@@ -36,7 +36,6 @@ export default function RewardBoxPage() {
     const [loading, setLoading] = useState(true);
     const [status, setStatus] = useState(null);
     const [isSpinning, setIsSpinning] = useState(false);
-    const [rotation, setRotation] = useState(0);
     const [reward, setReward] = useState(null);
 
     useEffect(() => {
@@ -107,30 +106,17 @@ export default function RewardBoxPage() {
             const data = await res.json();
 
             if (data.success) {
-                const targetIndex = data.reward.index;
-                const sliceDegree = 360 / WHEEL_SLICES.length;
-                // Center of the target slice
-                const targetCenterAngle = (targetIndex * sliceDegree) + (sliceDegree / 2);
-                // Tiny random offset to land naturally within the slice
-                const randomOffset = Math.floor(Math.random() * (sliceDegree - 10)) - (sliceDegree/2 - 5); 
-                const stopAngle = 1800 + (360 - targetCenterAngle) + randomOffset;
-                
-                // Add to current rotation so it spins smoothly from current position
-                const newRotation = rotation + stopAngle + (360 - (rotation % 360));
-
-                setRotation(newRotation);
-
-                // Wait for animation to finish (5 seconds)
+                // Wait for shake animation to finish (2.5 seconds)
                 setTimeout(() => {
                     setReward(data.reward);
                     setIsSpinning(false);
                     checkStatus(); // Refresh eligibility
-                }, 5000);
+                }, 2500);
                 
             } else {
                 setModalConfig({
                     isOpen: true,
-                    title: "⚠️ Spin Error",
+                    title: "⚠️ Open Error",
                     message: data.error,
                     type: "danger",
                     confirmText: "Close",
@@ -142,7 +128,7 @@ export default function RewardBoxPage() {
             setModalConfig({
                 isOpen: true,
                 title: "⚠️ Network Error",
-                message: "Failed to connect to reward-box spin server.",
+                message: "Failed to connect to reward-box server.",
                 type: "danger",
                 confirmText: "Close",
                 onConfirm: null
@@ -192,76 +178,108 @@ export default function RewardBoxPage() {
                     </p>
                 </div>
 
-            {/* WHEEL CONTAINER */}
-            <div className="relative w-[320px] h-[320px] md:w-[420px] md:h-[420px] mb-16 flex items-center justify-center">
-                {/* Glow Background */}
-                <div className="absolute inset-0 rounded-full blur-3xl opacity-50 bg-gradient-to-r from-yellow-500 to-amber-600 animate-pulse"></div>
+            {/* Custom CSS Keyframes for Chest Shaking */}
+            <style jsx global>{`
+                @keyframes chest-shake {
+                    0% { transform: translate(1px, 1px) rotate(0deg); }
+                    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+                    20% { transform: translate(-3px, 0deg) rotate(1deg); }
+                    30% { transform: translate(0deg, 2px) rotate(0deg); }
+                    40% { transform: translate(1px, -1px) rotate(1deg); }
+                    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+                    60% { transform: translate(-3px, 1px) rotate(0deg); }
+                    70% { transform: translate(2px, 1px) rotate(-1deg); }
+                    80% { transform: translate(-1px, -1px) rotate(1deg); }
+                    90% { transform: translate(2px, 2px) rotate(0deg); }
+                    100% { transform: translate(1px, -2px) rotate(-1deg); }
+                }
+                .animate-chest-shake {
+                    animation: chest-shake 0.3s infinite;
+                }
+            `}</style>
+
+            {/* GOLDEN MYSTERY CHEST CONTAINER */}
+            <div className="relative w-[320px] h-[320px] mb-12 flex items-center justify-center select-none">
+                {/* Golden Radial Glow */}
+                <div className="absolute inset-0 rounded-full blur-3xl opacity-50 bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 animate-pulse z-0"></div>
                 
-                {/* Outer Golden Border & Lights */}
-                <div className="absolute inset-[-10px] md:inset-[-15px] rounded-full bg-gradient-to-tr from-yellow-400 via-amber-600 to-yellow-500 shadow-[0_0_30px_rgba(245,158,11,0.5)] z-0 flex items-center justify-center">
-                    <div className="absolute inset-[3px] md:inset-[5px] rounded-full bg-[#1a0f2e]"></div>
-                    {/* Glowing dots */}
-                    {[...Array(16)].map((_, i) => (
-                        <div 
-                            key={`dot-${i}`}
-                            className="absolute w-2 h-2 rounded-full bg-yellow-100 shadow-[0_0_8px_#fef08a]"
-                            style={{
-                                transform: `rotate(${i * 22.5}deg) translateY(-160px)`, // Adjusted for 320px base, will scale via CSS or just use % for responsive
-                                top: '50%', left: '50%', margin: '-4px 0 0 -4px'
-                            }}
-                        />
-                    ))}
-                    {/* Responsive Dots Fix */}
-                    <style jsx>{`
-                        @media (min-width: 768px) {
-                            div[style*="translateY(-160px)"] {
-                                transform: rotate(calc(var(--i) * 22.5deg)) translateY(-210px) !important;
-                            }
-                        }
-                    `}</style>
-                </div>
+                {/* Exploding / Opening Glow */}
+                {isSpinning && (
+                    <div className="absolute inset-[-40px] rounded-full bg-yellow-500/10 blur-2xl animate-ping z-0"></div>
+                )}
 
-                {/* Selector Diamond (Top) */}
-                <div className="absolute -top-6 md:-top-8 left-1/2 transform -translate-x-1/2 z-30 drop-shadow-[0_5px_10px_rgba(0,0,0,0.8)]">
-                    <div className="w-8 h-12 md:w-10 md:h-14 bg-gradient-to-b from-yellow-200 to-amber-500" style={{ clipPath: 'polygon(50% 100%, 0 25%, 50% 0, 100% 25%)' }}></div>
-                </div>
-
-                {/* The Wheel */}
-                <div 
-                    className="absolute inset-0 rounded-full border-4 border-yellow-500/20 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] overflow-hidden transition-transform ease-out z-10"
-                    style={{
-                        transform: `rotate(${rotation}deg)`,
-                        transitionDuration: '5s', // 5 second spin animation
-                        background: `conic-gradient(${WHEEL_SLICES.map((s, i) => `${s.color} ${i * (360/WHEEL_SLICES.length)}deg ${(i+1) * (360/WHEEL_SLICES.length)}deg`).join(', ')})`
-                    }}
-                >
-                    {WHEEL_SLICES.map((slice, i) => {
-                        const sliceAngle = 360 / WHEEL_SLICES.length;
-                        const deg = (i * sliceAngle) + (sliceAngle / 2);
-                        return (
-                            <div 
-                                key={i}
-                                className="absolute top-0 left-0 w-full h-full flex items-start justify-center pointer-events-none"
-                                style={{
-                                    transform: `rotate(${deg}deg)`,
-                                }}
-                            >
-                                <span 
-                                    className="block mt-6 text-white font-bold text-xs md:text-sm tracking-wider text-center"
-                                    style={{
-                                        textShadow: '0 2px 4px rgba(0,0,0,0.8)'
-                                    }}
-                                >
-                                    {slice.label}
-                                </span>
+                {/* Chest Presentation */}
+                {reward ? (
+                    /* OPENED CHEST STATE */
+                    <div className="relative flex flex-col items-center justify-center animate-bounce z-10">
+                        {/* Golden Rays Backlight */}
+                        <div className="absolute w-56 h-56 rounded-full bg-gradient-to-tr from-yellow-500/20 to-transparent blur-xl pointer-events-none -z-10 animate-pulse"></div>
+                        
+                        {/* SVG Open Chest Illustration */}
+                        <div className="w-48 h-36 bg-zinc-900 border-4 border-yellow-500 rounded-3xl relative shadow-[0_20px_45px_rgba(245,158,11,0.3)] flex flex-col justify-end">
+                            {/* Lid thrown back */}
+                            <div className="absolute -top-12 left-4 right-4 h-14 bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 border-4 border-yellow-500 rounded-t-2xl shadow-md origin-bottom -rotate-12 transition-all"></div>
+                            
+                            {/* Shiny Gold Inside */}
+                            <div className="absolute inset-x-2 top-2 bottom-12 bg-gradient-to-b from-yellow-400/40 via-yellow-500/10 to-transparent rounded-xl flex items-center justify-center">
+                                <span className="text-4xl animate-pulse">✨</span>
                             </div>
-                        );
-                    })}
-                    
-                    {/* Inner Center Circle */}
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-zinc-900 border-[6px] border-amber-500 rounded-full z-10 flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.8)]">
-                        <span className="text-yellow-400 font-black text-3xl drop-shadow-[0_2px_5px_rgba(245,158,11,0.5)]">G</span>
+
+                            {/* Padlock (Unlocked) */}
+                            <div className="absolute top-6 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-zinc-950 border-2 border-emerald-500 flex items-center justify-center z-10 shadow-lg">
+                                <span className="text-emerald-400 text-xs">🔓</span>
+                            </div>
+
+                            {/* Front Details */}
+                            <div className="h-12 bg-zinc-950/80 w-full flex items-center justify-between px-6 rounded-b-2xl border-t border-white/5">
+                                <div className="w-2 h-5 bg-yellow-500/40 rounded-full"></div>
+                                <div className="w-2 h-5 bg-yellow-500/40 rounded-full"></div>
+                            </div>
+                        </div>
                     </div>
+                ) : (
+                    /* CLOSED CHEST STATE */
+                    <div className={`relative flex flex-col items-center justify-center z-10 transition-all duration-500 ${isSpinning ? 'animate-chest-shake' : 'hover:scale-[1.04]'}`}>
+                        {/* Closed Chest Illustration */}
+                        <div className="w-48 h-36 bg-zinc-900 border-4 border-yellow-500 rounded-3xl relative shadow-[0_20px_35px_rgba(245,158,11,0.2)] flex flex-col justify-end">
+                            
+                            {/* Lid (Top Half) */}
+                            <div className="absolute top-0 left-0 right-0 h-14 bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 border-b-4 border-yellow-500 rounded-t-2xl flex items-center justify-center shadow-lg">
+                                {/* Shiny center badge */}
+                                <div className="w-7 h-7 rounded-full bg-zinc-950 border border-yellow-400/30 flex items-center justify-center shadow-inner">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-ping"></div>
+                                </div>
+                            </div>
+
+                            {/* Padlock (Locked) */}
+                            <div className="absolute top-[44px] left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-zinc-950 border-2 border-yellow-500 flex items-center justify-center z-10 shadow-lg">
+                                <span className="text-yellow-400 text-xs">🔒</span>
+                            </div>
+
+                            {/* Front Details */}
+                            <div className="h-12 bg-zinc-950/80 w-full flex items-center justify-between px-6 rounded-b-2xl border-t border-white/5">
+                                <div className="w-2 h-5 bg-yellow-500/40 rounded-full"></div>
+                                <div className="w-2 h-5 bg-yellow-500/40 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* POTENTIAL REWARDS LIST */}
+            <div className="w-full max-w-xl mb-12 relative z-10 text-center select-none">
+                <span className="text-[10px] font-extrabold tracking-widest text-zinc-500 uppercase block mb-4">
+                    🎁 Potential Rewards Chest Pool
+                </span>
+                <div className="flex flex-wrap justify-center gap-2">
+                    {WHEEL_SLICES.map((slice, i) => (
+                        <span 
+                            key={i} 
+                            className="text-[10px] font-bold px-3.5 py-2 rounded-full border border-white/5 bg-zinc-900/40 text-zinc-300 hover:text-white hover:border-yellow-500/20 transition-all cursor-default"
+                        >
+                            {slice.label}
+                        </span>
+                    ))}
                 </div>
             </div>
 

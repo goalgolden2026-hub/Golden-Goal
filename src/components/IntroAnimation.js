@@ -115,7 +115,7 @@ export default function IntroAnimation() {
       /* ── Phase 2: Drop to ground (single smooth movement) ── */
       el.animate([
         { transform: 'translate(21vw,-44vh) scale(0.54) rotate(1380deg)' },
-        { transform: 'translate(12vw,-2vh) scale(0.46) rotate(1540deg)' },
+        { transform: 'translate(12vw,-11vh) scale(0.46) rotate(1540deg)' },
       ], { duration: 750, easing: 'cubic-bezier(0.4, 0, 1, 1)', fill: 'forwards' });
 
       setTimeout(() => {

@@ -167,16 +167,15 @@ export default function WorldCupMusicPlayer({ isMobile = false }) {
                 {/* Track Details & Visualizer */}
                 <div className="flex items-center gap-3 mt-1">
                     {/* Rotating Golden Vinyl Disk */}
-                    <div className="relative flex-shrink-0 w-12 h-12 rounded-full border-2 border-yellow-500/35 bg-zinc-950 flex items-center justify-center shadow-lg shadow-black/50 overflow-hidden">
-                        <div className={`w-full h-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-600 absolute transition-transform duration-1000 ${isPlaying ? 'animate-spin' : ''}`} style={{ animationDuration: '6s' }}></div>
-                        <div className="w-4 h-4 rounded-full bg-zinc-950 border border-yellow-500/60 z-10 flex items-center justify-center">
-                            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
+                    <div className="relative flex-shrink-0 w-12 h-12 rounded-full border-2 border-black bg-zinc-950 flex items-center justify-center shadow-lg shadow-black/50 overflow-hidden">
+                        <div className={`w-full h-full bg-gradient-to-tr from-yellow-500 via-amber-400 to-yellow-500 absolute transition-transform duration-1000 ${isPlaying ? 'animate-spin' : ''}`} style={{ animationDuration: '6s' }}></div>
+                        <div className="w-5.5 h-5.5 rounded-full bg-black border border-black/40 z-10 flex items-center justify-center shadow-inner shadow-black">
+                            <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
                         </div>
                         {/* Radial grooves */}
-                        <div className="absolute inset-0 rounded-full border border-black/15 pointer-events-none"></div>
-                        <div className="absolute inset-1.5 rounded-full border border-black/15 pointer-events-none"></div>
-                        <div className="absolute inset-3 rounded-full border border-black/15 pointer-events-none"></div>
-                        <div className="absolute inset-4.5 rounded-full border border-black/15 pointer-events-none"></div>
+                        <div className="absolute inset-1 rounded-full border border-black/15 pointer-events-none"></div>
+                        <div className="absolute inset-2.5 rounded-full border border-black/15 pointer-events-none"></div>
+                        <div className="absolute inset-4 rounded-full border border-black/15 pointer-events-none"></div>
                     </div>
 
                     {/* Meta info */}
@@ -277,15 +276,15 @@ export default function WorldCupMusicPlayer({ isMobile = false }) {
             <div className="absolute inset-0 rounded-full border border-yellow-500/10 pointer-events-none group-hover:border-yellow-500/30 transition-all duration-500"></div>
 
             {/* Rotating Golden Vinyl Disk */}
-            <div className="relative flex-shrink-0 w-8 h-8 rounded-full border border-yellow-500/40 bg-zinc-950 flex items-center justify-center shadow-lg shadow-black/60 overflow-hidden">
-                <div className={`w-full h-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-600 absolute transition-transform duration-1000 ${isPlaying ? 'animate-spin' : ''}`} style={{ animationDuration: '6s' }}></div>
-                <div className="w-3 h-3 rounded-full bg-zinc-950 border border-yellow-500/60 z-10 flex items-center justify-center">
-                    <div className="w-1 h-1 rounded-full bg-yellow-500"></div>
+            <div className="relative flex-shrink-0 w-8 h-8 rounded-full border border-black bg-zinc-950 flex items-center justify-center shadow-lg shadow-black/60 overflow-hidden">
+                <div className={`w-full h-full bg-gradient-to-tr from-yellow-500 via-amber-400 to-yellow-500 absolute transition-transform duration-1000 ${isPlaying ? 'animate-spin' : ''}`} style={{ animationDuration: '6s' }}></div>
+                <div className="w-3.5 h-3.5 rounded-full bg-black border border-black/40 z-10 flex items-center justify-center shadow-inner shadow-black">
+                    <div className="w-1 h-1 rounded-full bg-white"></div>
                 </div>
                 {/* Grooves */}
-                <div className="absolute inset-0 rounded-full border border-black/15 pointer-events-none"></div>
+                <div className="absolute inset-0.5 rounded-full border border-black/15 pointer-events-none"></div>
                 <div className="absolute inset-1 rounded-full border border-black/15 pointer-events-none"></div>
-                <div className="absolute inset-2 rounded-full border border-black/15 pointer-events-none"></div>
+                <div className="absolute inset-1.5 rounded-full border border-black/10 pointer-events-none"></div>
             </div>
 
             {/* Text Marquee / Meta Details */}

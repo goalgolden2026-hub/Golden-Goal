@@ -20,7 +20,8 @@ export async function getDb() {
                     "referredBy" TEXT,
                     "referralPoints" INTEGER DEFAULT 0,
                     "lastFreeSpinDate" DATE,
-                    "spinBonusBets" INTEGER DEFAULT 0
+                    "spinBonusBets" INTEGER DEFAULT 0,
+                    "twitterTaskStatus" BOOLEAN DEFAULT false
                 );
             `;
 
@@ -83,12 +84,24 @@ export async function getDb() {
                 );
             `;
 
+            await sql`
+                CREATE TABLE IF NOT EXISTS social_tasks (
+                    id SERIAL PRIMARY KEY,
+                    "walletAddress" TEXT NOT NULL,
+                    "taskType" TEXT NOT NULL,
+                    "url" TEXT NOT NULL,
+                    status TEXT DEFAULT 'COMPLETED',
+                    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            `;
+
             // ADD MISSING COLUMNS FOR EXISTING DB
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "referralCode" TEXT UNIQUE;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "referredBy" TEXT;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "referralPoints" INTEGER DEFAULT 0;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "lastFreeSpinDate" DATE;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "spinBonusBets" INTEGER DEFAULT 0;`;
+            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "twitterTaskStatus" BOOLEAN DEFAULT false;`;
 
             // Seed initial World Cup markets if none exist
             const { rows } = await sql`SELECT COUNT(*) as count FROM markets;`;

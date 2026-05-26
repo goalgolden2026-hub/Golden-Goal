@@ -104,6 +104,7 @@ export async function GET(request) {
                 balance: mockBalance,
                 referralCode: user.referralCode,
                 referralPoints: user.referralPoints,
+                twitterTaskStatus: user.twitterTaskStatus || false,
                 totalInvited,
                 betsToday: displayBetsToday,
                 maxBets: maxBets

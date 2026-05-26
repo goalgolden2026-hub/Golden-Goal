@@ -15,6 +15,11 @@ export default function ProfilePage() {
     const [loading, setLoading] = useState(true);
     const [claiming, setClaiming] = useState(false);
     const [claimMessage, setClaimMessage] = useState("");
+    
+    // Social Tasks State
+    const [tweetUrl, setTweetUrl] = useState('');
+    const [submittingTweet, setSubmittingTweet] = useState(false);
+    const [tweetMessage, setTweetMessage] = useState('');
 
     useEffect(() => {
         if (connected && publicKey) {
@@ -59,6 +64,29 @@ export default function ProfilePage() {
             setClaimMessage("❌ Server error.");
         }
         setClaiming(false);
+    };
+
+    const handleTweetSubmit = async () => {
+        if (!tweetUrl) return;
+        setSubmittingTweet(true);
+        setTweetMessage('');
+        try {
+            const res = await fetch('/api/user/twitter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ walletAddress: publicKey.toBase58(), tweetUrl })
+            });
+            const data = await res.json();
+            if (data.success) {
+                setTweetMessage('🎉 ' + data.message);
+                fetchProfile(); // refresh to show task completed and update points
+            } else {
+                setTweetMessage('❌ ' + data.error);
+            }
+        } catch (error) {
+            setTweetMessage('❌ Server error.');
+        }
+        setSubmittingTweet(false);
     };
 
     const copyToClipboard = () => {
@@ -201,6 +229,59 @@ export default function ProfilePage() {
 
                 </div>
             </div>
+
+            {/* Social Tasks Card */}
+            <div className="mt-8 bg-zinc-900/50 border border-white/10 rounded-3xl p-8 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <h2 className="text-2xl font-bold mb-6 text-zinc-300">Social Tasks</h2>
+                
+                <div className="bg-black/50 rounded-2xl p-6 border border-zinc-800 flex flex-col md:flex-row items-start md:items-center gap-6">
+                    <div className="flex-1 w-full">
+                        <div className="flex items-center gap-3 mb-2">
+                            <span className="text-2xl">🐦</span>
+                            <h3 className="text-lg font-bold text-white">Share on X (Twitter)</h3>
+                        </div>
+                        <p className="text-sm text-zinc-400 mb-4">
+                            Tweet about Golden Goal using the hashtag <span className="text-blue-400 font-bold">#GoldenGoal</span> and paste your tweet link here to earn <span className="text-amber-500 font-bold">500 Points</span> instantly!
+                        </p>
+                        
+                        {profile.twitterTaskStatus ? (
+                            <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-2 rounded-xl text-sm font-bold">
+                                <span>✅</span> Task Completed
+                            </div>
+                        ) : (
+                            <div className="flex flex-col gap-3">
+                                <div className="flex flex-col sm:flex-row items-center gap-2">
+                                    <input 
+                                        type="text" 
+                                        placeholder="https://x.com/username/status/123..."
+                                        value={tweetUrl}
+                                        onChange={(e) => setTweetUrl(e.target.value)}
+                                        className="w-full sm:flex-1 bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-zinc-300 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+                                    />
+                                    <button 
+                                        onClick={handleTweetSubmit}
+                                        disabled={submittingTweet || !tweetUrl}
+                                        className={`w-full sm:w-auto px-6 py-3 rounded-xl font-bold transition-all ${
+                                            submittingTweet || !tweetUrl 
+                                            ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed' 
+                                            : 'bg-blue-500 hover:bg-blue-600 text-white'
+                                        }`}
+                                    >
+                                        {submittingTweet ? 'Verifying...' : 'Submit'}
+                                    </button>
+                                </div>
+                                {tweetMessage && (
+                                    <p className={`text-sm font-medium ${tweetMessage.includes('❌') ? 'text-red-400' : 'text-green-400'}`}>
+                                        {tweetMessage}
+                                    </p>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
         </div>
     );
 }

@@ -118,30 +118,27 @@ Early unstaking (withdrawing tokens before the lock period expires) triggers a *
 
 ---
 
-### 4.6 The Lucky Spin System
-The Lucky Spin is a high-engagement gamification module that allows users to test their luck for massive token multipliers, points, or bonuses. Spin costs are dynamically discounted based on cüzdan holdings and active Staking Tiers:
+### 4.6 The Rewards Box Module
+The Rewards Box is a high-engagement gamification module that allows users to open mystery rewards for massive XP boosts or prediction quotas. Opening costs are dynamically paid using XP Points and heavily discounted based on active Staking Tiers:
 
-| User Category | Wallet & Staking Status | Spin Cost (in $GG) |
+| User Category | Wallet & Staking Status | Opening Cost (in XP) |
 | :--- | :--- | :--- |
-| **No Tokens Held** | Holds 0 $GG | 1,500 $GG |
-| **Token Holder** | Holds $GG but does not stake | 1,000 $GG |
-| **1-Day Stakers** | Active Soft Stake | 750 $GG |
-| **7-Day Stakers** | Active 7-Day Locked Stake | 500 $GG |
-| **15-Day Stakers** | Active 15-Day Locked Stake | 250 $GG |
-| **1-Month Stakers** | Active 30-Day Locked Stake | **1 Rewards Box Daily** (then 250 $GG) |
+| **No Active Stake** | Holds 0 $GG or no active stake | 100 XP |
+| **1-Day Stakers** | Active Soft Stake | 75 XP |
+| **7-Day Stakers** | Active 7-Day Locked Stake | 50 XP |
+| **15-Day Stakers** | Active 15-Day Locked Stake | 25 XP |
+| **1-Month Stakers** | Active 30-Day Locked Stake | **1 Free Daily Opening**, then 25 XP |
 
-**Possible Spin Rewards:**
-*   Golden Goal ($GG) token payouts.
-*   USDC token rewards.
-*   Leaderboard Points (Puans) to boost seasonal standings.
-*   Extra Bet quotas for high-action matchweeks.
+**Possible Rewards Box Loot:**
+*   Leaderboard XP Points (up to +1000 XP) to boost seasonal standings.
+*   Extra prediction quotas (+1 to +5 Quotas) for high-action matchweeks.
 
 ---
 
 ### 4.7 Referral System
 The Referral System drives organic platform expansion. Users earn Referral Points by inviting new participants via personalized links. 
-*   **Validation Rule:** For a referral to register as valid and prevent bot abuse, the invited user must connect their Solana wallet and complete at least **one active transaction** (e.g., place a prediction, stake, or spin).
-*   **Rewards:** Reaching referral milestones unlocks special token bonuses and free high-tier Lucky Spins.
+*   **Validation Rule:** For a referral to register as valid and prevent bot abuse, the invited user must connect their Solana wallet and complete at least **one active transaction** (e.g., place a prediction, stake, or open a box).
+*   **Rewards:** Reaching referral milestones unlocks special token bonuses and free high-tier Rewards Box openings.
 
 ---
 
@@ -156,7 +153,7 @@ To guarantee continuous visibility on social media, Golden Goal rewards viral co
 
 The native **Golden Goal ($GG)** token serves as the absolute backbone of the platform's utility structure:
 1.  **Staking:** Unlocking VIP multiplier tiers, daily prediction limits, and platform perks.
-2.  **Lucky Spin Access:** Serving as the direct currency to interact with the gamified wheel.
+2.  **Rewards Box Utility:** Staking tiers directly determine the XP cost discounts or free daily openings.
 3.  **Ecosystem Rewards:** Distributing weekly performance payouts to top-performing leaderboard users.
 4.  **XP and Point Boosters:** Purchasing multipliers to secure ranking leads.
 5.  **Ecosystem Governance:** Granting active holders voting power over community wallets and expansion priorities.

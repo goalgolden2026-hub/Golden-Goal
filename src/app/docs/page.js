@@ -28,7 +28,7 @@ export default function DocsPage() {
         tier: "Tier 4 (1-Month Locked)",
         bets: "+10 Daily Predictions",
         xp: "1.25x XP Multiplier",
-        rewardsBox: "1 Daily Rewards Box (then 250 $GG)",
+        rewardsBox: "1 Free Daily Rewards Box (then 25 XP)",
         period: "30 Days Lock",
         color: "from-amber-400 to-yellow-600",
         unstakePenalty: "10% Penalty (50% Burned, 50% to Rewards)"
@@ -38,7 +38,7 @@ export default function DocsPage() {
         tier: "Tier 3 (15-Day Locked)",
         bets: "+5 Daily Predictions",
         xp: "1.10x XP Multiplier",
-        rewardsBox: "250 $GG / Box (75% Off)",
+        rewardsBox: "25 XP / Box (75% Off)",
         period: "15 Days Lock",
         color: "from-yellow-500 to-amber-500",
         unstakePenalty: "10% Penalty (50% Burned, 50% to Rewards)"
@@ -48,7 +48,7 @@ export default function DocsPage() {
         tier: "Tier 2 (7-Day Locked)",
         bets: "+3 Daily Predictions",
         xp: "1.0x XP Multiplier",
-        rewardsBox: "500 $GG / Box (50% Off)",
+        rewardsBox: "50 XP / Box (50% Off)",
         period: "7 Days Lock",
         color: "from-zinc-300 to-zinc-500",
         unstakePenalty: "10% Penalty (50% Burned, 50% to Rewards)"
@@ -58,17 +58,17 @@ export default function DocsPage() {
         tier: "Tier 1 (Soft Stake)",
         bets: "+1 Daily Prediction",
         xp: "1.0x XP Multiplier",
-        rewardsBox: "750 $GG / Box (25% Off)",
+        rewardsBox: "75 XP / Box (25% Off)",
         period: "1 Day Lock",
         color: "from-amber-700 to-yellow-900",
         unstakePenalty: "Flexible - Zero Penalty"
       };
     } else {
       return {
-        tier: "Tier 0 (Hold Min 10,000 $GG for features)",
+        tier: "Tier 0 (No Active Stake)",
         bets: "Base Daily Prediction Limit",
         xp: "1.0x XP Multiplier",
-        rewardsBox: "1,000 $GG / Box Open",
+        rewardsBox: "100 XP / Box Open",
         period: "No Lock",
         color: "from-zinc-700 to-zinc-800",
         unstakePenalty: "N/A"
@@ -345,12 +345,11 @@ export default function DocsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5 bg-zinc-950/40 font-mono">
-                  <tr><td className="p-4 text-zinc-400 font-sans">No Token Holdings</td><td className="p-4 text-right text-red-400 font-bold">1,500 $GG</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">Holder (No Lock Stake)</td><td className="p-4 text-right text-zinc-300">1,000 $GG</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">1-Day Soft Stakers</td><td className="p-4 text-right text-zinc-300">750 $GG</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">7-Day Locked Stakers</td><td className="p-4 text-right text-zinc-300">500 $GG</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">15-Day Locked Stakers</td><td className="p-4 text-right text-zinc-300">250 $GG</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans font-semibold">30-Day Locked Stakers</td><td className="p-4 text-right text-emerald-400 font-bold">1 Free Daily Box</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">No Active Stake (Tier 0)</td><td className="p-4 text-right text-zinc-300 font-bold">100 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">Soft Stakers (Tier 1)</td><td className="p-4 text-right text-zinc-300 font-bold">75 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">7-Day Locked Stakers (Tier 2)</td><td className="p-4 text-right text-zinc-300 font-bold">50 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">15-Day Locked Stakers (Tier 3)</td><td className="p-4 text-right text-zinc-300 font-bold">25 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans font-semibold">30-Day Locked Stakers (Tier 4)</td><td className="p-4 text-right text-emerald-400 font-bold">1 Free Daily Box (then 25 XP)</td></tr>
                 </tbody>
               </table>
             </div>
@@ -403,7 +402,7 @@ export default function DocsPage() {
               <ul className="list-disc list-inside text-zinc-400 text-sm space-y-1">
                 <li>Staking early unstake penalty burns 50% of the penalty.</li>
                 <li>Prediction changes and deletion burn or lock micro $GG tokens.</li>
-                <li>Rewards Box fee distributions return directly into the treasury pool.</li>
+                <li>Rewards Box utilizes gamified XP Points to reward platform loyalty rather than inflating circulating token supply.</li>
               </ul>
             </div>
           </section>

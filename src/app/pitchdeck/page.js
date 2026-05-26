@@ -203,11 +203,11 @@ export default function PitchDeckPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 bg-zinc-950/40 font-mono">
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 0 (Holder)</td><td className="p-3">Min 10,000 GG</td><td className="p-3">Base Limit</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">1,000 GG / Open</td></tr>
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 1 (Soft)</td><td className="p-3">Min 100 GG</td><td className="p-3 text-emerald-400">+1 Prediction</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">750 GG / Open</td></tr>
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 2 (7-Day)</td><td className="p-3">Min 500 GG</td><td className="p-3 text-emerald-400">+3 Predictions</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">500 GG / Open</td></tr>
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 3 (15-Day)</td><td className="p-3">Min 1,000 GG</td><td className="p-3 text-emerald-400">+5 Predictions</td><td className="p-3 text-blue-400">1.1x XP</td><td className="p-3">250 GG / Open</td></tr>
-                <tr><td className="p-3 font-sans text-amber-400 font-semibold">Tier 4 (30-Day)</td><td className="p-3 font-bold">Min 5,000 GG</td><td className="p-3 text-emerald-400 font-bold">+10 Predictions</td><td className="p-3 text-blue-400 font-bold">1.25x XP</td><td className="p-3 text-amber-400 font-bold">1 Free Daily Box</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 0 (Holder)</td><td className="p-3">Min 10,000 GG</td><td className="p-3">Base Limit</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">100 XP / Open</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 1 (Soft)</td><td className="p-3">Min 100 GG</td><td className="p-3 text-emerald-400">+1 Prediction</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">75 XP / Open</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 2 (7-Day)</td><td className="p-3">Min 500 GG</td><td className="p-3 text-emerald-400">+3 Predictions</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">50 XP / Open</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 3 (15-Day)</td><td className="p-3">Min 1,000 GG</td><td className="p-3 text-emerald-400">+5 Predictions</td><td className="p-3 text-blue-400">1.1x XP</td><td className="p-3">25 XP / Open</td></tr>
+                <tr><td className="p-3 font-sans text-amber-400 font-semibold">Tier 4 (30-Day)</td><td className="p-3 font-bold">Min 5,000 GG</td><td className="p-3 text-emerald-400 font-bold">+10 Predictions</td><td className="p-3 text-blue-400 font-bold">1.25x XP</td><td className="p-3 text-amber-400 font-bold">1 Free Daily Box (then 25 XP)</td></tr>
               </tbody>
             </table>
           </div>
@@ -234,7 +234,7 @@ export default function PitchDeckPage() {
             <span className="text-2xl">🎰</span>
             <h4 className="font-bold text-amber-400 text-sm">Ecosystem Utility</h4>
             <p className="text-zinc-400 text-[10px] leading-relaxed">
-              $GG is consumed actively inside the platform to pay for prediction modifications, correct score locks, and Rewards Box openings, returning value back to the treasury.
+              $GG is consumed actively inside the platform to pay for prediction modifications and correct score locks, while point-based Rewards Box openings consume accumulated XP, returning dynamic value back to the community.
             </p>
           </div>
           <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-2">

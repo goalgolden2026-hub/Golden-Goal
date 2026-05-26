@@ -11,29 +11,25 @@ const REWARD_TIERS = [
     { index: 6, type: 'XP', value: 500, label: '+500 XP Points', prob: 4 },
     { index: 7, type: 'XP', value: 1000, label: '+1000 XP Points', prob: 1 }
 ];
-
 async function getSpinStatus(sql, walletAddress) {
     let activeTier = 0;
     // Get the highest active stake tier
     const activeStakeRes = await sql`SELECT tier FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE' ORDER BY tier DESC LIMIT 1`;
     if (activeStakeRes.rowCount > 0) activeTier = activeStakeRes.rows[0].tier;
 
-    let spinCost = 1000;
+    let spinCost = 100;
     let requiresMinBalance = false;
     let isEligibleForFreeSpin = false;
 
     if (activeTier === 0) {
-        spinCost = 1000;
-        requiresMinBalance = true;
+        spinCost = 100;
     } else if (activeTier === 1) {
-        spinCost = 750;
+        spinCost = 75;
     } else if (activeTier === 2) {
-        spinCost = 500;
+        spinCost = 50;
     } else if (activeTier === 3) {
-        spinCost = 250;
+        spinCost = 25;
     } else if (activeTier === 4) {
-        spinCost = 250;
-        
         // Check free spin eligibility
         const today = new Date().toISOString().split('T')[0];
         const userRes = await sql`SELECT "lastFreeSpinDate" FROM users WHERE "walletAddress" = ${walletAddress}`;
@@ -41,7 +37,13 @@ async function getSpinStatus(sql, walletAddress) {
             const lastSpin = userRes.rows[0].lastFreeSpinDate;
             if (!lastSpin || new Date(lastSpin).toISOString().split('T')[0] !== today) {
                 isEligibleForFreeSpin = true;
+                spinCost = 0;
+            } else {
+                spinCost = 25;
             }
+        } else {
+            isEligibleForFreeSpin = true;
+            spinCost = 0;
         }
     }
 
@@ -60,12 +62,6 @@ function spinRNG() {
     return REWARD_TIERS[0]; // fallback
 }
 
-// Mock USDC Airdrop Smart Contract Call
-async function sendUSDCAirdrop(walletAddress, amount) {
-    console.log(`[SMART CONTRACT MOCK] Sent ${amount} USDC to ${walletAddress}`);
-    return true;
-}
-
 export async function GET(request) {
     try {
         const { searchParams } = new URL(request.url);
@@ -75,16 +71,11 @@ export async function GET(request) {
         const sql = await getDb();
         const status = await getSpinStatus(sql, walletAddress);
 
-        let dynamicBalance = 30000;
-        const activeStakesTotalRes = await sql`SELECT SUM(amount) as total FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
-        if (activeStakesTotalRes.rows[0].total) dynamicBalance -= parseInt(activeStakesTotalRes.rows[0].total);
-
-        const logsRes = await sql`SELECT amount, type FROM treasury_logs WHERE "walletAddress" = ${walletAddress}`;
-        for (const log of logsRes.rows) {
-            const amt = parseFloat(log.amount);
-            if (log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') dynamicBalance -= amt;
-            else if (log.type === 'SPIN_PAYMENT') dynamicBalance += amt;
-            else if (log.type === 'REFERRAL_REWARD' || log.type === 'SPIN_REWARD_GOLDEN') dynamicBalance += amt;
+        // Fetch user's current points
+        let points = 0;
+        const userRes = await sql`SELECT points FROM users WHERE "walletAddress" = ${walletAddress}`;
+        if (userRes.rowCount > 0 && userRes.rows[0].points !== null) {
+            points = parseInt(userRes.rows[0].points);
         }
 
         return NextResponse.json({ 
@@ -93,10 +84,11 @@ export async function GET(request) {
             spinCost: status.spinCost,
             requiresMinBalance: status.requiresMinBalance,
             activeTier: status.activeTier,
-            balance: dynamicBalance
+            points: points
         }, { status: 200 });
 
     } catch (error) {
+        console.error("GET /api/spin error:", error);
         return NextResponse.json({ success: false, error: "Failed to fetch spin status" }, { status: 500 });
     }
 }
@@ -109,7 +101,7 @@ export async function POST(request) {
 
         const sql = await getDb();
         
-        // 1. Determine Payment (Free vs Dynamic Token Cost)
+        // 1. Determine Payment (Free vs Dynamic XP Points Cost)
         const status = await getSpinStatus(sql, walletAddress);
         
         if (status.isEligibleForFreeSpin) {
@@ -119,31 +111,28 @@ export async function POST(request) {
                 WHERE "walletAddress" = ${walletAddress}
             `;
         } else {
-            // Check dynamic balance before deducting
-            let dynamicBalance = 30000;
-            const activeStakesTotalRes = await sql`SELECT SUM(amount) as total FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
-            if (activeStakesTotalRes.rows[0].total) dynamicBalance -= parseInt(activeStakesTotalRes.rows[0].total);
-
-            const logsRes = await sql`SELECT amount, type FROM treasury_logs WHERE "walletAddress" = ${walletAddress}`;
-            for (const log of logsRes.rows) {
-                const amt = parseFloat(log.amount);
-                if (log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') dynamicBalance -= amt;
-                else if (log.type === 'SPIN_PAYMENT') dynamicBalance += amt;
-                else if (log.type === 'REFERRAL_REWARD' || log.type === 'SPIN_REWARD_GOLDEN') dynamicBalance += amt;
+            // Fetch user's current points
+            let points = 0;
+            const userRes = await sql`SELECT points FROM users WHERE "walletAddress" = ${walletAddress}`;
+            if (userRes.rowCount > 0 && userRes.rows[0].points !== null) {
+                points = parseInt(userRes.rows[0].points);
             }
 
-            if (status.requiresMinBalance && dynamicBalance < 10000) {
-                return NextResponse.json({ success: false, error: "You need a minimum balance of 10,000 Golden Tokens to spin without an active stake." }, { status: 400 });
+            if (points < status.spinCost) {
+                return NextResponse.json({ success: false, error: `Insufficient XP Points. ${status.spinCost} XP points are required to open the Rewards Box.` }, { status: 400 });
             }
 
-            if (dynamicBalance < status.spinCost) {
-                return NextResponse.json({ success: false, error: `Insufficient Golden Token balance. ${status.spinCost} tokens are required to spin.` }, { status: 400 });
-            }
-
-            // Deduct Spin Cost
+            // Deduct Spin Cost from user's points directly!
+            await sql`
+                UPDATE users 
+                SET points = COALESCE(points, 0) - ${status.spinCost} 
+                WHERE "walletAddress" = ${walletAddress}
+            `;
+            
+            // Log the payment in treasury_logs
             await sql`
                 INSERT INTO treasury_logs ("walletAddress", amount, type) 
-                VALUES (${walletAddress}, ${-status.spinCost}, 'SPIN_PAYMENT')
+                VALUES (${walletAddress}, ${-status.spinCost}, 'REWARDS_BOX_OPEN_XP')
             `;
         }
 

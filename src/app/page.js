@@ -20,8 +20,8 @@ export default function LandingPage() {
       requirement: "Min 10,000 GG (Circulating)",
       predictions: "Base Daily Limit",
       xp: "1.0x XP",
-      rewardsBox: "1,000 GG / Box Open",
-      perk: "Hold tokens in your Solana wallet to unlock basic prediction privileges.",
+      rewardsBox: "100 XP / Rewards Box Open",
+      perk: "Hold tokens in your Solana wallet to unlock basic prediction privileges and open boxes for 100 XP.",
       color: "from-zinc-500 to-zinc-700",
       glow: "rgba(113, 113, 122, 0.15)"
     },
@@ -30,8 +30,8 @@ export default function LandingPage() {
       requirement: "Min 100 GG Staked",
       predictions: "+1 Prediction / Day",
       xp: "1.0x XP",
-      rewardsBox: "750 GG / Box (25% Off)",
-      perk: "Low-barrier lock with 1-day lockup. Perfect for casual forecasters.",
+      rewardsBox: "75 XP / Rewards Box (25% Off)",
+      perk: "Low-barrier lock with 1-day lockup. Unlocks a 25% discount on the daily Rewards Box opening fee.",
       color: "from-emerald-500 to-teal-600",
       glow: "rgba(16, 185, 129, 0.15)"
     },
@@ -40,8 +40,8 @@ export default function LandingPage() {
       requirement: "Min 500 GG Staked",
       predictions: "+3 Predictions / Day",
       xp: "1.0x XP",
-      rewardsBox: "500 GG / Box (50% Off)",
-      perk: "7-day lockup. Unlocks a 50% discount on the daily Rewards Box open fee.",
+      rewardsBox: "50 XP / Rewards Box (50% Off)",
+      perk: "7-day lockup. Unlocks a 50% discount on the daily Rewards Box opening fee.",
       color: "from-blue-500 to-indigo-600",
       glow: "rgba(59, 130, 246, 0.15)"
     },
@@ -50,8 +50,8 @@ export default function LandingPage() {
       requirement: "Min 1,000 GG Staked",
       predictions: "+5 Predictions / Day",
       xp: "1.1x XP Booster",
-      rewardsBox: "250 GG / Box (75% Off)",
-      perk: "15-day lockup. Unlocks a 1.1x XP scaling multiplier for leaderboard domination.",
+      rewardsBox: "25 XP / Rewards Box (75% Off)",
+      perk: "15-day lockup. Unlocks a 75% discount on the daily Rewards Box opening fee and 1.1x XP.",
       color: "from-purple-500 to-violet-600",
       glow: "rgba(139, 92, 246, 0.15)"
     },
@@ -60,8 +60,8 @@ export default function LandingPage() {
       requirement: "Min 5,000 GG Staked",
       predictions: "+10 Predictions / Day",
       xp: "1.25x XP Booster",
-      rewardsBox: "1 Free Daily Rewards Box!",
-      perk: "30-day lockup. Premium VIP benefits including a free daily rewards box and maximum XP gains.",
+      rewardsBox: "1 Free Daily + 25 XP / Next Rewards Box",
+      perk: "30-day lockup. First daily Rewards Box opening is completely free, subsequent openings cost 25 XP.",
       color: "from-yellow-400 via-amber-500 to-orange-500",
       glow: "rgba(245, 158, 11, 0.25)"
     }

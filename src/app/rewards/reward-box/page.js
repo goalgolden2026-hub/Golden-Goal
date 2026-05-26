@@ -164,7 +164,7 @@ export default function SpinPage() {
                         REWARDS BOX
                     </h1>
                     <p className="text-zinc-300 font-medium">
-                        Get <span className="text-yellow-400 font-bold">1 Rewards Box</span> every day if you have a 30-Day active stake!
+                        Get <span className="text-yellow-400 font-bold">1 Free Rewards Box</span> daily with 30-Day staking, subsequent openings cost just 25 XP!
                     </p>
                 </div>
 
@@ -245,45 +245,49 @@ export default function SpinPage() {
             <div className="flex flex-col items-center gap-4 w-full max-w-sm mb-16 relative z-10">
                 <button
                     onClick={handleSpin}
-                    disabled={isSpinning || (!status?.isEligibleForFreeSpin && (status?.balance < status?.spinCost || (status?.requiresMinBalance && status?.balance < 10000)))}
+                    disabled={isSpinning || (!status?.isEligibleForFreeSpin && status?.points < status?.spinCost)}
                     className={`w-full py-5 rounded-full font-black text-xl uppercase tracking-widest transition-all shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex items-center justify-center gap-3 ${
                         isSpinning 
                         ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
                         : status?.isEligibleForFreeSpin
                             ? 'bg-gradient-to-b from-green-400 via-emerald-500 to-green-700 text-white shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-105 hover:brightness-110'
-                            : (status?.balance >= status?.spinCost && (!status?.requiresMinBalance || status?.balance >= 10000))
+                            : (status?.points >= status?.spinCost)
                                 ? 'bg-gradient-to-b from-yellow-300 via-amber-500 to-orange-600 text-white shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:scale-105 hover:brightness-110'
                                 : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
                     }`}
                 >
                     {!isSpinning && (
                         <div className="w-8 h-8 rounded-full bg-black/30 flex items-center justify-center border border-white/20">
-                            <span className="text-yellow-300 text-sm">G</span>
+                            <span className="text-yellow-300 text-xs font-bold">XP</span>
                         </div>
                     )}
-                    {isSpinning ? 'SPINNING...' : status?.isEligibleForFreeSpin ? 'OPEN REWARDS BOX' : `SPIN FOR ${status?.spinCost || '...'} TOKENS`}
+                    {isSpinning ? 'OPENING...' : status?.isEligibleForFreeSpin ? 'OPEN REWARDS BOX' : `OPEN FOR ${status?.spinCost || 0} XP`}
                 </button>
 
-                {!status?.isEligibleForFreeSpin && (
-                    <div className="text-xs text-zinc-400 text-center flex items-start gap-2 max-w-sm mx-auto">
-                        <span className="text-zinc-500 mt-0.5">ⓘ</span>
-                        <p>
-                            Stake tokens to get massive discounts and up to 1 Rewards Box daily!
-                            
-                            {status?.requiresMinBalance && status?.balance < 10000 && (
-                                <span className="block text-red-500 mt-2 font-bold">
-                                    ⚠️ Minimum 10,000 Golden Tokens required to spin without an active stake. (Current: {status.balance.toLocaleString()})
+                <div className="text-xs text-zinc-400 text-center flex flex-col gap-2 max-w-sm mx-auto select-none">
+                    <div className="flex items-center justify-center gap-1.5 bg-zinc-900/60 border border-white/5 rounded-full px-4 py-1.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+                        <span className="text-zinc-500">Your Balance:</span>
+                        <span className="text-yellow-400 font-bold">{status?.points !== undefined ? status.points.toLocaleString() : 0} XP</span>
+                    </div>
+                    {!status?.isEligibleForFreeSpin && (
+                        <p className="mt-1">
+                            {status?.points < status?.spinCost ? (
+                                <span className="text-red-500 font-bold block">
+                                    ⚠️ Insufficient XP Points. {status.spinCost} XP required.
                                 </span>
-                            )}
-                            
-                            {status?.balance < status?.spinCost && (!status?.requiresMinBalance || status?.balance >= 10000) && (
-                                <span className="block text-red-500 mt-2 font-bold">
-                                    ⚠️ Insufficient balance. {status.spinCost} tokens required.
+                            ) : (
+                                <span>
+                                    Cost: <span className="text-amber-400 font-bold">{status?.spinCost} XP Points</span>. Opens are point-based.
                                 </span>
                             )}
                         </p>
-                    </div>
-                )}
+                    )}
+                    {status?.isEligibleForFreeSpin && (
+                        <p className="mt-1 text-emerald-400 font-bold">
+                            🎉 Your first daily Rewards Box opening is completely FREE!
+                        </p>
+                    )}
+                </div>
             </div>
 
             {/* Bottom Info Cards */}

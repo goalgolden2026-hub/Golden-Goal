@@ -26,12 +26,12 @@ export default function LandingPage() {
           >
             Launch App
           </Link>
-          <a 
-            href="#how-it-works" 
-            className="w-full sm:w-auto bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white font-semibold py-4 px-10 rounded-full text-lg transition-colors"
+          <Link 
+            href="/docs" 
+            className="w-full sm:w-auto bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white font-semibold py-4 px-10 rounded-full text-lg transition-all hover:scale-105"
           >
-            Learn More
-          </a>
+            Read Whitepaper 📄
+          </Link>
         </div>
       </section>
 

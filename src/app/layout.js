@@ -3,6 +3,7 @@ import "./globals.css";
 import { WalletContextProvider } from "@/components/WalletContextProvider";
 import Header from "@/components/Header";
 import ReferralCapture from "@/components/ReferralCapture";
+import IntroAnimation from "@/components/IntroAnimation";
 import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
       <body className={`${inter.className} bg-black text-zinc-50 min-h-screen flex flex-col relative`}>
+        <IntroAnimation />
         {/* Web3 Glowing Background Orbs */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/20 blur-[120px]"></div>

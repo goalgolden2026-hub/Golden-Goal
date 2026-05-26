@@ -41,6 +41,7 @@ export default function Header() {
                             <Link href="/stake" className="hover:text-white transition-colors">Staking</Link>
                             <Link href="/profile" className="hover:text-white transition-colors text-amber-500">Profile</Link>
                             <Link href="/spin" className="hover:text-white transition-colors text-red-500 font-bold flex items-center gap-1">Spin 🎰</Link>
+                            <Link href="/docs" className="hover:text-white transition-colors text-yellow-400 font-medium">Docs 📄</Link>
                         </nav>
 
                         <div className="flex items-center">

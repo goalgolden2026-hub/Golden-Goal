@@ -132,7 +132,7 @@ export default function SpinPage() {
             <div className="flex-1 flex flex-col items-center justify-center p-4">
                 <div className="text-center mb-8">
                     <h1 className="text-5xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-500">
-                        Lucky Wheel
+                        Rewards Box
                     </h1>
                     <p className="text-zinc-400 max-w-md mx-auto">
                         Connect your wallet to spin the wheel and win XP boosts and prediction quotas.
@@ -161,7 +161,7 @@ export default function SpinPage() {
             <div className="w-full max-w-4xl mx-auto px-4 py-12 flex flex-col items-center relative z-10">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl md:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-amber-600 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)] tracking-wider">
-                        GOLDEN SPIN
+                        REWARDS BOX
                     </h1>
                     <p className="text-zinc-300 font-medium">
                         Get <span className="text-yellow-400 font-bold">1 Rewards Box</span> every day if you have a 30-Day active stake!
@@ -290,7 +290,7 @@ export default function SpinPage() {
             <div className="w-full max-w-5xl bg-[#130b29]/80 backdrop-blur-md rounded-3xl border border-purple-500/20 p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 z-10 relative">
                 <div className="flex flex-col items-center text-center">
                     <div className="text-4xl mb-3 text-orange-400 drop-shadow-[0_0_10px_rgba(251,146,60,0.5)]">🎁</div>
-                    <h3 className="text-xs font-bold text-orange-400 tracking-wider mb-2">EVERY DAY 1 SPIN</h3>
+                    <h3 className="text-xs font-bold text-orange-400 tracking-wider mb-2">DAILY REWARDS BOX</h3>
                     <p className="text-[11px] text-zinc-500">Stake your tokens for 30 days and earn 1 Rewards Box daily!</p>
                 </div>
                 <div className="flex flex-col items-center text-center">

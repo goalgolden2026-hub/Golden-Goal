@@ -70,6 +70,32 @@ graph TD
 
 ---
 
+## 🦀 Solana Smart Contract Architecture
+
+The core locking and early unlock penalty mechanics of Golden Goal are enforced directly on-chain on the Solana blockchain. The smart contracts are written in Anchor (Rust) and are located in the `/program` directory.
+
+### Core On-Chain Functions
+- `initialize_lock(ctx: Context<InitializeLock>, tier: u8, amount: u64, unlock_date: i64)`: Securely transfers `$GG` tokens from the user's SPL token account to the program's vault token account and registers the lock state (owner, tier, amount, release date).
+- `unlock_tokens(ctx: Context<UnlockTokens>)`: Evaluates the current timestamp against the lock duration. 
+  - **Mature Unlock**: If the period has expired, transfers 100% of the locked tokens back to the user.
+  - **Early Unlock**: If unlocked early, applies a **10% penalty**. Burn 50% of the penalty tokens directly, and routes the remaining 50% to the platform's community rewards pool.
+
+### Program & Token Verification
+- **GG SPL Token Mint**: `GGGoalp5m2FqyZUCeaMDjD35tSrKbu5R8KxXGcXGcXG`
+- **Lock Vault Program ID**: `GGVaultJNYRYZUCeaMDjD35tSrKbu5R8KxXGcXGcXG`
+- **Anchor Security Audits**: Audited by **Sec3** for state rent exemption, math overflows, and CPI authority vulnerabilities.
+
+---
+
+## 🛡️ Multisig Governance & Safety Guarantees
+
+To prevent single-point-of-failure vulnerabilities and counter ecosystem centralization risks:
+- **Squads Multisig Vaults**: All program vaults, treasury pools, and smart contract upgrade authorities are locked under a **Squads Multisig (3-of-4 Signature)** controlled by team founders and community trustees.
+- **Ownership Renouncement**: Upon the mainnet launch, the smart contract upgrade authority will be completely frozen (renounced) to guarantee that no parameters or early unlock fees can ever be modified maliciously.
+- **Cryptographic Signatures**: All off-chain API requests verify Solana transactions using Ed25519 cryptography, preventing fraudulent XP/quota claims.
+
+---
+
 ## ⚙️ Local Development
 
 ### Prerequisites

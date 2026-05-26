@@ -18,7 +18,8 @@ function getTierLimits(balance) {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { walletAddress, marketId, prediction, betType = 'MAIN', referredBy } = body;
+        const { walletAddress, marketId, prediction, predictionType, betType, referredBy } = body;
+        const finalPredictionType = predictionType || betType || 'MAIN';
 
         if (!walletAddress || !marketId || !prediction) {
             return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
@@ -90,7 +91,7 @@ export async function POST(request) {
             SELECT id FROM predictions 
             WHERE "walletAddress" = ${walletAddress} 
             AND "marketId" = ${marketId} 
-            AND "predictionType" = ${betType} 
+            AND "predictionType" = ${finalPredictionType} 
             AND status = 'PENDING'
         `;
 
@@ -105,7 +106,7 @@ export async function POST(request) {
         // 5. Insert Prediction
         await sql`
             INSERT INTO predictions ("walletAddress", "marketId", prediction, "predictionType") 
-            VALUES (${walletAddress}, ${marketId}, ${prediction}, ${betType})
+            VALUES (${walletAddress}, ${marketId}, ${prediction}, ${finalPredictionType})
         `;
 
         // 6. Increment predictionsToday

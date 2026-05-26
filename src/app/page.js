@@ -1,33 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 
 export default function LandingPage() {
-  const [hoveredSlice, setHoveredSlice] = useState(null);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
-
-  const tokenomicsData = [
-    { id: 'presale', label: 'Presale', percentage: 40, tokens: '400M Tokens', color: '#F59E0B' },
-    { id: 'dex', label: 'DEX Liquidity', percentage: 20, tokens: '200M Tokens', color: '#3B82F6' },
-    { id: 'rewards', label: 'Rewards & Giveaways', percentage: 20, tokens: '200M Tokens', color: '#10B981' },
-    { id: 'dev', label: 'Development', percentage: 10, tokens: '100M Tokens', color: '#8B5CF6' },
-    { id: 'marketing', label: 'Marketing & Advisors', percentage: 10, tokens: '100M Tokens', color: '#EC4899' },
-  ];
-
-  const radius = 100;
-  const strokeWidth = 40;
-  const circumference = 2 * Math.PI * radius;
-  let currentOffset = 0;
-
-  const handleMouseMove = (e, slice) => {
-    setHoveredSlice(slice);
-    setTooltipPos({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredSlice(null);
-  };
 
   return (
     <div className="flex-1 w-full max-w-6xl mx-auto px-4 py-12 sm:py-20 flex flex-col items-center">
@@ -96,106 +72,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Tokenomics Section */}
-      <section className="w-full mb-32 relative">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Tokenomics</h2>
-          <p className="text-zinc-500 max-w-2xl mx-auto">1 Billion Total Supply. Designed for long-term sustainability and community growth.</p>
-        </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-center gap-12 max-w-5xl mx-auto">
-          {/* Interactive SVG Donut Chart */}
-          <div className="relative w-80 h-80 flex items-center justify-center">
-            {/* Glow effect behind the chart */}
-            <div className="absolute inset-0 rounded-full blur-3xl opacity-20 bg-gradient-to-r from-amber-500 via-blue-500 to-pink-500"></div>
-            
-            <svg viewBox="0 0 300 300" className="w-full h-full transform -rotate-90 z-10 drop-shadow-2xl">
-              {tokenomicsData.map((slice) => {
-                const strokeDasharray = `${(slice.percentage / 100) * circumference} ${circumference}`;
-                const strokeDashoffset = -currentOffset;
-                currentOffset += (slice.percentage / 100) * circumference;
-
-                const isHovered = hoveredSlice?.id === slice.id;
-
-                return (
-                  <circle
-                    key={slice.id}
-                    cx="150"
-                    cy="150"
-                    r={radius}
-                    fill="transparent"
-                    stroke={slice.color}
-                    strokeWidth={isHovered ? strokeWidth + 10 : strokeWidth}
-                    strokeDasharray={strokeDasharray}
-                    strokeDashoffset={strokeDashoffset}
-                    className="transition-all duration-300 ease-out cursor-pointer origin-center"
-                    style={{ pointerEvents: 'stroke' }}
-                    onMouseMove={(e) => handleMouseMove(e, slice)}
-                    onMouseLeave={handleMouseLeave}
-                  />
-                );
-              })}
-            </svg>
-
-            {/* Inner Text */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-20">
-              <span className="text-xs text-zinc-500 font-bold tracking-widest uppercase">Total Supply</span>
-              <span className="text-lg font-extrabold text-white mt-1">1,000,000,000</span>
-            </div>
-          </div>
-
-          {/* Legend */}
-          <div className="flex flex-col gap-4 w-full max-w-md">
-            {tokenomicsData.map((slice) => {
-              const isHovered = hoveredSlice?.id === slice.id;
-              return (
-                <div 
-                  key={slice.id}
-                  className={`border rounded-xl p-4 flex items-center justify-between transition-all duration-300 ${
-                    isHovered 
-                      ? 'bg-zinc-800 border-zinc-600 scale-105 shadow-lg' 
-                      : 'bg-zinc-900/50 border-zinc-800 hover:bg-zinc-800/50'
-                  }`}
-                  onMouseMove={(e) => handleMouseMove(e, slice)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <div className="flex items-center gap-3">
-                    <div 
-                      className="w-4 h-4 rounded-full transition-shadow duration-300" 
-                      style={{ 
-                        backgroundColor: slice.color,
-                        boxShadow: isHovered ? `0 0 15px ${slice.color}` : `0 0 5px ${slice.color}80`
-                      }}
-                    ></div>
-                    <span className={`font-medium ${isHovered ? 'text-white' : 'text-zinc-300'}`}>{slice.label}</span>
-                  </div>
-                  <div className="text-right">
-                    <span className="block font-bold" style={{ color: slice.color }}>{slice.percentage}%</span>
-                    <span className="text-xs text-zinc-500">{slice.tokens}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Floating Tooltip */}
-        {hoveredSlice && (
-          <div 
-            className="fixed z-50 pointer-events-none transform -translate-x-1/2 -translate-y-full pb-4"
-            style={{ left: tooltipPos.x, top: tooltipPos.y }}
-          >
-            <div className="bg-zinc-950/90 backdrop-blur-md border border-zinc-700 p-4 rounded-2xl shadow-2xl flex flex-col items-center gap-1 animate-in fade-in zoom-in duration-200">
-              <span className="text-white font-bold">{hoveredSlice.label}</span>
-              <div className="h-px w-full bg-zinc-800 my-1"></div>
-              <span className="text-2xl font-black" style={{ color: hoveredSlice.color }}>
-                {hoveredSlice.tokens}
-              </span>
-              <span className="text-xs text-zinc-500 uppercase tracking-wider">{hoveredSlice.percentage}% of Supply</span>
-            </div>
-          </div>
-        )}
-      </section>
 
       {/* Roadmap Section */}
       <section className="w-full mb-24">

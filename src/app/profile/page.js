@@ -89,9 +89,11 @@ export default function ProfilePage() {
                         {/* Upper Section: Brand & VIP Level */}
                         <div className="flex justify-between items-center pb-6 border-b border-white/5">
                             <div className="flex items-center gap-2">
-                                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center font-black text-black text-base shadow-[0_0_15px_rgba(245,158,11,0.3)]">
-                                    G
-                                </div>
+                                <img 
+                                    src="/logo.jpg" 
+                                    alt="Golden Goal Logo" 
+                                    className="w-9 h-9 rounded-xl object-cover border border-yellow-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]"
+                                />
                                 <span className="font-black text-lg tracking-wider text-white">GOLDEN GOAL</span>
                             </div>
                             <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 rounded-full border border-white/10 text-[10px] font-bold text-zinc-300">

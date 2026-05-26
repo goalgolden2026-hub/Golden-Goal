@@ -63,20 +63,9 @@ Users can place predictions on real-world football fixtures, including major int
 *   **Dynamic Modification:** Each user has a personal performance dashboard (Portfolio) where active predictions can be edited or cancelled anytime before the match officially begins.
 
 ### 4.2 Weekly Reward Pool
-The competitive heart of Golden Goal is the weekly Leaderboard. Every week, the top 10 predictors on the leaderboard are rewarded with payouts distributed in **Golden Goal ($GG) tokens** (pegged to USD values):
+The competitive heart of Golden Goal is the weekly Leaderboard. Every week, the top 10 predictors on the leaderboard are rewarded with payouts distributed in **Golden Goal ($GG) tokens**. 
 
-| Rank | Weekly Reward (in $GG equivalent) |
-| :--- | :--- |
-| **1st Place** | $150 |
-| **2nd Place** | $100 |
-| **3rd Place** | $75 |
-| **4th Place** | $50 |
-| **5th Place** | $40 |
-| **6th Place** | $30 |
-| **7th Place** | $25 |
-| **8th Place** | $15 |
-| **9th Place** | $10 |
-| **10th Place** | $5 |
+The reward distribution scales dynamically based on active user volume, matched fixtures, and treasury revenue, ensuring that top analytical minds are consistently incentivized with premium payouts down to the 10th rank. The exact reward distributions for each tier are displayed transparently in the application dashboard at the start of each matchweek, giving the platform flexibility to scale pools during major global championships (such as the World Cup).
 
 ---
 

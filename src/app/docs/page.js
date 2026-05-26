@@ -240,29 +240,13 @@ export default function DocsPage() {
             </div>
 
             <div className="space-y-4 pt-4">
-              <h3 className="font-bold text-zinc-200 text-lg">4.2 Weekly Payout Schedule ($150 - $5)</h3>
-              <p className="text-zinc-400 text-sm">
-                Each matchweek, the top 10 forecasters on our global leaderboard receive direct rewards in $GG tokens equivalent to the USD targets below:
+              <h3 className="font-bold text-zinc-200 text-lg">4.2 Weekly Payout Pool</h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Each matchweek, the top 10 forecasters on our global leaderboard receive direct reward distributions in <strong>Golden Goal ($GG) tokens</strong>. 
               </p>
-              
-              <div className="overflow-hidden border border-white/5 rounded-2xl">
-                <table className="w-full text-left border-collapse text-sm">
-                  <thead>
-                    <tr className="bg-zinc-900/80 text-zinc-400 border-b border-white/5">
-                      <th className="p-4 font-semibold">Rank</th>
-                      <th className="p-4 font-semibold">Weekly Reward Payout</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5 bg-zinc-950/40">
-                    <tr><td className="p-4 font-bold text-yellow-400">🏆 1st</td><td className="p-4 text-white font-mono font-bold">$150.00</td></tr>
-                    <tr><td className="p-4 font-semibold text-zinc-300">🥈 2nd</td><td className="p-4 text-white font-mono font-bold">$100.00</td></tr>
-                    <tr><td className="p-4 font-semibold text-amber-600">🥉 3rd</td><td className="p-4 text-white font-mono font-bold">$75.00</td></tr>
-                    <tr><td className="p-4">4th</td><td className="p-4 font-mono text-zinc-300">$50.00</td></tr>
-                    <tr><td className="p-4">5th</td><td className="p-4 font-mono text-zinc-300">$40.00</td></tr>
-                    <tr><td className="p-4 text-zinc-500" colSpan="2">Ranks 6th through 10th receive: $30, $25, $15, $10, $5 respectively.</td></tr>
-                  </tbody>
-                </table>
-              </div>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                The exact prize pool size and token distribution structures are dynamically scaled by the platform treasury in proportion to user volume, sponsorship partnerships, and active match cycle transactions. This gives the ecosystem full flexibility to amplify reward payouts during major sports tournaments like the World Cup. Current matchweek payout scales are displayed transparently inside the application dashboard.
+              </p>
             </div>
           </section>
 

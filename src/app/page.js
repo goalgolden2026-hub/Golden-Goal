@@ -171,110 +171,110 @@ export default function LandingPage() {
             <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Unstake Burn Penalty</div>
           </div>
         </div>
-30: 
-31:         {/* SKILL-BASED SYSTEM SHOWCASE */}
-32:         <section className="w-full max-w-5xl mb-32 select-none">
-33:           <div className="relative rounded-[32px] overflow-hidden border border-yellow-500/20 bg-gradient-to-b from-[#161026]/90 to-[#0e0a1b]/90 p-8 sm:p-12 shadow-[0_0_50px_rgba(245,158,11,0.05)] backdrop-blur-xl">
-34:             {/* Background vector glow */}
-35:             <div className="absolute -top-12 -right-12 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] pointer-events-none"></div>
-36:             <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-purple-500/10 rounded-full blur-[80px] pointer-events-none"></div>
-37: 
-38:             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-39:               <div className="lg:col-span-5 space-y-6 col-span-1">
-40:                 <div className="inline-flex items-center gap-1.5 text-[10px] tracking-widest text-yellow-400 font-black uppercase bg-yellow-400/10 px-3.5 py-1.5 rounded-full border border-yellow-400/20">
-41:                   ⚡ SKILL OVER CHANCE
-42:                 </div>
-43:                 <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-none">
-44:                   A Purely <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500">Skill-Based</span> Prediction Ecosystem
-45:                 </h2>
-46:                 <p className="text-zinc-400 text-sm leading-relaxed font-medium">
-47:                   Golden Goal completely redefines sports forecasts. Our platform has <span className="text-white font-bold">no elements of chance or gambling</span>. It is a competitive sports analytics simulator where success is determined entirely by analytical skill, strategic asset allocation, and leaderboard performance.
-48:                 </p>
-49:                 <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-zinc-500 font-mono">
-50:                   <span>❌ NO ROULETTE</span>
-51:                   <span>•</span>
-52:                   <span>❌ NO HOUSE EDGE</span>
-53:                   <span>•</span>
-54:                   <span>❌ NO CAPITAL RISK</span>
-55:                 </div>
-56:               </div>
-57: 
-58:               <div className="lg:col-span-7 col-span-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
-59:                 {/* Pillar 1 */}
-60:                 <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
-61:                   <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🧠</div>
-62:                   <h4 className="text-base font-bold text-white mb-2">Football Knowledge</h4>
-63:                   <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-64:                     Test your in-depth understanding of league standings, tactical matching, team rosters, and historical head-to-head dynamics.
-65:                   </p>
-66:                 </div>
-67: 
-68:                 {/* Pillar 2 */}
-69:                 <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
-70:                   <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">📈</div>
-71:                   <h4 className="text-base font-bold text-white mb-2">Prediction Accuracy</h4>
-72:                   <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-73:                     Your foresight is graded mathematically. Build long-term win streaks across diverse match outcome types to scale your reputation.
-74:                   </p>
-75:                 </div>
-76: 
-77:                 {/* Pillar 3 */}
-78:                 <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
-79:                   <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🏆</div>
-80:                   <h4 className="text-base font-bold text-white mb-2">Leaderboard Dominance</h4>
-81:                   <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-82:                     Outperform the global community. Dual ladders reward analytical brilliance and active community engagement with top ranks.
-83:                   </p>
-84:                 </div>
-85:               </div>
-86:             </div>
-87:           </div>
-88:         </section>
-89: 
-90:         {/* CORE PLATFORM FEATURES */}
-91:         <section className="w-full mb-32">
-92:           <div className="text-center mb-16 space-y-3">
-93:             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">Ecosystem Mechanics</h2>
-94:             <p className="text-zinc-500 max-w-2xl mx-auto font-medium">A cohesive sports analytics platform engineered for sustainability, gamification, and social virality.</p>
-95:           </div>
-96: 
-97:           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-98:             
-99:             {/* Feature 1 */}
-100:             <div className="bg-zinc-900/50 border border-white/5 hover:border-amber-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
-101:               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl group-hover:bg-amber-500/10 transition-all"></div>
-102:               <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 text-2xl animate-pulse">
-103:                 ⚽
-104:               </div>
-105:               <h3 className="text-xl font-bold mb-3 text-white">1. Football Predictor</h3>
-106:               <p className="text-zinc-400 text-sm leading-relaxed">
-107:                 Forecast football matches across 4 sub-markets: Match Outcome (1X2), Correct Score, BTTS, and Under/Over 2.5 goals. You retain full editing rights until kick-off.
-108:               </p>
-109:             </div>
-110: 
-111:             {/* Feature 2 */}
-112:             <div className="bg-zinc-900/50 border border-white/5 hover:border-red-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
-113:               <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl group-hover:bg-red-500/10 transition-all"></div>
-114:               <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-6 text-2xl">
-115:                 🎰
-116:               </div>
-117:               <h3 className="text-xl font-bold mb-3 text-white">2. Lucky Spin Wheel</h3>
-118:               <p className="text-zinc-400 text-sm leading-relaxed">
-119:                 A provably fair, high-fidelity interactive wheel game. Spin to win XP boosts or extra prediction quotas. Staking unlocks massive discounts and free daily spins.
-120:               </p>
-121:             </div>
-122: 
-123:             {/* Feature 3 */}
-124:             <div className="bg-zinc-900/50 border border-white/5 hover:border-emerald-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
-125:               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-all"></div>
-126:               <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-2xl">
-127:                 🛡️
-128:               </div>
-129:               <h3 className="text-xl font-bold mb-3 text-white">3. Deflationary Staking</h3>
-130:               <p className="text-zinc-400 text-sm leading-relaxed">
-131:                 Lock $GG (Tiers 1-4) to scale your prediction privileges and boost XP points. Early unstaking triggers a 10% penalty fee, with <strong>50% permanently burned</strong>.
-132:               </p>
-133:             </div>
+
+        {/* SKILL-BASED SYSTEM SHOWCASE */}
+        <section className="w-full max-w-5xl mb-32 select-none">
+          <div className="relative rounded-[32px] overflow-hidden border border-yellow-500/20 bg-gradient-to-b from-[#161026]/90 to-[#0e0a1b]/90 p-8 sm:p-12 shadow-[0_0_50px_rgba(245,158,11,0.05)] backdrop-blur-xl">
+            {/* Background vector glow */}
+            <div className="absolute -top-12 -right-12 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+            <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-purple-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-5 space-y-6 col-span-1">
+                <div className="inline-flex items-center gap-1.5 text-[10px] tracking-widest text-yellow-400 font-black uppercase bg-yellow-400/10 px-3.5 py-1.5 rounded-full border border-yellow-400/20">
+                  ⚡ SKILL OVER CHANCE
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-none">
+                  A Purely <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500">Skill-Based</span> Prediction Ecosystem
+                </h2>
+                <p className="text-zinc-400 text-sm leading-relaxed font-medium">
+                  Golden Goal completely redefines sports forecasts. Our platform has <span className="text-white font-bold">no elements of chance or gambling</span>. It is a competitive sports analytics simulator where success is determined entirely by analytical skill, strategic asset allocation, and leaderboard performance.
+                </p>
+                <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-zinc-500 font-mono">
+                  <span>❌ NO ROULETTE</span>
+                  <span>•</span>
+                  <span>❌ NO HOUSE EDGE</span>
+                  <span>•</span>
+                  <span>❌ NO CAPITAL RISK</span>
+                </div>
+              </div>
+
+              <div className="lg:col-span-7 col-span-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {/* Pillar 1 */}
+                <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
+                  <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🧠</div>
+                  <h4 className="text-base font-bold text-white mb-2">Football Knowledge</h4>
+                  <p className="text-zinc-400 text-xs leading-relaxed font-medium">
+                    Test your in-depth understanding of league standings, tactical matching, team rosters, and historical head-to-head dynamics.
+                  </p>
+                </div>
+
+                {/* Pillar 2 */}
+                <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
+                  <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">📈</div>
+                  <h4 className="text-base font-bold text-white mb-2">Prediction Accuracy</h4>
+                  <p className="text-zinc-400 text-xs leading-relaxed font-medium">
+                    Your foresight is graded mathematically. Build long-term win streaks across diverse match outcome types to scale your reputation.
+                  </p>
+                </div>
+
+                {/* Pillar 3 */}
+                <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
+                  <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🏆</div>
+                  <h4 className="text-base font-bold text-white mb-2">Leaderboard Dominance</h4>
+                  <p className="text-zinc-400 text-xs leading-relaxed font-medium">
+                    Outperform the global community. Dual ladders reward analytical brilliance and active community engagement with top ranks.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CORE PLATFORM FEATURES */}
+        <section className="w-full mb-32">
+          <div className="text-center mb-16 space-y-3">
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">Ecosystem Mechanics</h2>
+            <p className="text-zinc-500 max-w-2xl mx-auto font-medium">A cohesive sports analytics platform engineered for sustainability, gamification, and social virality.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {/* Feature 1 */}
+            <div className="bg-zinc-900/50 border border-white/5 hover:border-amber-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl group-hover:bg-amber-500/10 transition-all"></div>
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 text-2xl animate-pulse">
+                ⚽
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-white">1. Football Predictor</h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Forecast football matches across 4 sub-markets: Match Outcome (1X2), Correct Score, BTTS, and Under/Over 2.5 goals. You retain full editing rights until kick-off.
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="bg-zinc-900/50 border border-white/5 hover:border-red-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl group-hover:bg-red-500/10 transition-all"></div>
+              <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-6 text-2xl">
+                🎰
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-white">2. Lucky Spin Wheel</h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                A provably fair, high-fidelity interactive wheel game. Spin to win XP boosts or extra prediction quotas. Staking unlocks massive discounts and free daily spins.
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="bg-zinc-900/50 border border-white/5 hover:border-emerald-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-all"></div>
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-2xl">
+                🛡️
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-white">3. Deflationary Staking</h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Lock $GG (Tiers 1-4) to scale your prediction privileges and boost XP points. Early unstaking triggers a 10% penalty fee, with <strong>50% permanently burned</strong>.
+              </p>
+            </div>
 
             {/* Feature 4 */}
             <div className="bg-zinc-900/50 border border-white/5 hover:border-blue-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">

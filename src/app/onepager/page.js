@@ -89,7 +89,7 @@ export default function OnePagerPage() {
               <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 print:text-zinc-950 print:bg-none">
                 GOLDEN GOAL
               </h1>
-              <p className="text-xs sm:text-sm text-amber-400 font-bold uppercase tracking-widest print:text-amber-700">
+              <p className="text-xs sm:text-sm text-white font-bold uppercase tracking-widest print:text-zinc-500">
                 Solana's Premier Risk-Free Football Prediction Market
               </p>
             </div>

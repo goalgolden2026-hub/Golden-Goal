@@ -30,7 +30,13 @@ export default function WhitelistGuard({ children }) {
       if (connected && walletAddress) {
         document.cookie = `connected_wallet=${walletAddress}; path=/; max-age=86400; SameSite=Lax`;
       } else {
-        document.cookie = `connected_wallet=; path=/; max-age=0; SameSite=Lax`;
+        // Debounce cookie deletion to prevent deletion during page transitions / wallet re-initialization
+        const timer = setTimeout(() => {
+          if (!connected || !walletAddress) {
+            document.cookie = `connected_wallet=; path=/; max-age=0; SameSite=Lax`;
+          }
+        }, 1500);
+        return () => clearTimeout(timer);
       }
     }
   }, [connected, walletAddress, mounted]);

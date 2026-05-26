@@ -276,7 +276,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">1. Football Predictor</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                Forecast football matches across 4 sub-markets: Match Outcome (1X2), Correct Score, BTTS, and Under/Over 2.5 goals. You retain full editing rights until kick-off.
+                Analyze and forecast football fixtures across global leagues with a variety of predictive options. Fully manage your insights and strategy adjustments until kick-off.
               </p>
             </div>
 
@@ -284,11 +284,11 @@ export default function LandingPage() {
             <div className="bg-zinc-900/50 border border-white/5 hover:border-red-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl group-hover:bg-red-500/10 transition-all"></div>
               <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-6 text-2xl">
-                🎰
+                🎁
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">2. Lucky Spin Wheel</h3>
+              <h3 className="text-xl font-bold mb-3 text-white">2. Rewards Box Module</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                A provably fair, high-fidelity interactive wheel game. Spin to win XP boosts or extra prediction quotas. Staking unlocks massive discounts and a daily Rewards Box.
+                A provably fair gamified rewards module. Open daily boxes to claim experience points, leaderboard boosts, and extra prediction quotas. Active staking unlocks daily boxes for free.
               </p>
             </div>
 
@@ -300,7 +300,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">3. Deflationary Staking</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                Lock $GG (Tiers 1-4) to scale your prediction privileges and boost XP points. Early unstaking triggers a 10% penalty fee, with <strong>50% permanently burned</strong>.
+                Lock your $GG tokens to scale your prediction capabilities, boost your XP multiplier, and unlock VIP access levels. Drive premium value through long-term loyalty.
               </p>
             </div>
 
@@ -312,7 +312,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">4. Dual Leaderboards</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                Compete on dual tracks: a <strong>Pro Forecasters</strong> leaderboard segmenting analytical skills, and a <strong>Social Leaderboard</strong> rewarding referral outreach and viral points.
+                Compete on dual tracks: a <strong>Pro Forecasters</strong> leaderboard segmenting analytical skills, and a <strong>Social Leaderboard</strong> rewarding active community participation, platform engagement, and growth.
               </p>
             </div>
 

@@ -249,13 +249,10 @@ export default function RewardBoxPage() {
             </div>
 
             <div className="w-full max-w-4xl mx-auto px-4 py-12 flex flex-col items-center relative z-10">
-                <div className="text-center mb-12">
+                <div className="text-center mb-8">
                     <h1 className="text-4xl md:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-amber-600 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)] tracking-wider">
                         REWARDS BOX
                     </h1>
-                    <p className="text-zinc-300 font-medium">
-                        Get <span className="text-yellow-400 font-bold">1 Free Rewards Box</span> daily with 30-Day locking, subsequent openings cost just 25 XP!
-                    </p>
                 </div>
 
             {/* Custom CSS Keyframes for Chest Shaking */}

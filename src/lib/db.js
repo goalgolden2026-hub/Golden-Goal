@@ -42,6 +42,9 @@ export async function getDb() {
                 );
             `;
 
+            // Add updatedAt column if it doesn't exist (for existing DBs)
+            await sql`ALTER TABLE bets ADD COLUMN IF NOT EXISTS "updatedAt" TIMESTAMP;`;
+
             await sql`
                 CREATE TABLE IF NOT EXISTS stakes (
                     id SERIAL PRIMARY KEY,

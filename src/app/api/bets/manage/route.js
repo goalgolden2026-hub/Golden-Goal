@@ -60,7 +60,7 @@ export async function PUT(request) {
             await sql`INSERT INTO treasury_logs ("walletAddress", amount, type) VALUES (${walletAddress}, 50, 'REWARD_POOL_CHANGE_BET')`;
 
             // Update bet
-            await sql`UPDATE bets SET prediction = ${newPrediction} WHERE id = ${betId}`;
+            await sql`UPDATE bets SET prediction = ${newPrediction}, "updatedAt" = CURRENT_TIMESTAMP WHERE id = ${betId}`;
             
             return NextResponse.json({ success: true, message: "Prediction updated successfully. 100 Tokens deducted." });
 

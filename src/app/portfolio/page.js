@@ -141,7 +141,10 @@ export default function Portfolio() {
                                       <span className="ml-1">{TEAM_FLAGS[bet.teamB] || '🏳️'}</span>
                                   </h3>
                                   <p className="text-xs text-amber-500 mt-1 uppercase tracking-wider font-bold">{bet.betType?.replace('_', ' ') || 'MAIN'}</p>
-                                  <p className="text-xs text-zinc-500 mt-1">Placed on: {new Date(bet.timestamp).toLocaleString()}</p>
+                                  <p className="text-xs text-zinc-500 mt-1">
+                                      Placed on: {new Date(bet.timestamp).toLocaleString()}
+                                      {bet.updatedAt && <span className="ml-2 pl-2 border-l border-zinc-800 text-amber-500/80">Changed: {new Date(bet.updatedAt).toLocaleString()}</span>}
+                                  </p>
                               </div>
                               <div className="flex items-center gap-4 bg-zinc-950 p-3 rounded-lg border border-zinc-800">
                                   <div className="text-right">

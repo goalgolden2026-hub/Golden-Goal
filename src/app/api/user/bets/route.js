@@ -23,7 +23,7 @@ export async function GET(request) {
 
         // Fetch Bets
         const { rows: bets } = await sql`
-            SELECT b.id as "betId", b.prediction, b."betType", b.status as "betStatus", b.timestamp, 
+            SELECT b.id as "betId", b.prediction, b."betType", b.status as "betStatus", b.timestamp, b."updatedAt",
                    m.id as "marketId", m."teamA", m."teamB", m."matchDate", m.status as "marketStatus", m."pointsReward"
             FROM bets b
             JOIN markets m ON b."marketId" = m.id

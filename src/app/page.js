@@ -83,9 +83,9 @@ export default function LandingPage() {
           </div>
 
           <h1 className="text-5xl sm:text-7xl font-black mb-6 tracking-tight leading-none text-white">
-            Predict Football. <br />
+            Football Prediction <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500">
-              Risk-Free. Win Rewards.
+              Competition Platform
             </span>
           </h1>
 

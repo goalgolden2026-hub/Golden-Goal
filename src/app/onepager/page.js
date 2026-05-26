@@ -23,14 +23,14 @@ export default function OnePagerPage() {
           <svg className="w-4 h-4 text-zinc-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
           </svg>
-          <span>PDF / Yazdır</span>
+          <span>Print / PDF</span>
         </button>
         
         <Link
           href="/"
           className="px-4 py-3 bg-zinc-900/90 border border-white/10 hover:border-yellow-500/30 hover:bg-yellow-500/[0.04] text-zinc-300 hover:text-white font-bold rounded-full shadow-lg backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-300 text-xs flex items-center gap-1.5"
         >
-          <span>Ana Sayfa</span>
+          <span>Home Page</span>
         </Link>
       </div>
 
@@ -90,7 +90,7 @@ export default function OnePagerPage() {
                 GOLDEN <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 print:text-amber-600 print:bg-none">GOAL</span>
               </h1>
               <p className="text-xs sm:text-sm text-amber-400 font-bold uppercase tracking-widest print:text-amber-700">
-                Solana'nın Risk-Free Futbol Tahmin Piyasası
+                Solana's Premier Risk-Free Football Prediction Market
               </p>
             </div>
           </div>
@@ -109,11 +109,10 @@ export default function OnePagerPage() {
         {/* HERO SECTION / THE HOOK */}
         <div className="bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-3xl p-6 mb-8 print-bg-card print:p-5 print:mb-5">
           <h2 className="text-lg font-black tracking-wider text-amber-400 uppercase mb-3 print:text-amber-800">
-            📌 Vizyon & Proje Özeti
+            📌 Vision & Project Summary
           </h2>
           <p className="text-sm text-zinc-300 leading-relaxed print:text-zinc-800">
-            Golden Goal; geleneksel spor tahmin ve bahis platformlarındaki <strong className="text-white print:text-zinc-900">finansal kayıp risklerini tamamen ortadan kaldıran</strong>, Solana altyapılı yenilikçi bir **Beceri ve Analiz Piyasası (Skill-Based Prediction Market)** simülatörüdür. 
-            Kullanıcılar platformda tahmin yapmak için sermaye kaybetmek yerine, cüzdanlarında token bulundurur veya kilitler (`Lock`). Böylece taraftar heyecanı ve futbol analitiği, sıfır risk barındıran modern bir Web3 oyunlaştırma ekosisteminde bir araya gelir.
+            Golden Goal is a pioneering <strong className="text-white print:text-zinc-900">Skill-Based Prediction Market</strong> simulator built on Solana, designed to <strong className="text-white print:text-zinc-900">entirely eliminate the financial loss risks</strong> associated with traditional sports betting platforms. Instead of losing or risking capital to make predictions, players hold or lock (<code className="text-amber-400">Lock</code>) their tokens in their wallets. This seamlessly merges fan passion, analytical skill, and Web3 gamification into a completely risk-free ecosystem.
           </p>
         </div>
 
@@ -123,12 +122,12 @@ export default function OnePagerPage() {
           <div className="bg-red-500/[0.02] border border-red-500/10 rounded-2xl p-5 space-y-3 print:bg-zinc-50 print:border-zinc-200">
             <div className="flex items-center gap-2 text-red-400 print:text-zinc-800">
               <span className="text-xl">💸</span>
-              <h3 className="font-extrabold text-sm uppercase tracking-wider">Kritik Sektör Problemleri</h3>
+              <h3 className="font-extrabold text-sm uppercase tracking-wider">Critical Industry Problems</h3>
             </div>
             <ul className="space-y-2 text-xs text-zinc-400 leading-relaxed print:text-zinc-700 list-disc list-inside">
-              <li><strong className="text-zinc-300 print:text-zinc-900">Yüksek Finansal Risk:</strong> Geleneksel tahmin ve bahis siteleri taraftarları sürekli sermaye kaybetme tehlikesiyle karşı karşıya bırakır.</li>
-              <li><strong className="text-zinc-300 print:text-zinc-900">Pasif Fan Tokenları:</strong> Piyasada bulunan taraftar tokenlarının gerçek bir kullanım senaryosu veya güçlü bir deflasyonist mekanizması yoktur.</li>
-              <li><strong className="text-zinc-300 print:text-zinc-900">Geri Beslemesiz Topluluk:</strong> Sosyal paylaşım ve liderlik rekabetinin olmaması, kullanıcıları izole eder.</li>
+              <li><strong className="text-zinc-300 print:text-zinc-900">High Financial Risk:</strong> Traditional sports forecasting platforms force casual fans to constantly risk capital just to participate, creating high stress.</li>
+              <li><strong className="text-zinc-300 print:text-zinc-900">Passive Fan Tokens:</strong> Existing sports fan tokens lack concrete platform utility sinks or deflationary mechanisms, driving high sell pressure.</li>
+              <li><strong className="text-zinc-300 print:text-zinc-900">Isolated Action:</strong> Legacy platforms lack viral SocialFi integrations, leaderboard competitions, and communal feedback loops, leaving players isolated.</li>
             </ul>
           </div>
 
@@ -136,12 +135,12 @@ export default function OnePagerPage() {
           <div className="bg-emerald-500/[0.02] border border-emerald-500/10 rounded-2xl p-5 space-y-3 print:bg-zinc-50 print:border-zinc-200">
             <div className="flex items-center gap-2 text-emerald-400 print:text-zinc-800">
               <span className="text-xl">🛡️</span>
-              <h3 className="font-extrabold text-sm uppercase tracking-wider">Golden Goal Çözümleri</h3>
+              <h3 className="font-extrabold text-sm uppercase tracking-wider">Golden Goal Solutions</h3>
             </div>
             <ul className="space-y-2 text-xs text-zinc-400 leading-relaxed print:text-zinc-700 list-disc list-inside">
-              <li><strong className="text-zinc-300 print:text-zinc-900">Sıfır Sermaye Kaybı (%0 Risk):</strong> Katılımcılar sermayelerini kaybetmez. Sadece token kilitleyerek günlük ücretsiz tahmin hakkı kazanır.</li>
-              <li><strong className="text-zinc-300 print:text-zinc-900">Derin Token Faydası ($GG):</strong> $GG tokenları kilitlendikçe VIP çarpanları, günlük ekstra tahmin kotaları ve Rewards Box hakları aktifleşir.</li>
-              <li><strong className="text-zinc-300 print:text-zinc-900">Veriye Dayalı Liderlik Ligleri:</strong> Pro ve Social olmak üzere çift liderlik tablosuyla en iyi analistler haftalık havuzdan ödüllendirilir.</li>
+              <li><strong className="text-zinc-300 print:text-zinc-900">Zero Capital Loss (0% Risk):</strong> Players make predictions completely free of charge. Locked tokens are never spent or lost, ensuring a safe fan experience.</li>
+              <li><strong className="text-zinc-300 print:text-zinc-900">Deep Token Utility ($GG):</strong> Ecosystem utility locks directly grant premium VIP multipliers, extra daily prediction quotas, and daily Rewards Box openings.</li>
+              <li><strong className="text-zinc-300 print:text-zinc-900">Data-Driven Leaderboards:</strong> Features a dual leaderboard system (Pro & Social) to reward top analytical minds and community champions weekly.</li>
             </ul>
           </div>
         </div>
@@ -149,28 +148,28 @@ export default function OnePagerPage() {
         {/* CORE PLATFORM FEATURES */}
         <div className="bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-3xl p-6 mb-8 print-bg-card print:p-5 print:mb-5">
           <h2 className="text-lg font-black tracking-wider text-amber-400 uppercase mb-4 print:text-amber-800">
-            ⚡ Temel Ekosistem Bileşenleri
+            ⚡ Core Ecosystem Pillars
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             <div className="space-y-1.5 text-center sm:text-left">
               <div className="text-xl">🎯</div>
               <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">1. Football Predictor</h4>
               <p className="text-[11px] text-zinc-400 leading-relaxed print:text-zinc-700">
-                Global liglerdeki maçlar üzerine kurulu beceri tabanlı tahmin modülü. Kullanıcılar futbol birikimlerini konuşturarak tahmin yapar.
+                A skill-based prediction market where users forecast global league matches, leveraging their football acumen and analytical skills.
               </p>
             </div>
             <div className="space-y-1.5 text-center sm:text-left border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-5 print:border-zinc-200">
               <div className="text-xl">🔒</div>
               <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">2. Multi-Tier Locking</h4>
               <p className="text-[11px] text-zinc-400 leading-relaxed print:text-zinc-700">
-                1 günden 30 güne kadar değişen kilit süreleriyle token kilitleyen VIP Locking sistemi. Kilitleme miktarı arttıkça platform ayrıcalıkları katlanır.
+                A robust utility locker offering lockup options from 1 to 30 days. Increasing locked amounts directly unlocks premium platform perks.
               </p>
             </div>
             <div className="space-y-1.5 text-center sm:text-left border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-5 print:border-zinc-200">
               <div className="text-xl">🎁</div>
               <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">3. Rewards Box Module</h4>
               <p className="text-[11px] text-zinc-400 leading-relaxed print:text-zinc-700">
-                Günlük ücretsiz veya indirimli açılabilen, içerisinden platform içi ekstra tahmin kotası ve XP kazandıran provably fair ödül havuzları.
+                A provably fair daily drops engine that offers extra prediction quotas and booster XP, completely free or heavily discounted for VIP lockers.
               </p>
             </div>
           </div>
@@ -179,54 +178,54 @@ export default function OnePagerPage() {
         {/* STAKING/LOCKING TIERS TABLE */}
         <div className="bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-3xl p-6 mb-8 print-bg-card print:p-5 print:mb-5">
           <h2 className="text-lg font-black tracking-wider text-amber-400 uppercase mb-4 print:text-amber-800">
-            📈 VIP Token Kilitleme Kademeleri (Locking Tiers)
+            📈 VIP Token Locking Tiers
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
                 <tr className="border-b border-white/10 text-zinc-400 font-bold print:border-zinc-200 print:text-zinc-800">
-                  <th className="py-2.5 px-3">Seviye (Tier)</th>
-                  <th className="py-2.5 px-3">Gereksinim</th>
-                  <th className="py-2.5 px-3">Günlük Tahmin Kotası</th>
-                  <th className="py-2.5 px-3">XP Çarpanı</th>
-                  <th className="py-2.5 px-3">Rewards Box Açım Maliyeti</th>
+                  <th className="py-2.5 px-3">Level (Tier)</th>
+                  <th className="py-2.5 px-3">Requirement</th>
+                  <th className="py-2.5 px-3">Daily Prediction Limit</th>
+                  <th className="py-2.5 px-3">XP Multiplier</th>
+                  <th className="py-2.5 px-3">Rewards Box Cost</th>
                 </tr>
               </thead>
               <tbody className="text-zinc-300 divide-y divide-white/5 print:text-zinc-800 print:divide-zinc-200">
                 <tr>
                   <td className="py-2 px-3 font-semibold print:text-zinc-950">Tier 0 (Holder)</td>
-                  <td className="py-2 px-3">Cüzdanda Min 10,000 GG</td>
-                  <td className="py-2 px-3">Standart Sınır</td>
+                  <td className="py-2 px-3">Min 10,000 GG in Wallet</td>
+                  <td className="py-2 px-3">Base Limit</td>
                   <td className="py-2 px-3">1.0x</td>
                   <td className="py-2 px-3">100 XP</td>
                 </tr>
                 <tr className="bg-emerald-500/5 print:bg-zinc-100/50">
                   <td className="py-2 px-3 font-semibold text-emerald-400 print:text-emerald-800">Tier 1 (Soft Lock)</td>
-                  <td className="py-2 px-3 font-medium">100 GG (1 Gün Kilit)</td>
-                  <td className="py-2 px-3">+1 Tahmin Hak / Gün</td>
+                  <td className="py-2 px-3 font-medium">100 GG (1-Day Lock)</td>
+                  <td className="py-2 px-3">+1 Prediction / Day</td>
                   <td className="py-2 px-3">1.0x</td>
-                  <td className="py-2 px-3">75 XP (%25 İndirimli)</td>
+                  <td className="py-2 px-3">75 XP (25% Off)</td>
                 </tr>
                 <tr>
                   <td className="py-2 px-3 font-semibold text-blue-400 print:text-blue-800">Tier 2 (Weekly)</td>
-                  <td className="py-2 px-3 font-medium">500 GG (7 Gün Kilit)</td>
-                  <td className="py-2 px-3">+3 Tahmin Hak / Gün</td>
+                  <td className="py-2 px-3 font-medium">500 GG (7-Day Lock)</td>
+                  <td className="py-2 px-3">+3 Predictions / Day</td>
                   <td className="py-2 px-3">1.0x</td>
-                  <td className="py-2 px-3">50 XP (%50 İndirimli)</td>
+                  <td className="py-2 px-3">50 XP (50% Off)</td>
                 </tr>
                 <tr className="bg-purple-500/5 print:bg-zinc-100/50">
                   <td className="py-2 px-3 font-semibold text-purple-400 print:text-purple-800">Tier 3 (Fortnight)</td>
-                  <td className="py-2 px-3 font-medium">1,000 GG (15 Gün Kilit)</td>
-                  <td className="py-2 px-3">+5 Tahmin Hak / Gün</td>
+                  <td className="py-2 px-3 font-medium">1,000 GG (15-Day Lock)</td>
+                  <td className="py-2 px-3">+5 Predictions / Day</td>
                   <td className="py-2 px-3">1.1x Booster</td>
-                  <td className="py-2 px-3">25 XP (%75 İndirimli)</td>
+                  <td className="py-2 px-3">25 XP (75% Off)</td>
                 </tr>
                 <tr className="bg-yellow-500/5 print:bg-yellow-50/50">
                   <td className="py-2 px-3 font-semibold text-yellow-400 print:text-amber-800">Tier 4 (Monthly)</td>
-                  <td className="py-2 px-3 font-medium">5,000 GG (30 Gün Kilit)</td>
-                  <td className="py-2 px-3 font-black">+10 Tahmin Hak / Gün</td>
+                  <td className="py-2 px-3 font-medium">5,000 GG (30-Day Lock)</td>
+                  <td className="py-2 px-3 font-black">+10 Predictions / Day</td>
                   <td className="py-2 px-3 font-black">1.25x Booster ⚡</td>
-                  <td className="py-2 px-3 font-black text-yellow-400 print:text-amber-800">Hergün 1 Tane Ücretsiz 🎁</td>
+                  <td className="py-2 px-3 font-black text-yellow-400 print:text-amber-800">1 Free Daily 🎁</td>
                 </tr>
               </tbody>
             </table>
@@ -238,20 +237,20 @@ export default function OnePagerPage() {
           {/* TECHNOLOGY STACK */}
           <div className="bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-3xl p-5 print-bg-card">
             <h3 className="text-sm font-black tracking-wider text-amber-400 uppercase mb-3 print:text-amber-800">
-              🛠️ Güçlü Altyapı & Güvenlik
+              🛠️ Robust Infrastructure & Security
             </h3>
             <ul className="space-y-2 text-xs text-zinc-400 print:text-zinc-700 leading-relaxed">
               <li className="flex items-start gap-2">
                 <span className="text-yellow-500">✔</span>
-                <span><strong className="text-zinc-200 print:text-zinc-900">Solana Hızı & Maliyeti:</strong> Web3 işlemlerinin neredeyse anında ve sıfıra yakın gas ücretleriyle gerçekleşmesini sağlayan Solana Entegrasyonu.</span>
+                <span><strong className="text-zinc-200 print:text-zinc-900">Solana Speed & Low Cost:</strong> Utilizes Solana's low gas fees and sub-second execution speeds for absolute efficiency.</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-yellow-500">✔</span>
-                <span><strong className="text-zinc-200 print:text-zinc-900">Kriptografik İmza (`tweetnacl`):</strong> API rotalarında cüzdan taklitlerini tamamen engelleyen matematiksel şifreli güvenlik kapıları.</span>
+                <span><strong className="text-zinc-200 print:text-zinc-900">Cryptographic Signatures (`tweetnacl`):</strong> Uses Ed25519 signatures to verify lock/unlock requests, securely preventing any wallet impersonation or bot requests on server APIs.</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-yellow-500">✔</span>
-                <span><strong className="text-zinc-200 print:text-zinc-900">AWS Cloud Sinerjisi:</strong> Hızlı sayfa açılışları ve kesintisiz API yönetimi sağlayan kurumsal Next.js ve AWS bulut ağları.</span>
+                <span><strong className="text-zinc-200 print:text-zinc-900">AWS Cloud Synergy:</strong> Combines robust Next.js server-side routing with AWS global clusters to ensure fast loads and reliable, low-latency API handling.</span>
               </li>
             </ul>
           </div>
@@ -259,24 +258,24 @@ export default function OnePagerPage() {
           {/* ROADMAP PLAN */}
           <div className="bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-3xl p-5 print-bg-card">
             <h3 className="text-sm font-black tracking-wider text-amber-400 uppercase mb-3 print:text-amber-800">
-              📅 Gelecek Yol Haritası
+              📅 Growth Roadmap
             </h3>
             <div className="space-y-3 text-[11px] text-zinc-400 print:text-zinc-700 font-medium">
               <div className="flex items-center justify-between border-b border-white/5 pb-1 print:border-zinc-200">
                 <span>Phase 2: Platform Launch & Whitelist Beta</span>
-                <span className="text-[9px] bg-yellow-500/10 text-yellow-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-yellow-50 print:text-yellow-800">Aktif Testte</span>
+                <span className="text-[9px] bg-yellow-500/10 text-yellow-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-yellow-50 print:text-yellow-800">Active Beta</span>
               </div>
               <div className="flex items-center justify-between border-b border-white/5 pb-1 print:border-zinc-200">
                 <span>Phase 3: Football Predictor & Leaderboards</span>
-                <span className="text-[9px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-blue-50 print:text-blue-800">Çok Yakında</span>
+                <span className="text-[9px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-blue-50 print:text-blue-800">Coming Soon</span>
               </div>
               <div className="flex items-center justify-between border-b border-white/5 pb-1 print:border-zinc-200">
                 <span>Phase 4: Rewards Box & Multi-Tier Locking</span>
-                <span className="text-[9px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-purple-50 print:text-purple-800">Geliştiriliyor</span>
+                <span className="text-[9px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-purple-50 print:text-purple-800">In Development</span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Phase 5: Mobile Apps & DAO Governance</span>
-                <span className="text-[9px] bg-zinc-500/10 text-zinc-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-zinc-100 print:text-zinc-600">Planlandı</span>
+                <span className="text-[9px] bg-zinc-500/10 text-zinc-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-zinc-100 print:text-zinc-600">Planned</span>
               </div>
             </div>
           </div>
@@ -309,7 +308,7 @@ export default function OnePagerPage() {
         {/* FOOTER & CTA */}
         <div className="mt-8 border-t border-white/10 pt-4 flex flex-col sm:flex-row items-center justify-between text-[10px] text-zinc-500 print:border-zinc-200 print:text-zinc-600 print:pt-3 print:pb-0">
           <div className="mb-2 sm:mb-0 text-center sm:text-left print:text-left">
-            <span>© 2026 Golden Goal. Tüm Hakları Saklıdır.</span>
+            <span>© 2026 Golden Goal. All Rights Reserved.</span>
             <span className="mx-2 hidden sm:inline">•</span>
             <span className="text-zinc-400 print:text-zinc-700">Not by Chance, but by Skill & Analysis.</span>
           </div>

@@ -12,14 +12,94 @@ const WalletMultiButtonDynamic = dynamic(
 );
 
 const WHEEL_SLICES = [
-    { label: 'Miss', color: '#4c1d95' },         // Deep Purple
-    { label: '+1 Prediction', color: '#f97316' }, // Orange
-    { label: '+3 Predictions', color: '#22c55e' },// Green
-    { label: '+5 Predictions', color: '#3b82f6' },// Blue
-    { label: '+100 XP Points', color: '#eab308' }, // Yellow
-    { label: '+250 XP Points', color: '#6366f1' }, // Indigo
-    { label: '+500 XP Points', color: '#d946ef' }, // Fuchsia
-    { label: '+1000 XP Points', color: '#be185d' } // Pink/Rose
+    { 
+        label: 'Miss', 
+        displayLabel: 'Miss',
+        color: '#4c1d95', 
+        rarity: 'Common', 
+        subtext: 'Try again tomorrow', 
+        icon: '💨',
+        gradient: 'from-zinc-800/40 to-zinc-900/60',
+        borderColor: 'border-zinc-800 hover:border-zinc-700/50',
+        rarityColor: 'text-zinc-400 bg-zinc-800/50'
+    },
+    { 
+        label: '+1 Prediction', 
+        displayLabel: '+1 Prediction',
+        color: '#f97316', 
+        rarity: 'Common', 
+        subtext: 'Predict limits booster', 
+        icon: '🎫',
+        gradient: 'from-orange-950/20 to-zinc-900/40',
+        borderColor: 'border-orange-500/20 hover:border-orange-500/40',
+        rarityColor: 'text-orange-400 bg-orange-950/40 border border-orange-500/20'
+    },
+    { 
+        label: '+3 Predictions', 
+        displayLabel: '+3 Predictions',
+        color: '#22c55e', 
+        rarity: 'Rare', 
+        subtext: 'Predict limits booster', 
+        icon: '🎟️',
+        gradient: 'from-emerald-950/20 to-zinc-900/40',
+        borderColor: 'border-emerald-500/20 hover:border-emerald-500/40',
+        rarityColor: 'text-emerald-400 bg-emerald-950/40 border border-emerald-500/20'
+    },
+    { 
+        label: '+5 Predictions', 
+        displayLabel: '+5 Predictions',
+        color: '#3b82f6', 
+        rarity: 'Epic', 
+        subtext: 'Predict limits booster', 
+        icon: '⚡',
+        gradient: 'from-blue-950/30 to-zinc-900/40',
+        borderColor: 'border-blue-500/30 hover:border-blue-500/50',
+        rarityColor: 'text-blue-400 bg-blue-950/40 border border-blue-500/30'
+    },
+    { 
+        label: '+100 XP Points', 
+        displayLabel: '+100 XP',
+        color: '#eab308', 
+        rarity: 'Common', 
+        subtext: 'Instant XP boost', 
+        icon: '🪙',
+        gradient: 'from-yellow-950/20 to-zinc-900/40',
+        borderColor: 'border-yellow-500/20 hover:border-yellow-500/40',
+        rarityColor: 'text-yellow-400 bg-yellow-950/40 border border-yellow-500/20'
+    },
+    { 
+        label: '+250 XP Points', 
+        displayLabel: '+250 XP',
+        color: '#6366f1', 
+        rarity: 'Rare', 
+        subtext: 'Instant XP boost', 
+        icon: '💎',
+        gradient: 'from-indigo-950/20 to-zinc-900/40',
+        borderColor: 'border-indigo-500/20 hover:border-indigo-500/40',
+        rarityColor: 'text-indigo-400 bg-indigo-950/40 border border-indigo-500/20'
+    },
+    { 
+        label: '+500 XP Points', 
+        displayLabel: '+500 XP',
+        color: '#d946ef', 
+        rarity: 'Epic', 
+        subtext: 'Instant XP boost', 
+        icon: '🔥',
+        gradient: 'from-fuchsia-950/30 to-zinc-900/40',
+        borderColor: 'border-fuchsia-500/30 hover:border-fuchsia-500/50',
+        rarityColor: 'text-fuchsia-400 bg-fuchsia-950/40 border border-fuchsia-500/30'
+    },
+    { 
+        label: '+1000 XP Points', 
+        displayLabel: 'Mega +1000 XP',
+        color: '#be185d', 
+        rarity: 'Legendary', 
+        subtext: 'Jackpot XP boost', 
+        icon: '👑',
+        gradient: 'from-amber-950/40 via-zinc-900/50 to-amber-950/20',
+        borderColor: 'border-yellow-500/50 hover:border-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.2)]',
+        rarityColor: 'text-yellow-300 bg-gradient-to-r from-amber-600 to-yellow-500 border border-yellow-400 font-extrabold animate-pulse'
+    }
 ];
 
 export default function RewardBoxPage() {
@@ -196,6 +276,30 @@ export default function RewardBoxPage() {
                 .animate-chest-shake {
                     animation: chest-shake 0.3s infinite;
                 }
+                @keyframes shimmer {
+                    100% { transform: translateX(100%); }
+                }
+                .shimmer-effect {
+                    position: relative;
+                    overflow: hidden;
+                }
+                .shimmer-effect::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    transform: translateX(-100%);
+                    background-image: linear-gradient(
+                        90deg,
+                        rgba(255, 255, 255, 0) 0%,
+                        rgba(255, 255, 255, 0.05) 20%,
+                        rgba(255, 255, 255, 0.15) 60%,
+                        rgba(255, 255, 255, 0) 100%
+                    );
+                    animation: shimmer 3s infinite;
+                }
             `}</style>
 
             {/* GOLDEN MYSTERY CHEST CONTAINER */}
@@ -267,19 +371,52 @@ export default function RewardBoxPage() {
             </div>
 
             {/* POTENTIAL REWARDS LIST */}
-            <div className="w-full max-w-xl mb-12 relative z-10 text-center select-none">
-                <span className="text-[10px] font-extrabold tracking-widest text-zinc-500 uppercase block mb-4">
-                    🎁 Potential Rewards Chest Pool
-                </span>
-                <div className="flex flex-wrap justify-center gap-2">
-                    {WHEEL_SLICES.map((slice, i) => (
-                        <span 
-                            key={i} 
-                            className="text-[10px] font-bold px-3.5 py-2 rounded-full border border-white/5 bg-zinc-900/40 text-zinc-300 hover:text-white hover:border-yellow-500/20 transition-all cursor-default"
-                        >
-                            {slice.label}
-                        </span>
-                    ))}
+            <div className="w-full max-w-4xl mb-14 relative z-10 select-none">
+                <div className="text-center mb-6">
+                    <span className="text-xs font-black tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 uppercase block">
+                        🎁 Potential Rewards Chest Pool
+                    </span>
+                    <p className="text-[10px] text-zinc-500 mt-1">Hover over rewards to inspect their properties and rarity levels</p>
+                </div>
+                
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    {WHEEL_SLICES.map((slice, i) => {
+                        const isLegendary = slice.rarity === 'Legendary';
+                        const isEpic = slice.rarity === 'Epic';
+                        
+                        return (
+                            <div 
+                                key={i} 
+                                className={`relative group p-4 rounded-2xl border transition-all duration-300 flex flex-col justify-between items-center text-center cursor-default bg-gradient-to-b ${slice.gradient} ${slice.borderColor} hover:scale-[1.03] hover:shadow-[0_10px_25px_rgba(0,0,0,0.4)] ${isLegendary || isEpic ? 'shimmer-effect' : ''}`}
+                            >
+                                {/* Glow Halo behind icon */}
+                                <div 
+                                    className="absolute w-12 h-12 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity top-4"
+                                    style={{ backgroundColor: slice.color }}
+                                ></div>
+
+                                {/* Rarity Tag */}
+                                <span className={`text-[8px] tracking-wider uppercase font-black px-2 py-0.5 rounded-full mb-3 self-center ${slice.rarityColor}`}>
+                                    {slice.rarity}
+                                </span>
+
+                                {/* Icon Display */}
+                                <div className="text-3xl mb-3 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 drop-shadow-[0_5px_10px_rgba(0,0,0,0.3)]">
+                                    {slice.icon}
+                                </div>
+
+                                {/* Title / Main Amount */}
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-black text-white group-hover:text-yellow-400 transition-colors duration-200">
+                                        {slice.displayLabel}
+                                    </span>
+                                    <span className="text-[9px] text-zinc-500 font-medium mt-0.5">
+                                        {slice.subtext}
+                                    </span>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
 

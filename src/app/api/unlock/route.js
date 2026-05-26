@@ -1,10 +1,42 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import nacl from 'tweetnacl';
+import bs58 from 'bs58';
+
+function verifySignature(walletAddress, message, signatureHex) {
+    try {
+        const messageBytes = new TextEncoder().encode(message);
+        const signatureBytes = new Uint8Array(
+            signatureHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16))
+        );
+        const publicKeyBytes = bs58.decode(walletAddress);
+        return nacl.sign.detached.verify(messageBytes, signatureBytes, publicKeyBytes);
+    } catch (err) {
+        console.error("verifySignature error:", err);
+        return false;
+    }
+}
 
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { walletAddress } = body;
+        const { walletAddress, message, signature } = body;
+
+        // Perform Cryptographic Signature Verification
+        if (!message || !signature) {
+            return NextResponse.json({ success: false, error: "Cryptographic authentication required. Please sign the transaction." }, { status: 401 });
+        }
+
+        // Check if message format matches unlock request
+        if (!message.includes("Authenticate Golden Goal Unlock Transaction") || !message.includes(walletAddress)) {
+            return NextResponse.json({ success: false, error: "Invalid signature message payload." }, { status: 400 });
+        }
+
+        // Verify signature
+        const isVerified = verifySignature(walletAddress, message, signature);
+        if (!isVerified) {
+            return NextResponse.json({ success: false, error: "Signature verification failed. Impersonation blocked." }, { status: 401 });
+        }
 
         if (!walletAddress) {
             return NextResponse.json({ success: false, error: "Missing walletAddress" }, { status: 400 });

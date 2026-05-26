@@ -5,7 +5,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import CustomModal from '@/components/CustomModal';
 
 export default function LockingPage() {
-  const { publicKey, connected } = useWallet();
+  const { publicKey, connected, signMessage } = useWallet();
   const [loading, setLoading] = useState(false);
   const [activeLock, setActiveLock] = useState(null);
   const [message, setMessage] = useState({ text: '', type: '' });
@@ -179,13 +179,26 @@ export default function LockingPage() {
     
     setLoading(true);
     try {
+      if (!signMessage) {
+        showMessage("Wallet does not support message signing. Please use Phantom, Backpack or Solflare.", "error");
+        setLoading(false);
+        return;
+      }
+
+      const msgText = `Authenticate Golden Goal Lock Transaction:\nWallet: ${publicKey.toString()}\nAmount: ${minAmount}\nTier: ${tierId}\nTimestamp: ${Date.now()}`;
+      const encodedMessage = new TextEncoder().encode(msgText);
+      const signatureBytes = await signMessage(encodedMessage);
+      const signatureHex = Array.from(signatureBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+
       const res = await fetch('/api/lock', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           walletAddress: publicKey.toString(),
           tier: tierId,
-          amount: minAmount
+          amount: minAmount,
+          message: msgText,
+          signature: signatureHex
         })
       });
       const data = await res.json();
@@ -196,7 +209,7 @@ export default function LockingPage() {
         showMessage(data.error, "error");
       }
     } catch (err) {
-      showMessage("Network error.", "error");
+      showMessage("Lock cancelled or network error.", "error");
     }
     setLoading(false);
   };
@@ -236,10 +249,32 @@ export default function LockingPage() {
       onConfirm: async () => {
         setLoading(true);
         try {
+          if (!signMessage) {
+            setModalConfig({
+              isOpen: true,
+              title: "Error",
+              message: "Wallet does not support message signing.",
+              type: "error",
+              confirmText: "Close",
+              onConfirm: null
+            });
+            setLoading(false);
+            return;
+          }
+
+          const msgText = `Authenticate Golden Goal Unlock Transaction:\nWallet: ${publicKey.toString()}\nTimestamp: ${Date.now()}`;
+          const encodedMessage = new TextEncoder().encode(msgText);
+          const signatureBytes = await signMessage(encodedMessage);
+          const signatureHex = Array.from(signatureBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+
           const res = await fetch('/api/unlock', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ walletAddress: publicKey.toString() })
+            body: JSON.stringify({
+              walletAddress: publicKey.toString(),
+              message: msgText,
+              signature: signatureHex
+            })
           });
           const data = await res.json();
           if (data.success) {

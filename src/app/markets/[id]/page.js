@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { TEAM_FLAGS } from '@/lib/flags';
 import CustomModal from '@/components/CustomModal';
 

@@ -71,7 +71,7 @@ export default function Home() {
                           </div>
                       </div>
 
-                      {/* Betting Buttons */}
+                      {/* Prediction Action Buttons */}
                       <div className="flex w-full gap-2 mt-2">
                           <button 
                               disabled={m.isLocked}

@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Golden Goal | Solana Prediction Market",
-  description: "Bet on the future with Golden Goal prediction markets on Solana.",
+  description: "Forecast the future with Golden Goal competitive prediction markets on Solana.",
 };
 
 export default function RootLayout({ children }) {

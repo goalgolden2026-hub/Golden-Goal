@@ -12,13 +12,13 @@ const WalletMultiButtonDynamic = dynamic(
 
 const WHEEL_SLICES = [
     { label: 'Miss', color: '#4c1d95' },         // Deep Purple
-    { label: '1 Extra Bet', color: '#f97316' },  // Orange
-    { label: '3 Extra Bets', color: '#22c55e' }, // Green
-    { label: '5 Extra Bets', color: '#3b82f6' }, // Blue
-    { label: '1000 Golden', color: '#eab308' },  // Yellow
-    { label: '1 USDC', color: '#6366f1' },       // Indigo
-    { label: '10 USDC', color: '#d946ef' },      // Fuchsia
-    { label: '5000 Golden', color: '#be185d' }   // Pink/Rose
+    { label: '+1 Prediction', color: '#f97316' }, // Orange
+    { label: '+3 Predictions', color: '#22c55e' },// Green
+    { label: '+5 Predictions', color: '#3b82f6' },// Blue
+    { label: '+100 XP Points', color: '#eab308' }, // Yellow
+    { label: '+250 XP Points', color: '#6366f1' }, // Indigo
+    { label: '+500 XP Points', color: '#d946ef' }, // Fuchsia
+    { label: '+1000 XP Points', color: '#be185d' } // Pink/Rose
 ];
 
 export default function SpinPage() {
@@ -135,7 +135,7 @@ export default function SpinPage() {
                         Lucky Wheel
                     </h1>
                     <p className="text-zinc-400 max-w-md mx-auto">
-                        Connect your wallet to spin the wheel and win amazing prizes.
+                        Connect your wallet to spin the wheel and win XP boosts and prediction quotas.
                     </p>
                 </div>
                 <WalletMultiButtonDynamic className="!bg-amber-500 hover:!bg-amber-600 !text-black !font-bold !rounded-full !px-8 !py-4" />
@@ -300,15 +300,20 @@ export default function SpinPage() {
                 </div>
                 <div className="flex flex-col items-center text-center">
                     <div className="text-4xl mb-3 text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">🪙</div>
-                    <h3 className="text-xs font-bold text-yellow-400 tracking-wider mb-2">HUGE REWARDS</h3>
-                    <p className="text-[11px] text-zinc-500">Win up to 5000 Golden Tokens, USDC or extra bet limits!</p>
+                    <h3 className="text-xs font-bold text-yellow-400 tracking-wider mb-2">XP & QUOTAS</h3>
+                    <p className="text-[11px] text-zinc-500">Win up to +1000 XP Points or extra prediction limits!</p>
                 </div>
                 <div className="flex flex-col items-center text-center">
                     <div className="text-4xl mb-3 text-purple-400 drop-shadow-[0_0_10px_rgba(192,132,252,0.5)]">⚡</div>
-                    <h3 className="text-xs font-bold text-purple-400 tracking-wider mb-2">INSTANT WIN</h3>
-                    <p className="text-[11px] text-zinc-500">Rewards are instantly added to your wallet balance.</p>
+                    <h3 className="text-xs font-bold text-purple-400 tracking-wider mb-2">INSTANT BOOST</h3>
+                    <p className="text-[11px] text-zinc-500">Rewards are instantly added to your profile points.</p>
                 </div>
             </div>
+
+            {/* Legal Disclaimer */}
+            <p className="text-zinc-600 text-[10px] uppercase font-mono tracking-widest text-center mt-8 relative z-10 select-none">
+                NO PURCHASE NECESSARY. Void where prohibited. Skill-based prediction simulator.
+            </p>
 
             {/* Reward Modal */}
             {reward && (

@@ -33,10 +33,10 @@ export default function StakePage() {
   }, [connected, publicKey, refresh]);
 
   const tiers = [
-    { id: 1, name: "Soft Stake", lock: "24h Lock", penalty: "0%", reward: "+1 Daily Bet", min: 100, color: "border-blue-500/30", glow: "group-hover:bg-blue-500/20", icon: "🌱" },
-    { id: 2, name: "7-Day Stake", lock: "7 Days", penalty: "10%", reward: "+3 Daily Bets", min: 500, color: "border-green-500/30", glow: "group-hover:bg-green-500/20", icon: "🛡️" },
-    { id: 3, name: "15-Day Stake", lock: "15 Days", penalty: "10%", reward: "+5 Bets & 1.1x XP", min: 1000, color: "border-amber-500/30", glow: "group-hover:bg-amber-500/20", icon: "🔥" },
-    { id: 4, name: "1-Month Stake", lock: "30 Days", penalty: "10%", reward: "+10 Bets & 1.25x XP", min: 5000, color: "border-purple-500/30", glow: "group-hover:bg-purple-500/20", icon: "👑" },
+    { id: 1, name: "Soft Stake", lock: "24h Lock", penalty: "0%", reward: "+1 Daily Prediction", min: 100, color: "border-blue-500/30", glow: "group-hover:bg-blue-500/20", icon: "🌱" },
+    { id: 2, name: "7-Day Stake", lock: "7 Days", penalty: "10%", reward: "+3 Daily Predictions", min: 500, color: "border-green-500/30", glow: "group-hover:bg-green-500/20", icon: "🛡️" },
+    { id: 3, name: "15-Day Stake", lock: "15 Days", penalty: "10%", reward: "+5 Predictions & 1.1x XP", min: 1000, color: "border-amber-500/30", glow: "group-hover:bg-amber-500/20", icon: "🔥" },
+    { id: 4, name: "1-Month Stake", lock: "30 Days", penalty: "10%", reward: "+10 Predictions & 1.25x XP", min: 5000, color: "border-purple-500/30", glow: "group-hover:bg-purple-500/20", icon: "👑" },
   ];
 
   const CountdownTimer = ({ targetDate }) => {
@@ -259,6 +259,13 @@ export default function StakePage() {
           >
             Unstake / Withdraw
         </button>
+      </div>
+
+      {/* Legal Notice */}
+      <div className="mt-12 text-center max-w-3xl mx-auto pb-8">
+        <p className="text-[10px] uppercase font-mono tracking-widest text-zinc-500 select-none leading-relaxed">
+          NO PURCHASE NECESSARY. Void where prohibited by law. Standard daily prediction quotas are allocated for free. Locking tokens increases daily prediction limits and XP multipliers strictly for analytical skill-based simulation rankings.
+        </p>
       </div>
 
     </div>

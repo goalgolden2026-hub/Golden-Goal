@@ -18,7 +18,7 @@ export default function LandingPage() {
     {
       level: "Tier 0 (Holder)",
       requirement: "Min 10,000 GG (Circulating)",
-      bets: "Base Daily Limit",
+      predictions: "Base Daily Limit",
       xp: "1.0x XP",
       spin: "1,000 GG per Spin",
       perk: "Hold tokens in your Solana wallet to unlock basic prediction privileges.",
@@ -28,7 +28,7 @@ export default function LandingPage() {
     {
       level: "Tier 1 (Soft)",
       requirement: "Min 100 GG Staked",
-      bets: "+1 Bet / Day",
+      predictions: "+1 Prediction / Day",
       xp: "1.0x XP",
       spin: "750 GG per Spin (25% Off)",
       perk: "Low-barrier lock with 1-day lockup. Perfect for casual forecasters.",
@@ -38,7 +38,7 @@ export default function LandingPage() {
     {
       level: "Tier 2 (7-Day)",
       requirement: "Min 500 GG Staked",
-      bets: "+3 Bets / Day",
+      predictions: "+3 Predictions / Day",
       xp: "1.0x XP",
       spin: "500 GG per Spin (50% Off)",
       perk: "7-day lockup. Unlocks a 50% discount on the Lucky Spin wheel.",
@@ -48,7 +48,7 @@ export default function LandingPage() {
     {
       level: "Tier 3 (15-Day)",
       requirement: "Min 1,000 GG Staked",
-      bets: "+5 Bets / Day",
+      predictions: "+5 Predictions / Day",
       xp: "1.1x XP Booster",
       spin: "250 GG per Spin (75% Off)",
       perk: "15-day lockup. Unlocks a 1.1x XP scaling multiplier for leaderboard domination.",
@@ -58,7 +58,7 @@ export default function LandingPage() {
     {
       level: "Tier 4 (30-Day)",
       requirement: "Min 5,000 GG Staked",
-      bets: "+10 Bets / Day",
+      predictions: "+10 Predictions / Day",
       xp: "1.25x XP Booster",
       spin: "1 Free Daily Spin!",
       perk: "30-day lockup. Premium VIP benefits including a free daily spin and maximum XP gains.",
@@ -106,7 +106,7 @@ export default function LandingPage() {
                 <button 
                   disabled
                   className="w-full sm:w-auto bg-zinc-900/80 border border-red-500/30 text-red-500/90 font-black py-4 px-10 rounded-2xl text-base cursor-not-allowed flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.05)] uppercase tracking-wider"
-                  title="Coming Soon - Bu cüzdan adresi kapalı betada yetkilendirilmemiştir."
+                  title="Coming Soon - This wallet address is not authorized for the closed beta testing phase."
                 >
                   <svg className="w-5 h-5 text-red-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -146,6 +146,10 @@ export default function LandingPage() {
               <span>🔒 Coming Soon - Access Restricted to Whitelisted Testers</span>
             </p>
           )}
+
+          <p className="mt-8 text-[11px] uppercase tracking-widest font-mono text-zinc-500 max-w-xl mx-auto select-none leading-relaxed">
+            ⚠️ NO PURCHASE NECESSARY. Void where prohibited by law. Standard daily prediction quotas are allocated for free. Competitions are decided strictly based on sports analytical skill and forecasting accuracy, not chance.
+          </p>
         </section>
 
         {/* ECOSYSTEM STATS RIBBON */}
@@ -167,51 +171,110 @@ export default function LandingPage() {
             <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Unstake Burn Penalty</div>
           </div>
         </div>
-
-        {/* CORE PLATFORM FEATURES */}
-        <section className="w-full mb-32">
-          <div className="text-center mb-16 space-y-3">
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">Ecosystem Mechanics</h2>
-            <p className="text-zinc-500 max-w-2xl mx-auto font-medium">A cohesive sports analytics platform engineered for sustainability, gamification, and social virality.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            {/* Feature 1 */}
-            <div className="bg-zinc-900/50 border border-white/5 hover:border-amber-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl group-hover:bg-amber-500/10 transition-all"></div>
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 text-2xl animate-pulse">
-                ⚽
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-white">1. Football Predictor</h3>
-              <p className="text-zinc-400 text-sm leading-relaxed">
-                Forecast football matches across 4 sub-markets: Match Outcome (1X2), Correct Score, BTTS, and Under/Over 2.5 goals. You retain full editing rights until kick-off.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="bg-zinc-900/50 border border-white/5 hover:border-red-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl group-hover:bg-red-500/10 transition-all"></div>
-              <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-6 text-2xl">
-                🎰
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-white">2. Lucky Spin Wheel</h3>
-              <p className="text-zinc-400 text-sm leading-relaxed">
-                A provably fair, high-fidelity casino mini-game. Spin to win point multipliers, extra prediction quotas, $GG tokens, or USDC bonuses. Staking unlocks massive discounts.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="bg-zinc-900/50 border border-white/5 hover:border-emerald-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-all"></div>
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-2xl">
-                🛡️
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-white">3. Deflationary Staking</h3>
-              <p className="text-zinc-400 text-sm leading-relaxed">
-                Lock $GG (Tiers 1-4) to scale your betting privileges and boost XP points. Early unstaking triggers a 10% penalty fee, with <strong>50% permanently burned</strong>.
-              </p>
-            </div>
+30: 
+31:         {/* SKILL-BASED SYSTEM SHOWCASE */}
+32:         <section className="w-full max-w-5xl mb-32 select-none">
+33:           <div className="relative rounded-[32px] overflow-hidden border border-yellow-500/20 bg-gradient-to-b from-[#161026]/90 to-[#0e0a1b]/90 p-8 sm:p-12 shadow-[0_0_50px_rgba(245,158,11,0.05)] backdrop-blur-xl">
+34:             {/* Background vector glow */}
+35:             <div className="absolute -top-12 -right-12 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+36:             <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-purple-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+37: 
+38:             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+39:               <div className="lg:col-span-5 space-y-6 col-span-1">
+40:                 <div className="inline-flex items-center gap-1.5 text-[10px] tracking-widest text-yellow-400 font-black uppercase bg-yellow-400/10 px-3.5 py-1.5 rounded-full border border-yellow-400/20">
+41:                   ⚡ SKILL OVER CHANCE
+42:                 </div>
+43:                 <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-none">
+44:                   A Purely <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500">Skill-Based</span> Prediction Ecosystem
+45:                 </h2>
+46:                 <p className="text-zinc-400 text-sm leading-relaxed font-medium">
+47:                   Golden Goal completely redefines sports forecasts. Our platform has <span className="text-white font-bold">no elements of chance or gambling</span>. It is a competitive sports analytics simulator where success is determined entirely by analytical skill, strategic asset allocation, and leaderboard performance.
+48:                 </p>
+49:                 <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-zinc-500 font-mono">
+50:                   <span>❌ NO ROULETTE</span>
+51:                   <span>•</span>
+52:                   <span>❌ NO HOUSE EDGE</span>
+53:                   <span>•</span>
+54:                   <span>❌ NO CAPITAL RISK</span>
+55:                 </div>
+56:               </div>
+57: 
+58:               <div className="lg:col-span-7 col-span-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
+59:                 {/* Pillar 1 */}
+60:                 <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
+61:                   <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🧠</div>
+62:                   <h4 className="text-base font-bold text-white mb-2">Football Knowledge</h4>
+63:                   <p className="text-zinc-400 text-xs leading-relaxed font-medium">
+64:                     Test your in-depth understanding of league standings, tactical matching, team rosters, and historical head-to-head dynamics.
+65:                   </p>
+66:                 </div>
+67: 
+68:                 {/* Pillar 2 */}
+69:                 <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
+70:                   <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">📈</div>
+71:                   <h4 className="text-base font-bold text-white mb-2">Prediction Accuracy</h4>
+72:                   <p className="text-zinc-400 text-xs leading-relaxed font-medium">
+73:                     Your foresight is graded mathematically. Build long-term win streaks across diverse match outcome types to scale your reputation.
+74:                   </p>
+75:                 </div>
+76: 
+77:                 {/* Pillar 3 */}
+78:                 <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
+79:                   <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🏆</div>
+80:                   <h4 className="text-base font-bold text-white mb-2">Leaderboard Dominance</h4>
+81:                   <p className="text-zinc-400 text-xs leading-relaxed font-medium">
+82:                     Outperform the global community. Dual ladders reward analytical brilliance and active community engagement with top ranks.
+83:                   </p>
+84:                 </div>
+85:               </div>
+86:             </div>
+87:           </div>
+88:         </section>
+89: 
+90:         {/* CORE PLATFORM FEATURES */}
+91:         <section className="w-full mb-32">
+92:           <div className="text-center mb-16 space-y-3">
+93:             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">Ecosystem Mechanics</h2>
+94:             <p className="text-zinc-500 max-w-2xl mx-auto font-medium">A cohesive sports analytics platform engineered for sustainability, gamification, and social virality.</p>
+95:           </div>
+96: 
+97:           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+98:             
+99:             {/* Feature 1 */}
+100:             <div className="bg-zinc-900/50 border border-white/5 hover:border-amber-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
+101:               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl group-hover:bg-amber-500/10 transition-all"></div>
+102:               <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 text-2xl animate-pulse">
+103:                 ⚽
+104:               </div>
+105:               <h3 className="text-xl font-bold mb-3 text-white">1. Football Predictor</h3>
+106:               <p className="text-zinc-400 text-sm leading-relaxed">
+107:                 Forecast football matches across 4 sub-markets: Match Outcome (1X2), Correct Score, BTTS, and Under/Over 2.5 goals. You retain full editing rights until kick-off.
+108:               </p>
+109:             </div>
+110: 
+111:             {/* Feature 2 */}
+112:             <div className="bg-zinc-900/50 border border-white/5 hover:border-red-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
+113:               <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl group-hover:bg-red-500/10 transition-all"></div>
+114:               <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-6 text-2xl">
+115:                 🎰
+116:               </div>
+117:               <h3 className="text-xl font-bold mb-3 text-white">2. Lucky Spin Wheel</h3>
+118:               <p className="text-zinc-400 text-sm leading-relaxed">
+119:                 A provably fair, high-fidelity interactive wheel game. Spin to win XP boosts or extra prediction quotas. Staking unlocks massive discounts and free daily spins.
+120:               </p>
+121:             </div>
+122: 
+123:             {/* Feature 3 */}
+124:             <div className="bg-zinc-900/50 border border-white/5 hover:border-emerald-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
+125:               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-all"></div>
+126:               <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-2xl">
+127:                 🛡️
+128:               </div>
+129:               <h3 className="text-xl font-bold mb-3 text-white">3. Deflationary Staking</h3>
+130:               <p className="text-zinc-400 text-sm leading-relaxed">
+131:                 Lock $GG (Tiers 1-4) to scale your prediction privileges and boost XP points. Early unstaking triggers a 10% penalty fee, with <strong>50% permanently burned</strong>.
+132:               </p>
+133:             </div>
 
             {/* Feature 4 */}
             <div className="bg-zinc-900/50 border border-white/5 hover:border-blue-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
@@ -315,7 +378,7 @@ export default function LandingPage() {
 
                   <div className="flex justify-between items-center pt-4">
                     <span className="text-zinc-500">Prediction Limit:</span>
-                    <span className="text-emerald-400 font-bold">{stakingTiers[activeTier].bets}</span>
+                    <span className="text-emerald-400 font-bold">{stakingTiers[activeTier].predictions}</span>
                   </div>
 
                   <div className="flex justify-between items-center pt-4">
@@ -428,15 +491,36 @@ export default function LandingPage() {
         {/* FINAL CTA SECTION */}
         <section className="w-full text-center py-20 border-t border-white/5 select-none">
           <h2 className="text-3xl sm:text-5xl font-black text-white mb-6 tracking-tight">DOMINATE THE SCOREBOARD</h2>
-          <p className="text-zinc-400 max-w-lg mx-auto text-sm leading-relaxed mb-10 font-medium font-medium">
+          <p className="text-zinc-400 max-w-lg mx-auto text-sm leading-relaxed mb-10 font-medium">
             Connect your Phantom wallet in seconds, lock your predictions, climb the analyst ranks, and earn weekly $GG rewards risk-free.
           </p>
-          <Link 
-            href="/markets" 
-            className="inline-block bg-white hover:bg-zinc-200 text-black font-black py-4 px-12 rounded-2xl text-base transition-transform hover:scale-105 uppercase tracking-wider shadow-[0_0_30px_rgba(255,255,255,0.1)]"
-          >
-            Enter Platform
-          </Link>
+          <div className="flex justify-center">
+            {connected ? (
+              isWhitelisted ? (
+                <Link 
+                  href="/markets" 
+                  className="inline-block bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-black py-4 px-12 rounded-2xl text-base transition-transform hover:scale-105 uppercase tracking-wider shadow-[0_0_35px_rgba(245,158,11,0.3)]"
+                >
+                  Enter Platform 🚀
+                </Link>
+              ) : (
+                <button 
+                  disabled
+                  className="inline-block bg-zinc-900/80 border border-red-500/30 text-red-500/90 font-black py-4 px-12 rounded-2xl text-base cursor-not-allowed uppercase tracking-wider shadow-[0_0_20px_rgba(239,68,68,0.05)]"
+                  title="Coming Soon - This wallet address is not authorized for the closed beta testing phase."
+                >
+                  🔒 Coming Soon
+                </button>
+              )
+            ) : (
+              <button 
+                onClick={() => setVisible(true)}
+                className="inline-block bg-gradient-to-r from-yellow-500/10 to-amber-600/10 hover:from-yellow-500/20 hover:to-amber-600/20 text-yellow-400 hover:text-yellow-300 font-black py-4 px-12 rounded-2xl text-base border border-yellow-500/30 transition-transform hover:scale-105 uppercase tracking-wider shadow-[0_0_25px_rgba(245,158,11,0.1)]"
+              >
+                Enter Platform
+              </button>
+            )}
+          </div>
         </section>
 
       </div>

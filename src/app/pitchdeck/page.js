@@ -39,7 +39,7 @@ export default function PitchDeckPage() {
     },
     {
       title: "The Problem",
-      subtitle: "Traditional sports betting is broken, expensive, and isolated.",
+      subtitle: "Traditional sports forecasting platforms are high-risk, expensive, and isolated.",
       type: "problem",
       content: (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-3xl mx-auto">
@@ -61,7 +61,7 @@ export default function PitchDeckPage() {
             <span className="text-xl">🧩</span>
             <h4 className="font-bold text-red-400">Clunky & Opaque UX</h4>
             <p className="text-zinc-400 text-xs leading-relaxed">
-              High commission margins (vig), hidden fees, complex bet structures, and slow onboarding alienate average sports fans.
+              High commission margins (vig), hidden fees, complex predicting structures, and slow onboarding alienate average sports fans.
             </p>
           </div>
           <div className="bg-red-500/5 border border-red-500/10 p-5 rounded-2xl space-y-2">
@@ -127,10 +127,10 @@ export default function PitchDeckPage() {
           <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-amber-500">🎰</span>
-              <h4 className="font-bold text-white text-sm">Lucky Spin casino</h4>
+              <h4 className="font-bold text-white text-sm">Lucky Spin Module</h4>
             </div>
             <p className="text-zinc-400 text-xs leading-relaxed">
-              A provably fair, high-fidelity casino wheel awarding $GG token multipliers, USDC rewards, extra prediction limits, and ranking points with discounts scaled dynamically by Staking Tiers.
+              A provably fair, high-fidelity gamified wheel awarding XP ranking points and extra prediction quotas with discounts scaled dynamically by Staking Tiers.
             </p>
           </div>
           <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-3">
@@ -197,22 +197,22 @@ export default function PitchDeckPage() {
                 <tr className="bg-zinc-900 text-zinc-400 border-b border-white/5">
                   <th className="p-3 font-semibold">Tier Level</th>
                   <th className="p-3 font-semibold">Requirement</th>
-                  <th className="p-3 font-semibold">Daily Bets Limit</th>
+                  <th className="p-3 font-semibold">Daily Prediction Limit</th>
                   <th className="p-3 font-semibold">XP Points Booster</th>
                   <th className="p-3 font-semibold">Lucky Spin Perks</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 bg-zinc-950/40 font-mono">
                 <tr><td className="p-3 font-sans text-zinc-300">Tier 0 (Holder)</td><td className="p-3">Min 10,000 GG</td><td className="p-3">Base Limit</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">1,000 GG Cost</td></tr>
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 1 (Soft)</td><td className="p-3">Min 100 GG</td><td className="p-3 text-emerald-400">+1 Bet</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">750 GG Cost</td></tr>
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 2 (7-Day)</td><td className="p-3">Min 500 GG</td><td className="p-3 text-emerald-400">+3 Bets</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">500 GG Cost</td></tr>
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 3 (15-Day)</td><td className="p-3">Min 1,000 GG</td><td className="p-3 text-emerald-400">+5 Bets</td><td className="p-3 text-blue-400">1.1x XP</td><td className="p-3">250 GG Cost</td></tr>
-                <tr><td className="p-3 font-sans text-amber-400 font-semibold">Tier 4 (30-Day)</td><td className="p-3 font-bold">Min 5,000 GG</td><td className="p-3 text-emerald-400 font-bold">+10 Bets</td><td className="p-3 text-blue-400 font-bold">1.25x XP</td><td className="p-3 text-amber-400 font-bold">1 Free Daily Spin</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 1 (Soft)</td><td className="p-3">Min 100 GG</td><td className="p-3 text-emerald-400">+1 Prediction</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">750 GG Cost</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 2 (7-Day)</td><td className="p-3">Min 500 GG</td><td className="p-3 text-emerald-400">+3 Predictions</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">500 GG Cost</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 3 (15-Day)</td><td className="p-3">Min 1,000 GG</td><td className="p-3 text-emerald-400">+5 Predictions</td><td className="p-3 text-blue-400">1.1x XP</td><td className="p-3">250 GG Cost</td></tr>
+                <tr><td className="p-3 font-sans text-amber-400 font-semibold">Tier 4 (30-Day)</td><td className="p-3 font-bold">Min 5,000 GG</td><td className="p-3 text-emerald-400 font-bold">+10 Predictions</td><td className="p-3 text-blue-400 font-bold">1.25x XP</td><td className="p-3 text-amber-400 font-bold">1 Free Daily Spin</td></tr>
               </tbody>
             </table>
           </div>
           <div className="text-center text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">
-            STAKING DRIVES HIGHER DAILY BET LIMITS & SIGNIFICANT CASINO SPIN DISCOUNT UTILITIES
+            STAKING DRIVES HIGHER DAILY PREDICTION LIMITS & SIGNIFICANT SPIN DISCOUNT UTILITIES
           </div>
         </div>
       )

@@ -141,7 +141,7 @@ export default function AdminDashboard() {
                   >
                       ✕
                   </button>
-                  <h3 className="text-2xl font-bold mb-6">Resolve Bets: {selectedMatch.teamA} vs {selectedMatch.teamB}</h3>
+                  <h3 className="text-2xl font-bold mb-6">Resolve Markets: {selectedMatch.teamA} vs {selectedMatch.teamB}</h3>
                   
                   <div className="max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
                       {renderResolveSection("Match Result", "MAIN", [selectedMatch.teamA, "Draw", selectedMatch.teamB])}

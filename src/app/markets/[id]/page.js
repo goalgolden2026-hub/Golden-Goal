@@ -70,7 +70,7 @@ export default function MatchDetail() {
         const data = await res.json();
         
         if (data.success) {
-            alert(`Prediction locked! You have ${data.remainingBets} bets left today (Tier: ${data.tier}).`);
+            alert(`Prediction locked! You have ${data.remainingBets} predictions left today (Tier: ${data.tier}).`);
             setBetModalOpen(false);
         } else {
             alert('Prediction failed: ' + data.error);
@@ -149,7 +149,7 @@ export default function MatchDetail() {
           {renderMarketSection("First Half Winner", "FIRST_HALF", [market.teamA, "Draw", market.teamB])}
       </div>
 
-      {/* Bet Modal */}
+      {/* Prediction Modal */}
       {betModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
               <div className="bg-zinc-900 border border-zinc-700 rounded-3xl w-full max-w-md p-6 relative shadow-2xl">

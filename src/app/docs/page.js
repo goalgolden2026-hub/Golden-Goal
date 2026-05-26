@@ -26,7 +26,7 @@ export default function DocsPage() {
     if (amount >= 5000) {
       return {
         tier: "Tier 4 (1-Month Locked)",
-        bets: "+10 Daily Bets",
+        bets: "+10 Daily Predictions",
         xp: "1.25x XP Multiplier",
         spin: "1 Free Daily Spin (then 250 $GG)",
         period: "30 Days Lock",
@@ -36,7 +36,7 @@ export default function DocsPage() {
     } else if (amount >= 1000) {
       return {
         tier: "Tier 3 (15-Day Locked)",
-        bets: "+5 Daily Bets",
+        bets: "+5 Daily Predictions",
         xp: "1.10x XP Multiplier",
         spin: "250 $GG per Spin (75% Off)",
         period: "15 Days Lock",
@@ -46,7 +46,7 @@ export default function DocsPage() {
     } else if (amount >= 500) {
       return {
         tier: "Tier 2 (7-Day Locked)",
-        bets: "+3 Daily Bets",
+        bets: "+3 Daily Predictions",
         xp: "1.0x XP Multiplier",
         spin: "500 $GG per Spin (50% Off)",
         period: "7 Days Lock",
@@ -56,7 +56,7 @@ export default function DocsPage() {
     } else if (amount >= 100) {
       return {
         tier: "Tier 1 (Soft Stake)",
-        bets: "+1 Daily Bet",
+        bets: "+1 Daily Prediction",
         xp: "1.0x XP Multiplier",
         spin: "750 $GG per Spin (25% Off)",
         period: "1 Day Lock",
@@ -66,7 +66,7 @@ export default function DocsPage() {
     } else {
       return {
         tier: "Tier 0 (Hold Min 10,000 $GG for features)",
-        bets: "Base Daily Limit",
+        bets: "Base Daily Prediction Limit",
         xp: "1.0x XP Multiplier",
         spin: "1,000 $GG per Spin",
         period: "No Lock",
@@ -193,7 +193,7 @@ export default function DocsPage() {
               <div className="border-l-2 border-red-500/50 pl-4 space-y-2">
                 <h3 className="font-bold text-red-400 text-lg">The Industry Problems</h3>
                 <ul className="list-disc list-inside text-zinc-400 text-sm space-y-1">
-                  <li>High capital requirements and severe betting risk for regular users.</li>
+                  <li>High capital requirements and financial risk in traditional sports forecasting platforms.</li>
                   <li>Overly complex UX, confusing interfaces, and high entry barriers.</li>
                   <li>Absence of organic social interactions and community growth drivers.</li>
                   <li>Speculative tokens lacking active in-app utility sinks or burned deflation.</li>
@@ -227,7 +227,7 @@ export default function DocsPage() {
                 <div className="bg-zinc-900 border border-white/5 p-6 rounded-2xl">
                   <h4 className="font-bold text-amber-400 mb-2">Pro Forecasters</h4>
                   <p className="text-zinc-400 text-xs leading-relaxed">
-                    Ranks players based strictly on predictions. Tracks Won Bets (WB), Total Bets (TB), Win Rate (WR), and earned points.
+                    Ranks players based strictly on predictions. Tracks Won Predictions (WP), Total Predictions (TP), Win Rate (WR), and earned points.
                   </p>
                 </div>
                 <div className="bg-zinc-900 border border-white/5 p-6 rounded-2xl">
@@ -330,10 +330,10 @@ export default function DocsPage() {
           {/* 6. LUCKY SPIN SYSTEM */}
           <section id="spin-system" className="scroll-mt-24 space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
-              <span className="text-amber-500">6.</span> Lucky Spin Casino Module
+              <span className="text-amber-500">6.</span> Lucky Spin Module
             </h2>
             <p className="text-zinc-400 text-sm md:text-base leading-relaxed">
-              The Lucky Spin is a provably fair gaming wheel designed to reward active token holders. It awards payouts in Golden Goal tokens, direct USDC allocations, ranking points, and extra daily prediction limits.
+              The Lucky Spin is a provably fair gaming wheel designed to reward active token holders. It awards gamified rewards including XP Points (to advance in the Leaderboard ranks) and extra daily prediction quotas.
             </p>
 
             <div className="overflow-hidden border border-white/5 rounded-2xl">

@@ -3,13 +3,13 @@ import { getDb } from '@/lib/db';
 
 const REWARD_TIERS = [
     { index: 0, type: 'EMPTY', value: 0, label: 'Miss', prob: 20 },
-    { index: 1, type: 'BET', value: 1, label: '1 Extra Bet', prob: 35 },
-    { index: 2, type: 'BET', value: 3, label: '3 Extra Bets', prob: 15 },
-    { index: 3, type: 'BET', value: 5, label: '5 Extra Bets', prob: 5 },
-    { index: 4, type: 'GOLDEN', value: 1000, label: '1000 Golden', prob: 10 },
-    { index: 5, type: 'USDC', value: 1, label: '1 USDC', prob: 10 },
-    { index: 6, type: 'USDC', value: 10, label: '10 USDC', prob: 4 },
-    { index: 7, type: 'GOLDEN', value: 5000, label: '5000 Golden', prob: 1 }
+    { index: 1, type: 'BET', value: 1, label: '+1 Prediction Quota', prob: 35 },
+    { index: 2, type: 'BET', value: 3, label: '+3 Prediction Quotas', prob: 15 },
+    { index: 3, type: 'BET', value: 5, label: '+5 Prediction Quotas', prob: 5 },
+    { index: 4, type: 'XP', value: 100, label: '+100 XP Points', prob: 10 },
+    { index: 5, type: 'XP', value: 250, label: '+250 XP Points', prob: 10 },
+    { index: 6, type: 'XP', value: 500, label: '+500 XP Points', prob: 4 },
+    { index: 7, type: 'XP', value: 1000, label: '+1000 XP Points', prob: 1 }
 ];
 
 async function getSpinStatus(sql, walletAddress) {
@@ -157,17 +157,12 @@ export async function POST(request) {
                 SET "spinBonusBets" = COALESCE("spinBonusBets", 0) + ${reward.value} 
                 WHERE "walletAddress" = ${walletAddress}
             `;
-        } else if (reward.type === 'GOLDEN') {
+        } else if (reward.type === 'XP') {
             await sql`
-                INSERT INTO treasury_logs ("walletAddress", amount, type) 
-                VALUES (${walletAddress}, ${reward.value}, 'SPIN_REWARD_GOLDEN')
+                UPDATE users 
+                SET points = COALESCE(points, 0) + ${reward.value} 
+                WHERE "walletAddress" = ${walletAddress}
             `;
-        } else if (reward.type === 'USDC') {
-            await sql`
-                INSERT INTO treasury_logs ("walletAddress", amount, type) 
-                VALUES (${walletAddress}, ${reward.value}, 'SPIN_REWARD_USDC')
-            `;
-            await sendUSDCAirdrop(walletAddress, reward.value);
         }
 
         return NextResponse.json({ 

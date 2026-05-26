@@ -160,7 +160,7 @@ export default function ProfilePage() {
 
                     <div className="mt-6 bg-black/50 rounded-2xl p-6 border border-zinc-800">
                         <div className="flex justify-between items-end mb-2">
-                            <p className="text-sm text-zinc-500">Daily Bet Limit</p>
+                            <p className="text-sm text-zinc-500">Daily Prediction Limit</p>
                             <p className="text-lg text-white font-bold">
                                 {profile.maxBets - profile.betsToday} <span className="text-zinc-500 text-sm">/ {profile.maxBets} Left</span>
                             </p>

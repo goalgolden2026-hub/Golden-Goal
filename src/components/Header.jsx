@@ -63,7 +63,7 @@ export default function Header() {
                                 <button 
                                     disabled
                                     className="bg-zinc-900/80 border border-red-500/30 text-red-500/90 font-bold py-2 px-5 rounded-full flex items-center gap-1.5 cursor-not-allowed shadow-[0_0_15px_rgba(239,68,68,0.05)]"
-                                    title="Coming Soon - Bu cüzdan adresi kapalı betada yetkilendirilmemiştir."
+                                    title="Coming Soon - This wallet address is not authorized for the closed beta testing phase."
                                 >
                                     <svg className="w-4.5 h-4.5 text-red-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />

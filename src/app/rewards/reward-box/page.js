@@ -323,7 +323,7 @@ export default function RewardBoxPage() {
                         <img 
                             src="/chest-open.png" 
                             alt="Open Golden Chest" 
-                            className="w-64 h-64 object-contain drop-shadow-[0_20px_50px_rgba(245,158,11,0.5)] z-20 mix-blend-screen"
+                            className="w-64 h-64 object-contain drop-shadow-[0_20px_50px_rgba(245,158,11,0.5)] z-20"
                         />
                     </div>
                 ) : (
@@ -333,7 +333,7 @@ export default function RewardBoxPage() {
                         <img 
                             src="/chest-closed.png" 
                             alt="Closed Golden Chest" 
-                            className="w-64 h-64 object-contain drop-shadow-[0_20px_40px_rgba(245,158,11,0.35)] z-20 animate-pulse mix-blend-screen"
+                            className="w-64 h-64 object-contain drop-shadow-[0_20px_40px_rgba(245,158,11,0.35)] z-20 animate-pulse"
                         />
                     </div>
                 )}

@@ -22,6 +22,19 @@ export default function WhitelistGuard({ children }) {
     setMounted(true);
   }, []);
 
+  const walletAddress = publicKey ? publicKey.toBase58() : null;
+
+  // Set connected_wallet cookie for server-side middleware validation
+  useEffect(() => {
+    if (mounted) {
+      if (connected && walletAddress) {
+        document.cookie = `connected_wallet=${walletAddress}; path=/; max-age=86400; SameSite=Lax`;
+      } else {
+        document.cookie = `connected_wallet=; path=/; max-age=0; SameSite=Lax`;
+      }
+    }
+  }, [connected, walletAddress, mounted]);
+
   if (!mounted) return null;
 
   // List of public, unprotected routes
@@ -33,7 +46,6 @@ export default function WhitelistGuard({ children }) {
     return <>{children}</>;
   }
 
-  const walletAddress = publicKey ? publicKey.toBase58() : null;
   const isWhitelisted = isWalletWhitelisted(walletAddress);
 
   // If connected AND whitelisted, grant access

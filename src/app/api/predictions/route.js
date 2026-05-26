@@ -49,17 +49,17 @@ export async function POST(request) {
 
         let user = userRes.rows[0];
 
-        // 2.5 Check Active Stake for Quota Bonus
-        const activeStakeRes = await sql`SELECT * FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+        // 2.5 Check Active Lock for Quota Bonus
+        const activeLockRes = await sql`SELECT * FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
         let bonusPredictions = 0;
-        let stakeTier = 0;
+        let lockTier = 0;
         
-        if (activeStakeRes.rowCount > 0) {
-            stakeTier = activeStakeRes.rows[0].tier;
-            if (stakeTier === 1) bonusPredictions = 1;
-            else if (stakeTier === 2) bonusPredictions = 3;
-            else if (stakeTier === 3) bonusPredictions = 5;
-            else if (stakeTier === 4) bonusPredictions = 10;
+        if (activeLockRes.rowCount > 0) {
+            lockTier = activeLockRes.rows[0].tier;
+            if (lockTier === 1) bonusPredictions = 1;
+            else if (lockTier === 2) bonusPredictions = 3;
+            else if (lockTier === 3) bonusPredictions = 5;
+            else if (lockTier === 4) bonusPredictions = 10;
         }
 
         let finalLimit = limit + bonusPredictions + (user.bonusPredictions || 0);

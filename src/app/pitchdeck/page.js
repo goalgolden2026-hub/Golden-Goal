@@ -85,7 +85,7 @@ export default function PitchDeckPage() {
               <span className="text-3xl">🛡️</span>
               <h4 className="font-bold text-emerald-400 text-sm">Risk-Free Play</h4>
               <p className="text-zinc-400 text-xs leading-relaxed">
-                Users hold or stake $GG to predict. Capital is never lost or spent, creating a premium risk-free fan loop.
+                Users hold or lock $GG to predict. Capital is never lost or spent, creating a premium risk-free fan loop.
               </p>
             </div>
             <div className="bg-emerald-500/5 border border-emerald-500/10 p-6 rounded-2xl text-center space-y-2">
@@ -104,7 +104,7 @@ export default function PitchDeckPage() {
             </div>
           </div>
           <div className="bg-zinc-900/60 border border-white/5 p-4 rounded-2xl text-center text-xs text-zinc-400">
-            <strong>The Result:</strong> Football enthusiasts predict outcomes, unlock passive staking multipliers, and open Rewards Boxes without asset custody risks.
+            <strong>The Result:</strong> Football enthusiasts predict outcomes, unlock passive locking multipliers, and open Rewards Boxes without asset custody risks.
           </div>
         </div>
       )
@@ -130,7 +130,7 @@ export default function PitchDeckPage() {
               <h4 className="font-bold text-white text-sm">Rewards Box Module</h4>
             </div>
             <p className="text-zinc-400 text-xs leading-relaxed">
-              A provably fair, high-fidelity gamified chest system awarding XP ranking points and extra prediction quotas with discounts scaled dynamically by Staking Tiers.
+              A provably fair, high-fidelity gamified chest system awarding XP ranking points and extra prediction quotas with discounts scaled dynamically by Locking Tiers.
             </p>
           </div>
           <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-3">
@@ -148,7 +148,7 @@ export default function PitchDeckPage() {
               <h4 className="font-bold text-white text-sm">Personal Dashboard</h4>
             </div>
             <p className="text-zinc-400 text-xs leading-relaxed">
-              Real-time user analytics tracking Win Rates, Prediction History, Active Forecast status, and staking statistics with gold glass aesthetics.
+              Real-time user analytics tracking Win Rates, Prediction History, Active Forecast status, and locking statistics with gold glass aesthetics.
             </p>
           </div>
         </div>
@@ -186,7 +186,7 @@ export default function PitchDeckPage() {
       )
     },
     {
-      title: "Staking Economy",
+      title: "Locking Economy",
       subtitle: "Multi-Tiered lock mechanisms driving core token utility.",
       type: "staking",
       content: (
@@ -212,7 +212,7 @@ export default function PitchDeckPage() {
             </table>
           </div>
           <div className="text-center text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">
-            STAKING DRIVES HIGHER DAILY PREDICTION LIMITS & SIGNIFICANT REWARDS BOX DISCOUNT UTILITIES
+            LOCKING DRIVES HIGHER DAILY PREDICTION LIMITS & SIGNIFICANT REWARDS BOX DISCOUNT UTILITIES
           </div>
         </div>
       )
@@ -227,7 +227,7 @@ export default function PitchDeckPage() {
             <span className="text-2xl">🔥</span>
             <h4 className="font-bold text-amber-400 text-sm">Lock Breach Penalty</h4>
             <p className="text-zinc-400 text-[10px] leading-relaxed">
-              Early unstaking triggers a 10% penalty fee: <strong>50% is permanently burned</strong>, contracting circulating supply, and 50% returns directly back to weekly rewards.
+              Early unlocking triggers a 10% penalty fee: <strong>50% is permanently burned</strong>, contracting circulating supply, and 50% returns directly back to weekly rewards.
             </p>
           </div>
           <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-2">
@@ -241,7 +241,7 @@ export default function PitchDeckPage() {
             <span className="text-2xl">🛡️</span>
             <h4 className="font-bold text-amber-400 text-sm">Fair Launch Standard</h4>
             <p className="text-zinc-400 text-[10px] leading-relaxed">
-              <strong>Zero locked pre-sale tokens</strong> scheduled to be released or dumped onto the market. All active circulating tokens represent organic players and stakers.
+              <strong>Zero locked pre-sale tokens</strong> scheduled to be released or dumped onto the market. All active circulating tokens represent organic players and lockers.
             </p>
           </div>
         </div>
@@ -325,7 +325,7 @@ export default function PitchDeckPage() {
           <div className="bg-zinc-900/40 border border-white/5 p-4 rounded-xl space-y-1">
             <div className="text-[10px] text-zinc-500 font-bold">PHASE 3</div>
             <div className="font-bold text-white text-[11px] leading-tight">DeFi Features</div>
-            <div className="text-[9px] text-zinc-500">Staking Tiers (Tier 1-4), Rewards Box, unstake penalty burns.</div>
+            <div className="text-[9px] text-zinc-500">Locking Tiers (Tier 1-4), Rewards Box, unlock penalty burns.</div>
           </div>
           <div className="bg-zinc-900/40 border border-white/5 p-4 rounded-xl space-y-1">
             <div className="text-[10px] text-zinc-500 font-bold">PHASE 4</div>

@@ -14,7 +14,7 @@ export default function LandingPage() {
   const walletAddress = publicKey ? publicKey.toBase58() : null;
   const isWhitelisted = isWalletWhitelisted(walletAddress);
 
-  const stakingTiers = [
+  const lockingTiers = [
     {
       level: "Tier 0 (Holder)",
       requirement: "Min 10,000 GG (Circulating)",
@@ -27,7 +27,7 @@ export default function LandingPage() {
     },
     {
       level: "Tier 1 (Soft)",
-      requirement: "Min 100 GG Staked",
+      requirement: "Min 100 GG Locked",
       predictions: "+1 Prediction / Day",
       xp: "1.0x XP",
       rewardsBox: "75 XP / Rewards Box (25% Off)",
@@ -37,7 +37,7 @@ export default function LandingPage() {
     },
     {
       level: "Tier 2 (7-Day)",
-      requirement: "Min 500 GG Staked",
+      requirement: "Min 500 GG Locked",
       predictions: "+3 Predictions / Day",
       xp: "1.0x XP",
       rewardsBox: "50 XP / Rewards Box (50% Off)",
@@ -47,7 +47,7 @@ export default function LandingPage() {
     },
     {
       level: "Tier 3 (15-Day)",
-      requirement: "Min 1,000 GG Staked",
+      requirement: "Min 1,000 GG Locked",
       predictions: "+5 Predictions / Day",
       xp: "1.1x XP Booster",
       rewardsBox: "25 XP / Rewards Box (75% Off)",
@@ -57,7 +57,7 @@ export default function LandingPage() {
     },
     {
       level: "Tier 4 (30-Day)",
-      requirement: "Min 5,000 GG Staked",
+      requirement: "Min 5,000 GG Locked",
       predictions: "+10 Predictions / Day",
       xp: "1.25x XP Booster",
       rewardsBox: "1 Free Daily + 25 XP / Next Rewards Box",
@@ -214,7 +214,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Stat 2: VIP Staking */}
+          {/* Stat 2: VIP Locking */}
           <div className="relative overflow-hidden bg-zinc-900/30 hover:bg-zinc-900/50 border border-white/5 hover:border-amber-500/20 backdrop-blur-md rounded-3xl p-6 flex items-center justify-between transition-all duration-300 hover:scale-[1.02] shadow-[0_4px_30px_rgba(0,0,0,0.2)] group/stat">
             <div className="space-y-1 text-left">
               <div className="text-[10px] font-black text-amber-400 font-mono tracking-widest uppercase flex items-center gap-1.5">
@@ -222,7 +222,7 @@ export default function LandingPage() {
                 Multi-Tiered
               </div>
               <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500 tracking-tight">Tiers 0-4</div>
-              <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">VIP Staking Programs</div>
+              <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">VIP Locking Programs</div>
             </div>
             <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl group-hover/stat:scale-110 transition-transform duration-300">
               📈
@@ -333,7 +333,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">2. Rewards Box Module</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                A provably fair gamified rewards module. Open daily boxes to claim experience points, leaderboard boosts, and extra prediction quotas. Active staking unlocks daily boxes for free.
+                A provably fair gamified rewards module. Open daily boxes to claim experience points, leaderboard boosts, and extra prediction quotas. Active locking unlocks daily boxes for free.
               </p>
             </div>
 
@@ -343,7 +343,7 @@ export default function LandingPage() {
               <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-2xl">
                 🛡️
               </div>
-              <h3 className="text-xl font-bold mb-3 text-white">3. Deflationary Staking</h3>
+              <h3 className="text-xl font-bold mb-3 text-white">3. Deflationary Locking</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
                 Lock your $GG tokens to scale your prediction capabilities, boost your XP multiplier, and unlock VIP access levels. Drive premium value through long-term loyalty.
               </p>
@@ -388,7 +388,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* INTERACTIVE STAKING PREVIEW */}
+        {/* INTERACTIVE LOCKING PREVIEW */}
         <section className="w-full mb-32 bg-zinc-900/20 border border-white/5 p-8 sm:p-12 rounded-[32px] backdrop-blur-md relative overflow-hidden">
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -397,15 +397,15 @@ export default function LandingPage() {
             <div className="space-y-6">
               <div className="space-y-2">
                 <span className="text-amber-500 font-mono text-xs uppercase tracking-widest font-bold">UTILITY HUB</span>
-                <h3 className="text-3xl sm:text-4xl font-black text-white">VIP Staking Programs</h3>
+                <h3 className="text-3xl sm:text-4xl font-black text-white">VIP Locking Programs</h3>
                 <p className="text-zinc-400 text-sm leading-relaxed font-medium">
-                  Staking your $GG tokens contracts circulating market supply while unlocking compound benefits across the platform. Click on a tier level below to preview its specific gaming benefits:
+                  Locking your $GG tokens contracts circulating market supply while unlocking compound benefits across the platform. Click on a tier level below to preview its specific gaming benefits:
                 </p>
               </div>
 
               {/* Selector Buttons */}
               <div className="flex flex-col gap-2.5">
-                {stakingTiers.map((tier, idx) => (
+                {lockingTiers.map((tier, idx) => (
                   <button
                     key={idx}
                     onClick={() => setActiveTier(idx)}
@@ -430,44 +430,44 @@ export default function LandingPage() {
               {/* Glowing decorative background based on tier */}
               <div 
                 className="absolute w-[80%] h-[80%] rounded-full blur-[80px] transition-all duration-500 -z-10"
-                style={{ backgroundColor: stakingTiers[activeTier].glow }}
+                style={{ backgroundColor: lockingTiers[activeTier].glow }}
               ></div>
 
               {/* Gold Glassmorphic Card */}
               <div className="w-full max-w-sm bg-zinc-900/80 border border-white/10 backdrop-blur-xl p-8 rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.5)] space-y-6 relative overflow-hidden group">
-                <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${stakingTiers[activeTier].color}`}></div>
+                <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${lockingTiers[activeTier].color}`}></div>
                 
                 <div className="space-y-1">
                   <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider font-mono">ACTIVE PREVIEW</div>
-                  <h4 className="text-2xl font-black text-white">{stakingTiers[activeTier].level}</h4>
+                  <h4 className="text-2xl font-black text-white">{lockingTiers[activeTier].level}</h4>
                 </div>
 
                 <div className="divide-y divide-white/5 space-y-4 text-xs font-medium">
                   
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-zinc-500">Requirement:</span>
-                    <span className="text-white font-bold">{stakingTiers[activeTier].requirement}</span>
+                    <span className="text-white font-bold">{lockingTiers[activeTier].requirement}</span>
                   </div>
 
                   <div className="flex justify-between items-center pt-4">
                     <span className="text-zinc-500">Prediction Limit:</span>
-                    <span className="text-emerald-400 font-bold">{stakingTiers[activeTier].predictions}</span>
+                    <span className="text-emerald-400 font-bold">{lockingTiers[activeTier].predictions}</span>
                   </div>
 
                   <div className="flex justify-between items-center pt-4">
                     <span className="text-zinc-500">XP Booster Rate:</span>
-                    <span className="text-blue-400 font-bold">{stakingTiers[activeTier].xp}</span>
+                    <span className="text-blue-400 font-bold">{lockingTiers[activeTier].xp}</span>
                   </div>
 
                   <div className="flex justify-between items-center pt-4">
                     <span className="text-zinc-500">Rewards Box:</span>
-                    <span className="text-amber-400 font-bold">{stakingTiers[activeTier].rewardsBox}</span>
+                    <span className="text-amber-400 font-bold">{lockingTiers[activeTier].rewardsBox}</span>
                   </div>
 
                 </div>
 
                 <div className="bg-black/30 border border-white/5 p-4 rounded-xl text-[11px] text-zinc-400 leading-relaxed font-medium">
-                  {stakingTiers[activeTier].perk}
+                  {lockingTiers[activeTier].perk}
                 </div>
 
               </div>
@@ -537,9 +537,9 @@ export default function LandingPage() {
                 <span className="bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">UPCOMING</span>
               </div>
               <div className="sm:w-2/3">
-                <h4 className="font-bold text-white text-base mb-2">Rewards Box & Staking Engine</h4>
+                <h4 className="font-bold text-white text-base mb-2">Rewards Box & Locking Engine</h4>
                 <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-                  Unlocking the gamified Rewards Box module for daily XP & prediction quota claims, and launching the multi-tier lockup VIP Staking programs.
+                  Unlocking the gamified Rewards Box module for daily XP & prediction quota claims, and launching the multi-tier lockup VIP Locking programs.
                 </p>
               </div>
             </div>

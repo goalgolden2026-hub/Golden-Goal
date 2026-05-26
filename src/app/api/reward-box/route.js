@@ -14,9 +14,9 @@ const REWARD_TIERS = [
 
 async function getBoxStatus(sql, walletAddress) {
     let activeTier = 0;
-    // Get the highest active stake tier
-    const activeStakeRes = await sql`SELECT tier FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE' ORDER BY tier DESC LIMIT 1`;
-    if (activeStakeRes.rowCount > 0) activeTier = activeStakeRes.rows[0].tier;
+    // Get the highest active lock tier
+    const activeLockRes = await sql`SELECT tier FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE' ORDER BY tier DESC LIMIT 1`;
+    if (activeLockRes.rowCount > 0) activeTier = activeLockRes.rows[0].tier;
 
     let boxCost = 100;
     let requiresMinBalance = false;

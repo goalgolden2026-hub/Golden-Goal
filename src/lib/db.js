@@ -19,6 +19,14 @@ export async function getDb() {
                 // Table might already be renamed or not exist
             }
 
+            // 1b. Rename 'stakes' table to 'locks' if it exists
+            try {
+                await sql`ALTER TABLE IF EXISTS stakes RENAME TO locks;`;
+                console.log("Migration: Renamed 'stakes' table to 'locks'");
+            } catch (e) {
+                // Table might already be renamed or not exist
+            }
+
             // 2. Rename columns in predictions table (formerly bets)
             try {
                 await sql`ALTER TABLE IF EXISTS predictions RENAME COLUMN "betType" TO "predictionType";`;
@@ -94,7 +102,7 @@ export async function getDb() {
             `;
 
             await sql`
-                CREATE TABLE IF NOT EXISTS stakes (
+                CREATE TABLE IF NOT EXISTS locks (
                     id SERIAL PRIMARY KEY,
                     "walletAddress" TEXT NOT NULL REFERENCES users("walletAddress"),
                     tier INTEGER NOT NULL,

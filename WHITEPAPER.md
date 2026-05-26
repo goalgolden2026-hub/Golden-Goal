@@ -77,41 +77,41 @@ Her katılımcı, şu analitik verileri barındıran premium bir kişisel panele
 
 ---
 
-### 4.4 Staking Sistemi
-Uzun vadeli sadakati teşvik etmek, token talebini artırmak ve dolaşımdaki arzı dengelemek için Golden Goal kademeli bir staking protokolü uygular.
+### 4.4 Token Kilitleme (Locking) Sistemi
+Uzun vadeli sadakati teşvik etmek, token talebini artırmak ve dolaşımdaki arzı dengelemek için Golden Goal kademeli bir kilitleme protokolü uygular.
 
 ```mermaid
 graph TD
     A[Kullanıcı $GG Kilitler] --> B{Kilit Süresini Seç}
-    B -->|Soft Stake: 1 Gün| C[+1 Günlük Tahmin / Esnek Çekim]
-    B -->|7 Günlük Kilit| D[+3 Günlük Tahmin / %10 Unstake Cezası]
-    B -->|15 Günlük Kilit| E[+5 Günlük Tahmin / 1.1x XP / %10 Unstake Cezası]
+    B -->|Soft Lock: 1 Gün| C[+1 Günlük Tahmin / Esnek Çekim]
+    B -->|7 Günlük Kilit| D[+3 Günlük Tahmin / %10 Erken Kilit Açma Cezası]
+    B -->|15 Günlük Kilit| E[+5 Günlük Tahmin / 1.1x XP / %10 Erken Kilit Açma Cezası]
     B -->|30 Günlük Kilit| F[+10 Günlük Tahmin / 1.25x XP / 1 Ücretsiz Günlük Kutu]
 ```
 
-*   **Soft Stake (Esnek Kilitleme):**
+*   **Soft Lock (Esnek Kilitleme):**
     *   *Minimum:* 100 $GG token
     *   *Kilit Süresi:* 1 Gün
     *   *Ödül:* Günlük +1 ek tahmin limiti
     *   *Çekim:* Sıfır ceza ile tamamen esnek çekim.
-*   **7 Günlük Stake:**
+*   **7 Günlük Kilitleme:**
     *   *Minimum:* 500 $GG token
     *   *Kilit Süresi:* 7 Gün
     *   *Ödül:* Günlük +3 ek tahmin limiti
     *   *Erken Çekim Cezası:* Kilit süresi dolmadan çekim yapıldığında ana paradan %10 kesinti.
-*   **15 Günlük Stake:**
+*   **15 Günlük Kilitleme:**
     *   *Minimum:* 1,000 $GG token
     *   *Kilit Süresi:* 15 Gün
     *   *Ödüller:* Günlük +5 ek tahmin limiti & **1.1x XP Çarpanı**
     *   *Erken Çekim Cezası:* Kilit süresi dolmadan çekim yapıldığında ana paradan %10 kesinti.
-*   **1 Aylık Stake (Tier 4):**
+*   **1 Aylık Kilitleme (Tier 4):**
     *   *Minimum:* 5,000 $GG token
     *   *Kilit Süresi:* 30 Gün
     *   *Ödüller:* Günlük +10 ek tahmin limiti, **1.25x XP Çarpanı** ve sadakat modülünde **Her Gün 1 Ücretsiz Ödül Kutusu**.
 
 ---
 
-### 4.5 Staking Yakım Mekanizması
+### 4.5 Kilit Açma Yakım Mekanizması
 Kilit süresi dolmadan erken token çekimlerinde uygulanan **%10 ceza ücreti**, uzun vadeli token ekonomisini ve ödül sürdürülebilirliğini korumak amacıyla ikiye bölünür:
 *   **%50'si kalıcı olarak yakılır (Burn):** Dolaşımdaki token arzı doğrudan azaltılarak deflasyonist baskı oluşturulur.
 *   **%50'si Ödül Havuzu Cüzdanına aktarılır:** Gelecek haftalardaki liderlik tablosu ödüllerini finanse etmek amacıyla doğrudan ekosisteme geri kazandırılır.
@@ -119,15 +119,15 @@ Kilit süresi dolmadan erken token çekimlerinde uygulanan **%10 ceza ücreti**,
 ---
 
 ### 4.6 Ödül Kutusu (Rewards Box)
-Ödül Kutusu, kullanıcıların sadakat ödülleri, devasa XP puanları veya ek tahmin limitleri kazanmasını sağlayan yüksek etkileşimli bir oyunlaştırma modülüdür. Kutu açımları tamamen XP Puanları ile gerçekleştirilir ve Staking kademelerine göre büyük indirimlerle sunulur:
+Ödül Kutusu, kullanıcıların sadakat ödülleri, devasa XP puanları veya ek tahmin limitleri kazanmasını sağlayan yüksek etkileşimli bir oyunlaştırma modülüdür. Kutu açımları tamamen XP Puanları ile gerçekleştirilir ve kilitleme (locking) kademelerine göre büyük indirimlerle sunulur:
 
-| Kullanıcı Kategorisi | Staking Durumu | Kutu Açım Maliyeti (XP) |
-2: | :--- | :--- | :--- |
-| **Kilit Yapmayanlar (Tier 0)** | 0 $GG veya aktif staking bulunmayan cüzdanlar | 100 XP |
-| **1 Günlük Stakerlar (Tier 1)** | Aktif Soft Stake | 75 XP |
-| **7 Günlük Stakerlar (Tier 2)** | Aktif 7 Günlük Kilitli Stake | 50 XP |
-| **15 Günlük Stakerlar (Tier 3)** | Aktif 15 Günlük Kilitli Stake | 25 XP |
-| **1 Aylık Stakerlar (Tier 4)** | Aktif 30 Günlük Kilitli Stake | **Her Gün 1 Kutu ÜCRETSİZ**, sonrakiler 25 XP |
+| Kullanıcı Kategorisi | Kilitleme Durumu | Kutu Açım Maliyeti (XP) |
+| :--- | :--- | :--- |
+| **Kilit Yapmayanlar (Tier 0)** | 0 $GG veya aktif kilidi bulunmayan cüzdanlar | 100 XP |
+| **1 Günlük Lockerlar (Tier 1)** | Aktif Soft Lock | 75 XP |
+| **7 Günlük Lockerlar (Tier 2)** | Aktif 7 Günlük Kilitli Lock | 50 XP |
+| **15 Günlük Lockerlar (Tier 3)** | Aktif 15 Günlük Kilitli Lock | 25 XP |
+| **1 Aylık Lockerlar (Tier 4)** | Aktif 30 Günlük Kilitli Lock | **Her Gün 1 Kutu ÜCRETSİZ**, sonrakiler 25 XP |
 
 **Ödül Kutusundan Çıkabilecek Olası Ödüller:**
 *   Liderlik sıralamasında yükselmenizi sağlayacak XP Puanları (+100, +250, +500, +1000 XP).
@@ -137,7 +137,7 @@ Kilit süresi dolmadan erken token çekimlerinde uygulanan **%10 ceza ücreti**,
 
 ### 4.7 Referans Sistemi
 Referans sistemi, platformun organik büyümesini tetikler. Kullanıcılar kendilerine özel bağlantılarla yeni katılımcıları platforma davet ederek Referans Puanları kazanırlar.
-*   **Doğrulama Kuralı (Spam/Bot Koruması):** Davet edilen bir kullanıcının referans olarak sayılabilmesi için Solana cüzdanını bağlaması ve platform üzerinde en az **bir aktif işlem** gerçekleştirmesi (tahmin kilitleme, stake etme veya kutu açma) zorunludur.
+*   **Doğrulama Kuralı (Spam/Bot Koruması):** Davet edilen bir kullanıcının referans olarak sayılabilmesi için Solana cüzdanını bağlaması ve platform üzerinde en az **bir aktif işlem** gerçekleştirmesi (tahmin kilitleme, token kilitleme veya kutu açma) zorunludur.
 *   **Ödüller:** Belirli referans sınırlarına ulaşan kullanıcılar özel token bonusları ve ücretsiz yüksek kademe Ödül Kutusu açımları elde ederler.
 
 ---
@@ -152,8 +152,8 @@ Sosyal medyada sürekli görünürlük sağlamak amacıyla Golden Goal, viral to
 ## 5. Token Faydası (Utility)
 
 Platformun temel taşı olan **Golden Goal ($GG)** tokenı, tüm ekosistem boyunca derin işlevsel faydalara sahiptir:
-1.  **Staking:** VIP çarpan seviyelerini, günlük ekstra tahmin limitlerini ve özel platform imtiyazlarını aktifleştirme.
-2.  **Kutu Açma Avantajı:** Staking kademelerine bağlı olarak Ödül Kutusu açımlarında devasa XP indirimleri veya günlük ücretsiz açım hakları.
+1.  **Kilitleme (Locking):** VIP çarpan seviyelerini, günlük ekstra tahmin limitlerini ve özel platform imtiyazlarını aktifleştirme.
+2.  **Kutu Açma Avantajı:** Kilitleme kademelerine bağlı olarak Ödül Kutusu açımlarında devasa XP indirimleri veya günlük ücretsiz açım hakları.
 3.  **Ekosistem Ödülleri:** Liderlik tablosundaki en başarılı analizcilere haftalık olarak yapılan ödemelerin para birimi olması.
 4.  **XP ve Puan Artırıcılar:** Liderlik sıralamasında avantaj elde etmek için XP çarpanları satın alma.
 5.  **Ekosistem Yönetişimi (DAO):** Token sahiplerine topluluk cüzdanı harcamaları ve ekosistem genişleme öncelikleri üzerinde oylama gücü verme.
@@ -165,14 +165,14 @@ Platformun temel taşı olan **Golden Goal ($GG)** tokenı, tüm ekosistem boyun
 
 ### 6.1 Token Sürdürülebilirliği Mekanizmaları
 Golden Goal token ekonomisi, enflasyona dayalı olmak yerine ekosistem içi sürekli fayda ve yakım (sink) mekanizmalarıyla dengelenir:
-*   **Erken Unstake Cezaları:** Süresi dolmadan yapılan kilit iptali cezalarının %50'si kalıcı olarak yakılarak dolaşımdaki arzdan silinir.
-*   **Ödül Kutusu Katkıları:** Kutu açımlarından elde edilen gelirlerin bir kısmı ekosistem havuzunu beslemek üzere hazineye aktarılır.
+*   **Erken Kilit Açma Cezaları:** Süresi dolmadan yapılan kilit iptali cezalarının %50'si kalıcı olarak yakılarak dolaşımdaki arzdan silinir.
+*   **Ödül Kutusu Katkıları:** Kutu açımlardan elde edilen gelirlerin bir kısmı ekosistem havuzunu beslemek üzere hazineye aktarılır.
 *   **Deflasyonist Mikro Ücretler:** Tahmin değiştirme ve iptallerinden alınan mikro token kesintileri sürekli deflasyonist etki yaratır.
 
 ### 6.2 Adil Lansman (Kilitli veya Ön Satış Tokenı Yoktur)
 Golden Goal, topluluk öncelikli bir protokol olarak tasarlanmıştır. Mutlak güven ortamını sağlamak amacıyla:
 *   **Ön Satış Yoktur:** Platform öncesinde herhangi bir halka açık ön satış etkinliği yapılmamıştır.
-*   **Kilitli Token Baskısı Yoktur:** Ekosistem üzerinde gelecekte pazara sürülerek fiyata baskı yapacak **önceden rezerve edilmiş ön satış veya kurucu kilitli token programı yoktur**. Bu durum, dolaşımdaki tüm tokenların yalnızca aktif katılımcıları, gerçek oyuncuları ve uzun vadeli stakerları temsil etmesini sağlayarak yapay satış baskılarını tamamen ortadan kaldırır.
+*   **Kilitli Token Baskısı Yoktur:** Ekosistem üzerinde gelecekte pazara sürülerek fiyata baskı yapacak **önceden rezerve edilmiş ön satış veya kurucu kilitli token programı yoktur**. Bu durum, dolaşımdaki tüm tokenların yalnızca aktif katılımcıları, gerçek oyuncuları ve uzun vadeli lockerları temsil etmesini sağlayarak yapay satış baskılarını tamamen ortadan kaldırır.
 
 ---
 
@@ -212,7 +212,7 @@ Liderlik tablosu ödüllerinin bütünlüğünü ve adaletini korumak için back
                                  ▼
   ┌─────────────────────────────────────────────────────────────┐
   │ AŞAMA 3: Oyunlaştırma & DeFi Özellikleri                    │
-  │  ⏳ Kademeli Staking Protokolü (Soft, 7g, 15g, 30g Kilit)   │
+  │  ⏳ Kademeli Kilitleme Protokolü (Soft, 7g, 15g, 30g Kilit)   │
   │  ⏳ Ödül Kutusu (Rewards Box - Sadakat Modülü) Entegrasyonu │
   │  ⏳ Deflasyonist Erken Kilit Açma Ceza Yakımları             │
   └──────────────────────────────┬──────────────────────────────┘
@@ -238,4 +238,4 @@ Liderlik tablosu ödüllerinin bütünlüğünü ve adaletini korumak için back
 
 ## 9. Feragatname (Disclaimer)
 
-*Golden Goal ($GG), oyunlaştırılmış merkeziyetsiz bir tahmin platformudur. Kripto varlıkları tutmak ve stake etmek piyasa riskleri barındırır. Platformdaki tahmin pazarlarına katılım tamamen eğlence ve puan biriktirme amaçlıdır; kullanıcılar kendi ülkelerindeki yasal düzenlemelere uymakla yükümlüdür. $GG tokenı bir hizmet ve yönetişim tokenı olup; çekirdek geliştirici ekip üzerinde herhangi bir hisse ortaklığı veya borç hakkı temsil etmez.*
+*Golden Goal ($GG), oyunlaştırılmış merkeziyetsiz bir tahmin platformudur. Kripto varlıkları tutmak ve kilitlemek piyasa riskleri barındırır. Platformdaki tahmin pazarlarına katılım tamamen eğlence ve puan biriktirme amaçlıdır; kullanıcılar kendi ülkelerindeki yasal düzenlemelere uymakla yükümlüdür. $GG tokenı bir hizmet ve yönetişim tokenı olup; çekirdek geliştirici ekip üzerinde herhangi bir hisse ortaklığı veya borç hakkı temsil etmez.*

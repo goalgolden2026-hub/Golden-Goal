@@ -10,27 +10,27 @@ Bu belge, Golden Goal platformunun mimarisini, ekonomisini ve özellik setini ya
 ### 1.1 Altın Puanlar (XP) ve Token Yapısı
 Platformun temel etkileşim ve beceri ölçeğidir.
 - **Kazanım:** Kullanıcılar ücretsiz bir başlangıç kotası ile başlarlar. Sosyal görevleri tamamlayarak, isabetli tahminler yaparak ve arkadaşlarını platforma davet ederek XP (Deneyim Puanı) kazanırlar.
-- **Kullanım:** Becerilerini test etmek amacıyla tahminlerde bulunmak, günlük Ödül Kutusu (Rewards Box) açmak ve staking mekanizmasıyla VIP ayrıcalıklar elde etmek.
+- **Kullanım:** Becerilerini test etmek amacıyla tahminlerde bulunmak, günlük Ödül Kutusu (Rewards Box) açmak ve kilitleme (locking) mekanizmasıyla VIP ayrıcalıklar elde etmek.
 
 ### 1.2 Tahmin Sistemi (Prediction System)
 - **Marketler:** Kullanıcılar Maç Sonucu (Ev Sahibi, Beraberlik, Deplasman), Karşılıklı Gol Var/Yok, 2.5 Alt/Üst ve Çifte Şans gibi standart spor analiz pazarlarında tahminler gerçekleştirebilir.
 - **Kısıtlamalar:** Tahminler, ilgili maçın başlama saatine 5 dakika kalana kadar değiştirilebilir veya iptal edilebilir. Tahmin değişikliği 100 Altın Token, tahmin iptali ise 200 Altın Token işlem ücretine tabidir (Bu ücretlerin yarısı yakılır, diğer yarısı ödül havuzuna aktarılır).
 
-## 2. Staking Kademeleri & Ayrıcalıklar
+## 2. Kilitleme (Locking) Kademeleri & Ayrıcalıklar
 
-Kullanıcılar, Golden Token'larını belirli sürelerle kilitleyerek (Staking) VIP analiz seviyelerine yükselebilir ve günlük tahmin limitlerini artırabilirler.
-- **Tier 1 (Soft Stake):** 75 XP Ödül Kutusu maliyeti, günlük +1 Ek Tahmin Limiti.
+Kullanıcılar, Golden Token'larını belirli sürelerle kilitleyerek (Locking) VIP analiz seviyelerine yükselebilir ve günlük tahmin limitlerini artırabilirler.
+- **Tier 1 (Soft Lock):** 75 XP Ödül Kutusu maliyeti, günlük +1 Ek Tahmin Limiti.
 - **Tier 2 (7 Günlük Kilit):** 50 XP Ödül Kutusu maliyeti, günlük +3 Ek Tahmin Limiti.
 - **Tier 3 (15 Günlük Kilit):** 25 XP Ödül Kutusu maliyeti, günlük +5 Ek Tahmin Limiti.
 - **Tier 4 (1 Aylık Kilit):** Her gün ilk Ödül Kutusu açımı TAMAMEN ÜCRETSİZ, sonraki açımlar 25 XP, günlük +10 Ek Tahmin Limiti.
 
-*Not: Herhangi bir staking işlemi yapmayan kullanıcılar (Tier 0), standart günlük 5 tahmin hakkına sahiptir ve Ödül Kutusu açımları için 100 XP öderler.*
+*Not: Herhangi bir kilitleme (locking) işlemi yapmayan kullanıcılar (Tier 0), standart günlük 5 tahmin hakkına sahiptir ve Ödül Kutusu açımları için 100 XP öderler.*
 
 ## 3. Sosyal Büyüme & Oyunlaştırma
 
 ### 3.1 Ödül Kutusu (Rewards Box - Sadakat Modülü)
 - Şans faktöründen uzak, tamamen kullanıcı bağlılığı ve XP ödüllendirmesine dayalı, neon/altın temalı görsel efektler ve konfeti animasyonları içeren premium bir sadakat modülüdür.
-- Kutu açım maliyetleri kullanıcının Staking kademesine göre dinamik olarak azalır.
+- Kutu açım maliyetleri kullanıcının kilitleme (locking) kademesine göre dinamik olarak azalır.
 - **Ödüller:** Ek tahmin limitleri veya doğrudan profil puanına eklenen XP Puanları (+100, +250, +500, +1000 XP) matematiksel oranlara göre dağıtılır.
 
 ### 3.2 Sınırsız Sosyal Görevler (Twitter Farming)

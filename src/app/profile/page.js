@@ -136,7 +136,7 @@ export default function ProfilePage() {
                                 ></div>
                             </div>
                             <p className="text-xs text-zinc-500 mt-3.5 leading-relaxed">
-                                Stake your Golden Tokens or unlock daily Rewards Boxes to permanently boost your prediction limit and XP multipliers.
+                                Lock your Golden Tokens or unlock daily Rewards Boxes to permanently boost your prediction limit and XP multipliers.
                             </p>
                         </div>
                     </div>

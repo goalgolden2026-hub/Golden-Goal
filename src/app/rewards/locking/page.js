@@ -4,13 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import CustomModal from '@/components/CustomModal';
 
-export default function StakePage() {
+export default function LockingPage() {
   const { publicKey, connected } = useWallet();
   const [loading, setLoading] = useState(false);
-  const [activeStake, setActiveStake] = useState(null);
+  const [activeLock, setActiveLock] = useState(null);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [refresh, setRefresh] = useState(0);
-  const [stats, setStats] = useState({ tvl: 0, stakers: 0, userStaked: 0 });
+  const [stats, setStats] = useState({ tvl: 0, lockers: 0, userLocked: 0 });
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     title: '',
@@ -24,16 +24,16 @@ export default function StakePage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const url = connected ? `/api/stake/stats?walletAddress=${publicKey.toString()}` : '/api/stake/stats';
+        const url = connected ? `/api/lock/stats?walletAddress=${publicKey.toString()}` : '/api/lock/stats';
         const res = await fetch(url);
         const data = await res.json();
         if (data.success) {
           setStats({
             tvl: data.totalValueLocked,
-            stakers: data.activeStakers,
-            userStaked: data.userStaked
+            lockers: data.activeLockers,
+            userLocked: data.userLocked
           });
-          setActiveStake(data.activeStake);
+          setActiveLock(data.activeLock);
         }
       } catch (err) {
         console.error("Failed to fetch stats", err);
@@ -45,7 +45,7 @@ export default function StakePage() {
   const tiers = [
     { 
       id: 1, 
-      name: "Soft Stake", 
+      name: "Soft Lock", 
       lock: "24h Lock", 
       penalty: "0%", 
       reward: "+1 Daily Prediction",
@@ -59,7 +59,7 @@ export default function StakePage() {
     },
     { 
       id: 2, 
-      name: "7-Day Stake", 
+      name: "7-Day Lock", 
       lock: "7 Days", 
       penalty: "10%", 
       reward: "+3 Daily Predictions",
@@ -73,7 +73,7 @@ export default function StakePage() {
     },
     { 
       id: 3, 
-      name: "15-Day Stake", 
+      name: "15-Day Lock", 
       lock: "15 Days", 
       penalty: "10%", 
       reward: "+5 Predictions & 1.1x XP",
@@ -88,7 +88,7 @@ export default function StakePage() {
     },
     { 
       id: 4, 
-      name: "1-Month Stake", 
+      name: "1-Month Lock", 
       lock: "30 Days", 
       penalty: "10%", 
       reward: "+10 Predictions & 1.25x XP",
@@ -153,11 +153,11 @@ export default function StakePage() {
             </span>
           </div>
           <button
-            onClick={handleUnstake}
+            onClick={handleUnlock}
             disabled={loading}
             className="w-full py-4 rounded-xl font-bold transition-all bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-[0_4px_20px_rgba(16,185,129,0.2)] hover:shadow-[0_4px_25px_rgba(16,185,129,0.35)] animate-pulse"
           >
-            Withdraw / Unstake
+            Unlock / Withdraw
           </button>
         </div>
       );
@@ -171,7 +171,7 @@ export default function StakePage() {
     );
   };
 
-  const handleStake = async (tierId, minAmount) => {
+  const handleLock = async (tierId, minAmount) => {
     if (!connected) {
       showMessage("Please connect your wallet first.", "error");
       return;
@@ -179,7 +179,7 @@ export default function StakePage() {
     
     setLoading(true);
     try {
-      const res = await fetch('/api/stake', {
+      const res = await fetch('/api/lock', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -190,7 +190,7 @@ export default function StakePage() {
       });
       const data = await res.json();
       if (data.success) {
-        showMessage(`Successfully staked ${minAmount} tokens!`, "success");
+        showMessage(`Successfully locked ${minAmount} tokens!`, "success");
         setRefresh(prev => prev + 1);
       } else {
         showMessage(data.error, "error");
@@ -201,24 +201,24 @@ export default function StakePage() {
     setLoading(false);
   };
 
-  const handleUnstake = async () => {
-    if (!connected || !activeStake) return;
+  const handleUnlock = async () => {
+    if (!connected || !activeLock) return;
 
-    const isExpired = new Date().getTime() >= new Date(activeStake.unlockDate).getTime();
-    const tier = tiers.find(t => t.id === activeStake.tier);
+    const isExpired = new Date().getTime() >= new Date(activeLock.unlockDate).getTime();
+    const tier = tiers.find(t => t.id === activeLock.tier);
     const hasPenalty = tier && tier.id > 1 && !isExpired;
 
-    let confirmTitle = "Unstake Request";
-    let confirmMessage = "Are you sure you want to unstake and withdraw your tokens?";
+    let confirmTitle = "Unlock Request";
+    let confirmMessage = "Are you sure you want to unlock and withdraw your tokens?";
     let modalType = "confirm";
 
     if (hasPenalty) {
       confirmTitle = "⚠️ Warning: Early Withdrawal Penalty";
-      confirmMessage = "You are unstaking BEFORE your lock period has expired. A 10% early withdrawal penalty will be applied.\n\nAre you sure you want to proceed?";
+      confirmMessage = "You are unlocking BEFORE your lock period has expired. A 10% early withdrawal penalty will be applied.\n\nAre you sure you want to proceed?";
       modalType = "warning";
     } else if (tier && tier.id === 1) {
-      confirmTitle = "Soft Stake Withdrawal";
-      confirmMessage = "Are you sure you want to unstake and withdraw your tokens from Soft Stake (0% penalty)?";
+      confirmTitle = "Soft Lock Withdrawal";
+      confirmMessage = "Are you sure you want to unlock and withdraw your tokens from Soft Lock (0% penalty)?";
       modalType = "confirm";
     } else {
       confirmTitle = "🎉 Lock Period Expired!";
@@ -236,7 +236,7 @@ export default function StakePage() {
       onConfirm: async () => {
         setLoading(true);
         try {
-          const res = await fetch('/api/unstake', {
+          const res = await fetch('/api/unlock', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ walletAddress: publicKey.toString() })
@@ -247,7 +247,7 @@ export default function StakePage() {
                 setModalConfig({
                   isOpen: true,
                   title: "⚠️ Penalty Applied",
-                  message: `Unstaked! Early penalty was applied. You received ${data.returnedAmount} tokens.`,
+                  message: `Unlocked! Early penalty was applied. You received ${data.returnedAmount} tokens.`,
                   type: "warning",
                   confirmText: "Close",
                   onConfirm: null
@@ -255,8 +255,8 @@ export default function StakePage() {
             } else {
                 setModalConfig({
                   isOpen: true,
-                  title: "🎉 Unstaked Successfully!",
-                  message: "Your staked tokens have been successfully returned to your wallet.",
+                  title: "🎉 Unlocked Successfully!",
+                  message: "Your locked tokens have been successfully returned to your wallet.",
                   type: "success",
                   confirmText: "Great",
                   onConfirm: null
@@ -299,7 +299,7 @@ export default function StakePage() {
       {/* Header */}
       <div className="text-center mb-16">
         <h1 className="text-4xl sm:text-5xl font-extrabold mb-4">
-          Token <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">Staking</span>
+          Token <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">Locking</span>
         </h1>
         <p className="text-zinc-400 max-w-2xl mx-auto text-lg">
           Lock your Golden Tokens to unlock powerful multipliers, extra daily predictions, and secure the network.
@@ -334,8 +334,8 @@ export default function StakePage() {
             👥
           </div>
           <div>
-            <div className="text-zinc-500 text-xs font-bold tracking-wider mb-1 uppercase">Active Stakers</div>
-            <div className="text-2xl font-bold text-white">{stats.stakers.toLocaleString()} <span className="text-sm text-zinc-500 font-normal">Wallets</span></div>
+            <div className="text-zinc-500 text-xs font-bold tracking-wider mb-1 uppercase">Active Lockers</div>
+            <div className="text-2xl font-bold text-white">{stats.lockers.toLocaleString()} <span className="text-sm text-zinc-500 font-normal">Wallets</span></div>
           </div>
         </div>
 
@@ -344,8 +344,8 @@ export default function StakePage() {
             👤
           </div>
           <div>
-            <div className="text-zinc-500 text-xs font-bold tracking-wider mb-1 uppercase">Your Staked</div>
-            <div className="text-2xl font-bold text-white">{stats.userStaked.toLocaleString()} <span className="text-sm text-zinc-500 font-normal">Tokens</span></div>
+            <div className="text-zinc-500 text-xs font-bold tracking-wider mb-1 uppercase">Your Locked</div>
+            <div className="text-2xl font-bold text-white">{stats.userLocked.toLocaleString()} <span className="text-sm text-zinc-500 font-normal">Tokens</span></div>
           </div>
         </div>
       </div>
@@ -397,15 +397,15 @@ export default function StakePage() {
                 </div>
               </div>
 
-              {activeStake && activeStake.tier === t.id ? (
-                <CountdownTimer targetDate={activeStake.unlockDate} />
+              {activeLock && activeLock.tier === t.id ? (
+                <CountdownTimer targetDate={activeLock.unlockDate} />
               ) : (
                 <button 
-                  onClick={() => handleStake(t.id, t.min)}
-                  disabled={loading || !connected || activeStake}
+                  onClick={() => handleLock(t.id, t.min)}
+                  disabled={loading || !connected || activeLock}
                   className="w-full py-4 rounded-xl font-bold transition-all bg-zinc-800 text-white hover:bg-zinc-700 disabled:opacity-50"
                 >
-                  {activeStake ? 'Already Staked' : 'Stake Now'}
+                  {activeLock ? 'Already Locked' : 'Lock Now'}
                 </button>
               )}
             </div>
@@ -413,14 +413,14 @@ export default function StakePage() {
         ))}
       </div>
 
-      {/* Unstake Section */}
-      {activeStake && (
+      {/* Unlock Section */}
+      {activeLock && (
         <div className="mt-16 bg-zinc-900/30 border border-white/10 rounded-3xl p-8 max-w-3xl mx-auto text-center">
-          <h3 className="text-xl font-bold mb-2">Manage Your Stake</h3>
+          <h3 className="text-xl font-bold mb-2">Manage Your Lock</h3>
           <p className="text-zinc-400 mb-6 text-sm leading-relaxed max-w-2xl mx-auto">
-            {new Date().getTime() >= new Date(activeStake.unlockDate).getTime() || activeStake.tier === 1 ? (
+            {new Date().getTime() >= new Date(activeLock.unlockDate).getTime() || activeLock.tier === 1 ? (
               <span className="text-emerald-400 font-semibold text-base block my-2">
-                🔓 Your stake is unlocked! You can now withdraw all your staked tokens with 0% penalty.
+                🔓 Your lock is unlocked! You can now withdraw all your locked tokens with 0% penalty.
               </span>
             ) : (
               <>
@@ -432,15 +432,15 @@ export default function StakePage() {
           </p>
           
           <button 
-              onClick={handleUnstake}
+              onClick={handleUnlock}
               disabled={loading || !connected}
               className={`px-8 py-3 font-bold rounded-xl transition-all disabled:opacity-50 ${
-                new Date().getTime() >= new Date(activeStake.unlockDate).getTime() || activeStake.tier === 1
+                new Date().getTime() >= new Date(activeLock.unlockDate).getTime() || activeLock.tier === 1
                   ? 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-[0_4px_15px_rgba(16,185,129,0.2)] hover:shadow-[0_4px_25px_rgba(16,185,129,0.35)]'
                   : 'bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20'
               }`}
             >
-              Unstake / Withdraw
+              Unlock / Withdraw
           </button>
         </div>
       )}

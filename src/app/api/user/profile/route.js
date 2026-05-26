@@ -54,10 +54,10 @@ export async function GET(request) {
         // Dynamic Balance Calculation
         let mockBalance = 30000;
 
-        // Deduct active stakes
-        const activeStakesTotalRes = await sql`SELECT SUM(amount) as total FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
-        if (activeStakesTotalRes.rows[0].total) {
-            mockBalance -= parseInt(activeStakesTotalRes.rows[0].total);
+        // Deduct active locks
+        const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+        if (activeLocksTotalRes.rows[0].total) {
+            mockBalance -= parseInt(activeLocksTotalRes.rows[0].total);
         }
 
         // Apply treasury logs
@@ -74,14 +74,14 @@ export async function GET(request) {
         }
 
         // Calculate Daily Predictions Limit
-        const activeStakeRes = await sql`SELECT tier FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+        const activeLockRes = await sql`SELECT tier FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
         let bonusPredictions = 0;
-        if (activeStakeRes.rowCount > 0) {
-            const stakeTier = activeStakeRes.rows[0].tier;
-            if (stakeTier === 1) bonusPredictions = 1;
-            else if (stakeTier === 2) bonusPredictions = 3;
-            else if (stakeTier === 3) bonusPredictions = 5;
-            else if (stakeTier === 4) bonusPredictions = 10;
+        if (activeLockRes.rowCount > 0) {
+            const lockTier = activeLockRes.rows[0].tier;
+            if (lockTier === 1) bonusPredictions = 1;
+            else if (lockTier === 2) bonusPredictions = 3;
+            else if (lockTier === 3) bonusPredictions = 5;
+            else if (lockTier === 4) bonusPredictions = 10;
         }
 
         const baseLimit = 5;

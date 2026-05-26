@@ -5,14 +5,14 @@ import Link from 'next/link';
 
 export default function DocsPage() {
   const [activeSection, setActiveSection] = useState('introduction');
-  const [stakeAmount, setStakeAmount] = useState(1000);
+  const [lockAmount, setLockAmount] = useState(1000);
 
   const sections = [
     { id: 'introduction', label: '1. Introduction' },
     { id: 'vision', label: '2. Vision & Core Philosophy' },
     { id: 'problem-solution', label: '3. Problem & Solution' },
     { id: 'features', label: '4. Platform Features' },
-    { id: 'staking', label: '5. VIP Staking System' },
+    { id: 'staking', label: '5. VIP Locking System' },
     { id: 'spin-system', label: '6. Rewards Box Module' },
     { id: 'social-referral', label: '7. Social Hub & Referrals' },
     { id: 'tokenomics', label: '8. Tokenomics & Fair Launch' },
@@ -21,8 +21,8 @@ export default function DocsPage() {
     { id: 'disclaimer', label: '11. Disclaimer' },
   ];
 
-  // Helper to determine staking rewards dynamically
-  const getStakingTierInfo = (amount) => {
+  // Helper to determine locking rewards dynamically
+  const getLockingTierInfo = (amount) => {
     if (amount >= 5000) {
       return {
         tier: "Tier 4 (1-Month Locked)",
@@ -31,7 +31,7 @@ export default function DocsPage() {
         rewardsBox: "1 Free Daily Rewards Box (then 25 XP)",
         period: "30 Days Lock",
         color: "from-amber-400 to-yellow-600",
-        unstakePenalty: "10% Penalty (50% Burned, 50% to Rewards)"
+        unlockPenalty: "10% Penalty (50% Burned, 50% to Rewards)"
       };
     } else if (amount >= 1000) {
       return {
@@ -41,7 +41,7 @@ export default function DocsPage() {
         rewardsBox: "25 XP / Box (75% Off)",
         period: "15 Days Lock",
         color: "from-yellow-500 to-amber-500",
-        unstakePenalty: "10% Penalty (50% Burned, 50% to Rewards)"
+        unlockPenalty: "10% Penalty (50% Burned, 50% to Rewards)"
       };
     } else if (amount >= 500) {
       return {
@@ -51,32 +51,32 @@ export default function DocsPage() {
         rewardsBox: "50 XP / Box (50% Off)",
         period: "7 Days Lock",
         color: "from-zinc-300 to-zinc-500",
-        unstakePenalty: "10% Penalty (50% Burned, 50% to Rewards)"
+        unlockPenalty: "10% Penalty (50% Burned, 50% to Rewards)"
       };
     } else if (amount >= 100) {
       return {
-        tier: "Tier 1 (Soft Stake)",
+        tier: "Tier 1 (Soft Lock)",
         predictions: "+1 Daily Prediction",
         xp: "1.0x XP Multiplier",
         rewardsBox: "75 XP / Box (25% Off)",
         period: "1 Day Lock",
         color: "from-amber-700 to-yellow-900",
-        unstakePenalty: "Flexible - Zero Penalty"
+        unlockPenalty: "Flexible - Zero Penalty"
       };
     } else {
       return {
-        tier: "Tier 0 (No Active Stake)",
+        tier: "Tier 0 (No Active Lock)",
         predictions: "Base Daily Prediction Limit",
         xp: "1.0x XP Multiplier",
         rewardsBox: "100 XP / Box Open",
         period: "No Lock",
         color: "from-zinc-700 to-zinc-800",
-        unstakePenalty: "N/A"
+        unlockPenalty: "N/A"
       };
     }
   };
 
-  const currentTier = getStakingTierInfo(stakeAmount);
+  const currentTier = getLockingTierInfo(lockAmount);
 
   return (
     <div className="flex-1 w-full bg-zinc-950 text-zinc-100 flex flex-col md:flex-row relative">
@@ -137,7 +137,7 @@ export default function DocsPage() {
               Solana <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">Golden Goal</span>
             </h1>
             <p className="text-zinc-400 text-lg leading-relaxed max-w-3xl">
-              Official whitepaper detailing the decentralized, gamified prediction economy, VIP staking utility matrix, provably fair mechanics, and AWS global cluster architecture.
+              Official whitepaper detailing the decentralized, gamified prediction economy, VIP locking utility matrix, provably fair mechanics, and AWS global cluster architecture.
             </p>
           </div>
 
@@ -149,7 +149,7 @@ export default function DocsPage() {
             <div className="p-0.5 rounded-3xl bg-gradient-to-br from-white/10 to-transparent">
               <div className="bg-zinc-900/50 backdrop-blur-md p-6 rounded-[22px] space-y-4 text-zinc-300 leading-relaxed text-sm md:text-base">
                 <p>
-                  Solana <strong>Golden Goal</strong> is a next-generation Web3 sports prediction ecosystem engineered to unite high-fidelity gamification, passive staking yield mechanics, and sports oracle pipelines.
+                  Solana <strong>Golden Goal</strong> is a next-generation Web3 sports prediction ecosystem engineered to unite high-fidelity gamification, passive locking mechanics, and sports oracle pipelines.
                 </p>
                 <p>
                   By creating a <strong>sustainable prediction economy</strong>, users can place risk-free predictions on global fixtures (such as World Cup matches) completely free, claim Experience Points (XP) for success, and win high-yielding payouts from weekly token rewards.
@@ -173,7 +173,7 @@ export default function DocsPage() {
               <div className="bg-zinc-900/40 border border-white/5 p-5 rounded-2xl">
                 <span className="text-2xl">⚡</span>
                 <h4 className="font-bold text-white mt-2 mb-1">Zero-Capital Forecasting</h4>
-                <p className="text-zinc-400 text-sm">Users utilize staking limits or wallet hold quotas to predict. Core assets remain 100% untouched.</p>
+                <p className="text-zinc-400 text-sm">Users utilize locking limits or wallet hold quotas to predict. Core assets remain 100% untouched.</p>
               </div>
               <div className="bg-zinc-900/40 border border-white/5 p-5 rounded-2xl">
                 <span className="text-2xl">🏆</span>
@@ -203,7 +203,7 @@ export default function DocsPage() {
               <div className="border-l-2 border-emerald-500/50 pl-4 space-y-2">
                 <h3 className="font-bold text-emerald-400 text-lg">The Golden Goal Solutions</h3>
                 <ul className="list-disc list-inside text-zinc-400 text-sm space-y-1">
-                  <li>Risk-free predictive matrix based entirely on holdings and loyalty stakes.</li>
+                  <li>Risk-free predictive matrix based entirely on holdings and loyalty locks.</li>
                   <li>Sleek, cinematic premium layout co-located on optimized servers.</li>
                   <li>Twitter Farming and gamified double leaderboards rewarding viral support.</li>
                   <li>Sustainable sinks built into prediction changes, spins, and lock breaches.</li>
@@ -250,35 +250,35 @@ export default function DocsPage() {
             </div>
           </section>
 
-          {/* 5. VIP STAKING SYSTEM (WITH INTERACTIVE CALCULATOR) */}
+          {/* 5. VIP LOCKING SYSTEM (WITH INTERACTIVE CALCULATOR) */}
           <section id="staking" className="scroll-mt-24 space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
-              <span className="text-amber-500">5.</span> VIP Staking System
+              <span className="text-amber-500">5.</span> VIP Locking System
             </h2>
             <p className="text-zinc-400 text-sm md:text-base leading-relaxed">
               Locking your $GG tokens reduces circulating market supply while unlocking elite platform advantages. Use the interactive calculator below to explore your loyalty benefits in real-time.
             </p>
 
-            {/* INTERACTIVE STAKING CALCULATOR */}
+            {/* INTERACTIVE LOCKING CALCULATOR */}
             <div className="bg-zinc-900 border border-amber-500/20 p-6 rounded-3xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
               
               <h3 className="font-extrabold text-white text-lg mb-4 flex items-center gap-2">
-                <span>🎰</span> Staking Benefit Simulator
+                <span>🎰</span> Locking Benefit Simulator
               </h3>
 
               <div className="space-y-4 mb-6">
                 <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                  Select Staking Amount: <span className="text-amber-400 font-mono text-base font-bold">{stakeAmount} $GG</span>
+                  Select Locking Amount: <span className="text-amber-400 font-mono text-base font-bold">{lockAmount} $GG</span>
                 </label>
                 <input
-                  id="stake-slider"
+                  id="lock-slider"
                   type="range"
                   min="0"
                   max="10000"
                   step="100"
-                  value={stakeAmount}
-                  onChange={(e) => setStakeAmount(Number(e.target.value))}
+                  value={lockAmount}
+                  onChange={(e) => setLockAmount(Number(e.target.value))}
                   className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
                 />
                 <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
@@ -317,13 +317,13 @@ export default function DocsPage() {
                 </div>
                 <div className="sm:col-span-2 border-t border-white/5 pt-3 mt-1">
                   <h4 className="text-xs text-zinc-500 font-bold uppercase tracking-wider mb-1">Lock Breach Penalty</h4>
-                  <div className="text-xs font-semibold text-red-400">{currentTier.unstakePenalty}</div>
+                  <div className="text-xs font-semibold text-red-400">{currentTier.unlockPenalty}</div>
                 </div>
               </div>
             </div>
 
             <div className="border-l-2 border-amber-500/30 pl-4 py-1 text-sm text-zinc-400">
-              <strong>Staking Burn Lock Protocol:</strong> When you unstake early before the required period, the 10% penalty fee is dynamically split: 50% is sent to a burn address to contract supply, and 50% is routed directly back to the active rewards contract.
+              <strong>Locking Burn Protocol:</strong> When you unlock early before the required period, the 10% penalty fee is dynamically split: 50% is sent to a burn address to contract supply, and 50% is routed directly back to the active rewards contract.
             </div>
           </section>
 
@@ -340,16 +340,16 @@ export default function DocsPage() {
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
                   <tr className="bg-zinc-900/80 text-zinc-400 border-b border-white/5">
-                    <th className="p-4 font-semibold">User Staking Classification</th>
+                    <th className="p-4 font-semibold">User Locking Classification</th>
                     <th className="p-4 font-semibold text-right">Access Cost</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5 bg-zinc-950/40 font-mono">
-                  <tr><td className="p-4 text-zinc-400 font-sans">No Active Stake (Tier 0)</td><td className="p-4 text-right text-zinc-300 font-bold">100 XP</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">Soft Stakers (Tier 1)</td><td className="p-4 text-right text-zinc-300 font-bold">75 XP</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">7-Day Locked Stakers (Tier 2)</td><td className="p-4 text-right text-zinc-300 font-bold">50 XP</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">15-Day Locked Stakers (Tier 3)</td><td className="p-4 text-right text-zinc-300 font-bold">25 XP</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans font-semibold">30-Day Locked Stakers (Tier 4)</td><td className="p-4 text-right text-emerald-400 font-bold">1 Free Daily Box (then 25 XP)</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">No Active Lock (Tier 0)</td><td className="p-4 text-right text-zinc-300 font-bold">100 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">Soft Lockers (Tier 1)</td><td className="p-4 text-right text-zinc-300 font-bold">75 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">7-Day Locked Lockers (Tier 2)</td><td className="p-4 text-right text-zinc-300 font-bold">50 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">15-Day Locked Lockers (Tier 3)</td><td className="p-4 text-right text-zinc-300 font-bold">25 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans font-semibold">30-Day Locked Lockers (Tier 4)</td><td className="p-4 text-right text-emerald-400 font-bold">1 Free Daily Box (then 25 XP)</td></tr>
                 </tbody>
               </table>
             </div>
@@ -374,7 +374,7 @@ export default function DocsPage() {
             <div className="space-y-4 pt-2">
               <h3 className="font-bold text-white text-lg">7.2 Referral Milestones</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                Viral loops are powered by referral codes. Referrals only lock into place when the invited user connects their Solana wallet and registers at least <strong>one transactional operation</strong> (prediction, spin, or stake). 
+                Viral loops are powered by referral codes. Referrals only lock into place when the invited user connects their Solana wallet and registers at least <strong>one transactional operation</strong> (prediction, box open, or lock). 
               </p>
             </div>
           </section>
@@ -393,14 +393,14 @@ export default function DocsPage() {
                 To guarantee organic price growth and absolute transparency, <strong>Golden Goal has bypass-eliminated public presales</strong>. 
               </p>
               <div className="border-l-4 border-emerald-500 pl-4 py-1 text-sm text-zinc-400">
-                Because there is no public presale, there are <strong>zero locked pre-sale tokens</strong> scheduled to be released or dumped onto the market. All tokens in active circulation represent organic forecasters, real stakers, and leaderboard winners.
+                Because there is no public presale, there are <strong>zero locked pre-sale tokens</strong> scheduled to be released or dumped onto the market. All tokens in active circulation represent organic forecasters, real lockers, and leaderboard winners.
               </div>
             </div>
 
             <div className="space-y-3">
               <h4 className="font-bold text-zinc-200">Core Deflation Sinks:</h4>
               <ul className="list-disc list-inside text-zinc-400 text-sm space-y-1">
-                <li>Staking early unstake penalty burns 50% of the penalty.</li>
+                <li>Locking early unlock penalty burns 50% of the penalty.</li>
                 <li>Prediction changes and deletion burn or lock micro $GG tokens.</li>
                 <li>Rewards Box utilizes gamified XP Points to reward platform loyalty rather than inflating circulating token supply.</li>
               </ul>
@@ -470,7 +470,7 @@ export default function DocsPage() {
                 </span>
                 <h4 className="font-bold text-zinc-400">Phase 3: Gamified DeFi</h4>
                 <p className="text-zinc-400 text-xs mt-1">
-                  Multi-tier staking locks (1d, 7d, 15d, 30d Tiers), Rewards Box Integration, and automated stake early penalty splits.
+                  Multi-tier token locking (1d, 7d, 15d, 30d Tiers), Rewards Box Integration, and automated early unlock penalty splits.
                 </p>
               </div>
 
@@ -493,7 +493,7 @@ export default function DocsPage() {
               <span className="text-zinc-600">11.</span> Legal Disclaimers
             </h2>
             <p className="text-zinc-500 text-xs leading-relaxed">
-              Golden Goal ($GG) is an entertainment-based decentralized prediction ecosystem. Participation in predictions is risk-free and carries no direct asset cost. Staking cryptocurrency tokens carries systemic smart contract, blockchain network, and market volatility risks. The $GG token functions purely as a utility token within the application and represents no equity, security share, or debt claim on the development project team.
+              Golden Goal ($GG) is an entertainment-based decentralized prediction ecosystem. Participation in predictions is risk-free and carries no direct asset cost. Locking cryptocurrency tokens carries systemic smart contract, blockchain network, and market volatility risks. The $GG token functions purely as a utility token within the application and represents no equity, security share, or debt claim on the development project team.
             </p>
           </section>
 

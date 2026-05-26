@@ -7,7 +7,7 @@ export async function POST(request) {
         const { walletAddress, tier, amount } = body;
 
         // Tier definitions
-        // 1: Soft Stake (No lock), 2: 7-Day, 3: 15-Day, 4: 30-Day
+        // 1: Soft Lock (No lock), 2: 7-Day, 3: 15-Day, 4: 30-Day
         if (!walletAddress || !tier || !amount) {
             return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
         }
@@ -23,16 +23,16 @@ export async function POST(request) {
             `;
         }
 
-        // Check for existing active stake (simple logic: one active stake per user)
-        const activeStakeRes = await sql`SELECT * FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
-        if (activeStakeRes.rowCount > 0) {
-            return NextResponse.json({ success: false, error: "You already have an active stake. Unstake first." }, { status: 400 });
+        // Check for existing active lock (simple logic: one active lock per user)
+        const activeLockRes = await sql`SELECT * FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+        if (activeLockRes.rowCount > 0) {
+            return NextResponse.json({ success: false, error: "You already have an active lock. Unlock first." }, { status: 400 });
         }
 
         // Calculate unlock date
         let daysToLock = 0;
         
-        if (tier === 1) daysToLock = 1; // 24-Hour lock for Soft Stake
+        if (tier === 1) daysToLock = 1; // 24-Hour lock for Soft Lock
         else if (tier === 2) daysToLock = 7;
         else if (tier === 3) daysToLock = 15;
         else if (tier === 4) daysToLock = 30;
@@ -45,13 +45,13 @@ export async function POST(request) {
         }
 
         await sql`
-            INSERT INTO stakes ("walletAddress", tier, amount, "unlockDate", status)
+            INSERT INTO locks ("walletAddress", tier, amount, "unlockDate", status)
             VALUES (${walletAddress}, ${tier}, ${amount}, ${unlockDate}, 'ACTIVE')
         `;
 
-        return NextResponse.json({ success: true, message: "Stake successful", unlockDate }, { status: 201 });
+        return NextResponse.json({ success: true, message: "Lock successful", unlockDate }, { status: 201 });
     } catch (error) {
-        console.error("POST /api/stake error:", error);
-        return NextResponse.json({ success: false, error: "Failed to stake" }, { status: 500 });
+        console.error("POST /api/lock error:", error);
+        return NextResponse.json({ success: false, error: "Failed to lock" }, { status: 500 });
     }
 }

@@ -40,12 +40,12 @@ export async function POST(request) {
                 // Win
                 await sql`UPDATE predictions SET status = 'WON' WHERE id = ${bet.id}`;
                 
-                // Calculate Multiplier based on Active Stake
-                const activeStakeRes = await sql`SELECT * FROM stakes WHERE "walletAddress" = ${bet.walletAddress} AND status = 'ACTIVE'`;
+                // Calculate Multiplier based on Active Lock
+                const activeLockRes = await sql`SELECT * FROM locks WHERE "walletAddress" = ${bet.walletAddress} AND status = 'ACTIVE'`;
                 let finalReward = pointsReward;
                 
-                if (activeStakeRes.rowCount > 0) {
-                    const tier = activeStakeRes.rows[0].tier;
+                if (activeLockRes.rowCount > 0) {
+                    const tier = activeLockRes.rows[0].tier;
                     if (tier === 3) finalReward = Math.floor(pointsReward * 1.10);
                     else if (tier === 4) finalReward = Math.floor(pointsReward * 1.25);
                 }

@@ -188,7 +188,7 @@ export default function RewardBoxPage() {
                         REWARDS BOX
                     </h1>
                     <p className="text-zinc-300 font-medium">
-                        Get <span className="text-yellow-400 font-bold">1 Free Rewards Box</span> daily with 30-Day staking, subsequent openings cost just 25 XP!
+                        Get <span className="text-yellow-400 font-bold">1 Free Rewards Box</span> daily with 30-Day locking, subsequent openings cost just 25 XP!
                     </p>
                 </div>
 
@@ -319,7 +319,7 @@ export default function RewardBoxPage() {
                 <div className="flex flex-col items-center text-center">
                     <div className="text-4xl mb-3 text-orange-400 drop-shadow-[0_0_10px_rgba(251,146,60,0.5)]">🎁</div>
                     <h3 className="text-xs font-bold text-orange-400 tracking-wider mb-2">DAILY REWARDS BOX</h3>
-                    <p className="text-[11px] text-zinc-500">Stake your tokens for 30 days and earn 1 Rewards Box daily!</p>
+                    <p className="text-[11px] text-zinc-500">Lock your tokens for 30 days and earn 1 Rewards Box daily!</p>
                 </div>
                 <div className="flex flex-col items-center text-center">
                     <div className="text-4xl mb-3 text-red-400 drop-shadow-[0_0_10px_rgba(248,113,113,0.5)]">🛡️</div>

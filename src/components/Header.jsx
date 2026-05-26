@@ -125,7 +125,7 @@ export default function Header() {
                                     {/* Actual Styled Dropdown Container */}
                                     <div className="bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 shadow-[0_10px_35px_rgba(0,0,0,0.6)] hover:border-amber-500/30 relative">
                                         <div className="absolute top-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
-                                        <Link href="/rewards/staking" className="block px-4 py-2.5 rounded-xl hover:bg-amber-500/10 hover:text-amber-400 transition-all font-semibold text-xs text-left">🌱 Staking</Link>
+                                        <Link href="/rewards/locking" className="block px-4 py-2.5 rounded-xl hover:bg-amber-500/10 hover:text-amber-400 transition-all font-semibold text-xs text-left">🌱 Locking</Link>
                                         <Link href="/rewards/reward-box" className="block px-4 py-2.5 rounded-xl hover:bg-red-500/10 hover:text-red-400 transition-all font-semibold text-xs text-left">🎁 Reward Box</Link>
                                         <Link href="/rewards/social-tasks" className="block px-4 py-2.5 rounded-xl hover:bg-blue-500/10 hover:text-blue-400 transition-all font-semibold text-xs text-left">🐦 Social Tasks</Link>
                                     </div>
@@ -189,7 +189,7 @@ export default function Header() {
                                         </button>
                                         {mobileRewardsOpen && (
                                             <div className="flex flex-col gap-3 pl-4 pt-3 pb-2 text-sm bg-white/[0.02] rounded-xl mt-2 border border-white/5">
-                                                <Link href="/rewards/staking" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-400 transition-colors">🌱 Staking</Link>
+                                                <Link href="/rewards/locking" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-400 transition-colors">🌱 Locking</Link>
                                                 <Link href="/rewards/reward-box" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-red-400 transition-colors">🎁 Reward Box</Link>
                                                 <Link href="/rewards/social-tasks" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-blue-400 transition-colors">🐦 Social Tasks</Link>
                                             </div>

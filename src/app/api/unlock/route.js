@@ -12,21 +12,21 @@ export async function POST(request) {
 
         const sql = await getDb();
         
-        const activeStakeRes = await sql`SELECT * FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
-        if (activeStakeRes.rowCount === 0) {
-            return NextResponse.json({ success: false, error: "No active stake found." }, { status: 400 });
+        const activeLockRes = await sql`SELECT * FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+        if (activeLockRes.rowCount === 0) {
+            return NextResponse.json({ success: false, error: "No active lock found." }, { status: 400 });
         }
 
-        const stake = activeStakeRes.rows[0];
+        const lock = activeLockRes.rows[0];
         let penaltyAmount = 0;
 
-        // Check early unstake penalty
-        if (stake.tier > 1 && stake.unlockDate) {
+        // Check early unlock penalty
+        if (lock.tier > 1 && lock.unlockDate) {
             const now = new Date();
-            const unlock = new Date(stake.unlockDate);
+            const unlock = new Date(lock.unlockDate);
             if (now < unlock) {
-                // Early unstake! 10% penalty
-                penaltyAmount = stake.amount * 0.10;
+                // Early unlock! 10% penalty
+                penaltyAmount = lock.amount * 0.10;
                 
                 // 50% Burn, 50% Treasury
                 const burnAmount = penaltyAmount * 0.5;
@@ -37,19 +37,19 @@ export async function POST(request) {
             }
         }
 
-        // Deactivate stake
-        await sql`UPDATE stakes SET status = 'INACTIVE' WHERE id = ${stake.id}`;
+        // Deactivate lock
+        await sql`UPDATE locks SET status = 'INACTIVE' WHERE id = ${lock.id}`;
 
         return NextResponse.json({ 
             success: true, 
-            message: "Unstake successful", 
+            message: "Unlock successful", 
             penaltyApplied: penaltyAmount > 0,
             penaltyAmount,
-            returnedAmount: stake.amount - penaltyAmount
+            returnedAmount: lock.amount - penaltyAmount
         }, { status: 200 });
 
     } catch (error) {
-        console.error("POST /api/unstake error:", error);
-        return NextResponse.json({ success: false, error: "Failed to unstake" }, { status: 500 });
+        console.error("POST /api/unlock error:", error);
+        return NextResponse.json({ success: false, error: "Failed to unlock" }, { status: 500 });
     }
 }

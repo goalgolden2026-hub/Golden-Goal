@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import crypto from 'crypto';
 
 const REWARD_TIERS = [
     { index: 0, type: 'EMPTY', value: 0, label: 'Miss', prob: 20 },
@@ -102,6 +103,33 @@ export async function POST(request) {
 
         const sql = await getDb();
         
+        // Ensure user exists
+        let userRes = await sql`SELECT * FROM users WHERE "walletAddress" = ${walletAddress}`;
+        if (userRes.rowCount === 0) {
+            const newCode = crypto.randomBytes(3).toString('hex').toUpperCase();
+            await sql`
+                INSERT INTO users ("walletAddress", points, "predictionsToday", "lastPredictionDate", "referralCode", "referralPoints") 
+                VALUES (${walletAddress}, 0, 0, CURRENT_DATE, ${newCode}, 0)
+            `;
+            userRes = await sql`SELECT * FROM users WHERE "walletAddress" = ${walletAddress}`;
+        }
+        
+        const user = userRes.rows[0];
+
+        // Daily Reset Check for Quota & Bonus (if new day)
+        const today = new Date().toISOString().split('T')[0];
+        const lastPredictionDate = user.lastPredictionDate 
+            ? new Date(user.lastPredictionDate).toISOString().split('T')[0] 
+            : null;
+            
+        if (!lastPredictionDate || lastPredictionDate !== today) {
+            await sql`
+                UPDATE users 
+                SET "predictionsToday" = 0, "bonusPredictions" = 0, "lastPredictionDate" = CURRENT_DATE 
+                WHERE "walletAddress" = ${walletAddress}
+            `;
+        }
+
         // 1. Determine Payment (Free vs Dynamic XP Points Cost)
         const status = await getBoxStatus(sql, walletAddress);
         
@@ -112,21 +140,21 @@ export async function POST(request) {
                 WHERE "walletAddress" = ${walletAddress}
             `;
         } else {
-            // Fetch user's current points
+            // Fetch user's current points (reload to get up-to-date points after daily reset)
             let points = 0;
-            const userRes = await sql`SELECT points FROM users WHERE "walletAddress" = ${walletAddress}`;
-            if (userRes.rowCount > 0 && userRes.rows[0].points !== null) {
-                points = parseInt(userRes.rows[0].points);
+            const pointsRes = await sql`SELECT points FROM users WHERE "walletAddress" = ${walletAddress}`;
+            if (pointsRes.rowCount > 0 && pointsRes.rows[0].points !== null) {
+                points = parseInt(pointsRes.rows[0].points);
             }
 
             if (points < status.boxCost) {
                 return NextResponse.json({ success: false, error: `Insufficient XP Points. ${status.boxCost} XP points are required to open the Rewards Box.` }, { status: 400 });
             }
 
-            // Deduct Box Cost from user's points directly!
+            // Deduct Box Cost from user's points directly and update lastFreeBoxDate!
             await sql`
                 UPDATE users 
-                SET points = COALESCE(points, 0) - ${status.boxCost} 
+                SET points = COALESCE(points, 0) - ${status.boxCost}, "lastFreeBoxDate" = CURRENT_DATE
                 WHERE "walletAddress" = ${walletAddress}
             `;
             

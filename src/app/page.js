@@ -464,9 +464,9 @@ export default function LandingPage() {
                 <span className="bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider animate-pulse">ACTIVE NOW</span>
               </div>
               <div className="sm:w-2/3">
-                <h4 className="font-bold text-white text-base mb-2">Platform Launch</h4>
+                <h4 className="font-bold text-white text-base mb-2">Platform Launch & Closed Beta</h4>
                 <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-                  Release of prediction sub-markets, integration of dual ladders (Pro & Social Leaderboards), and initiation of our organic viral loop system (Twitter Farming module).
+                  Public announcement of the platform, preview release of landing page mechanics, and whitelisted closed beta testing access for early community participants.
                 </p>
               </div>
             </div>
@@ -475,12 +475,12 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row gap-6 bg-zinc-900/40 border border-white/5 rounded-3xl p-8 hover:border-white/10 transition-colors">
               <div className="sm:w-1/3 flex items-center justify-between sm:justify-start gap-3">
                 <span className="text-zinc-500 font-bold tracking-widest text-lg font-mono">PHASE 3</span>
-                <span className="bg-zinc-800 border border-white/5 text-zinc-500 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">PLANNED</span>
+                <span className="bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">LAUNCHING SOON</span>
               </div>
               <div className="sm:w-2/3">
-                <h4 className="font-bold text-white text-base mb-2">DeFi Integration & Mini-Games</h4>
+                <h4 className="font-bold text-white text-base mb-2">Football Predictor & Leaderboards</h4>
                 <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-                  Launching the multi-tier lockup VIP Staking programs, activating the high-fidelity provably fair Lucky Spin casino wheel, and implementing deflationary burn mechanisms on early unstakes.
+                  Activation of the core Football Predictor analytics board, allowing live forecasts across global football leagues, alongside the launch of Pro & Social Leaderboards.
                 </p>
               </div>
             </div>
@@ -489,12 +489,12 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row gap-6 bg-zinc-900/40 border border-white/5 rounded-3xl p-8 hover:border-white/10 transition-colors">
               <div className="sm:w-1/3 flex items-center justify-between sm:justify-start gap-3">
                 <span className="text-zinc-500 font-bold tracking-widest text-lg font-mono">PHASE 4</span>
-                <span className="bg-zinc-800 border border-white/5 text-zinc-500 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">PLANNED</span>
+                <span className="bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">UPCOMING</span>
               </div>
               <div className="sm:w-2/3">
-                <h4 className="font-bold text-white text-base mb-2">Expansion & Mobile App</h4>
+                <h4 className="font-bold text-white text-base mb-2">Rewards Box & Staking Engine</h4>
                 <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-                  Deploying dedicated iOS and Android application binaries, introducing knockout bracket tournaments, and offering custom collectible avatar NFTs to reward loyal forecasters.
+                  Unlocking the gamified Rewards Box module for daily XP & prediction quota claims, and launching the multi-tier lockup VIP Staking programs.
                 </p>
               </div>
             </div>
@@ -506,9 +506,9 @@ export default function LandingPage() {
                 <span className="bg-zinc-800 border border-white/5 text-zinc-500 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">PLANNED</span>
               </div>
               <div className="sm:w-2/3">
-                <h4 className="font-bold text-white text-base mb-2">Decentralized Governance (DAO)</h4>
+                <h4 className="font-bold text-white text-base mb-2">Expansion & Decentralized Governance</h4>
                 <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-                  Enabling DAO governance model allowing community token votes to shape the roadmap, and expanding predictions into other global sports tournaments and e-sports categories.
+                  Releasing dedicated mobile apps (iOS & Android), bracket tournaments, and enabling a DAO governance model with community token voting.
                 </p>
               </div>
             </div>

@@ -179,9 +179,16 @@ export default function StakePage() {
                   <span className="text-zinc-400 text-sm">Early Penalty</span>
                   <span className={t.penalty === '0%' ? 'text-green-400 font-semibold' : 'text-red-400 font-semibold'}>{t.penalty}</span>
                 </li>
-                <li className="flex justify-between items-center bg-white/5 p-3 rounded-lg mt-2 border border-white/5">
-                  <span className="text-amber-400 text-sm font-bold tracking-wide">REWARD</span>
-                  <span className="text-amber-400 font-extrabold text-sm">{t.reward}</span>
+                <li className="bg-white/5 p-3 rounded-lg mt-2 border border-white/5 flex flex-col gap-1">
+                  <div className="flex justify-between items-center w-full">
+                    <span className="text-amber-400 text-sm font-bold tracking-wide shrink-0">REWARD</span>
+                    <span className="text-amber-400 font-extrabold text-xs lg:text-[13px] text-right whitespace-nowrap">{t.reward}</span>
+                  </div>
+                  {t.id === 4 && (
+                    <div className="flex justify-end">
+                      <span className="text-emerald-400 font-extrabold text-xs lg:text-[13px] text-right whitespace-nowrap">+ 1 Daily Free Spin</span>
+                    </div>
+                  )}
                 </li>
               </ul>
 

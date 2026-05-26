@@ -44,8 +44,21 @@ Users can lock their tokens to unlock VIP benefits.
   - Displays Total Points, Weekly Points, Total Bets (TB), Won Bets (WB), and Win Rate (WR).
   - Includes a personalized "Your Ranking" card at the bottom for logged-in users.
 
-## 4. Technical Architecture
+## 4. Technical Architecture & Deployment
+
+### 4.1 Tech Stack
 - **Frontend:** Next.js (App Router), TailwindCSS, Web3 Wallet Adapter (Solana).
 - **Backend:** Next.js Serverless Route Handlers.
-- **Database:** Vercel Postgres SQL.
-- **Deployment:** Vercel (main branch auto-deploy).
+- **Database:** Vercel Postgres SQL (`@vercel/postgres`).
+
+### 4.2 Deployment & Integration Workflow
+- **GitHub Repository:** [https://github.com/goalgolden2026-hub/Golden-Goal.git](https://github.com/goalgolden2026-hub/Golden-Goal.git)
+- **Vercel Project:** Auto-linked to the GitHub `main` branch. 
+- **Live URL:** [https://golden-goal-five.vercel.app](https://golden-goal-five.vercel.app)
+
+**How it works (Memory Refresh):**
+1. We write and modify code locally in the `/scratch/golden-goal` directory.
+2. We use standard Git commands (`git add .`, `git commit -m "..."`, `git push`) to push updates to the `main` branch on GitHub.
+3. Vercel automatically detects the push to GitHub and triggers a build.
+4. Sometimes, for immediate deployment without waiting for the automatic trigger, we run `npx --yes vercel --prod` directly from the CLI.
+5. Environment variables (like `POSTGRES_URL`) are securely stored in Vercel's project settings and mapped locally in `.env.local`.

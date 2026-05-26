@@ -37,6 +37,9 @@
   ],
   "exclude": [
     "node_modules",
-    "program"
+    "program",
+    "tests",
+    "src/components/smart_contracts",
+    "src/components/backend_api"
   ]
 }

@@ -13,13 +13,6 @@ export default function ProfilePage() {
     const { publicKey, connected } = useWallet();
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
-    
-    // Social Tasks State
-    const [tweetUrl, setTweetUrl] = useState('');
-    const [submittingTweet, setSubmittingTweet] = useState(false);
-    const [tweetMessage, setTweetMessage] = useState('');
-    const [cooldown, setCooldown] = useState(0);
-    const [socialLeaderboard, setSocialLeaderboard] = useState([]);
 
     useEffect(() => {
         if (connected && publicKey) {
@@ -30,16 +23,6 @@ export default function ProfilePage() {
         }
     }, [connected, publicKey]);
 
-    useEffect(() => {
-        let timer;
-        if (cooldown > 0) {
-            timer = setInterval(() => {
-                setCooldown(prev => prev - 1);
-            }, 1000);
-        }
-        return () => clearInterval(timer);
-    }, [cooldown]);
-
     const fetchProfile = async () => {
         setLoading(true);
         try {
@@ -48,197 +31,121 @@ export default function ProfilePage() {
             if (data.success) {
                 setProfile(data.profile);
             }
-            
-            // Also fetch social leaderboard
-            const lbRes = await fetch('/api/leaderboard/social');
-            const lbData = await lbRes.json();
-            if (lbData.success) {
-                setSocialLeaderboard(lbData.leaderboard);
-            }
         } catch (error) {
             console.error("Error fetching profile:", error);
         }
         setLoading(false);
     };
 
-    const handleTweetSubmit = async () => {
-        if (!tweetUrl) return;
-        setSubmittingTweet(true);
-        setTweetMessage('');
-        try {
-            const res = await fetch('/api/user/twitter', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ walletAddress: publicKey.toBase58(), tweetUrl })
-            });
-            const data = await res.json();
-            if (data.success) {
-                setTweetMessage('🎉 ' + data.message);
-                setTweetUrl('');
-                setCooldown(60); // Start 60s cooldown
-                fetchProfile(); // refresh to show update points
-            } else {
-                setTweetMessage('❌ ' + data.error);
-                // If backend error says "Please wait X seconds", parse X if possible, but backend handles block.
-            }
-        } catch (error) {
-            setTweetMessage('❌ Server error.');
-        }
-        setSubmittingTweet(false);
-    };
-
     if (!connected) {
         return (
-            <div className="flex-1 flex flex-col items-center justify-center p-4">
-                <h1 className="text-3xl font-bold mb-6 text-white">My Profile</h1>
-                <p className="text-zinc-400 mb-8 text-center max-w-md">
-                    Please connect your Phantom wallet to view your profile and check your balance.
-                </p>
-                <WalletMultiButtonDynamic className="!bg-amber-500 hover:!bg-amber-600 !text-black !font-bold" />
+            <div className="flex-1 flex flex-col items-center justify-center p-4 min-h-[60vh]">
+                <div className="text-center mb-8">
+                    <h1 className="text-5xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 drop-shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+                        VIP Profile
+                    </h1>
+                    <p className="text-zinc-400 max-w-md mx-auto">
+                        Connect your Solana wallet to access your premium VIP Dashboard and check your balance.
+                    </p>
+                </div>
+                <WalletMultiButtonDynamic className="!bg-amber-500 hover:!bg-amber-600 !text-black !font-bold !rounded-full !px-8 !py-4" />
             </div>
         );
     }
 
     if (loading) {
         return (
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center min-h-[60vh]">
                 <div className="animate-spin w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full"></div>
             </div>
         );
     }
 
-    if (!profile) return null;    return (
-        <div className="flex-1 w-full max-w-5xl mx-auto px-4 py-12">
-            <h1 className="text-4xl font-extrabold mb-8 text-white">My Profile</h1>
+    if (!profile) return null;
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Wallet Balance Card */}
-                <div className="bg-zinc-900/50 border border-white/10 rounded-3xl p-8 flex flex-col justify-between">
-                    <div>
-                        <h2 className="text-2xl font-bold mb-6 text-zinc-300">Wallet Summary</h2>
-                        <div className="bg-black/50 rounded-2xl p-6 border border-zinc-800">
-                            <p className="text-sm text-zinc-500 mb-2">Wallet Address</p>
-                            <p className="text-lg text-white font-mono truncate">{profile.walletAddress}</p>
-                        </div>
-                        <div className="mt-6 bg-gradient-to-r from-yellow-500/10 to-amber-600/10 rounded-2xl p-6 border border-amber-500/20">
-                            <p className="text-sm text-amber-500/80 mb-2 font-bold">Golden Token Balance</p>
-                            <p className="text-4xl font-black text-white">{profile.balance.toLocaleString()}</p>
-                        </div>
-                    </div>
+    return (
+        <div className="flex-1 w-full max-w-3xl mx-auto px-4 py-16 relative">
+            {/* Holographic Glowing Backgrounds */}
+            <div className="absolute top-[20%] left-1/2 transform -translate-x-1/2 w-[350px] h-[350px] bg-gradient-to-tr from-amber-500/10 via-yellow-500/5 to-purple-500/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
 
-                    <div className="mt-6 bg-black/50 rounded-2xl p-6 border border-zinc-800">
-                        <div className="flex justify-between items-end mb-2">
-                            <p className="text-sm text-zinc-500">Daily Prediction Limit</p>
-                            <p className="text-lg text-white font-bold">
-                                {profile.maxBets - profile.betsToday} <span className="text-zinc-500 text-sm">/ {profile.maxBets} Left</span>
-                            </p>
-                        </div>
-                        <div className="w-full bg-zinc-800 rounded-full h-2">
-                            <div 
-                                className="bg-emerald-500 h-2 rounded-full transition-all duration-500" 
-                                style={{ width: `${Math.max(0, ((profile.maxBets - profile.betsToday) / profile.maxBets) * 100)}%` }}
-                            ></div>
-                        </div>
-                        <p className="text-xs text-zinc-500 mt-3">
-                            You can increase your limit by staking or opening the Rewards Box.
-                        </p>
-                    </div>
+            <div className="relative z-10 flex flex-col items-center">
+                {/* Header */}
+                <div className="text-center mb-12">
+                    <span className="text-[10px] font-extrabold tracking-[0.25em] text-amber-500 uppercase bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+                        GOLDEN MEMBER
+                    </span>
+                    <h1 className="text-4xl sm:text-5xl font-black mt-4 text-white tracking-tight">
+                        VIP <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.2)]">Dashboard</span>
+                    </h1>
                 </div>
 
-                {/* Social Tasks Card */}
-                <div className="bg-zinc-900/50 border border-white/10 rounded-3xl p-8 relative overflow-hidden flex flex-col justify-between">
-                    <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                    <div>
-                        <h2 className="text-2xl font-bold mb-6 text-zinc-300">Social Tasks</h2>
-                        
-                        <div className="bg-black/50 rounded-2xl p-6 border border-zinc-800 flex flex-col gap-4">
-                            <div className="flex items-center gap-3">
-                                <span className="text-2xl">🐦</span>
-                                <h3 className="text-lg font-bold text-white">Share on X (Twitter)</h3>
-                            </div>
-                            <p className="text-xs text-zinc-400 leading-relaxed">
-                                Tweet about Golden Goal using the hashtag <span className="text-blue-400 font-bold">#GoldenGoal</span> and paste your tweet link here to earn <span className="text-amber-500 font-bold">25 Social Points</span> instantly! You can do this repeatedly!
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div className="mt-6">
-                        {cooldown > 0 ? (
-                            <div className="bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-xl text-center font-bold flex flex-col items-center justify-center gap-2">
-                                <span className="text-2xl">✅</span>
-                                <span>Task Completed!</span>
-                                <span className="text-xs font-normal text-green-400/80">You can submit another tweet in {cooldown} seconds.</span>
-                            </div>
-                        ) : (
-                            <div className="flex flex-col gap-3">
-                                <input 
-                                    type="text" 
-                                    placeholder="https://x.com/username/status/123..."
-                                    value={tweetUrl}
-                                    onChange={(e) => setTweetUrl(e.target.value)}
-                                    className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-zinc-300 text-sm focus:outline-none focus:border-blue-500 transition-colors"
-                                />
-                                <button 
-                                    onClick={handleTweetSubmit}
-                                    disabled={submittingTweet || !tweetUrl}
-                                    className={`w-full py-3 rounded-xl font-bold transition-all ${
-                                        submittingTweet || !tweetUrl 
-                                        ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed' 
-                                        : 'bg-blue-500 hover:bg-blue-600 text-white'
-                                    }`}
-                                >
-                                    {submittingTweet ? 'Verifying...' : 'Submit Tweet'}
-                                </button>
-                            </div>
-                        )}
-                        
-                        {tweetMessage && cooldown === 0 && (
-                            <p className={`mt-4 text-xs font-medium text-center ${tweetMessage.includes('❌') ? 'text-red-400' : 'text-green-400'}`}>
-                                {tweetMessage}
-                            </p>
-                        )}
-                    </div>
-                </div>
-            </div>
+                {/* VIP Membership Card */}
+                <div className="w-full bg-zinc-950/80 backdrop-blur-2xl border border-white/10 rounded-[32px] p-8 md:p-10 shadow-2xl relative overflow-hidden group hover:border-amber-500/20 transition-all duration-500">
+                    {/* Decorative Shiny Lines */}
+                    <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
+                    <div className="absolute -top-[150px] -right-[150px] w-[300px] h-[300px] bg-amber-500/5 rounded-full blur-3xl group-hover:bg-amber-500/10 transition-colors duration-500"></div>
 
-            <div className="mt-8 border-t border-white/10 pt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* User's Social Score */}
-                <div className="bg-black/50 rounded-2xl p-6 border border-zinc-800 text-center flex flex-col items-center justify-center">
-                    <p className="text-sm text-zinc-400 mb-2">My Social Points</p>
-                    <p className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                        {profile.socialPoints || 0}
-                    </p>
-                    <p className="text-xs text-zinc-500 mt-2">Rank up to earn exclusive rewards!</p>
-                </div>
-
-                {/* Leaderboard */}
-                <div className="bg-black/50 rounded-2xl p-6 border border-zinc-800">
-                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                        <span>🏆</span> Social Leaderboard
-                    </h3>
-                    {socialLeaderboard.length === 0 ? (
-                        <p className="text-zinc-500 text-sm">No one is on the leaderboard yet. Be the first!</p>
-                    ) : (
-                        <div className="space-y-3">
-                            {socialLeaderboard.map((user, index) => (
-                                <div key={index} className="flex justify-between items-center p-3 bg-zinc-900/50 rounded-lg border border-zinc-800">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">
-                                            {index + 1}
-                                        </div>
-                                        <span className="font-mono text-sm text-zinc-300">
-                                            {user.walletAddress.slice(0, 4)}...{user.walletAddress.slice(-4)}
-                                        </span>
-                                        {user.walletAddress === profile.walletAddress && (
-                                            <span className="text-[10px] bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">YOU</span>
-                                        )}
-                                    </div>
-                                    <div className="font-bold text-blue-400">{user.socialPoints}</div>
+                    <div className="flex flex-col gap-8">
+                        {/* Upper Section: Brand & VIP Level */}
+                        <div className="flex justify-between items-center pb-6 border-b border-white/5">
+                            <div className="flex items-center gap-2">
+                                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center font-black text-black text-base shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+                                    G
                                 </div>
-                            ))}
+                                <span className="font-black text-lg tracking-wider text-white">GOLDEN GOAL</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 rounded-full border border-white/10 text-[10px] font-bold text-zinc-300">
+                                <span className="text-amber-500 text-xs">⚡</span> SKILL VERIFIED
+                            </div>
                         </div>
-                    )}
+
+                        {/* Middle Section: Wallet Info */}
+                        <div className="space-y-6">
+                            <div className="bg-black/40 rounded-2xl p-5 border border-zinc-900 flex flex-col gap-1.5">
+                                <span className="text-[10px] font-extrabold tracking-wider text-zinc-500 uppercase">Solana Wallet Address</span>
+                                <span className="text-sm sm:text-base font-mono text-zinc-200 truncate select-all">{profile.walletAddress}</span>
+                            </div>
+
+                            {/* Token Balance */}
+                            <div className="bg-gradient-to-br from-amber-500/[0.04] to-orange-500/[0.04] rounded-2xl p-6 border border-amber-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div>
+                                    <span className="text-[10px] font-extrabold tracking-wider text-amber-500/80 uppercase block mb-1">Golden Token Balance</span>
+                                    <span className="text-3xl sm:text-4xl font-black text-white tracking-tight">{profile.balance.toLocaleString()}</span>
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-lg">
+                                        🪙
+                                    </div>
+                                    <span className="text-xs font-bold text-zinc-400">Tokens Ready</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Quota Progress */}
+                        <div className="bg-black/40 rounded-2xl p-6 border border-zinc-900/80">
+                            <div className="flex justify-between items-end mb-3">
+                                <span className="text-[10px] font-extrabold tracking-wider text-zinc-500 uppercase">Daily Prediction Quota</span>
+                                <span className="text-sm font-black text-white font-mono">
+                                    {profile.maxBets - profile.betsToday} <span className="text-zinc-500 font-normal">/ {profile.maxBets} left</span>
+                                </span>
+                            </div>
+                            <div className="w-full bg-zinc-900 rounded-full h-2.5 overflow-hidden p-[1px] border border-white/5">
+                                <div 
+                                    className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(16,185,129,0.3)]" 
+                                    style={{ width: `${Math.max(0, ((profile.maxBets - profile.betsToday) / profile.maxBets) * 100)}%` }}
+                                ></div>
+                            </div>
+                            <p className="text-xs text-zinc-500 mt-3.5 leading-relaxed">
+                                Stake your Golden Tokens or unlock daily Rewards Boxes to permanently boost your prediction limit and XP multipliers.
+                            </p>
+                        </div>
+                    </div>
                 </div>
+
+                {/* Footnote */}
+                <p className="text-zinc-600 text-[10px] uppercase font-mono tracking-widest text-center mt-12 select-none max-w-xl leading-relaxed">
+                    NO PURCHASE NECESSARY. Standard daily prediction quotas are allocated for free. VIP Membership levels strictly track non-financial skill simulation analytics. Void where prohibited by law.
+                </p>
             </div>
         </div>
     );

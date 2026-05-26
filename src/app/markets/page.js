@@ -2,14 +2,16 @@
 
 import Link from 'next/link';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { TEAM_FLAGS } from '@/lib/flags';
 
-export default function Home() {
+function MarketsContent() {
   const { connected } = useWallet();
   const [markets, setMarkets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showFutureMatches, setShowFutureMatches] = useState(false);
+  const searchParams = useSearchParams();
+  const filter = searchParams.get('filter') || 'live';
 
   useEffect(() => {
     fetch('/api/markets')
@@ -41,13 +43,18 @@ export default function Home() {
   });
 
   const resolvedMarkets = markets.filter(m => m.status !== 'ACTIVE');
+  
+  // Separator: first 3 groups (Live/Active), remaining groups (Upcoming)
   const initialGroups = groupedMarkets.slice(0, 3);
   const futureGroups = groupedMarkets.slice(3);
+
+  const displayedGroups = filter === 'upcoming' ? futureGroups : initialGroups;
+  const isUpcomingMode = filter === 'upcoming';
 
   const renderMatchGroup = (group, idx) => (
       <div key={group.date + idx} className="mb-12">
           <div className="flex items-center gap-4 mb-6">
-              <h2 className="text-2xl font-bold">{group.date}</h2>
+              <h2 className="text-2xl font-bold text-zinc-100">{group.date}</h2>
               <div className="flex-1 h-px bg-zinc-800"></div>
           </div>
 
@@ -95,16 +102,26 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-1">
       {/* Hero Section */}
-      <section className="relative py-28 px-4 text-center">
-        <div className="absolute inset-0 z-0 opacity-40" style={{ backgroundImage: "url('/hero-bg.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}></div>
+      <section className="relative py-28 px-4 text-center overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-20" style={{ backgroundImage: "url('/hero-bg.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}></div>
         <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/0 via-black/60 to-[#0A0A0A]"></div>
         <div className="relative z-10">
+            <span className="text-[10px] font-extrabold tracking-[0.25em] text-amber-500 uppercase bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.1)] inline-block mb-4">
+                {isUpcomingMode ? 'UPCOMING MATCHES' : 'LIVE MATCHES'}
+            </span>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-            Predict the <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-600 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">World Cup</span>
+                {isUpcomingMode ? (
+                    <>Upcoming <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500 drop-shadow-[0_0_15px_rgba(99,102,241,0.5)]">Fixtures</span></>
+                ) : (
+                    <>Predict the <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-600 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">World Cup</span></>
+                )}
             </h1>
             <p className="text-zinc-300 font-medium text-lg md:text-xl max-w-2xl mx-auto mb-10 text-shadow-sm">
-            Hold Golden Tokens to place free predictions on FIFA World Cup 2026 matches. 
-            Correct predictions earn you points and rank you up the leaderboard.
+                {isUpcomingMode ? (
+                    "Analyze scheduled matches after the next 3 days. Lock in your predictions ahead of time and secure your leaderboard multiplier!"
+                ) : (
+                    "Hold Golden Tokens to place free predictions on active FIFA World Cup 2026 matches. Correct predictions earn you points and rank you up the leaderboard."
+                )}
             </p>
             
             {connected ? (
@@ -124,34 +141,35 @@ export default function Home() {
       <section className="py-12 px-4 max-w-5xl mx-auto w-full">
         
         {loading ? (
-            <div className="text-center text-zinc-500">Loading matches from database...</div>
+            <div className="text-center text-zinc-500 py-12">
+                <div className="animate-spin w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                Loading matches from database...
+            </div>
         ) : (
             <>
               {/* Active Markets */}
               <div className="mb-16">
-                {initialGroups.map(renderMatchGroup)}
+                <div className="flex justify-between items-center mb-8">
+                    <h2 className="text-3xl font-black text-white">
+                        {isUpcomingMode ? 'Upcoming Match Program' : 'Live & Active Matches'}
+                    </h2>
+                    <span className="text-xs text-zinc-500 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full font-mono font-bold">
+                        {isUpcomingMode ? '3+ Days Out' : 'Next 72 Hours'}
+                    </span>
+                </div>
+
+                {displayedGroups.map(renderMatchGroup)}
                 
-                {futureGroups.length > 0 && (
-                    <div className="mt-8 flex flex-col items-center">
-                        <button 
-                            onClick={() => setShowFutureMatches(!showFutureMatches)}
-                            className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-medium py-3 px-8 rounded-full transition-all flex items-center gap-2 mb-8"
-                        >
-                            {showFutureMatches ? 'Hide Upcoming Matches' : 'Upcoming Matches'}
-                            <span className={`transform transition-transform ${showFutureMatches ? 'rotate-180' : ''}`}>▼</span>
-                        </button>
-                        
-                        {showFutureMatches && futureGroups.map(renderMatchGroup)}
+                {displayedGroups.length === 0 && (
+                    <div className="text-center py-16 bg-zinc-900/20 rounded-3xl border border-white/5 text-zinc-500">
+                        <span className="text-4xl block mb-2">📅</span>
+                        No active matches scheduled in this range.
                     </div>
-                )}
-                
-                {groupedMarkets.length === 0 && (
-                    <div className="text-center py-8 text-zinc-500">No active matches right now.</div>
                 )}
               </div>
 
               {/* Resolved Markets */}
-              <h2 className="text-2xl font-bold mb-8 text-zinc-500">Resolved Matches</h2>
+              <h2 className="text-2xl font-bold mb-8 text-zinc-500 border-t border-white/5 pt-12">Resolved Matches</h2>
               <div className="flex flex-col gap-4 opacity-70">
                 {resolvedMarkets.map((m) => (
                     <div key={m.id} className="bg-zinc-950/80 backdrop-blur-md border border-zinc-800 rounded-3xl p-6 relative overflow-hidden flex flex-col md:flex-row items-center gap-6 grayscale-[50%]">
@@ -186,7 +204,19 @@ export default function Home() {
             </>
         )}
       </section>
-
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+        <div className="flex-1 flex flex-col items-center justify-center min-h-[60vh] text-zinc-500">
+            <div className="animate-spin w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full mb-4"></div>
+            Preparing Platform...
+        </div>
+    }>
+      <MarketsContent />
+    </Suspense>
   );
 }

@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { TEAM_FLAGS } from '@/lib/flags';
 
-export default function Portfolio() {
+export default function Dashboard() {
   const { connected, publicKey } = useWallet();
   const [bets, setBets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [points, setPoints] = useState(0);
   const [managingBetId, setManagingBetId] = useState(null);
   const [changeBetModal, setChangeBetModal] = useState(null); // stores the bet object being changed
+  
   useEffect(() => {
     if (connected && publicKey) {
         fetchBets();
@@ -86,7 +87,7 @@ export default function Portfolio() {
           <div className="flex-1 flex flex-col items-center justify-center p-4">
               <span className="text-6xl mb-4">👻</span>
               <h2 className="text-2xl font-bold mb-2">Wallet Disconnected</h2>
-              <p className="text-zinc-500">Please connect your Solana wallet to view your portfolio.</p>
+              <p className="text-zinc-500">Please connect your Solana wallet to view your dashboard.</p>
           </div>
       );
   }
@@ -99,7 +100,7 @@ export default function Portfolio() {
 
   return (
     <div className="flex-1 p-4 md:p-8 max-w-5xl mx-auto w-full">
-      <h1 className="text-4xl font-bold mb-8 text-amber-500">My Portfolio</h1>
+      <h1 className="text-4xl font-bold mb-8 text-amber-500 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">Dashboard</h1>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
@@ -145,7 +146,7 @@ export default function Portfolio() {
                                       Placed on: {new Date(bet.timestamp).toLocaleString()}
                                       {bet.updatedAt && <span className="ml-2 pl-2 border-l border-zinc-800 text-amber-500/80">Changed: {new Date(bet.updatedAt).toLocaleString()}</span>}
                                   </p>
-                              </div>
+                                </div>
                               <div className="flex items-center gap-4 bg-zinc-950 p-3 rounded-lg border border-zinc-800">
                                   <div className="text-right">
                                       <p className="text-xs text-zinc-500">Reward</p>

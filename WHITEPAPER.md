@@ -60,7 +60,7 @@ Users can place predictions on real-world football fixtures, including major int
     *   **Experience Points (XP):** Boosts leaderboard rankings.
     *   **Social Points:** Contributes to social tier rewards.
     *   **Leaderboard Points:** Directly impacts the weekly prize pool standing.
-*   **Dynamic Modification:** Each user has a personal performance dashboard (Portfolio) where active predictions can be edited or cancelled anytime before the match officially begins.
+*   **Dynamic Modification:** Each user has a personal performance dashboard where active predictions can be edited or cancelled anytime before the match officially begins.
 
 ### 4.2 Weekly Reward Pool
 The competitive heart of Golden Goal is the weekly Leaderboard. Every week, the top 10 predictors on the leaderboard are rewarded with payouts distributed in **Golden Goal ($GG) tokens**. 
@@ -69,7 +69,7 @@ The reward distribution scales dynamically based on active user volume, matched 
 
 ---
 
-### 4.3 Portfolio System
+### 4.3 Dashboard System
 Every participant gets access to a high-fidelity, personal analytics dashboard containing:
 *   **Total Points & Active Predictions:** Instant view of currently active forecasts.
 *   **Win Rate (WR):** Historical success percentage across all categories.

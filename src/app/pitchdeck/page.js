@@ -145,7 +145,7 @@ export default function PitchDeckPage() {
           <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-amber-500">🛡️</span>
-              <h4 className="font-bold text-white text-sm">Personal Portfolio</h4>
+              <h4 className="font-bold text-white text-sm">Personal Dashboard</h4>
             </div>
             <p className="text-zinc-400 text-xs leading-relaxed">
               Real-time user analytics tracking Win Rates, Prediction History, Active Forecast status, and staking statistics with gold glass aesthetics.

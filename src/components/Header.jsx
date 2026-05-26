@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -19,30 +19,37 @@ export default function Header() {
     const { publicKey, connected } = useWallet();
     const { setVisible } = useWalletModal();
 
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [mobilePredictionOpen, setMobilePredictionOpen] = useState(false);
+    const [mobileRewardsOpen, setMobileRewardsOpen] = useState(false);
+
     const walletAddress = publicKey ? publicKey.toBase58() : null;
     const isWhitelisted = isWalletWhitelisted(walletAddress);
 
+    const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/50 backdrop-blur-md">
+        <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/60 backdrop-blur-xl">
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                <Link href="/" className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-amber-600 flex items-center justify-center">
-                        <span className="text-black font-bold text-lg">G</span>
+                
+                {/* Brand Logo */}
+                <Link href="/" className="flex items-center gap-2 relative z-50">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-amber-600 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                        <span className="text-black font-black text-base">G</span>
                     </div>
-                    <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-600 tracking-tight">
+                    <span className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-600 tracking-tight">
                         Golden Goal
                     </span>
                 </Link>
                 
                 {isLandingPage ? (
-                    <div className="flex items-center gap-4">
-
-                        
+                    /* Landing Page Navbar - Minimalist & High Conversion */
+                    <div className="flex items-center gap-4 relative z-50">
                         {connected ? (
                             isWhitelisted ? (
                                 <Link 
-                                    href="/markets" 
-                                    className="bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 bg-[length:200%_auto] hover:bg-[100%_0] text-zinc-950 font-black py-2 px-5 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] border border-emerald-400/30 flex items-center gap-1.5 whitespace-nowrap"
+                                    href="/markets?filter=live" 
+                                    className="bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 bg-[length:200%_auto] hover:bg-[100%_0] text-zinc-950 font-black py-2 px-5 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] border border-emerald-400/30 flex items-center gap-1.5 whitespace-nowrap text-xs"
                                 >
                                     <span>Launch App</span>
                                     <svg className="w-4 h-4 text-zinc-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -52,10 +59,10 @@ export default function Header() {
                             ) : (
                                 <button 
                                     disabled
-                                    className="bg-zinc-900/80 border border-red-500/30 text-red-500/80 font-bold py-2 px-5 rounded-full flex items-center gap-1.5 cursor-not-allowed shadow-[0_0_15px_rgba(239,68,68,0.05)]"
+                                    className="bg-zinc-900/80 border border-red-500/30 text-red-500/80 font-bold py-2 px-5 rounded-full flex items-center gap-1.5 cursor-not-allowed shadow-[0_0_15px_rgba(239,68,68,0.05)] text-xs"
                                     title="Coming Soon - This wallet address is not authorized for the closed beta testing phase."
                                 >
-                                    <svg className="w-4.5 h-4.5 text-red-500/80 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                    <svg className="w-4 h-4 text-red-500/80 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
                                     <span>Coming Soon</span>
@@ -64,7 +71,7 @@ export default function Header() {
                         ) : (
                             <button 
                                 onClick={() => setVisible(true)}
-                                className="bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-500 bg-[length:200%_auto] hover:bg-[100%_0] text-zinc-950 font-black py-2 px-5 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(245,158,11,0.25)] border border-yellow-400/30 flex items-center gap-1.5 whitespace-nowrap"
+                                className="bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-500 bg-[length:200%_auto] hover:bg-[100%_0] text-zinc-950 font-black py-2 px-5 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(245,158,11,0.25)] border border-yellow-400/30 flex items-center gap-1.5 whitespace-nowrap text-xs"
                             >
                                 <span>Launch App</span>
                                 <svg className="w-4 h-4 text-zinc-950 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
@@ -74,23 +81,115 @@ export default function Header() {
                         )}
 
                         {connected && (
-                            <WalletMultiButtonDynamic className="!bg-zinc-900 !border !border-white/10 hover:!bg-zinc-800 !transition-colors !rounded-full !h-10 !px-4 !font-semibold !text-xs" />
+                            <WalletMultiButtonDynamic className="!bg-zinc-900 !border !border-white/10 hover:!bg-zinc-800 !transition-colors !rounded-full !h-9 !px-4 !font-semibold !text-[11px]" />
                         )}
                     </div>
                 ) : (
+                    /* App Pages Navbar - Fully Loaded & Responsive */
                     <>
-                        <nav className="hidden md:flex gap-6 text-sm font-medium text-zinc-400">
-                            <Link href="/markets" className="hover:text-white transition-colors">Markets</Link>
-                            <Link href="/portfolio" className="hover:text-white transition-colors">Portfolio</Link>
+                        {/* Desktop Navigation */}
+                        <nav className="hidden md:flex gap-6 items-center text-sm font-semibold text-zinc-400">
+                            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+                            
+                            {/* Prediction Dropdown */}
+                            <div className="relative group py-2">
+                                <button className="flex items-center gap-1 hover:text-white transition-colors focus:outline-none">
+                                    Prediction <span className="text-zinc-500 text-[10px] transition-transform duration-300 group-hover:rotate-180">▼</span>
+                                </button>
+                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-52 bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 shadow-[0_10px_35px_rgba(0,0,0,0.6)] z-50 hover:border-emerald-500/30">
+                                    <div className="absolute top-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"></div>
+                                    <Link href="/markets?filter=live" className="block px-4 py-2.5 rounded-xl hover:bg-emerald-500/10 hover:text-emerald-400 transition-all font-semibold text-xs text-left">🟢 Live Match</Link>
+                                    <Link href="/markets?filter=upcoming" className="block px-4 py-2.5 rounded-xl hover:bg-blue-500/10 hover:text-blue-400 transition-all font-semibold text-xs text-left">📅 Upcoming Match</Link>
+                                    <Link href="/dashboard" className="block px-4 py-2.5 rounded-xl hover:bg-purple-500/10 hover:text-purple-400 transition-all font-semibold text-xs text-left">📊 Dashboard</Link>
+                                </div>
+                            </div>
+
                             <Link href="/leaderboard" className="hover:text-white transition-colors">Leaderboard</Link>
-                            <Link href="/stake" className="hover:text-white transition-colors">Staking</Link>
-                            <Link href="/profile" className="hover:text-white transition-colors text-amber-500">Profile</Link>
-                            <Link href="/spin" className="hover:text-white transition-colors text-amber-500 font-bold flex items-center gap-1">Rewards Box 🎁</Link>
+                            
+                            {/* Rewards Dropdown */}
+                            <div className="relative group py-2">
+                                <button className="flex items-center gap-1 hover:text-white transition-colors focus:outline-none">
+                                    Rewards <span className="text-zinc-500 text-[10px] transition-transform duration-300 group-hover:rotate-180">▼</span>
+                                </button>
+                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-52 bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 shadow-[0_10px_35px_rgba(0,0,0,0.6)] z-50 hover:border-amber-500/30">
+                                    <div className="absolute top-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
+                                    <Link href="/rewards/staking" className="block px-4 py-2.5 rounded-xl hover:bg-amber-500/10 hover:text-amber-400 transition-all font-semibold text-xs text-left">🌱 Staking</Link>
+                                    <Link href="/rewards/reward-box" className="block px-4 py-2.5 rounded-xl hover:bg-red-500/10 hover:text-red-400 transition-all font-semibold text-xs text-left">🎁 Reward Box</Link>
+                                    <Link href="/rewards/social-tasks" className="block px-4 py-2.5 rounded-xl hover:bg-blue-500/10 hover:text-blue-400 transition-all font-semibold text-xs text-left">🐦 Social Tasks</Link>
+                                </div>
+                            </div>
+
+                            <Link href="/profile" className="hover:text-white transition-colors text-amber-500 font-bold">Profile</Link>
                         </nav>
 
-                        <div className="flex items-center">
+                        {/* Desktop Wallet connection */}
+                        <div className="hidden md:flex items-center">
                             <WalletMultiButtonDynamic className="!bg-zinc-800 hover:!bg-zinc-700 !transition-colors !rounded-full !h-10 !px-6 !font-semibold !text-sm" />
                         </div>
+
+                        {/* Mobile Menu Button / Hamburger */}
+                        <button 
+                            onClick={toggleMobileMenu} 
+                            className="md:hidden flex flex-col justify-center items-center w-8 h-8 rounded-lg bg-white/5 border border-white/10 z-50 focus:outline-none"
+                            aria-label="Toggle Menu"
+                        >
+                            <span className={`block w-4.5 h-0.5 bg-zinc-300 rounded-full transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-1' : ''}`}></span>
+                            <span className={`block w-4.5 h-0.5 bg-zinc-300 rounded-full my-1 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
+                            <span className={`block w-4.5 h-0.5 bg-zinc-300 rounded-full transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-1' : ''}`}></span>
+                        </button>
+
+                        {/* Mobile Menu Drawer (Slide Down Overlay) */}
+                        {isMobileMenuOpen && (
+                            <div className="fixed inset-0 top-16 bg-black/95 backdrop-blur-2xl md:hidden z-40 animate-in fade-in slide-in-from-top duration-300 flex flex-col justify-between p-6">
+                                <div className="flex flex-col gap-6 text-base font-semibold text-zinc-300">
+                                    <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/5 hover:text-white transition-colors">Home</Link>
+                                    
+                                    {/* Mobile Prediction Dropdown */}
+                                    <div className="flex flex-col">
+                                        <button 
+                                            onClick={() => setMobilePredictionOpen(!mobilePredictionOpen)}
+                                            className="flex justify-between items-center py-2 border-b border-white/5 hover:text-white transition-colors w-full text-left"
+                                        >
+                                            <span>Prediction</span>
+                                            <span className={`text-xs text-zinc-500 transform transition-transform ${mobilePredictionOpen ? 'rotate-180' : ''}`}>▼</span>
+                                        </button>
+                                        {mobilePredictionOpen && (
+                                            <div className="flex flex-col gap-3 pl-4 pt-3 pb-2 text-sm bg-white/[0.02] rounded-xl mt-2 border border-white/5">
+                                                <Link href="/markets?filter=live" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-emerald-400 transition-colors">🟢 Live Match</Link>
+                                                <Link href="/markets?filter=upcoming" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-blue-400 transition-colors">📅 Upcoming Match</Link>
+                                                <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-purple-400 transition-colors">📊 Dashboard</Link>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <Link href="/leaderboard" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/5 hover:text-white transition-colors">Leaderboard</Link>
+
+                                    {/* Mobile Rewards Dropdown */}
+                                    <div className="flex flex-col">
+                                        <button 
+                                            onClick={() => setMobileRewardsOpen(!mobileRewardsOpen)}
+                                            className="flex justify-between items-center py-2 border-b border-white/5 hover:text-white transition-colors w-full text-left"
+                                        >
+                                            <span>Rewards</span>
+                                            <span className={`text-xs text-zinc-500 transform transition-transform ${mobileRewardsOpen ? 'rotate-180' : ''}`}>▼</span>
+                                        </button>
+                                        {mobileRewardsOpen && (
+                                            <div className="flex flex-col gap-3 pl-4 pt-3 pb-2 text-sm bg-white/[0.02] rounded-xl mt-2 border border-white/5">
+                                                <Link href="/rewards/staking" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-400 transition-colors">🌱 Staking</Link>
+                                                <Link href="/rewards/reward-box" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-red-400 transition-colors">🎁 Reward Box</Link>
+                                                <Link href="/rewards/social-tasks" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-blue-400 transition-colors">🐦 Social Tasks</Link>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/5 text-amber-500 hover:text-amber-400 transition-colors">Profile</Link>
+                                </div>
+
+                                <div className="pb-8 flex justify-center w-full">
+                                    <WalletMultiButtonDynamic className="!bg-zinc-800 hover:!bg-zinc-700 !transition-colors !rounded-full !h-12 !w-full !flex !items-center !justify-center !font-bold !text-sm" />
+                                </div>
+                            </div>
+                        )}
                     </>
                 )}
             </div>

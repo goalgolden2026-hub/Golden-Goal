@@ -97,7 +97,7 @@ export default function LandingPage() {
             {connected ? (
               isWhitelisted ? (
                 <Link 
-                  href="/markets" 
+                  href="/markets?filter=live" 
                   className="h-14 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 bg-[length:200%_auto] hover:bg-[100%_0] text-zinc-950 font-black rounded-2xl text-sm transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] shadow-[0_0_30px_rgba(16,185,129,0.3)] border border-emerald-400/40 text-center uppercase tracking-wider flex items-center justify-center gap-2 group whitespace-nowrap"
                 >
                   <span>Launch Platform</span>
@@ -560,7 +560,7 @@ export default function LandingPage() {
             {connected ? (
               isWhitelisted ? (
                 <Link 
-                  href="/markets" 
+                  href="/markets?filter=live" 
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-500 bg-[length:200%_auto] hover:bg-[100%_0] text-zinc-950 font-black py-4 px-12 rounded-2xl text-base transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] uppercase tracking-wider shadow-[0_0_35px_rgba(245,158,11,0.3)] border border-yellow-400/40"
                 >
                   <span>Enter Platform</span>

@@ -102,6 +102,7 @@ export async function getDb() {
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "lastFreeSpinDate" DATE;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "spinBonusBets" INTEGER DEFAULT 0;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "twitterTaskStatus" BOOLEAN DEFAULT false;`;
+            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "socialPoints" INTEGER DEFAULT 0;`;
 
             // Seed initial World Cup markets if none exist
             const { rows } = await sql`SELECT COUNT(*) as count FROM markets;`;

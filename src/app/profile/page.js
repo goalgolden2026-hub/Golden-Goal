@@ -20,6 +20,8 @@ export default function ProfilePage() {
     const [tweetUrl, setTweetUrl] = useState('');
     const [submittingTweet, setSubmittingTweet] = useState(false);
     const [tweetMessage, setTweetMessage] = useState('');
+    const [cooldown, setCooldown] = useState(0);
+    const [socialLeaderboard, setSocialLeaderboard] = useState([]);
 
     useEffect(() => {
         if (connected && publicKey) {
@@ -30,6 +32,16 @@ export default function ProfilePage() {
         }
     }, [connected, publicKey]);
 
+    useEffect(() => {
+        let timer;
+        if (cooldown > 0) {
+            timer = setInterval(() => {
+                setCooldown(prev => prev - 1);
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [cooldown]);
+
     const fetchProfile = async () => {
         setLoading(true);
         try {
@@ -37,6 +49,13 @@ export default function ProfilePage() {
             const data = await res.json();
             if (data.success) {
                 setProfile(data.profile);
+            }
+            
+            // Also fetch social leaderboard
+            const lbRes = await fetch('/api/leaderboard/social');
+            const lbData = await lbRes.json();
+            if (lbData.success) {
+                setSocialLeaderboard(lbData.leaderboard);
             }
         } catch (error) {
             console.error("Error fetching profile:", error);
@@ -79,9 +98,12 @@ export default function ProfilePage() {
             const data = await res.json();
             if (data.success) {
                 setTweetMessage('🎉 ' + data.message);
-                fetchProfile(); // refresh to show task completed and update points
+                setTweetUrl('');
+                setCooldown(60); // Start 60s cooldown
+                fetchProfile(); // refresh to show update points
             } else {
                 setTweetMessage('❌ ' + data.error);
+                // If backend error says "Please wait X seconds", parse X if possible, but backend handles block.
             }
         } catch (error) {
             setTweetMessage('❌ Server error.');
@@ -242,15 +264,17 @@ export default function ProfilePage() {
                             <h3 className="text-lg font-bold text-white">Share on X (Twitter)</h3>
                         </div>
                         <p className="text-sm text-zinc-400 mb-4">
-                            Tweet about Golden Goal using the hashtag <span className="text-blue-400 font-bold">#GoldenGoal</span> and paste your tweet link here to earn <span className="text-amber-500 font-bold">25 Points</span> instantly!
+                            Tweet about Golden Goal using the hashtag <span className="text-blue-400 font-bold">#GoldenGoal</span> and paste your tweet link here to earn <span className="text-amber-500 font-bold">25 Social Points</span> instantly! You can do this repeatedly!
                         </p>
                         
-                        {profile.twitterTaskStatus ? (
-                            <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-2 rounded-xl text-sm font-bold">
-                                <span>✅</span> Task Completed
-                            </div>
-                        ) : (
-                            <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-3">
+                            {cooldown > 0 ? (
+                                <div className="bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-xl text-center font-bold flex flex-col items-center justify-center gap-2">
+                                    <span className="text-2xl">✅</span>
+                                    <span>Task Completed!</span>
+                                    <span className="text-sm font-normal text-green-400/80">You can submit another tweet in {cooldown} seconds.</span>
+                                </div>
+                            ) : (
                                 <div className="flex flex-col sm:flex-row items-center gap-2">
                                     <input 
                                         type="text" 
@@ -271,11 +295,52 @@ export default function ProfilePage() {
                                         {submittingTweet ? 'Verifying...' : 'Submit'}
                                     </button>
                                 </div>
-                                {tweetMessage && (
-                                    <p className={`text-sm font-medium ${tweetMessage.includes('❌') ? 'text-red-400' : 'text-green-400'}`}>
-                                        {tweetMessage}
-                                    </p>
-                                )}
+                            )}
+                            
+                            {tweetMessage && cooldown === 0 && (
+                                <p className={`text-sm font-medium ${tweetMessage.includes('❌') ? 'text-red-400' : 'text-green-400'}`}>
+                                    {tweetMessage}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="mt-8 border-t border-white/10 pt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* User's Social Score */}
+                    <div className="bg-black/50 rounded-2xl p-6 border border-zinc-800 text-center flex flex-col items-center justify-center">
+                        <p className="text-sm text-zinc-400 mb-2">My Social Points</p>
+                        <p className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+                            {profile.socialPoints || 0}
+                        </p>
+                        <p className="text-xs text-zinc-500 mt-2">Rank up to earn exclusive rewards!</p>
+                    </div>
+
+                    {/* Leaderboard */}
+                    <div className="bg-black/50 rounded-2xl p-6 border border-zinc-800">
+                        <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                            <span>🏆</span> Social Leaderboard
+                        </h3>
+                        {socialLeaderboard.length === 0 ? (
+                            <p className="text-zinc-500 text-sm">No one is on the leaderboard yet. Be the first!</p>
+                        ) : (
+                            <div className="space-y-3">
+                                {socialLeaderboard.map((user, index) => (
+                                    <div key={index} className="flex justify-between items-center p-3 bg-zinc-900/50 rounded-lg border border-zinc-800">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">
+                                                {index + 1}
+                                            </div>
+                                            <span className="font-mono text-sm text-zinc-300">
+                                                {user.walletAddress.slice(0, 4)}...{user.walletAddress.slice(-4)}
+                                            </span>
+                                            {user.walletAddress === profile.walletAddress && (
+                                                <span className="text-[10px] bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">YOU</span>
+                                            )}
+                                        </div>
+                                        <div className="font-bold text-blue-400">{user.socialPoints}</div>
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </div>

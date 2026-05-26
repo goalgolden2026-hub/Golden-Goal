@@ -50,13 +50,13 @@ export default function ProfilePage() {
             });
             const data = await res.json();
             if (data.success) {
-                setClaimMessage("🎉 Başarıyla 1500 Golden Goal Token kazandın!");
+                setClaimMessage("🎉 Successfully claimed 1500 Golden Goal Tokens!");
                 fetchProfile(); // Refresh points
             } else {
-                setClaimMessage(`❌ Hata: ${data.error}`);
+                setClaimMessage(`❌ Error: ${data.error}`);
             }
         } catch (error) {
-            setClaimMessage("❌ Sunucu hatası.");
+            setClaimMessage("❌ Server error.");
         }
         setClaiming(false);
     };
@@ -64,15 +64,15 @@ export default function ProfilePage() {
     const copyToClipboard = () => {
         const link = `${window.location.origin}/?ref=${profile.referralCode}`;
         navigator.clipboard.writeText(link);
-        alert("Referans linki kopyalandı!");
+        alert("Referral link copied!");
     };
 
     if (!connected) {
         return (
             <div className="flex-1 flex flex-col items-center justify-center p-4">
-                <h1 className="text-3xl font-bold mb-6 text-white">Profil & Referans Sistemi</h1>
+                <h1 className="text-3xl font-bold mb-6 text-white">Profile & Referral System</h1>
                 <p className="text-zinc-400 mb-8 text-center max-w-md">
-                    Referans istatistiklerinizi görmek ve cüzdan bakiyenizi kontrol etmek için lütfen Phantom cüzdanınızı bağlayın.
+                    Please connect your Phantom wallet to view your referral statistics and check your balance.
                 </p>
                 <WalletMultiButtonDynamic className="!bg-amber-500 hover:!bg-amber-600 !text-black !font-bold" />
             </div>
@@ -93,26 +93,26 @@ export default function ProfilePage() {
 
     return (
         <div className="flex-1 w-full max-w-5xl mx-auto px-4 py-12">
-            <h1 className="text-4xl font-extrabold mb-8 text-white">Profilim</h1>
+            <h1 className="text-4xl font-extrabold mb-8 text-white">My Profile</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Wallet Balance Card */}
                 <div className="bg-zinc-900/50 border border-white/10 rounded-3xl p-8">
-                    <h2 className="text-2xl font-bold mb-6 text-zinc-300">Cüzdan Özeti</h2>
+                    <h2 className="text-2xl font-bold mb-6 text-zinc-300">Wallet Summary</h2>
                     <div className="bg-black/50 rounded-2xl p-6 border border-zinc-800">
-                        <p className="text-sm text-zinc-500 mb-2">Cüzdan Adresi</p>
+                        <p className="text-sm text-zinc-500 mb-2">Wallet Address</p>
                         <p className="text-lg text-white font-mono truncate">{profile.walletAddress}</p>
                     </div>
                     <div className="mt-6 bg-gradient-to-r from-yellow-500/10 to-amber-600/10 rounded-2xl p-6 border border-amber-500/20">
-                        <p className="text-sm text-amber-500/80 mb-2 font-bold">Golden Token Bakiyesi</p>
+                        <p className="text-sm text-amber-500/80 mb-2 font-bold">Golden Token Balance</p>
                         <p className="text-4xl font-black text-white">{profile.balance.toLocaleString()}</p>
                     </div>
 
                     <div className="mt-6 bg-black/50 rounded-2xl p-6 border border-zinc-800">
                         <div className="flex justify-between items-end mb-2">
-                            <p className="text-sm text-zinc-500">Günlük Bet Hakkı</p>
+                            <p className="text-sm text-zinc-500">Daily Bet Limit</p>
                             <p className="text-lg text-white font-bold">
-                                {profile.maxBets - profile.betsToday} <span className="text-zinc-500 text-sm">/ {profile.maxBets} Kaldı</span>
+                                {profile.maxBets - profile.betsToday} <span className="text-zinc-500 text-sm">/ {profile.maxBets} Left</span>
                             </p>
                         </div>
                         <div className="w-full bg-zinc-800 rounded-full h-2">
@@ -122,7 +122,7 @@ export default function ProfilePage() {
                             ></div>
                         </div>
                         <p className="text-xs text-zinc-500 mt-3">
-                            Stake yaparak veya Şans Çarkını çevirerek limitinizi yükseltebilirsiniz.
+                            You can increase your limit by staking or spinning the Lucky Wheel.
                         </p>
                     </div>
                 </div>
@@ -131,10 +131,10 @@ export default function ProfilePage() {
                 <div className="bg-zinc-900/50 border border-white/10 rounded-3xl p-8 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
                     
-                    <h2 className="text-2xl font-bold mb-6 text-zinc-300">Davet Et, Kazan!</h2>
+                    <h2 className="text-2xl font-bold mb-6 text-zinc-300">Invite & Earn!</h2>
                     
                     <div className="mb-8">
-                        <p className="text-sm text-zinc-400 mb-2">Kişisel Referans Linkin</p>
+                        <p className="text-sm text-zinc-400 mb-2">Personal Referral Link</p>
                         <div className="flex items-center gap-2">
                             <input 
                                 type="text" 
@@ -146,21 +146,21 @@ export default function ProfilePage() {
                                 onClick={copyToClipboard}
                                 className="bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-3 rounded-xl font-bold transition-colors"
                             >
-                                Kopyala
+                                Copy
                             </button>
                         </div>
                         <p className="text-xs text-zinc-500 mt-3">
-                            Bu linkle gelip ilk tahminini yapan her arkadaşın için <strong className="text-amber-500">100 Puan</strong> kazanırsın.
+                            You earn <strong className="text-amber-500">100 Points</strong> for every friend who joins via this link and places their first prediction.
                         </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 mb-8">
                         <div className="bg-black/40 rounded-xl p-4 border border-zinc-800/50 text-center">
-                            <p className="text-xs text-zinc-500 mb-1">Davet Edilen</p>
+                            <p className="text-xs text-zinc-500 mb-1">Invited Users</p>
                             <p className="text-2xl font-bold text-white">{profile.totalInvited}</p>
                         </div>
                         <div className="bg-black/40 rounded-xl p-4 border border-zinc-800/50 text-center">
-                            <p className="text-xs text-zinc-500 mb-1">Toplam Puan</p>
+                            <p className="text-xs text-zinc-500 mb-1">Total Points</p>
                             <p className="text-2xl font-bold text-amber-500">{profile.referralPoints} <span className="text-sm text-zinc-500">/ 1000</span></p>
                         </div>
                     </div>
@@ -168,7 +168,7 @@ export default function ProfilePage() {
                     {/* Progress Bar */}
                     <div className="mb-6">
                         <div className="flex justify-between text-xs mb-2">
-                            <span className="text-zinc-400">Ödül İlerlemesi</span>
+                            <span className="text-zinc-400">Reward Progress</span>
                             <span className="font-bold text-white">{progressPercent.toFixed(0)}%</span>
                         </div>
                         <div className="w-full bg-zinc-800 rounded-full h-3">
@@ -189,9 +189,9 @@ export default function ProfilePage() {
                                 : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
                             }`}
                         >
-                            {claiming ? 'İşleniyor...' : 'Ödülü Al'}
+                            {claiming ? 'Processing...' : 'Claim Reward'}
                         </button>
-                        <p className="text-xs text-zinc-500 mt-3">Hedefe ulaştığınızda 1500 Golden Goal Token ödülü kazanırsınız.</p>
+                        <p className="text-xs text-zinc-500 mt-3">Reach the target to win 1500 Golden Goal Tokens.</p>
                         {claimMessage && (
                             <p className={`mt-4 text-sm font-medium ${claimMessage.includes('❌') ? 'text-red-400' : 'text-green-400'}`}>
                                 {claimMessage}

@@ -10,10 +10,10 @@ const WalletMultiButtonDynamic = dynamic(
 );
 
 const WHEEL_SLICES = [
-    { label: 'Pas', color: '#3f3f46' },         // Index 0
-    { label: '1 Bet Hakkı', color: '#f59e0b' }, // Index 1
-    { label: '3 Bet Hakkı', color: '#10b981' }, // Index 2
-    { label: '5 Bet Hakkı', color: '#3b82f6' }, // Index 3
+    { label: 'Miss', color: '#3f3f46' },         // Index 0
+    { label: '1 Extra Bet', color: '#f59e0b' }, // Index 1
+    { label: '3 Extra Bets', color: '#10b981' }, // Index 2
+    { label: '5 Extra Bets', color: '#3b82f6' }, // Index 3
     { label: '1000 Golden', color: '#eab308' }, // Index 4
     { label: '1 USDC', color: '#6366f1' },      // Index 5
     { label: '10 USDC', color: '#8b5cf6' },     // Index 6
@@ -86,11 +86,11 @@ export default function SpinPage() {
                 }, 5000);
                 
             } else {
-                alert("Hata: " + data.error);
+                alert("Error: " + data.error);
                 setIsSpinning(false);
             }
         } catch (error) {
-            alert("Sunucu hatası");
+            alert("Server error");
             setIsSpinning(false);
         }
     };
@@ -100,10 +100,10 @@ export default function SpinPage() {
             <div className="flex-1 flex flex-col items-center justify-center p-4">
                 <div className="text-center mb-8">
                     <h1 className="text-5xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-500">
-                        Şans Çarkı
+                        Lucky Wheel
                     </h1>
                     <p className="text-zinc-400 max-w-md mx-auto">
-                        Çarkı çevirmek ve muhteşem ödüller kazanmak için cüzdanınızı bağlayın.
+                        Connect your wallet to spin the wheel and win amazing prizes.
                     </p>
                 </div>
                 <WalletMultiButtonDynamic className="!bg-amber-500 hover:!bg-amber-600 !text-black !font-bold !rounded-full !px-8 !py-4" />
@@ -112,7 +112,7 @@ export default function SpinPage() {
     }
 
     if (loading) {
-        return <div className="flex-1 flex items-center justify-center text-zinc-500">Yükleniyor...</div>;
+        return <div className="flex-1 flex items-center justify-center text-zinc-500">Loading...</div>;
     }
 
     return (
@@ -123,7 +123,7 @@ export default function SpinPage() {
                     Golden Spin
                 </h1>
                 <p className="text-zinc-400">
-                    Kilitli tokeni olanlara her gün 1 bedava çevirme hakkı!
+                    Get 1 free spin every day if you have a 30-Day active stake!
                 </p>
             </div>
 
@@ -191,15 +191,15 @@ export default function SpinPage() {
                                 : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
                     }`}
                 >
-                    {isSpinning ? 'DÖNÜYOR...' : status?.isEligibleForFreeSpin ? 'ÜCRETSİZ ÇEVİR' : '500 TOKEN İLE ÇEVİR'}
+                    {isSpinning ? 'SPINNING...' : status?.isEligibleForFreeSpin ? 'FREE SPIN' : 'SPIN FOR 500 TOKENS'}
                 </button>
 
                 {!status?.isEligibleForFreeSpin && (
                     <p className="text-xs text-zinc-500 text-center">
-                        Ücretsiz çevirme hakkınız bulunmuyor. Kilitli token (30 Gün) stake ederek her gün 1 ücretsiz hak kazanabilirsiniz.
+                        You don't have a free spin. Stake your tokens for 30 days to get 1 free spin daily!
                         {status?.balance < 500 && (
                             <span className="block text-red-500 mt-1 font-bold">
-                                Bakiye yetersiz ({status.balance} Golden). Çevirmek için 500 token gerekli.
+                                Insufficient balance ({status.balance} Golden). 500 tokens required.
                             </span>
                         )}
                     </p>
@@ -213,15 +213,15 @@ export default function SpinPage() {
                         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-amber-500/10 to-transparent pointer-events-none"></div>
                         
                         <h2 className="text-3xl font-black text-white mb-2">
-                            {reward.type === 'EMPTY' ? 'Tüh!' : 'Tebrikler! 🎉'}
+                            {reward.type === 'EMPTY' ? 'Oops!' : 'Congratulations! 🎉'}
                         </h2>
                         
                         <div className="my-8 py-8 bg-black/50 rounded-2xl border border-zinc-800">
                             {reward.type === 'EMPTY' ? (
-                                <span className="text-2xl text-zinc-400 block">Maalesef boş çıktı.<br/>Tekrar dene!</span>
+                                <span className="text-2xl text-zinc-400 block">Nothing this time.<br/>Try again!</span>
                             ) : (
                                 <>
-                                    <span className="text-amber-500 text-sm font-bold tracking-widest uppercase mb-2 block">Kazandığın Ödül</span>
+                                    <span className="text-amber-500 text-sm font-bold tracking-widest uppercase mb-2 block">You Won</span>
                                     <span className="text-5xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">{reward.label}</span>
                                 </>
                             )}
@@ -231,7 +231,7 @@ export default function SpinPage() {
                             onClick={() => setReward(null)}
                             className="bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-3 px-8 rounded-xl transition-colors"
                         >
-                            Kapat
+                            Close
                         </button>
                     </div>
                 </div>

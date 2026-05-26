@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 
 const REWARD_TIERS = [
-    { index: 0, type: 'EMPTY', value: 0, label: 'Pas', prob: 20 },
-    { index: 1, type: 'BET', value: 1, label: '1 Bet Hakkı', prob: 35 },
-    { index: 2, type: 'BET', value: 3, label: '3 Bet Hakkı', prob: 15 },
-    { index: 3, type: 'BET', value: 5, label: '5 Bet Hakkı', prob: 5 },
+    { index: 0, type: 'EMPTY', value: 0, label: 'Miss', prob: 20 },
+    { index: 1, type: 'BET', value: 1, label: '1 Extra Bet', prob: 35 },
+    { index: 2, type: 'BET', value: 3, label: '3 Extra Bets', prob: 15 },
+    { index: 3, type: 'BET', value: 5, label: '5 Extra Bets', prob: 5 },
     { index: 4, type: 'GOLDEN', value: 1000, label: '1000 Golden', prob: 10 },
     { index: 5, type: 'USDC', value: 1, label: '1 USDC', prob: 10 },
     { index: 6, type: 'USDC', value: 10, label: '10 USDC', prob: 4 },
@@ -120,7 +120,7 @@ export async function POST(request) {
             }
 
             if (dynamicBalance < 500) {
-                return NextResponse.json({ success: false, error: "Yetersiz Golden Token bakiyesi. Spin çevirmek için 500 token gereklidir." }, { status: 400 });
+                return NextResponse.json({ success: false, error: "Insufficient Golden Token balance. 500 tokens are required to spin." }, { status: 400 });
             }
 
             // Deduct 500 Golden Tokens

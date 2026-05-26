@@ -194,7 +194,7 @@ Golden Goal is designed as a community-first protocol. In order to ensure absolu
 
 ### 7.1 Enterprise AWS Hosting Infrastructure
 To guarantee 99.99% uptime, ultra-low latency, and elite defense against Distributed Denial of Service (DDoS) attacks, Golden Goal’s core infrastructure is hosted on **Amazon Web Services (AWS)**.
-*   **Co-Location with Elyte Signals:** The platform’s servers and backend architectures are deployed in the same highly secure, high-performance AWS virtual private cloud (VPC) that powers the enterprise **Elyte Signals** project.
+*   **Isolated VPC Architecture:** The platform’s servers and backend architectures are deployed in a highly secure, high-performance AWS virtual private cloud (VPC) with private subnets, advanced firewall shielding, and strict role-based access controls to maximize data safety.
 *   **Secure Distributed Database:** The platform utilizes AWS database architectures to manage user accounts, historical data, and prediction states with high redundancy and immediate automated backups.
 
 ### 7.2 Fair Play Protocols

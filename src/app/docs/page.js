@@ -427,7 +427,7 @@ export default function DocsPage() {
           {/* 9. AWS INFRASTRUCTURE */}
           <section id="infrastructure" className="scroll-mt-24 space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
-              <span className="text-amber-500">9.</span> AWS Infrastructure & Elyte Signals Co-Location
+              <span className="text-amber-500">9.</span> AWS Infrastructure & Enterprise-Grade Security
             </h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -441,9 +441,9 @@ export default function DocsPage() {
 
               <div className="bg-zinc-900/60 border border-white/5 p-6 rounded-2xl space-y-2">
                 <div className="text-2xl">🔒</div>
-                <h4 className="font-bold text-white">Elyte Signals VPC</h4>
+                <h4 className="font-bold text-white">Isolated VPC Shield</h4>
                 <p className="text-zinc-400 text-xs leading-relaxed">
-                  Co-located inside the same enterprise Virtual Private Cloud network infrastructure powering our flagship project, <strong>Elyte Signals</strong>.
+                  Deployed inside an isolated Virtual Private Cloud (VPC) network with stateful security walls and strict role-based access to safeguard data.
                 </p>
               </div>
             </div>

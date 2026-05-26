@@ -96,7 +96,7 @@ export default function OnePagerPage() {
           </div>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 font-mono text-[9px] font-bold select-none">
-            <span className="bg-gradient-to-r from-[#9945FF]/15 to-[#14F195]/15 text-[#14F195] border border-[#9945FF]/30 px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse flex items-center gap-1.5 shadow-[0_0_15px_rgba(153,69,255,0.2)] print:bg-zinc-100 print:text-zinc-700 print:border-zinc-300 print:shadow-none print:animate-none">
+            <span className="bg-gradient-to-r from-[#9945FF]/15 to-[#14F195]/15 text-white border border-[#9945FF]/30 px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse flex items-center gap-1.5 shadow-[0_0_15px_rgba(153,69,255,0.2)] print:bg-zinc-100 print:text-zinc-700 print:border-zinc-300 print:shadow-none print:animate-none">
               <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#9945FF] to-[#14F195] shadow-[0_0_8px_rgba(20,241,149,0.8)]"></span>
               Solana Ecosystem
             </span>

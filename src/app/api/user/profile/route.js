@@ -54,6 +54,30 @@ export async function GET(request) {
         // Balance mock (Phase 6 will be on-chain)
         const mockBalance = 30000;
 
+        // Calculate Daily Bets Limit
+        const activeStakeRes = await sql`SELECT tier FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+        let bonusBets = 0;
+        if (activeStakeRes.rowCount > 0) {
+            const stakeTier = activeStakeRes.rows[0].tier;
+            if (stakeTier === 1) bonusBets = 1;
+            else if (stakeTier === 2) bonusBets = 3;
+            else if (stakeTier === 3) bonusBets = 5;
+            else if (stakeTier === 4) bonusBets = 10;
+        }
+
+        const baseLimit = 5;
+        // Check if betsToday needs to be reset visually (if lastBetDate is not today)
+        const today = new Date().toISOString().split('T')[0];
+        let displayBetsToday = user.betsToday || 0;
+        let displaySpinBonus = user.spinBonusBets || 0;
+        
+        if (user.lastBetDate && new Date(user.lastBetDate).toISOString().split('T')[0] !== today) {
+            displayBetsToday = 0;
+            displaySpinBonus = 0; // they expired
+        }
+
+        const maxBets = baseLimit + bonusBets + displaySpinBonus;
+
         return NextResponse.json({ 
             success: true, 
             profile: {
@@ -61,7 +85,9 @@ export async function GET(request) {
                 balance: mockBalance,
                 referralCode: user.referralCode,
                 referralPoints: user.referralPoints,
-                totalInvited
+                totalInvited,
+                betsToday: displayBetsToday,
+                maxBets: maxBets
             }
         }, { status: 200 });
 

@@ -107,6 +107,24 @@ export default function ProfilePage() {
                         <p className="text-sm text-amber-500/80 mb-2 font-bold">Golden Token Bakiyesi</p>
                         <p className="text-4xl font-black text-white">{profile.balance.toLocaleString()}</p>
                     </div>
+
+                    <div className="mt-6 bg-black/50 rounded-2xl p-6 border border-zinc-800">
+                        <div className="flex justify-between items-end mb-2">
+                            <p className="text-sm text-zinc-500">Günlük Bet Hakkı</p>
+                            <p className="text-lg text-white font-bold">
+                                {profile.maxBets - profile.betsToday} <span className="text-zinc-500 text-sm">/ {profile.maxBets} Kaldı</span>
+                            </p>
+                        </div>
+                        <div className="w-full bg-zinc-800 rounded-full h-2">
+                            <div 
+                                className="bg-emerald-500 h-2 rounded-full transition-all duration-500" 
+                                style={{ width: `${Math.max(0, ((profile.maxBets - profile.betsToday) / profile.maxBets) * 100)}%` }}
+                            ></div>
+                        </div>
+                        <p className="text-xs text-zinc-500 mt-3">
+                            Stake yaparak veya Şans Çarkını çevirerek limitinizi yükseltebilirsiniz.
+                        </p>
+                    </div>
                 </div>
 
                 {/* Referral System Card */}

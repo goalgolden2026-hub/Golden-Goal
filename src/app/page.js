@@ -77,6 +77,17 @@ export default function LandingPage() {
         
         {/* HERO SECTION */}
         <section className="text-center w-full max-w-4xl mx-auto mb-20 mt-4 select-none">
+          <div className="flex justify-center mb-8">
+            <div className="relative">
+              <div className="absolute inset-0 bg-yellow-500/10 blur-2xl rounded-full"></div>
+              <img 
+                src="/logo.jpg" 
+                alt="Golden Goal Logo" 
+                className="w-32 h-32 sm:w-36 sm:h-36 rounded-full object-cover border-2 border-yellow-500/30 shadow-[0_0_50px_rgba(245,158,11,0.25)] hover:scale-105 transition-all duration-500 relative z-10"
+              />
+            </div>
+          </div>
+
           <div className="inline-flex items-center gap-2 text-xs tracking-widest text-amber-400/80 font-bold bg-amber-500/10 px-4 py-2 rounded-full border border-amber-500/20 mb-8 animate-pulse">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
             SOLANA COMPETITIVE FOOTBALL PREDICTIONS

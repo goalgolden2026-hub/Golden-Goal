@@ -34,9 +34,11 @@ export default function Header() {
                 
                 {/* Brand Logo */}
                 <Link href="/" className="flex items-center gap-2 relative z-50">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-amber-600 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.2)]">
-                        <span className="text-black font-black text-base">G</span>
-                    </div>
+                    <img 
+                        src="/logo.jpg" 
+                        alt="Golden Goal Logo" 
+                        className="w-8 h-8 rounded-full object-cover border border-yellow-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]"
+                    />
                     <span className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-600 tracking-tight">
                         Golden Goal
                     </span>

@@ -168,10 +168,10 @@ export default function LandingPage() {
             <div className="space-y-1.5 flex-1">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <span className="text-xs font-black tracking-widest text-amber-400 font-mono uppercase">⚖️ Legal Notice & Compliance Shield</span>
-                <span className="inline-flex items-center gap-1.5 text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30 font-mono shadow-[0_0_12px_rgba(16,185,129,0.15)] animate-pulse">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
+                <span className="inline-flex items-center gap-1.5 text-[9px] font-black text-emerald-300 bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-400/50 font-mono shadow-[0_0_18px_rgba(52,211,153,0.45)] animate-pulse">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-100"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
                   </span>
                   COMPLIANCE VERIFIED
                 </span>

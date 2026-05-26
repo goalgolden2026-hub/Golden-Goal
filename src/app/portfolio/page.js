@@ -159,17 +159,17 @@ export default function Portfolio() {
                               <div className="flex flex-col gap-2 border-l border-zinc-800 pl-4 w-full md:w-auto">
                                   <button 
                                       onClick={() => setChangeBetModal(bet)}
-                                      disabled={managingBetId === bet.id}
+                                      disabled={managingBetId === bet.betId}
                                       className="text-xs bg-zinc-800 hover:bg-zinc-700 text-white py-2 px-3 rounded-lg transition-colors border border-transparent hover:border-zinc-600 disabled:opacity-50 flex justify-center items-center gap-1"
                                   >
                                       ✏️ Change (100 <span className="text-amber-500 font-bold">GT</span>)
                                   </button>
                                   <button 
-                                      onClick={() => handleManageBet(bet.id, 'CANCEL')}
-                                      disabled={managingBetId === bet.id}
+                                      onClick={() => handleManageBet(bet.betId, 'CANCEL')}
+                                      disabled={managingBetId === bet.betId}
                                       className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-500 py-2 px-3 rounded-lg transition-colors border border-red-500/20 hover:border-red-500/40 disabled:opacity-50 flex justify-center items-center gap-1"
                                   >
-                                      {managingBetId === bet.id ? 'Processing...' : <>🗑️ Cancel (200 <span className="text-amber-500 font-bold">GT</span>)</>}
+                                      {managingBetId === bet.betId ? 'Processing...' : <>🗑️ Cancel (200 <span className="text-amber-500 font-bold">GT</span>)</>}
                                   </button>
                               </div>
                           </div>
@@ -236,8 +236,8 @@ export default function Portfolio() {
                           {getOptionsForBetType(changeBetModal).map((opt, idx) => (
                               <button 
                                   key={idx}
-                                  onClick={() => handleManageBet(changeBetModal.id, 'CHANGE', opt)}
-                                  disabled={managingBetId === changeBetModal.id || opt === changeBetModal.prediction}
+                                  onClick={() => handleManageBet(changeBetModal.betId, 'CHANGE', opt)}
+                                  disabled={managingBetId === changeBetModal.betId || opt === changeBetModal.prediction}
                                   className={`w-full py-3 rounded-xl border font-bold transition-all ${
                                       opt === changeBetModal.prediction 
                                           ? 'bg-amber-500/20 border-amber-500 text-amber-500 opacity-50 cursor-not-allowed' 

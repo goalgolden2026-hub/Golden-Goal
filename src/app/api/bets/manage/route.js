@@ -21,8 +21,13 @@ export async function PUT(request) {
         // 1. Check Token Balance
         const balance = await getTokenBalance(walletAddress);
 
-        // 2. Fetch Bet
-        const betRes = await sql`SELECT * FROM bets WHERE id = ${betId} AND "walletAddress" = ${walletAddress}`;
+        // 2. Fetch Bet and Market Data
+        const betRes = await sql`
+            SELECT b.*, m."matchDate" 
+            FROM bets b
+            JOIN markets m ON b."marketId" = m.id
+            WHERE b.id = ${betId} AND b."walletAddress" = ${walletAddress}
+        `;
         if (betRes.rowCount === 0) {
             return NextResponse.json({ success: false, error: "Bet not found or unauthorized" }, { status: 404 });
         }
@@ -31,6 +36,15 @@ export async function PUT(request) {
 
         if (bet.status !== 'PENDING') {
             return NextResponse.json({ success: false, error: "Only active (pending) predictions can be modified" }, { status: 400 });
+        }
+
+        // 3. Check Time Lockout (must be at least 5 mins before matchDate)
+        const matchTime = new Date(bet.matchDate).getTime();
+        const nowTime = Date.now();
+        const fiveMinsInMs = 5 * 60 * 1000;
+
+        if (matchTime - nowTime < fiveMinsInMs) {
+            return NextResponse.json({ success: false, error: "Modifications are locked! The match starts in less than 5 minutes or has already started." }, { status: 403 });
         }
 
         if (action === 'CHANGE') {

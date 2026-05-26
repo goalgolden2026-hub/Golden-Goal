@@ -79,6 +79,22 @@ export async function POST(request) {
             return NextResponse.json({ success: false, error: `Daily limit reached (${finalLimit} bets). Come back tomorrow!` }, { status: 429 });
         }
 
+        // 4.5 Check if user already has an active bet for this market and betType
+        const existingBetRes = await sql`
+            SELECT id FROM bets 
+            WHERE "walletAddress" = ${walletAddress} 
+            AND "marketId" = ${marketId} 
+            AND "betType" = ${betType} 
+            AND status = 'PENDING'
+        `;
+
+        if (existingBetRes.rowCount > 0) {
+            return NextResponse.json({ 
+                success: false, 
+                error: "You already have an active prediction for this specific market. To modify your choice, go to the Portfolio page and use the Change feature." 
+            }, { status: 400 });
+        }
+
         // 5. Insert Bet
         await sql`
             INSERT INTO bets ("walletAddress", "marketId", prediction, "betType") 

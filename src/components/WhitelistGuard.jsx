@@ -38,7 +38,7 @@ export default function WhitelistGuard({ children }) {
   if (!mounted) return null;
 
   // List of public, unprotected routes
-  const publicRoutes = ['/', '/docs', '/pitchdeck'];
+  const publicRoutes = ['/', '/docs', '/pitchdeck', '/onepager'];
   const isPublicRoute = publicRoutes.includes(pathname);
 
   // If it's a public page, let them view it immediately

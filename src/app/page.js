@@ -104,7 +104,7 @@ export default function LandingPage() {
             A competitive football prediction ecosystem built on <span className="text-white font-semibold">Solana</span> where fans forecast matches, earn <span className="text-amber-400 font-semibold">XP</span>, climb leaderboards, and unlock <span className="text-white font-semibold">ecosystem rewards.</span>
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl mx-auto px-4 select-none">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 w-full max-w-4xl mx-auto px-4 select-none">
             {connected ? (
               isWhitelisted ? (
                 <Link 
@@ -160,6 +160,17 @@ export default function LandingPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
               <span>Pitch Deck</span>
+            </Link>
+
+            {/* One-Pager Secondary Button */}
+            <Link 
+              href="/onepager" 
+              className="h-14 bg-white/[0.02] border border-white/10 hover:border-orange-500/30 hover:bg-orange-500/[0.04] text-zinc-300 hover:text-white font-bold rounded-2xl text-sm transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-2 shadow-[0_4px_30px_rgba(0,0,0,0.4)] backdrop-blur-md group whitespace-nowrap"
+            >
+              <svg className="w-5 h-5 text-orange-500/80 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span>One-Pager</span>
             </Link>
           </div>
 

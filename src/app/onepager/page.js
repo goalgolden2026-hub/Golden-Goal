@@ -282,6 +282,30 @@ export default function OnePagerPage() {
           </div>
         </div>
 
+        {/* PREMIUM LEGAL COMPLIANCE SHIELD CARD */}
+        <div className="w-full mt-8 p-5 rounded-2xl bg-zinc-950/60 border border-yellow-500/10 hover:border-yellow-500/30 backdrop-blur-xl shadow-[0_0_35px_rgba(245,158,11,0.02)] transition-all duration-300 select-none text-left flex items-start gap-4 group print-bg-card">
+          <div className="p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 flex items-center justify-center shrink-0 group-hover:bg-yellow-500/20 group-hover:scale-105 transition-all duration-300 print:bg-yellow-500/[0.05] print:border-zinc-300">
+            <svg className="w-6 h-6 text-amber-400 print:text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div className="space-y-1.5 flex-1">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <span className="text-xs font-black tracking-widest text-amber-400 font-mono uppercase print:text-amber-800">⚖️ Legal Notice & Compliance Shield</span>
+              <span className="inline-flex items-center gap-1.5 text-[9px] font-black text-emerald-300 bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-400/50 font-mono shadow-[0_0_18px_rgba(52,211,153,0.45)] animate-pulse print:bg-emerald-50 print:text-emerald-700 print:border-emerald-300 print:shadow-none">
+                <span className="relative flex h-2 w-2 print:hidden">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-100"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+                </span>
+                COMPLIANCE VERIFIED
+              </span>
+            </div>
+            <p className="text-[11px] font-medium leading-relaxed text-zinc-400 print:text-zinc-700">
+              <strong className="text-zinc-200 print:text-zinc-900">NO PURCHASE NECESSARY.</strong> Void where prohibited by law. Standard daily prediction quotas are allocated free of charge. Platform operations strictly simulate a football analytical index. Leaderboards are decided 100% based on predictive foresight, football acumen, and data modelling—completely free of capital hazard or chance elements.
+            </p>
+          </div>
+        </div>
+
         {/* FOOTER & CTA */}
         <div className="mt-8 border-t border-white/10 pt-4 flex flex-col sm:flex-row items-center justify-between text-[10px] text-zinc-500 print:border-zinc-200 print:text-zinc-600 print:pt-3 print:pb-0">
           <div className="mb-2 sm:mb-0 text-center sm:text-left print:text-left">

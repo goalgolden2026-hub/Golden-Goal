@@ -131,7 +131,7 @@ export default function Header() {
                                 </div>
                             </div>
 
-                            <Link href="/profile" className="hover:text-white transition-colors text-amber-500 font-bold">Profile</Link>
+                            <Link href="/profile" className="hover:text-white transition-colors">Profile</Link>
                         </nav>
 
                         {/* Desktop Wallet connection */}
@@ -194,7 +194,7 @@ export default function Header() {
                                         )}
                                     </div>
 
-                                    <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/5 text-amber-500 hover:text-amber-400 transition-colors">Profile</Link>
+                                    <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/5 hover:text-white transition-colors">Profile</Link>
                                 </div>
 
                                 <div className="pb-8 flex justify-center w-full">

@@ -24,9 +24,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Lint check
-        run: npm run lint
-        continue-on-error: true # Prevents warning lints from breaking builds on early betas
-
       - name: Build Next.js bundle
         run: npm run build

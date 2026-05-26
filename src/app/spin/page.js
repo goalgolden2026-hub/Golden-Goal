@@ -245,13 +245,13 @@ export default function SpinPage() {
             <div className="flex flex-col items-center gap-4 w-full max-w-sm mb-16 relative z-10">
                 <button
                     onClick={handleSpin}
-                    disabled={isSpinning || (!status?.isEligibleForFreeSpin && status?.balance < 500)}
+                    disabled={isSpinning || (!status?.isEligibleForFreeSpin && (status?.balance < status?.spinCost || (status?.requiresMinBalance && status?.balance < 10000)))}
                     className={`w-full py-5 rounded-full font-black text-xl uppercase tracking-widest transition-all shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex items-center justify-center gap-3 ${
                         isSpinning 
                         ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
                         : status?.isEligibleForFreeSpin
                             ? 'bg-gradient-to-b from-green-400 via-emerald-500 to-green-700 text-white shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-105 hover:brightness-110'
-                            : status?.balance >= 500 
+                            : (status?.balance >= status?.spinCost && (!status?.requiresMinBalance || status?.balance >= 10000))
                                 ? 'bg-gradient-to-b from-yellow-300 via-amber-500 to-orange-600 text-white shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:scale-105 hover:brightness-110'
                                 : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
                     }`}
@@ -261,17 +261,24 @@ export default function SpinPage() {
                             <span className="text-yellow-300 text-sm">G</span>
                         </div>
                     )}
-                    {isSpinning ? 'SPINNING...' : status?.isEligibleForFreeSpin ? 'FREE SPIN' : 'SPIN FOR 500 TOKENS'}
+                    {isSpinning ? 'SPINNING...' : status?.isEligibleForFreeSpin ? 'FREE SPIN' : `SPIN FOR ${status?.spinCost || '...'} TOKENS`}
                 </button>
 
                 {!status?.isEligibleForFreeSpin && (
-                    <div className="text-xs text-zinc-400 text-center flex items-start gap-2 max-w-xs mx-auto">
+                    <div className="text-xs text-zinc-400 text-center flex items-start gap-2 max-w-sm mx-auto">
                         <span className="text-zinc-500 mt-0.5">ⓘ</span>
                         <p>
-                            You don't have a free spin. Stake your tokens for 30 days to get 1 free spin daily!
-                            {status?.balance < 500 && (
-                                <span className="block text-red-500 mt-1 font-bold">
-                                    Insufficient balance ({status.balance} Golden). 500 tokens required.
+                            Stake tokens to get massive discounts and up to 1 free spin daily!
+                            
+                            {status?.requiresMinBalance && status?.balance < 10000 && (
+                                <span className="block text-red-500 mt-2 font-bold">
+                                    ⚠️ Minimum 10,000 Golden Tokens required to spin without an active stake. (Current: {status.balance.toLocaleString()})
+                                </span>
+                            )}
+                            
+                            {status?.balance < status?.spinCost && (!status?.requiresMinBalance || status?.balance >= 10000) && (
+                                <span className="block text-red-500 mt-2 font-bold">
+                                    ⚠️ Insufficient balance. {status.spinCost} tokens required.
                                 </span>
                             )}
                         </p>

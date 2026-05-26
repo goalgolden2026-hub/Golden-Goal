@@ -12,29 +12,40 @@ const REWARD_TIERS = [
     { index: 7, type: 'GOLDEN', value: 5000, label: '5000 Golden', prob: 1 }
 ];
 
-async function checkFreeSpinEligibility(sql, walletAddress) {
-    const today = new Date().toISOString().split('T')[0];
-    
-    // Check if user has already spun today for free
-    const userRes = await sql`SELECT "lastFreeSpinDate" FROM users WHERE "walletAddress" = ${walletAddress}`;
-    if (userRes.rowCount > 0) {
-        const lastSpin = userRes.rows[0].lastFreeSpinDate;
-        if (lastSpin && new Date(lastSpin).toISOString().split('T')[0] === today) {
-            return false; // Already used today
+async function getSpinStatus(sql, walletAddress) {
+    let activeTier = 0;
+    // Get the highest active stake tier
+    const activeStakeRes = await sql`SELECT tier FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE' ORDER BY tier DESC LIMIT 1`;
+    if (activeStakeRes.rowCount > 0) activeTier = activeStakeRes.rows[0].tier;
+
+    let spinCost = 1000;
+    let requiresMinBalance = false;
+    let isEligibleForFreeSpin = false;
+
+    if (activeTier === 0) {
+        spinCost = 1000;
+        requiresMinBalance = true;
+    } else if (activeTier === 1) {
+        spinCost = 750;
+    } else if (activeTier === 2) {
+        spinCost = 500;
+    } else if (activeTier === 3) {
+        spinCost = 250;
+    } else if (activeTier === 4) {
+        spinCost = 150;
+        
+        // Check free spin eligibility
+        const today = new Date().toISOString().split('T')[0];
+        const userRes = await sql`SELECT "lastFreeSpinDate" FROM users WHERE "walletAddress" = ${walletAddress}`;
+        if (userRes.rowCount > 0) {
+            const lastSpin = userRes.rows[0].lastFreeSpinDate;
+            if (!lastSpin || new Date(lastSpin).toISOString().split('T')[0] !== today) {
+                isEligibleForFreeSpin = true;
+            }
         }
     }
 
-    // Check if user has an active stake locked for >= 30 days
-    // Since our stakes tier logic defines locking periods, we'll check if they have any active stake.
-    // In our simplified logic: tier 3 or 4 are usually long term. Or just ANY active stake > 30 days.
-    const activeStakeRes = await sql`
-        SELECT * FROM stakes 
-        WHERE "walletAddress" = ${walletAddress} 
-        AND status = 'ACTIVE' 
-        AND ("unlockDate" >= "createdAt" + INTERVAL '30 days')
-    `;
-
-    return activeStakeRes.rowCount > 0;
+    return { isEligibleForFreeSpin, spinCost, requiresMinBalance, activeTier };
 }
 
 function spinRNG() {
@@ -62,7 +73,7 @@ export async function GET(request) {
         if (!walletAddress) return NextResponse.json({ success: false, error: "Missing walletAddress" }, { status: 400 });
 
         const sql = await getDb();
-        const isEligibleForFreeSpin = await checkFreeSpinEligibility(sql, walletAddress);
+        const status = await getSpinStatus(sql, walletAddress);
 
         let dynamicBalance = 30000;
         const activeStakesTotalRes = await sql`SELECT SUM(amount) as total FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
@@ -78,8 +89,10 @@ export async function GET(request) {
 
         return NextResponse.json({ 
             success: true, 
-            isEligibleForFreeSpin,
-            spinCost: 500,
+            isEligibleForFreeSpin: status.isEligibleForFreeSpin,
+            spinCost: status.spinCost,
+            requiresMinBalance: status.requiresMinBalance,
+            activeTier: status.activeTier,
             balance: dynamicBalance
         }, { status: 200 });
 
@@ -96,10 +109,10 @@ export async function POST(request) {
 
         const sql = await getDb();
         
-        // 1. Determine Payment (Free vs 500 Tokens)
-        const isFree = await checkFreeSpinEligibility(sql, walletAddress);
+        // 1. Determine Payment (Free vs Dynamic Token Cost)
+        const status = await getSpinStatus(sql, walletAddress);
         
-        if (isFree) {
+        if (status.isEligibleForFreeSpin) {
             // Update lastFreeSpinDate to today
             await sql`
                 UPDATE users SET "lastFreeSpinDate" = CURRENT_DATE 
@@ -119,14 +132,18 @@ export async function POST(request) {
                 else if (log.type === 'REFERRAL_REWARD' || log.type === 'SPIN_REWARD_GOLDEN') dynamicBalance += amt;
             }
 
-            if (dynamicBalance < 500) {
-                return NextResponse.json({ success: false, error: "Insufficient Golden Token balance. 500 tokens are required to spin." }, { status: 400 });
+            if (status.requiresMinBalance && dynamicBalance < 10000) {
+                return NextResponse.json({ success: false, error: "You need a minimum balance of 10,000 Golden Tokens to spin without an active stake." }, { status: 400 });
             }
 
-            // Deduct 500 Golden Tokens
+            if (dynamicBalance < status.spinCost) {
+                return NextResponse.json({ success: false, error: `Insufficient Golden Token balance. ${status.spinCost} tokens are required to spin.` }, { status: 400 });
+            }
+
+            // Deduct Spin Cost
             await sql`
                 INSERT INTO treasury_logs ("walletAddress", amount, type) 
-                VALUES (${walletAddress}, -500, 'SPIN_PAYMENT')
+                VALUES (${walletAddress}, ${-status.spinCost}, 'SPIN_PAYMENT')
             `;
         }
 
@@ -161,7 +178,7 @@ export async function POST(request) {
                 type: reward.type,
                 value: reward.value
             },
-            wasFree: isFree
+            wasFree: status.isEligibleForFreeSpin
         }, { status: 200 });
 
     } catch (error) {

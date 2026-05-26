@@ -2,6 +2,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { WalletContextProvider } from "@/components/WalletContextProvider";
 import Header from "@/components/Header";
+import ReferralCapture from "@/components/ReferralCapture";
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +25,9 @@ export default function RootLayout({ children }) {
 
         <WalletContextProvider>
           <Header />
+          <Suspense fallback={null}>
+            <ReferralCapture />
+          </Suspense>
           <main className="flex-1 flex flex-col">
             {children}
           </main>

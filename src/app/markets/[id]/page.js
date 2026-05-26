@@ -63,7 +63,8 @@ export default function MatchDetail() {
                 walletAddress: publicKey.toBase58(),
                 marketId: market.id,
                 betType: betType,
-                prediction: betPrediction
+                prediction: betPrediction,
+                referredBy: localStorage.getItem('referralCode') || null
             })
         });
         const data = await res.json();

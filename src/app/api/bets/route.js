@@ -18,7 +18,7 @@ function getTierLimits(balance) {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { walletAddress, marketId, prediction, betType = 'MAIN' } = body;
+        const { walletAddress, marketId, prediction, betType = 'MAIN', referredBy } = body;
 
         if (!walletAddress || !marketId || !prediction) {
             return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
@@ -36,11 +36,13 @@ export async function POST(request) {
 
         // 2. Fetch User from DB (or create if not exists)
         let userRes = await sql`SELECT * FROM users WHERE "walletAddress" = ${walletAddress}`;
+        let isFirstBet = false;
         
         if (userRes.rowCount === 0) {
+            isFirstBet = true;
             await sql`
-                INSERT INTO users ("walletAddress", points, "betsToday", "lastBetDate") 
-                VALUES (${walletAddress}, 0, 0, CURRENT_DATE)
+                INSERT INTO users ("walletAddress", points, "betsToday", "lastBetDate", "referredBy") 
+                VALUES (${walletAddress}, 0, 0, CURRENT_DATE, ${referredBy || null})
             `;
             userRes = await sql`SELECT * FROM users WHERE "walletAddress" = ${walletAddress}`;
         }
@@ -106,6 +108,37 @@ export async function POST(request) {
             UPDATE users SET "betsToday" = "betsToday" + 1 
             WHERE "walletAddress" = ${walletAddress}
         `;
+        
+        // 7. Referral System Logic (Only on First Bet)
+        if (isFirstBet && referredBy) {
+            try {
+                const referrerRes = await sql`SELECT * FROM users WHERE "referralCode" = ${referredBy}`;
+                if (referrerRes.rowCount > 0 && referrerRes.rows[0].walletAddress !== walletAddress) {
+                    const ipAddress = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+                    
+                    const ipCheckRes = await sql`SELECT id FROM referrals WHERE "ipAddress" = ${ipAddress} AND "ipAddress" != 'unknown'`;
+                    
+                    if (ipCheckRes.rowCount > 0) {
+                        await sql`
+                            INSERT INTO referrals ("referrerCode", "referredWallet", "ipAddress", status)
+                            VALUES (${referredBy}, ${walletAddress}, ${ipAddress}, 'IP_BLOCKED')
+                        `;
+                    } else {
+                        await sql`
+                            INSERT INTO referrals ("referrerCode", "referredWallet", "ipAddress", status)
+                            VALUES (${referredBy}, ${walletAddress}, ${ipAddress}, 'COMPLETED')
+                        `;
+                        await sql`
+                            UPDATE users 
+                            SET "referralPoints" = COALESCE("referralPoints", 0) + 100 
+                            WHERE "referralCode" = ${referredBy}
+                        `;
+                    }
+                }
+            } catch (refErr) {
+                console.error("Referral Error:", refErr);
+            }
+        }
         
         return NextResponse.json({ 
             success: true, 

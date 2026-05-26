@@ -15,7 +15,10 @@ export async function getDb() {
                     "walletAddress" TEXT PRIMARY KEY,
                     points INTEGER DEFAULT 0,
                     "betsToday" INTEGER DEFAULT 0,
-                    "lastBetDate" DATE DEFAULT CURRENT_DATE
+                    "lastBetDate" DATE DEFAULT CURRENT_DATE,
+                    "referralCode" TEXT UNIQUE,
+                    "referredBy" TEXT,
+                    "referralPoints" INTEGER DEFAULT 0
                 );
             `;
 
@@ -66,6 +69,22 @@ export async function getDb() {
                     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
             `;
+
+            await sql`
+                CREATE TABLE IF NOT EXISTS referrals (
+                    id SERIAL PRIMARY KEY,
+                    "referrerCode" TEXT NOT NULL,
+                    "referredWallet" TEXT NOT NULL,
+                    "ipAddress" TEXT,
+                    status TEXT DEFAULT 'PENDING',
+                    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            `;
+
+            // ADD MISSING COLUMNS FOR EXISTING DB
+            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "referralCode" TEXT UNIQUE;`;
+            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "referredBy" TEXT;`;
+            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "referralPoints" INTEGER DEFAULT 0;`;
 
             // Seed initial World Cup markets if none exist
             const { rows } = await sql`SELECT COUNT(*) as count FROM markets;`;

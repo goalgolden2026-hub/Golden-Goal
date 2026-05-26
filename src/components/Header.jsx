@@ -39,6 +39,7 @@ export default function Header() {
                             <Link href="/portfolio" className="hover:text-white transition-colors">Portfolio</Link>
                             <Link href="/leaderboard" className="hover:text-white transition-colors">Leaderboard</Link>
                             <Link href="/stake" className="hover:text-white transition-colors">Staking</Link>
+                            <Link href="/profile" className="hover:text-white transition-colors text-amber-500">Profile</Link>
                         </nav>
 
                         <div className="flex items-center">

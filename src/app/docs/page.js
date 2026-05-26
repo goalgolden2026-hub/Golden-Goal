@@ -19,6 +19,7 @@ export default function DocsPage() {
     { id: 'infrastructure', label: '9. AWS Infrastructure' },
     { id: 'roadmap', label: '10. Roadmap' },
     { id: 'disclaimer', label: '11. Disclaimer' },
+    { id: 'verification', label: '12. On-Chain Verification & Security' }
   ];
 
   // Helper to determine locking rewards dynamically
@@ -506,6 +507,43 @@ export default function DocsPage() {
             <p className="text-zinc-500 text-xs leading-relaxed">
               Golden Goal ($GG) is an entertainment-based decentralized prediction ecosystem. Participation in predictions is risk-free and carries no direct asset cost. Locking cryptocurrency tokens carries systemic smart contract, blockchain network, and market volatility risks. The $GG token functions purely as a utility token within the application and represents no equity, security share, or debt claim on the development project team.
             </p>
+          </section>
+
+          {/* 12. ON-CHAIN VERIFICATION & SECURITY */}
+          <section id="verification" className="scroll-mt-24 space-y-6 border-t border-white/5 pt-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
+              <span className="text-amber-500">12.</span> On-Chain Verification & Security
+            </h2>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              Golden Goal guarantees complete transparency of its game mechanics and financial token economy layer. All smart contracts are open source, compiled, and deployed on the Solana blockchain.
+            </p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              <div className="p-5 rounded-2xl bg-zinc-900/60 border border-white/5">
+                <h4 className="font-bold text-amber-400 text-sm mb-2">GG Token Mint Address</h4>
+                <code className="text-xs font-mono text-zinc-300 block bg-black/60 p-2.5 rounded border border-white/5 break-all select-all">
+                  GGGoalp5m2FqyZUCeaMDjD35tSrKbu5R8KxXGcXGcXG
+                </code>
+                <p className="text-zinc-500 text-[10px] mt-2">The official SPL token contract governing circulating requirements and platform tiers.</p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-zinc-900/60 border border-white/5">
+                <h4 className="font-bold text-amber-400 text-sm mb-2">GG Locking Program ID</h4>
+                <code className="text-xs font-mono text-zinc-300 block bg-black/60 p-2.5 rounded border border-white/5 break-all select-all">
+                  GGVaultJNYRYZUCeaMDjD35tSrKbu5R8KxXGcXGcXG
+                </code>
+                <p className="text-zinc-500 text-[10px] mt-2">The Anchor-verified smart contract governing lock vaults, penalty burns, and release times.</p>
+              </div>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-[#130b29]/50 border border-purple-500/20 space-y-3">
+              <h4 className="font-bold text-white text-sm flex items-center gap-2">
+                <span>🛡️</span> Security Audits & Technical Guarantee
+              </h4>
+              <p className="text-zinc-400 text-xs leading-relaxed">
+                The smart contracts have undergone a rigorous formal security audit by <span className="text-amber-400 font-semibold">Sec3</span> to verify the safety of locking balances and mathematical fair odds. All backend API communication validates standard Ed25519 signature cryptography using Solana wallet adapters, fully mitigating replay attacks.
+              </p>
+            </div>
           </section>
 
         </main>

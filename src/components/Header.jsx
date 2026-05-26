@@ -96,11 +96,16 @@ export default function Header() {
                                 <button className="flex items-center gap-1 hover:text-white transition-colors focus:outline-none">
                                     Prediction <span className="text-zinc-500 text-[10px] transition-transform duration-300 group-hover:rotate-180">▼</span>
                                 </button>
-                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-52 bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 shadow-[0_10px_35px_rgba(0,0,0,0.6)] z-50 hover:border-emerald-500/30">
-                                    <div className="absolute top-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"></div>
-                                    <Link href="/markets?filter=live" className="block px-4 py-2.5 rounded-xl hover:bg-emerald-500/10 hover:text-emerald-400 transition-all font-semibold text-xs text-left">🟢 Live Match</Link>
-                                    <Link href="/markets?filter=upcoming" className="block px-4 py-2.5 rounded-xl hover:bg-blue-500/10 hover:text-blue-400 transition-all font-semibold text-xs text-left">📅 Upcoming Match</Link>
-                                    <Link href="/dashboard" className="block px-4 py-2.5 rounded-xl hover:bg-purple-500/10 hover:text-purple-400 transition-all font-semibold text-xs text-left">📊 Dashboard</Link>
+                                
+                                {/* Transparent Bridge Wrapper */}
+                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-52 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 z-50">
+                                    {/* Actual Styled Dropdown Container */}
+                                    <div className="bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 shadow-[0_10px_35px_rgba(0,0,0,0.6)] hover:border-emerald-500/30 relative">
+                                        <div className="absolute top-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"></div>
+                                        <Link href="/markets?filter=live" className="block px-4 py-2.5 rounded-xl hover:bg-emerald-500/10 hover:text-emerald-400 transition-all font-semibold text-xs text-left">🟢 Live Match</Link>
+                                        <Link href="/markets?filter=upcoming" className="block px-4 py-2.5 rounded-xl hover:bg-blue-500/10 hover:text-blue-400 transition-all font-semibold text-xs text-left">📅 Upcoming Match</Link>
+                                        <Link href="/dashboard" className="block px-4 py-2.5 rounded-xl hover:bg-purple-500/10 hover:text-purple-400 transition-all font-semibold text-xs text-left">📊 Dashboard</Link>
+                                    </div>
                                 </div>
                             </div>
 
@@ -111,11 +116,16 @@ export default function Header() {
                                 <button className="flex items-center gap-1 hover:text-white transition-colors focus:outline-none">
                                     Rewards <span className="text-zinc-500 text-[10px] transition-transform duration-300 group-hover:rotate-180">▼</span>
                                 </button>
-                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-52 bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 shadow-[0_10px_35px_rgba(0,0,0,0.6)] z-50 hover:border-amber-500/30">
-                                    <div className="absolute top-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
-                                    <Link href="/rewards/staking" className="block px-4 py-2.5 rounded-xl hover:bg-amber-500/10 hover:text-amber-400 transition-all font-semibold text-xs text-left">🌱 Staking</Link>
-                                    <Link href="/rewards/reward-box" className="block px-4 py-2.5 rounded-xl hover:bg-red-500/10 hover:text-red-400 transition-all font-semibold text-xs text-left">🎁 Reward Box</Link>
-                                    <Link href="/rewards/social-tasks" className="block px-4 py-2.5 rounded-xl hover:bg-blue-500/10 hover:text-blue-400 transition-all font-semibold text-xs text-left">🐦 Social Tasks</Link>
+                                
+                                {/* Transparent Bridge Wrapper */}
+                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-52 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 z-50">
+                                    {/* Actual Styled Dropdown Container */}
+                                    <div className="bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 shadow-[0_10px_35px_rgba(0,0,0,0.6)] hover:border-amber-500/30 relative">
+                                        <div className="absolute top-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
+                                        <Link href="/rewards/staking" className="block px-4 py-2.5 rounded-xl hover:bg-amber-500/10 hover:text-amber-400 transition-all font-semibold text-xs text-left">🌱 Staking</Link>
+                                        <Link href="/rewards/reward-box" className="block px-4 py-2.5 rounded-xl hover:bg-red-500/10 hover:text-red-400 transition-all font-semibold text-xs text-left">🎁 Reward Box</Link>
+                                        <Link href="/rewards/social-tasks" className="block px-4 py-2.5 rounded-xl hover:bg-blue-500/10 hover:text-blue-400 transition-all font-semibold text-xs text-left">🐦 Social Tasks</Link>
+                                    </div>
                                 </div>
                             </div>
 

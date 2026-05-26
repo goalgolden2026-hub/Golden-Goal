@@ -95,13 +95,17 @@ export default function OnePagerPage() {
             </div>
           </div>
           
-          <div className="flex flex-wrap justify-center gap-2 font-mono text-[9px] font-bold">
-            <span className="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-full uppercase tracking-wider print:bg-zinc-100 print:text-zinc-700 print:border-zinc-300">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 font-mono text-[9px] font-bold select-none">
+            <span className="bg-gradient-to-r from-[#9945FF]/15 to-[#14F195]/15 text-[#14F195] border border-[#9945FF]/30 px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse flex items-center gap-1.5 shadow-[0_0_15px_rgba(153,69,255,0.2)] print:bg-zinc-100 print:text-zinc-700 print:border-zinc-300 print:shadow-none print:animate-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#9945FF] to-[#14F195] shadow-[0_0_8px_rgba(20,241,149,0.8)]"></span>
               Solana Ecosystem
             </span>
-            <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full uppercase tracking-wider print:bg-emerald-50 print:text-emerald-700 print:border-emerald-200 flex items-center gap-1">
-              <span className="w-1 h-1 rounded-full bg-emerald-400 print:bg-emerald-600"></span>
-              Compliance Verified
+            <span className="inline-flex items-center gap-1.5 text-[9px] font-black text-emerald-300 bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-400/50 font-mono shadow-[0_0_18px_rgba(52,211,153,0.45)] animate-pulse print:bg-emerald-50 print:text-emerald-700 print:border-emerald-300 print:shadow-none print:animate-none">
+              <span className="relative flex h-2 w-2 print:hidden">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-100"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+              </span>
+              COMPLIANCE VERIFIED
             </span>
           </div>
         </div>

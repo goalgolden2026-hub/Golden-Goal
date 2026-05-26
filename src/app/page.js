@@ -90,7 +90,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-base sm:text-xl text-zinc-400 mb-10 max-w-3xl mx-auto leading-relaxed font-medium">
-            The next-generation competitive sports forecasting ecosystem on Solana. Hold or stake <span className="text-amber-400 font-semibold">$GG</span> to forecast matches, spin the provably fair Lucky Wheel, and dominate dual ladders with <span className="text-white font-semibold">zero capital loss.</span>
+            A competitive football prediction ecosystem built on <span className="text-white font-semibold">Solana</span> where fans forecast matches, earn <span className="text-amber-400 font-semibold">XP</span>, climb leaderboards, and unlock <span className="text-white font-semibold">ecosystem rewards.</span>
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl mx-auto px-4 select-none">

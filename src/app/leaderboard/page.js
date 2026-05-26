@@ -65,8 +65,8 @@ export default function Leaderboard() {
 
       {/* Stats */}
       <div className="md:col-span-4 flex items-center justify-center gap-2">
-        <StatBadge label="TP" value={leader.totalBets} />
-        <StatBadge label="WP" value={leader.wonBets} />
+        <StatBadge label="TP" value={leader.totalPredictions} />
+        <StatBadge label="WP" value={leader.wonPredictions} />
         <StatBadge label="WR" value={`${leader.winrate}%`} valueClass={wrColor(leader.winrate)} />
       </div>
 
@@ -140,8 +140,8 @@ export default function Leaderboard() {
 
               {/* Stats */}
               <div className="flex items-center gap-2 md:flex-1 md:justify-center">
-                <StatBadge label="TP" value={userStats.totalBets} />
-                <StatBadge label="WP" value={userStats.wonBets} />
+                <StatBadge label="TP" value={userStats.totalPredictions} />
+                <StatBadge label="WP" value={userStats.wonPredictions} />
                 <StatBadge label="WR" value={`${userStats.winrate}%`} valueClass={wrColor(userStats.winrate)} />
               </div>
 

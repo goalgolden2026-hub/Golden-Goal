@@ -6,22 +6,66 @@ export async function getDb() {
     if (!isInitialized) {
         try {
             // UNCOMMENT THIS TO RESET DB: 
-            // await sql`DROP TABLE IF EXISTS bets CASCADE`;
+            // await sql`DROP TABLE IF EXISTS predictions CASCADE`;
             // await sql`DROP TABLE IF EXISTS markets CASCADE`;
             // await sql`DROP TABLE IF EXISTS users CASCADE`;
+
+            // --- DATABASE MIGRATIONS START ---
+            // 1. Rename 'bets' table to 'predictions' if it exists
+            try {
+                await sql`ALTER TABLE IF EXISTS bets RENAME TO predictions;`;
+                console.log("Migration: Renamed 'bets' table to 'predictions'");
+            } catch (e) {
+                // Table might already be renamed or not exist
+            }
+
+            // 2. Rename columns in predictions table (formerly bets)
+            try {
+                await sql`ALTER TABLE IF EXISTS predictions RENAME COLUMN "betType" TO "predictionType";`;
+                console.log("Migration: Renamed column 'betType' to 'predictionType' in predictions");
+            } catch (e) {
+                // Column might already be renamed or not exist
+            }
+
+            // 3. Rename columns in users table
+            const userColumnsToRename = [
+                { old: 'betsToday', new: 'predictionsToday' },
+                { old: 'lastBetDate', new: 'lastPredictionDate' },
+                { old: 'lastFreeSpinDate', new: 'lastFreeBoxDate' },
+                { old: 'spinBonusBets', new: 'bonusPredictions' }
+            ];
+
+            for (const col of userColumnsToRename) {
+                try {
+                    // We check if the old column exists before renaming
+                    const checkCol = await sql`
+                        SELECT column_name 
+                        FROM information_schema.columns 
+                        WHERE table_name = 'users' AND column_name = ${col.old}
+                    `;
+                    if (checkCol.rowCount > 0) {
+                        await sql.query(`ALTER TABLE users RENAME COLUMN "${col.old}" TO "${col.new}"`);
+                        console.log(`Migration: Renamed user column '${col.old}' to '${col.new}'`);
+                    }
+                } catch (e) {
+                    console.error(`Migration error renaming ${col.old}:`, e);
+                }
+            }
+            // --- DATABASE MIGRATIONS END ---
 
             await sql`
                 CREATE TABLE IF NOT EXISTS users (
                     "walletAddress" TEXT PRIMARY KEY,
                     points INTEGER DEFAULT 0,
-                    "betsToday" INTEGER DEFAULT 0,
-                    "lastBetDate" DATE DEFAULT CURRENT_DATE,
+                    "predictionsToday" INTEGER DEFAULT 0,
+                    "lastPredictionDate" DATE DEFAULT CURRENT_DATE,
                     "referralCode" TEXT UNIQUE,
                     "referredBy" TEXT,
                     "referralPoints" INTEGER DEFAULT 0,
-                    "lastFreeSpinDate" DATE,
-                    "spinBonusBets" INTEGER DEFAULT 0,
-                    "twitterTaskStatus" BOOLEAN DEFAULT false
+                    "lastFreeBoxDate" DATE,
+                    "bonusPredictions" INTEGER DEFAULT 0,
+                    "twitterTaskStatus" BOOLEAN DEFAULT false,
+                    "socialPoints" INTEGER DEFAULT 0
                 );
             `;
 
@@ -37,19 +81,17 @@ export async function getDb() {
             `;
 
             await sql`
-                CREATE TABLE IF NOT EXISTS bets (
+                CREATE TABLE IF NOT EXISTS predictions (
                     id SERIAL PRIMARY KEY,
                     "walletAddress" TEXT NOT NULL REFERENCES users("walletAddress"),
                     "marketId" INTEGER NOT NULL REFERENCES markets(id),
                     prediction TEXT NOT NULL,
-                    "betType" TEXT DEFAULT 'MAIN',
+                    "predictionType" TEXT DEFAULT 'MAIN',
                     status TEXT DEFAULT 'PENDING',
-                    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    "updatedAt" TIMESTAMP
                 );
             `;
-
-            // Add updatedAt column if it doesn't exist (for existing DBs)
-            await sql`ALTER TABLE bets ADD COLUMN IF NOT EXISTS "updatedAt" TIMESTAMP;`;
 
             await sql`
                 CREATE TABLE IF NOT EXISTS stakes (
@@ -95,12 +137,12 @@ export async function getDb() {
                 );
             `;
 
-            // ADD MISSING COLUMNS FOR EXISTING DB
+            // ADD MISSING COLUMNS FOR EXISTING DB (safety checks using the new column names)
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "referralCode" TEXT UNIQUE;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "referredBy" TEXT;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "referralPoints" INTEGER DEFAULT 0;`;
-            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "lastFreeSpinDate" DATE;`;
-            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "spinBonusBets" INTEGER DEFAULT 0;`;
+            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "lastFreeBoxDate" DATE;`;
+            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "bonusPredictions" INTEGER DEFAULT 0;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "twitterTaskStatus" BOOLEAN DEFAULT false;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "socialPoints" INTEGER DEFAULT 0;`;
 
@@ -131,3 +173,4 @@ export async function getDb() {
     }
     return sql;
 }
+

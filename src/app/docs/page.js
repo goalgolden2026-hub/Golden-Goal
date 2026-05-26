@@ -26,7 +26,7 @@ export default function DocsPage() {
     if (amount >= 5000) {
       return {
         tier: "Tier 4 (1-Month Locked)",
-        bets: "+10 Daily Predictions",
+        predictions: "+10 Daily Predictions",
         xp: "1.25x XP Multiplier",
         rewardsBox: "1 Free Daily Rewards Box (then 25 XP)",
         period: "30 Days Lock",
@@ -36,7 +36,7 @@ export default function DocsPage() {
     } else if (amount >= 1000) {
       return {
         tier: "Tier 3 (15-Day Locked)",
-        bets: "+5 Daily Predictions",
+        predictions: "+5 Daily Predictions",
         xp: "1.10x XP Multiplier",
         rewardsBox: "25 XP / Box (75% Off)",
         period: "15 Days Lock",
@@ -46,7 +46,7 @@ export default function DocsPage() {
     } else if (amount >= 500) {
       return {
         tier: "Tier 2 (7-Day Locked)",
-        bets: "+3 Daily Predictions",
+        predictions: "+3 Daily Predictions",
         xp: "1.0x XP Multiplier",
         rewardsBox: "50 XP / Box (50% Off)",
         period: "7 Days Lock",
@@ -56,7 +56,7 @@ export default function DocsPage() {
     } else if (amount >= 100) {
       return {
         tier: "Tier 1 (Soft Stake)",
-        bets: "+1 Daily Prediction",
+        predictions: "+1 Daily Prediction",
         xp: "1.0x XP Multiplier",
         rewardsBox: "75 XP / Box (25% Off)",
         period: "1 Day Lock",
@@ -66,7 +66,7 @@ export default function DocsPage() {
     } else {
       return {
         tier: "Tier 0 (No Active Stake)",
-        bets: "Base Daily Prediction Limit",
+        predictions: "Base Daily Prediction Limit",
         xp: "1.0x XP Multiplier",
         rewardsBox: "100 XP / Box Open",
         period: "No Lock",
@@ -305,7 +305,7 @@ export default function DocsPage() {
                 </div>
                 <div>
                   <h4 className="text-xs text-zinc-500 font-bold uppercase tracking-wider mb-1">Daily Forecast limits</h4>
-                  <div className="text-base font-bold text-emerald-400">{currentTier.bets}</div>
+                  <div className="text-base font-bold text-emerald-400">{currentTier.predictions}</div>
                 </div>
                 <div>
                   <h4 className="text-xs text-zinc-500 font-bold uppercase tracking-wider mb-1">XP Points Multiplier</h4>

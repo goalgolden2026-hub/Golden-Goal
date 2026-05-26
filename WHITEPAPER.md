@@ -1,241 +1,241 @@
 # Golden Goal ($GG) Whitepaper
-*Decentralized, Gamified Sports Predictions & Social Oracle Hub on Solana*
+*Solana Üzerinde Merkeziyetsiz, Oyunlaştırılmış Spor Tahminleri ve Sosyal Kehanet Merkezi*
 
-**Version:** 1.1.0  
-**Release Date:** May 2026  
-**Official Platform Domain:** [www.goldengoalsol.com](https://www.goldengoalsol.com)  
-
----
-
-## 1. Introduction
-
-Solana Golden Goal is a next-generation Web3 football prediction platform that combines prediction gaming, staking, social engagement, and competitive rewards into a single unified ecosystem. 
-
-The primary goal of Golden Goal is to establish a sustainable, community-driven prediction economy where football enthusiasts can predict matches for free, earn Experience Points (XP), and compete for weekly high-value token rewards. By leveraging the speed and cost-efficiency of the Solana blockchain, Golden Goal bridges the gap between passive sports fans and the active DeFi/Web3 community.
-
-The platform integrates gamification mechanics, powerful staking utilities, viral referral growth programs, and provably fair casino-style systems to deliver a premium user experience.
+**Sürüm:** 1.2.0  
+**Yayınlanma Tarihi:** Mayıs 2026  
+**Resmi Platform Alan Adı:** [www.goldengoalsol.com](https://www.goldengoalsol.com)  
 
 ---
 
-## 2. Vision
+## 1. Giriş
 
-Golden Goal's vision is to build the world's largest football prediction and fan engagement platform. 
+Solana Golden Goal; tahmin oyunlarını, staking'i, sosyal etkileşimi ve rekabetçi ödülleri tek bir çatı altında birleştiren yeni nesil bir Web3 futbol tahmin platformudur.
 
-To achieve this, the platform enables users to:
-*   **Make Free Predictions:** Predict real-world football fixtures without financial risk.
-*   **Compete on Weekly Leaderboards:** Rise through the ranks based on accurate predictions and claim valuable payouts.
-*   **Gain Staking Advantages:** Lock tokens to earn passive benefits, prediction multipliers, and casino discounts.
-*   **Earn Through Social Tasks:** Help the platform grow virally and get rewarded for community-driven marketing.
-*   **Participate in a Sustainable Ecosystem:** Enjoy a token economy built with deflationary burn sinks and continuous rewards.
+Golden Goal'ün birincil amacı; futbol tutkunlarının herhangi bir finansal risk almadan ücretsiz tahminler yapabildiği, Deneyim Puanları (XP) kazanabildiği ve haftalık yüksek değerli token ödülleri için rekabet edebildiği sürdürülebilir, topluluk odaklı bir tahmin ekonomisi kurmaktır. Golden Goal, Solana blokzincirinin yüksek hızından ve düşük maliyet verimliliğinden yararlanarak, pasif spor taraftarları ile aktif DeFi/Web3 topluluğu arasındaki köprüyü oluşturmaktadır.
+
+Platform; üst düzey bir kullanıcı deneyimi sunmak amacıyla oyunlaştırma mekaniklerini, güçlü staking araçlarını, viral referans büyüme programlarını ve tamamen adil ödül sistemlerini entegre eder.
 
 ---
 
-## 3. The Problem & The Solution
+## 2. Vizyon
 
-### 3.1 The Problem
-Traditional sports prediction and betting platforms suffer from several industry-wide flaws:
-1.  **High Financial Risk:** Casual fans are forced to risk their hard-earned money just to participate in sports forecasting.
-2.  **Complicated User Experience:** Complex betting slips, hidden margins, and difficult onboarding prevent non-crypto users from entering the market.
-3.  **Weak Community Engagement:** Users bet in isolation; platforms lack viral loops, social elements, or collaborative community rewards.
-4.  **Low Token Utility:** Most existing prediction tokens serve purely speculative purposes, lacking concrete utility sinks or deflationary mechanisms.
-5.  **High Onboarding Barriers:** Opaque web interfaces and high gas fees on legacy blockchains alienate the mass market.
+Golden Goal'ün vizyonu; dünyanın en büyük futbol tahmin ve taraftar etkileşim platformunu inşa etmektir.
 
-### 3.2 The Solution
-Golden Goal addresses these issues through a modern, web-scale Web3 architecture:
-*   **Risk-Free Prediction Systems:** Users predict real-world football matches without losing their core assets.
-*   **Deep Staking Utility:** Holding and staking tokens directly translates to platform perks, eliminating pure speculation.
-*   **Gamified Social Engagement:** Features like Twitter Farming and the Lucky Spin turn prediction tracking into a thrilling, socially shared experience.
-*   **Referral Growth Systems:** Organic word-of-mouth incentives built directly into the UI.
-*   **Weekly Leaderboard Rewards:** Direct, transparent financial distributions to the best analytical minds in the community.
+Bu hedefe ulaşmak için platform, kullanıcılarına aşağıdaki imkanları sunar:
+*   **Ücretsiz Tahminler Yapma:** Herhangi bir finansal risk taşımadan gerçek dünya futbol maçlarının sonuçlarını tahmin etme.
+*   **Haftalık Liderlik Tablolarında Rekabet:** İsabetli tahminler yaparak üst sıralara yükselme ve haftalık ödüller kazanma.
+*   **Staking Avantajları:** Token kilitleyerek pasif avantajlar, tahmin çarpanları ve sadakat ödül indirimleri kazanma.
+*   **Sosyal Görevlerle Kazanma:** Platformun sosyal medyada viral büyümesine yardımcı olarak topluluk ödülleri elde etme.
+*   **Sürdürülebilir Ekosisteme Katılım:** Deflasyonist token yakım mekanizmaları ve sürekli beslenen ödül havuzlarıyla korunan dengeli bir ekonominin parçası olma.
 
 ---
 
-## 4. Platform Features
+## 3. Sorun & Çözüm
 
-### 4.1 The Free Prediction System
-Users can place predictions on real-world football fixtures, including major international tournaments like the World Cup.
-*   **Prediction Markets:** Outright Match Winner (1X2), Exact Score Outcomes, and overall Team Performances.
-*   **Risk-Free Mechanics:** Predictions are completely free to enter, subject to daily entry quotas determined by the user's Staking Tier.
-*   **Earned Rewards:** Correct predictions award users with:
-    *   **Experience Points (XP):** Boosts leaderboard rankings.
-    *   **Social Points:** Contributes to social tier rewards.
-    *   **Leaderboard Points:** Directly impacts the weekly prize pool standing.
-*   **Dynamic Modification:** Each user has a personal performance dashboard where active predictions can be edited or cancelled anytime before the match officially begins.
+### 3.1 Sorun
+Geleneksel spor tahmini ve bahis platformları, sektör genelinde kronikleşmiş bazı ciddi kusurlara sahiptir:
+1.  **Yüksek Finansal Risk:** Taraftarlar, spor analiz yeteneklerini test etmek ve sürece dahil olmak için bile kendi birikimlerini riske atmak zorunda kalırlar.
+2.  **Karmaşık Kullanıcı Deneyimi:** Karışık bahis kuponları, gizli komisyonlar ve zorlu kayıt süreçleri kripto dışı kitlelerin sisteme dahil olmasını engeller.
+3.  **Zayıf Topluluk Etkileşimi:** Kullanıcılar birbirlerinden bağımsız, izole tahminlerde bulunurlar; platformlarda sosyal unsurlar, viral döngüler veya ortak topluluk ödülleri bulunmaz.
+4.  **Düşük Token Faydası:** Mevcut spor token'larının büyük kısmı somut platform faydasından yoksun, tamamen spekülatif niteliktedir.
+5.  **Yüksek Giriş Bariyerleri:** Eski blokzincirlerdeki yavaş işlemler ve yüksek işlem ücretleri kitlesel pazarın katılımını zorlaştırır.
 
-### 4.2 Weekly Reward Pool
-The competitive heart of Golden Goal is the weekly Leaderboard. Every week, the top 10 predictors on the leaderboard are rewarded with payouts distributed in **Golden Goal ($GG) tokens**. 
-
-The reward distribution scales dynamically based on active user volume, matched fixtures, and treasury revenue, ensuring that top analytical minds are consistently incentivized with premium payouts down to the 10th rank. The exact reward distributions for each tier are displayed transparently in the application dashboard at the start of each matchweek, giving the platform flexibility to scale pools during major global championships (such as the World Cup).
-
----
-
-### 4.3 Dashboard System
-Every participant gets access to a high-fidelity, personal analytics dashboard containing:
-*   **Total Points & Active Predictions:** Instant view of currently active forecasts.
-*   **Win Rate (WR):** Historical success percentage across all categories.
-*   **Prediction History:** Transparency log of all past predictions, points won, and final match scores.
+### 3.2 Çözüm
+Golden Goal, bu sorunları modern Web3 mimarisiyle çözer:
+*   **Risksiz Tahmin Sistemleri:** Kullanıcılar ana varlıklarını riske atmadan gerçek dünya futbol karşılaşmalarında analiz becerilerini yarıştırır.
+*   **Derin Staking Faydası:** Token sahipliği ve staking, platform içi doğrudan avantajlara (ek kota, XP çarpanı vb.) dönüşür.
+*   **Oyunlaştırılmış Sosyal Etkileşim:** Twitter Farming ve Ödül Kutusu (Rewards Box) gibi özellikler, tahmin sürecini sosyal olarak paylaşılan eğlenceli bir deneyime dönüştürür.
+*   **Referans Büyüme Sistemi:** Arayüze doğrudan entegre edilmiş, organik büyümeyi teşvik eden kulaktan kulağa pazarlama teşvikleri.
+*   **Haftalık Liderlik Tablosu Ödülleri:** Topluluktaki en iyi analitik beyinlere doğrudan, şeffaf token dağıtımları.
 
 ---
 
-### 4.4 Staking System
-To foster long-term loyalty, drive token demand, and limit circulating supply, Golden Goal implements a tiered staking protocol.
+## 4. Platform Özellikleri
+
+### 4.1 Ücretsiz Tahmin Sistemi
+Kullanıcılar, Dünya Kupası gibi büyük uluslararası turnuvalar da dahil olmak üzere gerçek dünya futbol maçlarına tahminler yerleştirebilirler.
+*   **Tahmin Piyasaları:** Maç Sonucu (1X2), Toplam Gol (Alt/Üst), Karşılıklı Gol Var/Yok, İlk Yarı Sonucu, İlk Golü Kim Atar ve Çifte Şans gibi popüler standart pazarlar.
+*   **Risksiz Tahmin Mekaniği:** Tahminler tamamen ücretsizdir. Günlük tahmin limitleri kullanıcının Staking kademesine göre belirlenir.
+*   **Kazanılan Ödüller:** Doğru tahminler kullanıcılara şunları kazandırır:
+    *   **Deneyim Puanı (XP):** Haftalık liderlik tablosundaki sıralamayı yükseltir.
+    *   **Sosyal Puanlar:** Sosyal görev seviyelerine katkıda bulunur.
+    *   **Liderlik Tablosu Puanı:** Haftalık ödül havuzundaki payı doğrudan etkiler.
+*   **Dinamik Değişiklik:** Kullanıcılar kişisel kontrol panelleri üzerinden, maçın başlama saatine 5 dakika kalana kadar tahminlerini değiştirebilir veya iptal edebilirler.
+
+### 4.2 Haftalık Ödül Havuzu
+Golden Goal'ün rekabetçi kalbi haftalık Liderlik Tablosudur. Her hafta, liderlik tablosundaki en başarılı ilk 10 tahminci **Golden Goal ($GG) tokenları** ile ödüllendirilir.
+
+Ödül dağıtımı aktif kullanıcı hacmine, tamamlanan fikstürlere ve hazine gelirlerine göre dinamik olarak ölçeklenir; böylece en iyi analiz yeteneğine sahip 10 kullanıcı sürekli olarak premium kazançlarla teşvik edilir. Güncel ödül miktarları ve dağılımları her maç haftasının başında şeffaf bir şekilde kontrol panelinde sergilenir. Bu esneklik, Dünya Kupası gibi küresel şampiyonalarda ödül havuzlarının çok daha yüksek seviyelere çıkarılmasına olanak tanır.
+
+---
+
+### 4.3 VIP Analiz Paneli (Dashboard)
+Her katılımcı, şu analitik verileri barındıran premium bir kişisel panele erişebilir:
+*   **Toplam Puan & Aktif Tahminler:** Aktif tahmin durumlarının anlık görünümü.
+*   **Başarı Oranı (WR):** Tüm tahmin kategorilerindeki tarihsel başarı yüzdesi.
+*   **Tahmin Geçmişi:** Geçmiş tüm tahminlerin, kazanılan puanların ve kesinleşen maç skorlarının şeffaf dökümü.
+
+---
+
+### 4.4 Staking Sistemi
+Uzun vadeli sadakati teşvik etmek, token talebini artırmak ve dolaşımdaki arzı dengelemek için Golden Goal kademeli bir staking protokolü uygular.
 
 ```mermaid
 graph TD
-    A[Staker Locks $GG] --> B{Choose Lock Tier}
-    B -->|Soft Stake: 1 Day| C[+1 Daily Bet / Flexible Cashout]
-    B -->|7-Day Stake| D[+3 Daily Bets / 10% Unstake Penalty]
-    B -->|15-Day Stake| E[+5 Daily Bets / 1.1x XP / 10% Unstake Penalty]
-    B -->|30-Day Stake| F[+10 Daily Bets / 1.25x XP / 1 Daily Rewards Box]
+    A[Kullanıcı $GG Kilitler] --> B{Kilit Süresini Seç}
+    B -->|Soft Stake: 1 Gün| C[+1 Günlük Tahmin / Esnek Çekim]
+    B -->|7 Günlük Kilit| D[+3 Günlük Tahmin / %10 Unstake Cezası]
+    B -->|15 Günlük Kilit| E[+5 Günlük Tahmin / 1.1x XP / %10 Unstake Cezası]
+    B -->|30 Günlük Kilit| F[+10 Günlük Tahmin / 1.25x XP / 1 Ücretsiz Günlük Kutu]
 ```
 
-*   **Soft Stake:**
-    *   *Minimum:* 100 $GG tokens
-    *   *Lock Period:* 1 Day
-    *   *Reward:* +1 bonus daily prediction limit
-    *   *Withdrawal:* Flexible withdrawal with zero penalty.
-*   **7-Day Stake:**
-    *   *Minimum:* 500 $GG tokens
-    *   *Lock Period:* 7 Days
-    *   *Reward:* +3 bonus daily prediction limit
-    *   *Early Withdrawal Penalty:* 10% on principal.
-*   **15-Day Stake:**
-    *   *Minimum:* 1,000 $GG tokens
-    *   *Lock Period:* 15 Days
-    *   *Rewards:* +5 bonus daily prediction limit & **1.1x XP Multiplier**
-    *   *Early Withdrawal Penalty:* 10% on principal.
-*   **1-Month Stake:**
-    *   *Minimum:* 5,000 $GG tokens
-    *   *Lock Period:* 30 Days
-    *   *Rewards:* +10 bonus daily prediction limit, **1.25x XP Multiplier**, and **1 Daily Rewards Box** in the rewards module.
+*   **Soft Stake (Esnek Kilitleme):**
+    *   *Minimum:* 100 $GG token
+    *   *Kilit Süresi:* 1 Gün
+    *   *Ödül:* Günlük +1 ek tahmin limiti
+    *   *Çekim:* Sıfır ceza ile tamamen esnek çekim.
+*   **7 Günlük Stake:**
+    *   *Minimum:* 500 $GG token
+    *   *Kilit Süresi:* 7 Gün
+    *   *Ödül:* Günlük +3 ek tahmin limiti
+    *   *Erken Çekim Cezası:* Kilit süresi dolmadan çekim yapıldığında ana paradan %10 kesinti.
+*   **15 Günlük Stake:**
+    *   *Minimum:* 1,000 $GG token
+    *   *Kilit Süresi:* 15 Gün
+    *   *Ödüller:* Günlük +5 ek tahmin limiti & **1.1x XP Çarpanı**
+    *   *Erken Çekim Cezası:* Kilit süresi dolmadan çekim yapıldığında ana paradan %10 kesinti.
+*   **1 Aylık Stake (Tier 4):**
+    *   *Minimum:* 5,000 $GG token
+    *   *Kilit Süresi:* 30 Gün
+    *   *Ödüller:* Günlük +10 ek tahmin limiti, **1.25x XP Çarpanı** ve sadakat modülünde **Her Gün 1 Ücretsiz Ödül Kutusu**.
 
 ---
 
-### 4.5 Staking Burn Mechanism
-Early unstaking (withdrawing tokens before the lock period expires) triggers a **10% penalty fee**. To support the long-term token economics and reward sustainability, this penalty is split:
-*   **50% is burned permanently:** Effectively reducing the circulating token supply.
-*   **50% is transferred to the Reward Pool Wallet:** Directly funding subsequent weekly leaderboard distributions.
+### 4.5 Staking Yakım Mekanizması
+Kilit süresi dolmadan erken token çekimlerinde uygulanan **%10 ceza ücreti**, uzun vadeli token ekonomisini ve ödül sürdürülebilirliğini korumak amacıyla ikiye bölünür:
+*   **%50'si kalıcı olarak yakılır (Burn):** Dolaşımdaki token arzı doğrudan azaltılarak deflasyonist baskı oluşturulur.
+*   **%50'si Ödül Havuzu Cüzdanına aktarılır:** Gelecek haftalardaki liderlik tablosu ödüllerini finanse etmek amacıyla doğrudan ekosisteme geri kazandırılır.
 
 ---
 
-### 4.6 The Rewards Box Module
-The Rewards Box is a high-engagement gamification module that allows users to open mystery rewards for massive XP boosts or prediction quotas. Opening costs are dynamically paid using XP Points and heavily discounted based on active Staking Tiers:
+### 4.6 Ödül Kutusu (Rewards Box)
+Ödül Kutusu, kullanıcıların sadakat ödülleri, devasa XP puanları veya ek tahmin limitleri kazanmasını sağlayan yüksek etkileşimli bir oyunlaştırma modülüdür. Kutu açımları tamamen XP Puanları ile gerçekleştirilir ve Staking kademelerine göre büyük indirimlerle sunulur:
 
-| User Category | Wallet & Staking Status | Opening Cost (in XP) |
-| :--- | :--- | :--- |
-| **No Active Stake** | Holds 0 $GG or no active stake | 100 XP |
-| **1-Day Stakers** | Active Soft Stake | 75 XP |
-| **7-Day Stakers** | Active 7-Day Locked Stake | 50 XP |
-| **15-Day Stakers** | Active 15-Day Locked Stake | 25 XP |
-| **1-Month Stakers** | Active 30-Day Locked Stake | **1 Free Daily Opening**, then 25 XP |
+| Kullanıcı Kategorisi | Staking Durumu | Kutu Açım Maliyeti (XP) |
+2: | :--- | :--- | :--- |
+| **Kilit Yapmayanlar (Tier 0)** | 0 $GG veya aktif staking bulunmayan cüzdanlar | 100 XP |
+| **1 Günlük Stakerlar (Tier 1)** | Aktif Soft Stake | 75 XP |
+| **7 Günlük Stakerlar (Tier 2)** | Aktif 7 Günlük Kilitli Stake | 50 XP |
+| **15 Günlük Stakerlar (Tier 3)** | Aktif 15 Günlük Kilitli Stake | 25 XP |
+| **1 Aylık Stakerlar (Tier 4)** | Aktif 30 Günlük Kilitli Stake | **Her Gün 1 Kutu ÜCRETSİZ**, sonrakiler 25 XP |
 
-**Possible Rewards Box Loot:**
-*   Leaderboard XP Points (up to +1000 XP) to boost seasonal standings.
-*   Extra prediction quotas (+1 to +5 Quotas) for high-action matchweeks.
-
----
-
-### 4.7 Referral System
-The Referral System drives organic platform expansion. Users earn Referral Points by inviting new participants via personalized links. 
-*   **Validation Rule:** For a referral to register as valid and prevent bot abuse, the invited user must connect their Solana wallet and complete at least **one active transaction** (e.g., place a prediction, stake, or open a box).
-*   **Rewards:** Reaching referral milestones unlocks special token bonuses and free high-tier Rewards Box openings.
+**Ödül Kutusundan Çıkabilecek Olası Ödüller:**
+*   Liderlik sıralamasında yükselmenizi sağlayacak XP Puanları (+100, +250, +500, +1000 XP).
+*   Yoğun fikstürlü haftalarda kullanabileceğiniz ek günlük tahmin kotaları (+1 ile +5 arası ek kota).
 
 ---
 
-### 4.8 Social Tasks (Twitter Farming)
-To guarantee continuous visibility on social media, Golden Goal rewards viral community marketing:
-*   **Twitter Farming:** Users post about Golden Goal on X (Twitter) using the official `#GoldenGoal` hashtag, submit their unique tweet URL in the app, and receive **25 Social Points** instantly.
-*   **Social Leaderboard:** A dedicated weekly Social Leaderboard ranks users based strictly on marketing tasks and referral points, distributing secondary token rewards.
+### 4.7 Referans Sistemi
+Referans sistemi, platformun organik büyümesini tetikler. Kullanıcılar kendilerine özel bağlantılarla yeni katılımcıları platforma davet ederek Referans Puanları kazanırlar.
+*   **Doğrulama Kuralı (Spam/Bot Koruması):** Davet edilen bir kullanıcının referans olarak sayılabilmesi için Solana cüzdanını bağlaması ve platform üzerinde en az **bir aktif işlem** gerçekleştirmesi (tahmin kilitleme, stake etme veya kutu açma) zorunludur.
+*   **Ödüller:** Belirli referans sınırlarına ulaşan kullanıcılar özel token bonusları ve ücretsiz yüksek kademe Ödül Kutusu açımları elde ederler.
 
 ---
 
-## 5. Token Utility
-
-The native **Golden Goal ($GG)** token serves as the absolute backbone of the platform's utility structure:
-1.  **Staking:** Unlocking VIP multiplier tiers, daily prediction limits, and platform perks.
-2.  **Rewards Box Utility:** Staking tiers directly determine the XP cost discounts or free daily openings.
-3.  **Ecosystem Rewards:** Distributing weekly performance payouts to top-performing leaderboard users.
-4.  **XP and Point Boosters:** Purchasing multipliers to secure ranking leads.
-5.  **Ecosystem Governance:** Granting active holders voting power over community wallets and expansion priorities.
-6.  **Future Tournament Entries:** Serving as buy-ins for high-stakes seasonal prediction tournaments.
+### 4.8 Sosyal Görevler (Twitter Farming)
+Sosyal medyada sürekli görünürlük sağlamak amacıyla Golden Goal, viral topluluk pazarlamasını ödüllendirir:
+*   **Twitter Farming:** Kullanıcılar X (Twitter) platformunda resmi `#GoldenGoal` etiketiyle paylaşım yapıp bu tweet URL'sini sisteme girdiklerinde anında **25 Sosyal Puan** kazanırlar.
+*   **Sosyal Liderlik Tablosu:** Sadece sosyal paylaşımlardan ve referanslardan kazanılan Sosyal Puanların yarıştığı özel bir liderlik tablosudur ve en aktif pazarlamacılara ek token ödülleri dağıtır.
 
 ---
 
-## 6. Sustainable Tokenomics & Fair Launch
+## 5. Token Faydası (Utility)
 
-### 6.1 Token Sustainability Mechanics
-Rather than relying on inflation, Golden Goal's tokenomics are stabilized by continuous utility sinks:
-*   **Early Unstake Penalty Sinks:** 50% of unstake penalties are permanently removed from circulation.
-*   **Lucky Spin Sinks:** Net token expenditures on the spin system are allocated to treasury reserve and reward pools.
-*   **Deflationary Sinks:** Modifying and deleting predictions burn or capture micro-fees.
-
-### 6.2 Fair Launch Token Mechanics (No Locked Presale Tokens)
-Golden Goal is designed as a community-first protocol. In order to ensure absolute trust:
-*   **No Public Presales:** There was no public presale event.
-*   **No Vested Locked Tokens:** Consequently, there are **no pre-allocated or locked presale tokens** scheduled to dump on the market, preventing artificial selling pressure and ensuring all circulating tokens represent active participants, organic players, and long-term stakers.
+Platformun temel taşı olan **Golden Goal ($GG)** tokenı, tüm ekosistem boyunca derin işlevsel faydalara sahiptir:
+1.  **Staking:** VIP çarpan seviyelerini, günlük ekstra tahmin limitlerini ve özel platform imtiyazlarını aktifleştirme.
+2.  **Kutu Açma Avantajı:** Staking kademelerine bağlı olarak Ödül Kutusu açımlarında devasa XP indirimleri veya günlük ücretsiz açım hakları.
+3.  **Ekosistem Ödülleri:** Liderlik tablosundaki en başarılı analizcilere haftalık olarak yapılan ödemelerin para birimi olması.
+4.  **XP ve Puan Artırıcılar:** Liderlik sıralamasında avantaj elde etmek için XP çarpanları satın alma.
+5.  **Ekosistem Yönetişimi (DAO):** Token sahiplerine topluluk cüzdanı harcamaları ve ekosistem genişleme öncelikleri üzerinde oylama gücü verme.
+6.  **Gelecek Turnuva Katılımları:** Yüksek ödüllü sezonluk özel tahmin turnuvalarına katılım bileti olma.
 
 ---
 
-## 7. Infrastructure, Security & Fair Play
+## 6. Sürdürülebilir Tokenomics & Adil Lansman
 
-### 7.1 Enterprise AWS Hosting Infrastructure
-To guarantee 99.99% uptime, ultra-low latency, and elite defense against Distributed Denial of Service (DDoS) attacks, Golden Goal’s core infrastructure is hosted on **Amazon Web Services (AWS)**.
-*   **Isolated VPC Architecture:** The platform’s servers and backend architectures are deployed in a highly secure, high-performance AWS virtual private cloud (VPC) with private subnets, advanced firewall shielding, and strict role-based access controls to maximize data safety.
-*   **Secure Distributed Database:** The platform utilizes AWS database architectures to manage user accounts, historical data, and prediction states with high redundancy and immediate automated backups.
+### 6.1 Token Sürdürülebilirliği Mekanizmaları
+Golden Goal token ekonomisi, enflasyona dayalı olmak yerine ekosistem içi sürekli fayda ve yakım (sink) mekanizmalarıyla dengelenir:
+*   **Erken Unstake Cezaları:** Süresi dolmadan yapılan kilit iptali cezalarının %50'si kalıcı olarak yakılarak dolaşımdaki arzdan silinir.
+*   **Ödül Kutusu Katkıları:** Kutu açımlarından elde edilen gelirlerin bir kısmı ekosistem havuzunu beslemek üzere hazineye aktarılır.
+*   **Deflasyonist Mikro Ücretler:** Tahmin değiştirme ve iptallerinden alınan mikro token kesintileri sürekli deflasyonist etki yaratır.
 
-### 7.2 Fair Play Protocols
-To ensure the integrity of the leaderboard rewards, the backend implements:
-*   **Anti-Bot Protocols:** Real-time user action analysis.
-*   **Multi-Account Detection:** IP, wallet behavior, and hardware fingerprint monitoring to prevent Sybil attacks.
-*   **Anti-Spam Filtering:** Strict rate-limiting on social task URL submissions.
+### 6.2 Adil Lansman (Kilitli veya Ön Satış Tokenı Yoktur)
+Golden Goal, topluluk öncelikli bir protokol olarak tasarlanmıştır. Mutlak güven ortamını sağlamak amacıyla:
+*   **Ön Satış Yoktur:** Platform öncesinde herhangi bir halka açık ön satış etkinliği yapılmamıştır.
+*   **Kilitli Token Baskısı Yoktur:** Ekosistem üzerinde gelecekte pazara sürülerek fiyata baskı yapacak **önceden rezerve edilmiş ön satış veya kurucu kilitli token programı yoktur**. Bu durum, dolaşımdaki tüm tokenların yalnızca aktif katılımcıları, gerçek oyuncuları ve uzun vadeli stakerları temsil etmesini sağlayarak yapay satış baskılarını tamamen ortadan kaldırır.
 
 ---
 
-## 8. Roadmap
+## 7. Altyapı, Güvenlik & Adil Oyun
+
+### 7.1 Enterprise AWS Sunucu Altyapısı
+%99.99 çalışma süresi (uptime), ultra düşük gecikme süresi ve Dağıtık Hizmet Reddi (DDoS) saldırılarına karşı üst düzey savunma sağlamak amacıyla Golden Goal'ün tüm çekirdek mimarisi **Amazon Web Services (AWS)** üzerinde barındırılmaktadır.
+*   **İzole VPC Mimarisi:** Platformun sunucuları ve backend servisleri; veri güvenliğini en üst düzeye çıkarmak için özel alt ağlar (private subnets), gelişmiş güvenlik duvarı kalkanları ve katı rol tabanlı erişim denetimleri içeren yüksek güvenlikli bir AWS Sanal Özel Bulut (VPC) içinde konuşlandırılmıştır.
+*   **Güvenli Dağıtık Veritabanı:** Kullanıcı hesapları, tarihsel tahmin verileri ve piyasa durumları, yüksek yedeklilik ve anında otomatik yedekleme özelliklerine sahip enterprise düzeydeki AWS veritabanı altyapılarıyla korunmaktadır.
+
+### 7.2 Adil Oyun Protokolleri
+Liderlik tablosu ödüllerinin bütünlüğünü ve adaletini korumak için backend sistemi şu kontrolleri gerçekleştirir:
+*   **Bot Önleme Protokolleri:** Gerçek zamanlı kullanıcı hareketlerinin analizi.
+*   **Çoklu Hesap (Sybil) Tespiti:** IP adresleri, cüzdan davranışları ve donanım parmak izi izleme mekanizmalarıyla sahte hesap açımlarının engellenmesi.
+*   **Spam Filtreleme:** Sosyal görevlerde girilen tweet bağlantılarında katı doğrulama ve hız sınırları.
+
+---
+
+## 8. Yol Haritası (Roadmap)
 
 ```
   ┌─────────────────────────────────────────────────────────────┐
-  │ PHASE 1: Infrastructure & Alpha Launch                      │
-  │  ✓ Main Domain Integration (www.goldengoalsol.com)          │
-  │  ✓ Premium Cinematic Golden Ball Intro & UI Architecture    │
-  │  ✓ AWS & Database Infrastructure Set Up                     │
+  │ AŞAMA 1: Altyapı & Alfa Yayını                              │
+  │  ✓ Ana Alan Adı Entegrasyonu (www.goldengoalsol.com)        │
+  │  ✓ Premium Sinematik Altın Top Girişi & UI Mimarisi         │
+  │  ✓ AWS & Veritabanı Altyapısının Kurulması                  │
   └──────────────────────────────┬──────────────────────────────┘
                                  │
                                  ▼
   ┌─────────────────────────────────────────────────────────────┐
-  │ PHASE 2: Core Platform Launch                               │
-  │  ⏳ Weekly Leaderboard System Activation ($150 - $5)        │
-  │  ⏳ Viral Social Tasks (Twitter Farming) & Referral Program │
-  │  ⏳ Wallet Adapter Suite Live (Phantom, Solflare, etc.)     │
+  │ AŞAMA 2: Çekirdek Platformun Devreye Alınması               │
+  │  ⏳ Haftalık Rekabetçi Liderlik Tablosunun Aktif Edilmesi    │
+  │  ⏳ Viral Sosyal Görevler (Twitter Farming) & Davet Sistemi │
+  │  ⏳ Solana Cüzdan Entegrasyonları Suite (Phantom, vb.)      │
   └──────────────────────────────┬──────────────────────────────┘
                                  │
                                  ▼
   ┌─────────────────────────────────────────────────────────────┐
-  │ PHASE 3: Gamification & DeFi                                │
-  │  ⏳ Tiered Staking Launch (Soft Stake, 7d, 15d, 30d Locks)  │
-  │  ⏳ Lucky Spin (Casino Module) Integration                   │
-  │  ⏳ Deflationary Burn Penalty Mechanisms                     │
+  │ AŞAMA 3: Oyunlaştırma & DeFi Özellikleri                    │
+  │  ⏳ Kademeli Staking Protokolü (Soft, 7g, 15g, 30g Kilit)   │
+  │  ⏳ Ödül Kutusu (Rewards Box - Sadakat Modülü) Entegrasyonu │
+  │  ⏳ Deflasyonist Erken Kilit Açma Ceza Yakımları             │
   └──────────────────────────────┬──────────────────────────────┘
                                  │
                                  ▼
   ┌─────────────────────────────────────────────────────────────┐
-  │ PHASE 4: Expansion & Assets                                 │
-  │  ⏳ Custom Mobile Application Rollout                       │
-  │  ⏳ Seasonal Tournaments & Football Championships            │
-  │  ⏳ Gamified NFT Achievements & Profile Customization       │
+  │ AŞAMA 4: Genişleme & Varlıklar                              │
+  │  ⏳ Özel Mobil Uygulama Geliştirilmesi ve Yayını            │
+  │  ⏳ Sezonluk Büyük Turnuvalar ve Futbol Şampiyonaları       │
+  │  ⏳ Oyunlaştırılmış NFT Başarımları & Profil Özelleştirme   │
   └──────────────────────────────┬──────────────────────────────┘
                                  │
                                  ▼
   ┌─────────────────────────────────────────────────────────────┐
-  │ PHASE 5: Full Decentralization                              │
-  │  ⏳ DAO Governance Enabler via $GG Token                    │
-  │  ⏳ Global Sports Expansion (Basketball, Tennis, etc.)       │
-  │  ⏳ Esports Predictions Integration                         │
+  │ AŞAMA 5: Tam Merkeziyetsizlik                               │
+  │  ⏳ $GG Tokenı ile DAO Yönetişim Altyapısının Kurulması     │
+  │  ⏳ Küresel Spor Dallarına Yayılım (Basketbol, Tenis vb.)   │
+  │  ⏳ Espor Tahmin Pazarlarının Entegre Edilmesi              │
   └─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 9. Disclaimer
+## 9. Feragatname (Disclaimer)
 
-*Golden Goal ($GG) is a decentralized gamified prediction platform. Staking and holding cryptocurrency assets carry inherent market risks. Participation in the prediction markets is designed for entertainment and point accumulation, and users are responsible for complying with their local jurisdictions. The $GG token is a utility and governance token; it represents no equity ownership or debt claims on the core development team.*
+*Golden Goal ($GG), oyunlaştırılmış merkeziyetsiz bir tahmin platformudur. Kripto varlıkları tutmak ve stake etmek piyasa riskleri barındırır. Platformdaki tahmin pazarlarına katılım tamamen eğlence ve puan biriktirme amaçlıdır; kullanıcılar kendi ülkelerindeki yasal düzenlemelere uymakla yükümlüdür. $GG tokenı bir hizmet ve yönetişim tokenı olup; çekirdek geliştirici ekip üzerinde herhangi bir hisse ortaklığı veya borç hakkı temsil etmez.*

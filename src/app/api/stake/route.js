@@ -18,7 +18,7 @@ export async function POST(request) {
         let userRes = await sql`SELECT * FROM users WHERE "walletAddress" = ${walletAddress}`;
         if (userRes.rowCount === 0) {
             await sql`
-                INSERT INTO users ("walletAddress", points, "betsToday", "lastBetDate") 
+                INSERT INTO users ("walletAddress", points, "predictionsToday", "lastPredictionDate") 
                 VALUES (${walletAddress}, 0, 0, CURRENT_DATE)
             `;
         }

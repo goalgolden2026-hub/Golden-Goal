@@ -21,7 +21,7 @@ const WHEEL_SLICES = [
     { label: '+1000 XP Points', color: '#be185d' } // Pink/Rose
 ];
 
-export default function SpinPage() {
+export default function RewardBoxPage() {
     const { publicKey, connected } = useWallet();
     const [loading, setLoading] = useState(true);
     const [status, setStatus] = useState(null);
@@ -71,7 +71,7 @@ export default function SpinPage() {
 
     const checkStatus = async () => {
         try {
-            const res = await fetch(`/api/spin?walletAddress=${publicKey.toBase58()}`);
+            const res = await fetch(`/api/reward-box?walletAddress=${publicKey.toBase58()}`);
             const data = await res.json();
             if (data.success) {
                 setStatus(data);
@@ -89,7 +89,7 @@ export default function SpinPage() {
         setReward(null);
 
         try {
-            const res = await fetch('/api/spin', {
+            const res = await fetch('/api/reward-box', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ walletAddress: publicKey.toBase58() })
@@ -245,13 +245,13 @@ export default function SpinPage() {
             <div className="flex flex-col items-center gap-4 w-full max-w-sm mb-16 relative z-10">
                 <button
                     onClick={handleSpin}
-                    disabled={isSpinning || (!status?.isEligibleForFreeSpin && status?.points < status?.spinCost)}
+                    disabled={isSpinning || (!status?.isEligibleForFreeBox && status?.points < status?.boxCost)}
                     className={`w-full py-5 rounded-full font-black text-xl uppercase tracking-widest transition-all shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex items-center justify-center gap-3 ${
                         isSpinning 
                         ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
-                        : status?.isEligibleForFreeSpin
+                        : status?.isEligibleForFreeBox
                             ? 'bg-gradient-to-b from-green-400 via-emerald-500 to-green-700 text-white shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-105 hover:brightness-110'
-                            : (status?.points >= status?.spinCost)
+                            : (status?.points >= status?.boxCost)
                                 ? 'bg-gradient-to-b from-yellow-300 via-amber-500 to-orange-600 text-white shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:scale-105 hover:brightness-110'
                                 : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
                     }`}
@@ -261,7 +261,7 @@ export default function SpinPage() {
                             <span className="text-yellow-300 text-xs font-bold">XP</span>
                         </div>
                     )}
-                    {isSpinning ? 'OPENING...' : status?.isEligibleForFreeSpin ? 'OPEN REWARDS BOX' : `OPEN FOR ${status?.spinCost || 0} XP`}
+                    {isSpinning ? 'OPENING...' : status?.isEligibleForFreeBox ? 'OPEN REWARDS BOX' : `OPEN FOR ${status?.boxCost || 0} XP`}
                 </button>
 
                 <div className="text-xs text-zinc-400 text-center flex flex-col gap-2 max-w-sm mx-auto select-none">
@@ -269,20 +269,20 @@ export default function SpinPage() {
                         <span className="text-zinc-500">Your Balance:</span>
                         <span className="text-yellow-400 font-bold">{status?.points !== undefined ? status.points.toLocaleString() : 0} XP</span>
                     </div>
-                    {!status?.isEligibleForFreeSpin && (
+                    {!status?.isEligibleForFreeBox && (
                         <p className="mt-1">
-                            {status?.points < status?.spinCost ? (
+                            {status?.points < status?.boxCost ? (
                                 <span className="text-red-500 font-bold block">
-                                    ⚠️ Insufficient XP Points. {status.spinCost} XP required.
+                                    ⚠️ Insufficient XP Points. {status.boxCost} XP required.
                                 </span>
                             ) : (
                                 <span>
-                                    Cost: <span className="text-amber-400 font-bold">{status?.spinCost} XP Points</span>. Opens are point-based.
+                                    Cost: <span className="text-amber-400 font-bold">{status?.boxCost} XP Points</span>. Opens are point-based.
                                 </span>
                             )}
                         </p>
                     )}
-                    {status?.isEligibleForFreeSpin && (
+                    {status?.isEligibleForFreeBox && (
                         <p className="mt-1 text-emerald-400 font-bold">
                             🎉 Your first daily Rewards Box opening is completely FREE!
                         </p>
@@ -300,7 +300,7 @@ export default function SpinPage() {
                 <div className="flex flex-col items-center text-center">
                     <div className="text-4xl mb-3 text-red-400 drop-shadow-[0_0_10px_rgba(248,113,113,0.5)]">🛡️</div>
                     <h3 className="text-xs font-bold text-red-400 tracking-wider mb-2">SAFE & FAIR</h3>
-                    <p className="text-[11px] text-zinc-500">All spin mechanics and results are mathematically verified.</p>
+                    <p className="text-[11px] text-zinc-500">All Reward Box mechanics and results are mathematically verified.</p>
                 </div>
                 <div className="flex flex-col items-center text-center">
                     <div className="text-4xl mb-3 text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">🪙</div>

@@ -10,9 +10,10 @@ async function getTokenBalance(walletAddress) {
 export async function PUT(request) {
     try {
         const body = await request.json();
-        const { walletAddress, betId, action, newPrediction } = body;
+        const { walletAddress, betId, predictionId, action, newPrediction } = body;
+        const finalPredictionId = predictionId || betId;
 
-        if (!walletAddress || !betId || !action) {
+        if (!walletAddress || !finalPredictionId || !action) {
             return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
         }
 
@@ -21,25 +22,25 @@ export async function PUT(request) {
         // 1. Check Token Balance
         const balance = await getTokenBalance(walletAddress);
 
-        // 2. Fetch Bet and Market Data
-        const betRes = await sql`
-            SELECT b.*, m."matchDate" 
-            FROM bets b
-            JOIN markets m ON b."marketId" = m.id
-            WHERE b.id = ${betId} AND b."walletAddress" = ${walletAddress}
+        // 2. Fetch Prediction and Market Data
+        const predictionRes = await sql`
+            SELECT p.*, m."matchDate" 
+            FROM predictions p
+            JOIN markets m ON p."marketId" = m.id
+            WHERE p.id = ${finalPredictionId} AND p."walletAddress" = ${walletAddress}
         `;
-        if (betRes.rowCount === 0) {
-            return NextResponse.json({ success: false, error: "Bet not found or unauthorized" }, { status: 404 });
+        if (predictionRes.rowCount === 0) {
+            return NextResponse.json({ success: false, error: "Prediction not found or unauthorized" }, { status: 404 });
         }
         
-        const bet = betRes.rows[0];
+        const prediction = predictionRes.rows[0];
 
-        if (bet.status !== 'PENDING') {
+        if (prediction.status !== 'PENDING') {
             return NextResponse.json({ success: false, error: "Only active (pending) predictions can be modified" }, { status: 400 });
         }
 
         // 3. Check Time Lockout (must be at least 5 mins before matchDate)
-        const matchTime = new Date(bet.matchDate).getTime();
+        const matchTime = new Date(prediction.matchDate).getTime();
         const nowTime = Date.now();
         const fiveMinsInMs = 5 * 60 * 1000;
 
@@ -56,11 +57,11 @@ export async function PUT(request) {
             }
             
             // Log 100 tokens (50 BURN, 50 REWARD_POOL)
-            await sql`INSERT INTO treasury_logs ("walletAddress", amount, type) VALUES (${walletAddress}, 50, 'BURN_CHANGE_BET')`;
-            await sql`INSERT INTO treasury_logs ("walletAddress", amount, type) VALUES (${walletAddress}, 50, 'REWARD_POOL_CHANGE_BET')`;
+            await sql`INSERT INTO treasury_logs ("walletAddress", amount, type) VALUES (${walletAddress}, 50, 'BURN_CHANGE_PREDICTION')`;
+            await sql`INSERT INTO treasury_logs ("walletAddress", amount, type) VALUES (${walletAddress}, 50, 'REWARD_POOL_CHANGE_PREDICTION')`;
 
-            // Update bet
-            await sql`UPDATE bets SET prediction = ${newPrediction}, "updatedAt" = CURRENT_TIMESTAMP WHERE id = ${betId}`;
+            // Update prediction
+            await sql`UPDATE predictions SET prediction = ${newPrediction}, "updatedAt" = CURRENT_TIMESTAMP WHERE id = ${finalPredictionId}`;
             
             return NextResponse.json({ success: true, message: "Prediction updated successfully. 100 Tokens deducted." });
 
@@ -70,21 +71,20 @@ export async function PUT(request) {
             }
 
             // Log 200 tokens (100 BURN, 100 REWARD_POOL)
-            await sql`INSERT INTO treasury_logs ("walletAddress", amount, type) VALUES (${walletAddress}, 100, 'BURN_CANCEL_BET')`;
-            await sql`INSERT INTO treasury_logs ("walletAddress", amount, type) VALUES (${walletAddress}, 100, 'REWARD_POOL_CANCEL_BET')`;
+            await sql`INSERT INTO treasury_logs ("walletAddress", amount, type) VALUES (${walletAddress}, 100, 'BURN_CANCEL_PREDICTION')`;
+            await sql`INSERT INTO treasury_logs ("walletAddress", amount, type) VALUES (${walletAddress}, 100, 'REWARD_POOL_CANCEL_PREDICTION')`;
 
-            // Update bet status to CANCELED
-            await sql`UPDATE bets SET status = 'CANCELED' WHERE id = ${betId}`;
+            // Update prediction status to CANCELED
+            await sql`UPDATE predictions SET status = 'CANCELED' WHERE id = ${finalPredictionId}`;
 
-            // Restore daily quota if bet was placed today
-            // Note: Postgres CURRENT_TIMESTAMP can be compared with CURRENT_DATE
+            // Restore daily quota if prediction was placed today
             await sql`
                 UPDATE users 
-                SET "betsToday" = GREATEST("betsToday" - 1, 0) 
+                SET "predictionsToday" = GREATEST("predictionsToday" - 1, 0) 
                 WHERE "walletAddress" = ${walletAddress} 
                 AND EXISTS (
-                    SELECT 1 FROM bets 
-                    WHERE id = ${betId} AND DATE(timestamp) = CURRENT_DATE
+                    SELECT 1 FROM predictions 
+                    WHERE id = ${finalPredictionId} AND DATE(timestamp) = CURRENT_DATE
                 )
             `;
 
@@ -94,7 +94,8 @@ export async function PUT(request) {
         }
         
     } catch (error) {
-        console.error("PUT /api/bets/manage error:", error);
+        console.error("PUT /api/predictions/manage error:", error);
         return NextResponse.json({ success: false, error: "Failed to process request" }, { status: 500 });
     }
 }
+

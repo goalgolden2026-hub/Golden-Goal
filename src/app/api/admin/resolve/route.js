@@ -4,9 +4,10 @@ import { getDb } from '@/lib/db';
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { marketId, betType, winningPrediction } = body;
+        const { marketId, betType, predictionType, winningPrediction } = body;
+        const finalPredictionType = predictionType || betType;
 
-        if (!marketId || !betType || !winningPrediction) {
+        if (!marketId || !finalPredictionType || !winningPrediction) {
             return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
         }
 
@@ -19,25 +20,25 @@ export async function POST(request) {
         }
         const market = marketRes.rows[0];
 
-        // 2. Fetch all PENDING bets for this market and betType
+        // 2. Fetch all PENDING predictions for this market and predictionType
         const betsRes = await sql`
-            SELECT id, "walletAddress", prediction FROM bets 
-            WHERE "marketId" = ${marketId} AND "betType" = ${betType} AND status = 'PENDING'
+            SELECT id, "walletAddress", prediction FROM predictions 
+            WHERE "marketId" = ${marketId} AND "predictionType" = ${finalPredictionType} AND status = 'PENDING'
         `;
         
         const bets = betsRes.rows;
         if (bets.length === 0) {
-             return NextResponse.json({ success: true, message: `No pending bets found for ${betType}.`, winnersCount: 0 });
+             return NextResponse.json({ success: true, message: `No pending predictions found for ${finalPredictionType}.`, winnersCount: 0 });
         }
 
         const pointsReward = market.pointsReward || 100;
         let winnersCount = 0;
 
-        // 3. Process each bet
+        // 3. Process each prediction
         for (const bet of bets) {
             if (bet.prediction === winningPrediction) {
                 // Win
-                await sql`UPDATE bets SET status = 'WON' WHERE id = ${bet.id}`;
+                await sql`UPDATE predictions SET status = 'WON' WHERE id = ${bet.id}`;
                 
                 // Calculate Multiplier based on Active Stake
                 const activeStakeRes = await sql`SELECT * FROM stakes WHERE "walletAddress" = ${bet.walletAddress} AND status = 'ACTIVE'`;
@@ -53,13 +54,13 @@ export async function POST(request) {
                 winnersCount++;
             } else {
                 // Loss
-                await sql`UPDATE bets SET status = 'LOST' WHERE id = ${bet.id}`;
+                await sql`UPDATE predictions SET status = 'LOST' WHERE id = ${bet.id}`;
             }
         }
 
         return NextResponse.json({ 
             success: true, 
-            message: `${betType} resolved! Awarded ${pointsReward} points to ${winnersCount} winners out of ${bets.length} total bets.`,
+            message: `${finalPredictionType} resolved! Awarded ${pointsReward} points to ${winnersCount} winners out of ${bets.length} total predictions.`,
             winnersCount: winnersCount
         });
 

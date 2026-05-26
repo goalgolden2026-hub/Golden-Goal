@@ -13,16 +13,16 @@ export async function GET(request) {
             SELECT 
                 u."walletAddress", 
                 u.points, 
-                u."betsToday",
-                (SELECT COUNT(*) FROM bets b WHERE b."walletAddress" = u."walletAddress") as "totalBets",
-                (SELECT COUNT(*) FROM bets b WHERE b."walletAddress" = u."walletAddress" AND b.status = 'WON') as "wonBets",
+                u."predictionsToday",
+                (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress") as "totalPredictions",
+                (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status = 'WON') as "wonPredictions",
                 (
                     SELECT COALESCE(SUM(m."pointsReward"), 0) 
-                    FROM bets b 
-                    JOIN markets m ON b."marketId" = m.id 
-                    WHERE b."walletAddress" = u."walletAddress" 
-                    AND b.status = 'WON' 
-                    AND b."updatedAt" >= NOW() - INTERVAL '7 days'
+                    FROM predictions p 
+                    JOIN markets m ON p."marketId" = m.id 
+                    WHERE p."walletAddress" = u."walletAddress" 
+                    AND p.status = 'WON' 
+                    AND p."updatedAt" >= NOW() - INTERVAL '7 days'
                 ) as "weeklyPoints"
             FROM users u
             ORDER BY u.points DESC
@@ -30,13 +30,13 @@ export async function GET(request) {
         `;
 
         const leaderboardWithStats = leaderboard.map(user => {
-            const totalBets = parseInt(user.totalBets) || 0;
-            const wonBets = parseInt(user.wonBets) || 0;
-            const winrate = totalBets > 0 ? Math.round((wonBets / totalBets) * 100) : 0;
+            const totalPredictions = parseInt(user.totalPredictions) || 0;
+            const wonPredictions = parseInt(user.wonPredictions) || 0;
+            const winrate = totalPredictions > 0 ? Math.round((wonPredictions / totalPredictions) * 100) : 0;
             return {
                 ...user,
-                totalBets,
-                wonBets,
+                totalPredictions,
+                wonPredictions,
                 winrate,
                 weeklyPoints: parseInt(user.weeklyPoints) || 0
             };
@@ -52,28 +52,28 @@ export async function GET(request) {
                     SELECT 
                         u."walletAddress", 
                         u.points, 
-                        (SELECT COUNT(*) FROM bets b WHERE b."walletAddress" = u."walletAddress") as "totalBets",
-                        (SELECT COUNT(*) FROM bets b WHERE b."walletAddress" = u."walletAddress" AND b.status = 'WON') as "wonBets",
+                        (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress") as "totalPredictions",
+                        (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status = 'WON') as "wonPredictions",
                         (
                             SELECT COALESCE(SUM(m."pointsReward"), 0) 
-                            FROM bets b 
-                            JOIN markets m ON b."marketId" = m.id 
-                            WHERE b."walletAddress" = u."walletAddress" 
-                            AND b.status = 'WON' 
-                            AND b."updatedAt" >= NOW() - INTERVAL '7 days'
+                            FROM predictions p 
+                            JOIN markets m ON p."marketId" = m.id 
+                            WHERE p."walletAddress" = u."walletAddress" 
+                            AND p.status = 'WON' 
+                            AND p."updatedAt" >= NOW() - INTERVAL '7 days'
                         ) as "weeklyPoints",
                         (SELECT COUNT(*) + 1 FROM users u2 WHERE u2.points > u.points) as rank
                     FROM users u
                     WHERE u."walletAddress" = ${walletAddress}
                 `;
                 if (userRow.length > 0) {
-                    const totalBets = parseInt(userRow[0].totalBets) || 0;
-                    const wonBets = parseInt(userRow[0].wonBets) || 0;
+                    const totalPredictions = parseInt(userRow[0].totalPredictions) || 0;
+                    const wonPredictions = parseInt(userRow[0].wonPredictions) || 0;
                     userStats = {
                         ...userRow[0],
-                        totalBets,
-                        wonBets,
-                        winrate: totalBets > 0 ? Math.round((wonBets / totalBets) * 100) : 0,
+                        totalPredictions,
+                        wonPredictions,
+                        winrate: totalPredictions > 0 ? Math.round((wonPredictions / totalPredictions) * 100) : 0,
                         weeklyPoints: parseInt(userRow[0].weeklyPoints) || 0,
                         rank: parseInt(userRow[0].rank) || 0
                     };
@@ -87,3 +87,4 @@ export async function GET(request) {
         return NextResponse.json({ success: false, error: "Failed to fetch leaderboard" }, { status: 500 });
     }
 }
+

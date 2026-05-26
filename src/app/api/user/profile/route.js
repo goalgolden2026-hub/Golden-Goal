@@ -25,7 +25,7 @@ export async function GET(request) {
             // User doesn't exist, create them
             const newCode = generateReferralCode();
             await sql`
-                INSERT INTO users ("walletAddress", points, "betsToday", "lastBetDate", "referralCode", "referralPoints") 
+                INSERT INTO users ("walletAddress", points, "predictionsToday", "lastPredictionDate", "referralCode", "referralPoints") 
                 VALUES (${walletAddress}, 0, 0, CURRENT_DATE, ${newCode}, 0)
             `;
             userRes = await sql`SELECT * FROM users WHERE "walletAddress" = ${walletAddress}`;
@@ -67,35 +67,35 @@ export async function GET(request) {
             if (log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') {
                 mockBalance -= amt; // Deductions logged as positive
             } else if (log.type === 'SPIN_PAYMENT') {
-                mockBalance += amt; // Already negative (-500)
+                mockBalance += amt; // Already negative
             } else if (log.type === 'REFERRAL_REWARD' || log.type === 'SPIN_REWARD_GOLDEN') {
                 mockBalance += amt; // Additions
             }
         }
 
-        // Calculate Daily Bets Limit
+        // Calculate Daily Predictions Limit
         const activeStakeRes = await sql`SELECT tier FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
-        let bonusBets = 0;
+        let bonusPredictions = 0;
         if (activeStakeRes.rowCount > 0) {
             const stakeTier = activeStakeRes.rows[0].tier;
-            if (stakeTier === 1) bonusBets = 1;
-            else if (stakeTier === 2) bonusBets = 3;
-            else if (stakeTier === 3) bonusBets = 5;
-            else if (stakeTier === 4) bonusBets = 10;
+            if (stakeTier === 1) bonusPredictions = 1;
+            else if (stakeTier === 2) bonusPredictions = 3;
+            else if (stakeTier === 3) bonusPredictions = 5;
+            else if (stakeTier === 4) bonusPredictions = 10;
         }
 
         const baseLimit = 5;
-        // Check if betsToday needs to be reset visually (if lastBetDate is not today)
+        // Check if predictionsToday needs to be reset visually (if lastPredictionDate is not today)
         const today = new Date().toISOString().split('T')[0];
-        let displayBetsToday = user.betsToday || 0;
-        let displaySpinBonus = user.spinBonusBets || 0;
+        let displayPredictionsToday = user.predictionsToday || 0;
+        let displaySpinBonus = user.bonusPredictions || 0;
         
-        if (user.lastBetDate && new Date(user.lastBetDate).toISOString().split('T')[0] !== today) {
-            displayBetsToday = 0;
+        if (user.lastPredictionDate && new Date(user.lastPredictionDate).toISOString().split('T')[0] !== today) {
+            displayPredictionsToday = 0;
             displaySpinBonus = 0; // they expired
         }
 
-        const maxBets = baseLimit + bonusBets + displaySpinBonus;
+        const maxPredictions = baseLimit + bonusPredictions + displaySpinBonus;
 
         return NextResponse.json({ 
             success: true, 
@@ -107,8 +107,8 @@ export async function GET(request) {
                 socialPoints: user.socialPoints || 0,
                 twitterTaskStatus: user.twitterTaskStatus || false,
                 totalInvited,
-                betsToday: displayBetsToday,
-                maxBets: maxBets
+                predictionsToday: displayPredictionsToday,
+                maxPredictions: maxPredictions
             }
         }, { status: 200 });
 
@@ -117,3 +117,4 @@ export async function GET(request) {
         return NextResponse.json({ success: false, error: "Failed to fetch profile" }, { status: 500 });
     }
 }
+

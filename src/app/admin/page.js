@@ -34,15 +34,15 @@ export default function AdminDashboard() {
       setResolveModalOpen(true);
   };
 
-  const handleResolve = async (betType, winningPrediction) => {
-      if (!confirm(`Are you sure you want to resolve ${betType} as ${winningPrediction}? Points will be distributed to winners instantly.`)) return;
+  const handleResolve = async (predictionType, winningPrediction) => {
+      if (!confirm(`Are you sure you want to resolve ${predictionType} as ${winningPrediction}? Points will be distributed to winners instantly.`)) return;
 
       setIsResolving(true);
       try {
           const res = await fetch('/api/admin/resolve', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ marketId: selectedMatch.id, betType, winningPrediction })
+              body: JSON.stringify({ marketId: selectedMatch.id, predictionType, winningPrediction })
           });
           const data = await res.json();
           

@@ -14,9 +14,9 @@ export default function MatchDetail() {
   const [isProcessing, setIsProcessing] = useState(false);
   
   // Modal State
-  const [betModalOpen, setBetModalOpen] = useState(false);
-  const [betType, setBetType] = useState('');
-  const [betPrediction, setBetPrediction] = useState('');
+  const [predictionModalOpen, setPredictionModalOpen] = useState(false);
+  const [predictionType, setPredictionType] = useState('');
+  const [predictionOption, setPredictionOption] = useState('');
 
   useEffect(() => {
     fetch(`/api/markets/${params.id}`)
@@ -40,30 +40,30 @@ export default function MatchDetail() {
       });
   }, [params.id]);
 
-  const openBetModal = (type, prediction) => {
+  const openPredictionModal = (type, option) => {
     if (!connected) {
         alert("Please connect your wallet first!");
         return;
     }
-    setBetType(type);
-    setBetPrediction(prediction);
-    setBetModalOpen(true);
+    setPredictionType(type);
+    setPredictionOption(option);
+    setPredictionModalOpen(true);
   };
 
-  const executeBet = async () => {
+  const executePrediction = async () => {
     if (!publicKey) return;
     
     try {
         setIsProcessing(true);
         
-        const res = await fetch('/api/bets', {
+        const res = await fetch('/api/predictions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 walletAddress: publicKey.toBase58(),
                 marketId: market.id,
-                betType: betType,
-                prediction: betPrediction,
+                predictionType: predictionType,
+                prediction: predictionOption,
                 referredBy: localStorage.getItem('referralCode') || null
             })
         });
@@ -71,12 +71,12 @@ export default function MatchDetail() {
         
         if (data.success) {
             alert(`Prediction locked! You have ${data.remainingBets} predictions left today (Tier: ${data.tier}).`);
-            setBetModalOpen(false);
+            setPredictionModalOpen(false);
         } else {
             alert('Prediction failed: ' + data.error);
         }
     } catch (error) {
-        console.error("Bet request failed:", error);
+        console.error("Prediction request failed:", error);
         alert("Server error: " + error.message);
     } finally {
         setIsProcessing(false);
@@ -98,7 +98,7 @@ export default function MatchDetail() {
               {options.map((opt, idx) => (
                   <button 
                       key={idx}
-                      onClick={() => openBetModal(type, opt)}
+                      onClick={() => openPredictionModal(type, opt)}
                       disabled={market.isLocked}
                       className="flex-1 min-w-[120px] bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent text-white font-medium py-4 px-4 rounded-xl transition-all text-sm text-center"
                   >
@@ -150,11 +150,11 @@ export default function MatchDetail() {
       </div>
 
       {/* Prediction Modal */}
-      {betModalOpen && (
+      {predictionModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
               <div className="bg-zinc-900 border border-zinc-700 rounded-3xl w-full max-w-md p-6 relative shadow-2xl">
                   <button 
-                    onClick={() => setBetModalOpen(false)}
+                    onClick={() => setPredictionModalOpen(false)}
                     className="absolute top-4 right-4 text-zinc-500 hover:text-white"
                   >
                       ✕
@@ -167,14 +167,14 @@ export default function MatchDetail() {
                   </div>
                   
                   <div className="bg-zinc-800/50 rounded-xl p-6 mb-6 border border-zinc-700 text-center mt-4">
-                      <span className="text-zinc-400 block mb-2 text-sm uppercase tracking-wider">{betType.replace('_', ' ')}</span>
-                      <span className="text-3xl font-extrabold text-yellow-400">{betPrediction}</span>
+                      <span className="text-zinc-400 block mb-2 text-sm uppercase tracking-wider">{predictionType.replace('_', ' ')}</span>
+                      <span className="text-3xl font-extrabold text-yellow-400">{predictionOption}</span>
                   </div>
 
                   <p className="text-xs text-zinc-500 mb-6 text-center">Predicting is free. Make sure you hold enough Golden Tokens to qualify for your tier limit.</p>
 
                   <button 
-                    onClick={executeBet}
+                    onClick={executePrediction}
                     className="w-full bg-gradient-to-r from-yellow-500 to-amber-600 text-black font-bold py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isProcessing}
                   >

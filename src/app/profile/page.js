@@ -126,13 +126,13 @@ export default function ProfilePage() {
                             <div className="flex justify-between items-end mb-3">
                                 <span className="text-[10px] font-extrabold tracking-wider text-zinc-500 uppercase">Daily Prediction Quota</span>
                                 <span className="text-sm font-black text-white font-mono">
-                                    {profile.maxBets - profile.betsToday} <span className="text-zinc-500 font-normal">/ {profile.maxBets} left</span>
+                                    {profile.maxPredictions - profile.predictionsToday} <span className="text-zinc-500 font-normal">/ {profile.maxPredictions} left</span>
                                 </span>
                             </div>
                             <div className="w-full bg-zinc-900 rounded-full h-2.5 overflow-hidden p-[1px] border border-white/5">
                                 <div 
                                     className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(16,185,129,0.3)]" 
-                                    style={{ width: `${Math.max(0, ((profile.maxBets - profile.betsToday) / profile.maxBets) * 100)}%` }}
+                                    style={{ width: `${Math.max(0, ((profile.maxPredictions - profile.predictionsToday) / profile.maxPredictions) * 100)}%` }}
                                 ></div>
                             </div>
                             <p className="text-xs text-zinc-500 mt-3.5 leading-relaxed">

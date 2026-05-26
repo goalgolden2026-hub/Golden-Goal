@@ -3,7 +3,7 @@ import { sql } from '@vercel/postgres';
 
 export async function GET() {
     try {
-        await sql`DROP TABLE IF EXISTS bets CASCADE`;
+        await sql`DROP TABLE IF EXISTS predictions CASCADE`;
         await sql`DROP TABLE IF EXISTS markets CASCADE`;
         await sql`DROP TABLE IF EXISTS users CASCADE`;
 
@@ -11,8 +11,8 @@ export async function GET() {
             CREATE TABLE users (
                 "walletAddress" TEXT PRIMARY KEY,
                 points INTEGER DEFAULT 0,
-                "betsToday" INTEGER DEFAULT 0,
-                "lastBetDate" DATE DEFAULT CURRENT_DATE
+                "predictionsToday" INTEGER DEFAULT 0,
+                "lastPredictionDate" DATE DEFAULT CURRENT_DATE
             );
         `;
 
@@ -28,14 +28,15 @@ export async function GET() {
         `;
 
         await sql`
-            CREATE TABLE bets (
+            CREATE TABLE predictions (
                 id SERIAL PRIMARY KEY,
                 "walletAddress" TEXT NOT NULL REFERENCES users("walletAddress"),
                 "marketId" INTEGER NOT NULL REFERENCES markets(id),
                 prediction TEXT NOT NULL,
-                "betType" TEXT DEFAULT 'MAIN',
+                "predictionType" TEXT DEFAULT 'MAIN',
                 status TEXT DEFAULT 'PENDING',
-                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                "updatedAt" TIMESTAMP
             );
         `;
 
@@ -59,3 +60,4 @@ export async function GET() {
         return NextResponse.json({ success: false, error: e.message });
     }
 }
+

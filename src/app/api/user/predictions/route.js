@@ -14,26 +14,27 @@ export async function GET(request) {
         
         // Fetch User Info
         let userPoints = 0;
-        let betsToday = 0;
-        const userRes = await sql`SELECT points, "betsToday" FROM users WHERE "walletAddress" = ${wallet}`;
+        let predictionsToday = 0;
+        const userRes = await sql`SELECT points, "predictionsToday" FROM users WHERE "walletAddress" = ${wallet}`;
         if (userRes.rowCount > 0) {
             userPoints = userRes.rows[0].points;
-            betsToday = userRes.rows[0].betsToday;
+            predictionsToday = userRes.rows[0].predictionsToday;
         }
 
-        // Fetch Bets
-        const { rows: bets } = await sql`
-            SELECT b.id as "betId", b.prediction, b."betType", b.status as "betStatus", b.timestamp, b."updatedAt",
+        // Fetch Predictions
+        const { rows: predictions } = await sql`
+            SELECT p.id as "predictionId", p.prediction, p."predictionType", p.status as "predictionStatus", p.timestamp, p."updatedAt",
                    m.id as "marketId", m."teamA", m."teamB", m."matchDate", m.status as "marketStatus", m."pointsReward"
-            FROM bets b
-            JOIN markets m ON b."marketId" = m.id
-            WHERE b."walletAddress" = ${wallet}
-            ORDER BY b.timestamp DESC
+            FROM predictions p
+            JOIN markets m ON p."marketId" = m.id
+            WHERE p."walletAddress" = ${wallet}
+            ORDER BY p.timestamp DESC
         `;
 
-        return NextResponse.json({ success: true, bets, points: userPoints, betsToday }, { status: 200 });
+        return NextResponse.json({ success: true, predictions, points: userPoints, predictionsToday }, { status: 200 });
     } catch (error) {
-        console.error("GET /api/user/bets error:", error);
+        console.error("GET /api/user/predictions error:", error);
         return NextResponse.json({ success: false, error: "Failed to fetch user data" }, { status: 500 });
     }
 }
+

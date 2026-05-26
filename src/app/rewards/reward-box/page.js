@@ -370,8 +370,57 @@ export default function RewardBoxPage() {
                 )}
             </div>
 
+            {/* Controls */}
+            <div className="flex flex-col items-center gap-4 w-full max-w-sm mb-14 relative z-10">
+                <button
+                    onClick={handleSpin}
+                    disabled={isSpinning || (!status?.isEligibleForFreeBox && status?.points < status?.boxCost)}
+                    className={`w-full py-5 rounded-full font-black text-xl uppercase tracking-widest transition-all shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex items-center justify-center gap-3 ${
+                        isSpinning 
+                        ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+                        : status?.isEligibleForFreeBox
+                            ? 'bg-gradient-to-b from-green-400 via-emerald-500 to-green-700 text-white shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-105 hover:brightness-110'
+                            : (status?.points >= status?.boxCost)
+                                ? 'bg-gradient-to-b from-yellow-300 via-amber-500 to-orange-600 text-white shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:scale-105 hover:brightness-110'
+                                : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
+                    }`}
+                >
+                    {!isSpinning && (
+                        <div className="w-8 h-8 rounded-full bg-black/30 flex items-center justify-center border border-white/20">
+                            <span className="text-yellow-300 text-xs font-bold">XP</span>
+                        </div>
+                    )}
+                    {isSpinning ? 'OPENING...' : status?.isEligibleForFreeBox ? 'OPEN REWARDS BOX' : `OPEN FOR ${status?.boxCost || 0} XP`}
+                </button>
+
+                <div className="text-xs text-zinc-400 text-center flex flex-col gap-2 max-w-sm mx-auto select-none">
+                    <div className="flex items-center justify-center gap-1.5 bg-zinc-900/60 border border-white/5 rounded-full px-4 py-1.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+                        <span className="text-zinc-500">Your Balance:</span>
+                        <span className="text-yellow-400 font-bold">{status?.points !== undefined ? status.points.toLocaleString() : 0} XP</span>
+                    </div>
+                    {!status?.isEligibleForFreeBox && (
+                        <p className="mt-1">
+                            {status?.points < status?.boxCost ? (
+                                <span className="text-red-500 font-bold block">
+                                    ⚠️ Insufficient XP Points. {status.boxCost} XP required.
+                                </span>
+                            ) : (
+                                <span>
+                                    Cost: <span className="text-amber-400 font-bold">{status?.boxCost} XP Points</span>. Opens are point-based.
+                                </span>
+                            )}
+                        </p>
+                    )}
+                    {status?.isEligibleForFreeBox && (
+                        <p className="mt-1 text-emerald-400 font-bold">
+                            🎉 Your first daily Rewards Box opening is completely FREE!
+                        </p>
+                    )}
+                </div>
+            </div>
+
             {/* POTENTIAL REWARDS LIST */}
-            <div className="w-full max-w-4xl mb-14 relative z-10 select-none">
+            <div className="w-full max-w-4xl mb-16 relative z-10 select-none">
                 <div className="text-center mb-6">
                     <span className="text-xs font-black tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 uppercase block">
                         🎁 Potential Rewards Chest Pool
@@ -417,55 +466,6 @@ export default function RewardBoxPage() {
                             </div>
                         );
                     })}
-                </div>
-            </div>
-
-            {/* Controls */}
-            <div className="flex flex-col items-center gap-4 w-full max-w-sm mb-16 relative z-10">
-                <button
-                    onClick={handleSpin}
-                    disabled={isSpinning || (!status?.isEligibleForFreeBox && status?.points < status?.boxCost)}
-                    className={`w-full py-5 rounded-full font-black text-xl uppercase tracking-widest transition-all shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex items-center justify-center gap-3 ${
-                        isSpinning 
-                        ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
-                        : status?.isEligibleForFreeBox
-                            ? 'bg-gradient-to-b from-green-400 via-emerald-500 to-green-700 text-white shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-105 hover:brightness-110'
-                            : (status?.points >= status?.boxCost)
-                                ? 'bg-gradient-to-b from-yellow-300 via-amber-500 to-orange-600 text-white shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:scale-105 hover:brightness-110'
-                                : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
-                    }`}
-                >
-                    {!isSpinning && (
-                        <div className="w-8 h-8 rounded-full bg-black/30 flex items-center justify-center border border-white/20">
-                            <span className="text-yellow-300 text-xs font-bold">XP</span>
-                        </div>
-                    )}
-                    {isSpinning ? 'OPENING...' : status?.isEligibleForFreeBox ? 'OPEN REWARDS BOX' : `OPEN FOR ${status?.boxCost || 0} XP`}
-                </button>
-
-                <div className="text-xs text-zinc-400 text-center flex flex-col gap-2 max-w-sm mx-auto select-none">
-                    <div className="flex items-center justify-center gap-1.5 bg-zinc-900/60 border border-white/5 rounded-full px-4 py-1.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
-                        <span className="text-zinc-500">Your Balance:</span>
-                        <span className="text-yellow-400 font-bold">{status?.points !== undefined ? status.points.toLocaleString() : 0} XP</span>
-                    </div>
-                    {!status?.isEligibleForFreeBox && (
-                        <p className="mt-1">
-                            {status?.points < status?.boxCost ? (
-                                <span className="text-red-500 font-bold block">
-                                    ⚠️ Insufficient XP Points. {status.boxCost} XP required.
-                                </span>
-                            ) : (
-                                <span>
-                                    Cost: <span className="text-amber-400 font-bold">{status?.boxCost} XP Points</span>. Opens are point-based.
-                                </span>
-                            )}
-                        </p>
-                    )}
-                    {status?.isEligibleForFreeBox && (
-                        <p className="mt-1 text-emerald-400 font-bold">
-                            🎉 Your first daily Rewards Box opening is completely FREE!
-                        </p>
-                    )}
                 </div>
             </div>
 

@@ -41,17 +41,18 @@ export default function StakePage() {
 
   const CountdownTimer = ({ targetDate }) => {
     const [timeLeft, setTimeLeft] = useState("");
+    const [isUnlocked, setIsUnlocked] = useState(false);
 
     useEffect(() => {
-      const interval = setInterval(() => {
+      const checkTime = () => {
         const now = new Date().getTime();
         const target = new Date(targetDate).getTime();
         const distance = target - now;
 
-        if (distance < 0) {
-          clearInterval(interval);
+        if (distance <= 0) {
           setTimeLeft("Unlocked");
-          return;
+          setIsUnlocked(true);
+          return true;
         }
 
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -60,10 +61,42 @@ export default function StakePage() {
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         setTimeLeft(`${days > 0 ? days + 'd ' : ''}${hours}h ${minutes}m ${seconds}s`);
+        setIsUnlocked(false);
+        return false;
+      };
+
+      const isDone = checkTime();
+      if (isDone) return;
+
+      const interval = setInterval(() => {
+        const done = checkTime();
+        if (done) {
+          clearInterval(interval);
+        }
       }, 1000);
 
       return () => clearInterval(interval);
     }, [targetDate]);
+
+    if (isUnlocked) {
+      return (
+        <div className="flex flex-col gap-3 w-full animate-fade-in">
+          <div className="w-full py-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 flex flex-col items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+            <span className="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-1">Status</span>
+            <span className="text-emerald-400 font-mono font-extrabold text-lg flex items-center gap-1.5 animate-pulse">
+              🔓 Unlocked
+            </span>
+          </div>
+          <button
+            onClick={handleUnstake}
+            disabled={loading}
+            className="w-full py-4 rounded-xl font-bold transition-all bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-[0_4px_20px_rgba(16,185,129,0.2)] hover:shadow-[0_4px_25px_rgba(16,185,129,0.35)] animate-pulse"
+          >
+            Withdraw / Unstake
+          </button>
+        </div>
+      );
+    }
 
     return (
       <div className="w-full py-3 bg-zinc-800/80 rounded-xl border border-zinc-700 flex flex-col items-center justify-center">
@@ -104,8 +137,22 @@ export default function StakePage() {
   };
 
   const handleUnstake = async () => {
-    if (!connected) return;
-    if (!confirm("Are you sure you want to unstake? Early withdrawal may result in a 10% penalty.")) return;
+    if (!connected || !activeStake) return;
+
+    const isExpired = new Date().getTime() >= new Date(activeStake.unlockDate).getTime();
+    const tier = tiers.find(t => t.id === activeStake.tier);
+    const hasPenalty = tier && tier.id > 1 && !isExpired;
+
+    let confirmMessage = "Are you sure you want to unstake and withdraw your tokens?";
+    if (hasPenalty) {
+      confirmMessage = "⚠️ WARNING: You are unstaking BEFORE your lock period has expired. A 10% early withdrawal penalty will be applied. Are you sure you want to proceed?";
+    } else if (tier && tier.id === 1) {
+      confirmMessage = "Are you sure you want to unstake and withdraw your tokens from Soft Stake (0% penalty)?";
+    } else {
+      confirmMessage = "Your lock period has expired! You can withdraw your tokens with 0% penalty. Are you sure you want to proceed?";
+    }
+
+    if (!confirm(confirmMessage)) return;
     
     setLoading(true);
     try {
@@ -244,22 +291,36 @@ export default function StakePage() {
       </div>
 
       {/* Unstake Section */}
-      <div className="mt-16 bg-zinc-900/30 border border-white/10 rounded-3xl p-8 max-w-3xl mx-auto text-center">
-        <h3 className="text-xl font-bold mb-2">Manage Your Stake</h3>
-        <p className="text-zinc-400 mb-6 text-sm leading-relaxed max-w-2xl mx-auto">
-          If you withdraw before your lock period expires, a <strong className="text-red-400">10% penalty fee</strong> will be applied. 
-          To ensure a fair and decentralized ecosystem, <strong className="text-white">Golden Goal takes 0% of these fees</strong>. 
-          Instead, <strong className="text-orange-400">50% is permanently burned</strong> to reduce total token supply, and the remaining <strong className="text-amber-400">50% is sent directly to the Community Rewards Treasury</strong> to be distributed to top-ranking players on the leaderboard.
-        </p>
-        
-        <button 
-            onClick={handleUnstake}
-            disabled={loading || !connected}
-            className="px-8 py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 font-bold rounded-xl transition-all disabled:opacity-50"
-          >
-            Unstake / Withdraw
-        </button>
-      </div>
+      {activeStake && (
+        <div className="mt-16 bg-zinc-900/30 border border-white/10 rounded-3xl p-8 max-w-3xl mx-auto text-center">
+          <h3 className="text-xl font-bold mb-2">Manage Your Stake</h3>
+          <p className="text-zinc-400 mb-6 text-sm leading-relaxed max-w-2xl mx-auto">
+            {new Date().getTime() >= new Date(activeStake.unlockDate).getTime() || activeStake.tier === 1 ? (
+              <span className="text-emerald-400 font-semibold text-base block my-2">
+                🔓 Your stake is unlocked! You can now withdraw all your staked tokens with 0% penalty.
+              </span>
+            ) : (
+              <>
+                If you withdraw before your lock period expires, a <strong className="text-red-400">10% penalty fee</strong> will be applied. 
+                To ensure a fair and decentralized ecosystem, <strong className="text-white">Golden Goal takes 0% of these fees</strong>. 
+                Instead, <strong className="text-orange-400">50% is permanently burned</strong> to reduce total token supply, and the remaining <strong className="text-amber-400">50% is sent directly to the Community Rewards Treasury</strong> to be distributed to top-ranking players on the leaderboard.
+              </>
+            )}
+          </p>
+          
+          <button 
+              onClick={handleUnstake}
+              disabled={loading || !connected}
+              className={`px-8 py-3 font-bold rounded-xl transition-all disabled:opacity-50 ${
+                new Date().getTime() >= new Date(activeStake.unlockDate).getTime() || activeStake.tier === 1
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-[0_4px_15px_rgba(16,185,129,0.2)] hover:shadow-[0_4px_25px_rgba(16,185,129,0.35)]'
+                  : 'bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20'
+              }`}
+            >
+              Unstake / Withdraw
+          </button>
+        </div>
+      )}
 
       {/* Legal Notice */}
       <div className="mt-12 text-center max-w-3xl mx-auto pb-8">

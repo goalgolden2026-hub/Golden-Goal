@@ -9,7 +9,8 @@ export default function Portfolio() {
   const [bets, setBets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [points, setPoints] = useState(0);
-
+  const [managingBetId, setManagingBetId] = useState(null);
+  const [changeBetModal, setChangeBetModal] = useState(null); // stores the bet object being changed
   useEffect(() => {
     if (connected && publicKey) {
         fetchBets();
@@ -31,6 +32,53 @@ export default function Portfolio() {
     } finally {
         setLoading(false);
     }
+  };
+
+  const handleManageBet = async (betId, action, newPrediction = null) => {
+      if (action === 'CANCEL') {
+          if (!window.confirm("Are you sure you want to cancel this prediction? This will cost 200 Golden Tokens (100 burned, 100 to Treasury).")) return;
+      }
+      
+      try {
+          setManagingBetId(betId);
+          const res = await fetch(`/api/bets/manage`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  walletAddress: publicKey.toBase58(),
+                  betId,
+                  action,
+                  newPrediction
+              })
+          });
+          const data = await res.json();
+          if (data.success) {
+              alert(data.message);
+              if (changeBetModal) setChangeBetModal(null);
+              fetchBets(); // Refresh list
+          } else {
+              alert('Action failed: ' + data.error);
+          }
+      } catch (err) {
+          console.error("Manage bet error:", err);
+          alert("Server error: " + err.message);
+      } finally {
+          setManagingBetId(null);
+      }
+  };
+
+  const getOptionsForBetType = (bet) => {
+      const { betType, teamA, teamB } = bet;
+      switch (betType) {
+          case 'TOTAL_GOALS': return ["Under 2.5", "Over 2.5"];
+          case 'BTTS': return ["Yes", "No"];
+          case 'DOUBLE_CHANCE': return [`${teamA} & Draw`, `${teamB} & Draw`];
+          case 'FIRST_GOAL': return [teamA, "No Goal", teamB];
+          case 'FIRST_HALF':
+          case 'MAIN':
+          default:
+              return [teamA, "Draw", teamB];
+      }
   };
 
   if (!connected) {
@@ -108,6 +156,22 @@ export default function Portfolio() {
                                       </p>
                                   </div>
                               </div>
+                              <div className="flex flex-col gap-2 border-l border-zinc-800 pl-4 w-full md:w-auto">
+                                  <button 
+                                      onClick={() => setChangeBetModal(bet)}
+                                      disabled={managingBetId === bet.id}
+                                      className="text-xs bg-zinc-800 hover:bg-zinc-700 text-white py-2 px-3 rounded-lg transition-colors border border-transparent hover:border-zinc-600 disabled:opacity-50 flex justify-center items-center gap-1"
+                                  >
+                                      ✏️ Change (100 <span className="text-amber-500 font-bold">GT</span>)
+                                  </button>
+                                  <button 
+                                      onClick={() => handleManageBet(bet.id, 'CANCEL')}
+                                      disabled={managingBetId === bet.id}
+                                      className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-500 py-2 px-3 rounded-lg transition-colors border border-red-500/20 hover:border-red-500/40 disabled:opacity-50 flex justify-center items-center gap-1"
+                                  >
+                                      {managingBetId === bet.id ? 'Processing...' : <>🗑️ Cancel (200 <span className="text-amber-500 font-bold">GT</span>)</>}
+                                  </button>
+                              </div>
                           </div>
                       ))}
                       {activeBets.length === 0 && <p className="text-zinc-500 bg-zinc-900/50 p-6 rounded-xl text-center border border-zinc-800 border-dashed">You have no active predictions.</p>}
@@ -146,6 +210,51 @@ export default function Portfolio() {
                       {pastBets.length === 0 && <p className="text-zinc-600">No past history.</p>}
                   </div>
               </section>
+          </div>
+      )}
+
+      {/* Change Bet Modal */}
+      {changeBetModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+              <div className="bg-zinc-900 border border-zinc-700 rounded-3xl w-full max-w-md p-6 relative shadow-2xl">
+                  <button 
+                    onClick={() => setChangeBetModal(null)}
+                    className="absolute top-4 right-4 text-zinc-500 hover:text-white"
+                  >
+                      ✕
+                  </button>
+                  <h3 className="text-xl font-bold mb-2">Change Prediction</h3>
+                  <div className="flex items-center justify-center gap-3 text-lg font-bold text-zinc-400 mb-2 py-3 bg-zinc-950 rounded-xl border border-zinc-800">
+                      <span>{changeBetModal.teamA}</span>
+                      <span className="text-zinc-600 text-sm">vs</span>
+                      <span>{changeBetModal.teamB}</span>
+                  </div>
+                  
+                  <div className="mb-6 mt-4">
+                      <p className="text-sm text-zinc-400 mb-3 text-center uppercase tracking-wider">{changeBetModal.betType?.replace('_', ' ') || 'MAIN'}</p>
+                      <div className="flex flex-col gap-2">
+                          {getOptionsForBetType(changeBetModal).map((opt, idx) => (
+                              <button 
+                                  key={idx}
+                                  onClick={() => handleManageBet(changeBetModal.id, 'CHANGE', opt)}
+                                  disabled={managingBetId === changeBetModal.id || opt === changeBetModal.prediction}
+                                  className={`w-full py-3 rounded-xl border font-bold transition-all ${
+                                      opt === changeBetModal.prediction 
+                                          ? 'bg-amber-500/20 border-amber-500 text-amber-500 opacity-50 cursor-not-allowed' 
+                                          : 'bg-zinc-800 hover:bg-zinc-700 border-transparent text-white'
+                                  }`}
+                              >
+                                  {opt === changeBetModal.prediction ? `${opt} (Current Pick)` : opt}
+                              </button>
+                          ))}
+                      </div>
+                  </div>
+
+                  <p className="text-xs text-amber-500/80 mb-2 text-center bg-amber-500/10 p-2 rounded-lg">
+                      Cost: 100 Golden Tokens<br/>
+                      <span className="text-zinc-500">50 permanently burned | 50 to Treasury</span>
+                  </p>
+              </div>
           </div>
       )}
     </div>

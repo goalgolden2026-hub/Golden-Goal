@@ -63,34 +63,34 @@ export default function LandingPage() {
       <section id="how-it-works" className="w-full mb-32 pt-10">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">How It Works</h2>
-          <p className="text-zinc-500 max-w-2xl mx-auto">Three simple steps to start earning by predicting real-world outcomes.</p>
+          <p className="text-zinc-500 max-w-2xl mx-auto">Three simple steps to predict risk-free, climb the ranks, and earn massive rewards.</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-zinc-900/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden group hover:border-amber-500/30 transition-colors">
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all"></div>
-            <div className="text-5xl mb-6">👛</div>
-            <h3 className="text-xl font-bold mb-3 text-white">1. Connect Wallet</h3>
+            <div className="text-5xl mb-6">🏦</div>
+            <h3 className="text-xl font-bold mb-3 text-white">1. Hold & Stake</h3>
             <p className="text-zinc-400 leading-relaxed">
-              Link your Solana wallet like Phantom safely. No sign-ups or KYC required. Your funds, your control.
+              Hold Golden Tokens in your Phantom wallet to unlock daily free predictions. Stake your tokens to earn massive point multipliers and extra prediction limits.
             </p>
           </div>
           
           <div className="bg-zinc-900/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden group hover:border-amber-500/30 transition-colors">
             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl group-hover:bg-amber-500/20 transition-all"></div>
             <div className="text-5xl mb-6">🎯</div>
-            <h3 className="text-xl font-bold mb-3 text-white">2. Make a Prediction</h3>
+            <h3 className="text-xl font-bold mb-3 text-white">2. Predict Risk-Free</h3>
             <p className="text-zinc-400 leading-relaxed">
-              Browse active markets and place your bet on the outcome you believe in. Lock in your position instantly.
+              Use your daily quota to predict World Cup matches and other real-world outcomes. Your tokens are never spent or lost—predictions are completely risk-free.
             </p>
           </div>
           
           <div className="bg-zinc-900/50 border border-white/5 rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden group hover:border-amber-500/30 transition-colors">
             <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 transition-all"></div>
             <div className="text-5xl mb-6">🏆</div>
-            <h3 className="text-xl font-bold mb-3 text-white">3. Claim Rewards</h3>
+            <h3 className="text-xl font-bold mb-3 text-white">3. Climb & Earn</h3>
             <p className="text-zinc-400 leading-relaxed">
-              If your prediction is correct, the smart contract automatically distributes your Golden Token winnings.
+              Earn Experience Points (XP) for every correct prediction. Rank high on the global Leaderboard to claim massive Golden Token payouts from the Community Treasury.
             </p>
           </div>
         </div>
@@ -228,8 +228,8 @@ export default function LandingPage() {
             <div className="sm:w-2/3">
               <ul className="text-zinc-400 space-y-3 text-lg font-medium">
                 <li className="flex items-center gap-3"><span className="text-zinc-600 font-black text-xl">⏳</span> Presale launch</li>
-                <li className="flex items-center gap-3"><span className="text-green-500 font-black text-xl">✓</span> Betting opening</li>
-                <li className="flex items-center gap-3"><span className="text-green-500 font-black text-xl">✓</span> Staking opening</li>
+                <li className="flex items-center gap-3"><span className="text-zinc-600 font-black text-xl">⏳</span> Betting opening</li>
+                <li className="flex items-center gap-3"><span className="text-zinc-600 font-black text-xl">⏳</span> Staking opening</li>
                 <li className="flex items-center gap-3"><span className="text-zinc-600 font-black text-xl">⏳</span> Ad & marketing campaigns</li>
               </ul>
             </div>
@@ -243,7 +243,10 @@ export default function LandingPage() {
               <ul className="text-zinc-400 space-y-3 text-lg font-medium">
                 <li className="flex items-center gap-3"><span className="text-zinc-600 font-black text-xl">⏳</span> Rewards distribution</li>
                 <li className="flex items-center gap-3"><span className="text-zinc-600 font-black text-xl">⏳</span> Expanding giveaways</li>
+                <li className="flex items-center gap-3"><span className="text-zinc-600 font-black text-xl">⏳</span> Ad & marketing campaigns</li>
                 <li className="flex items-center gap-3"><span className="text-zinc-600 font-black text-xl">⏳</span> Polymarket integration</li>
+                <li className="flex items-center gap-3"><span className="text-zinc-600 font-black text-xl">⏳</span> T1 Partnerships</li>
+                <li className="flex items-center gap-3"><span className="text-zinc-600 font-black text-xl">⏳</span> Big Burn Event</li>
               </ul>
             </div>
           </div>

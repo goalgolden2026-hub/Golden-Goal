@@ -29,11 +29,11 @@ export async function POST(request) {
             return NextResponse.json({ success: false, error: "You have already completed this task." }, { status: 400 });
         }
 
-        // Update User Status and add 500 Referral Points as reward
+        // Update User Status and add 25 Referral Points as reward
         await sql`
             UPDATE users 
             SET "twitterTaskStatus" = true,
-                "referralPoints" = COALESCE("referralPoints", 0) + 500
+                "referralPoints" = COALESCE("referralPoints", 0) + 25
             WHERE "walletAddress" = ${walletAddress}
         `;
 
@@ -43,7 +43,7 @@ export async function POST(request) {
             VALUES (${walletAddress}, 'TWITTER_SHARE', ${tweetUrl})
         `;
 
-        return NextResponse.json({ success: true, message: "Task completed! 500 Points awarded." }, { status: 200 });
+        return NextResponse.json({ success: true, message: "Task completed! 25 Points awarded." }, { status: 200 });
     } catch (error) {
         console.error("POST /api/user/twitter error:", error);
         return NextResponse.json({ success: false, error: "Server error" }, { status: 500 });

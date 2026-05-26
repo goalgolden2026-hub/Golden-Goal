@@ -242,7 +242,7 @@ export default function ProfilePage() {
                             <h3 className="text-lg font-bold text-white">Share on X (Twitter)</h3>
                         </div>
                         <p className="text-sm text-zinc-400 mb-4">
-                            Tweet about Golden Goal using the hashtag <span className="text-blue-400 font-bold">#GoldenGoal</span> and paste your tweet link here to earn <span className="text-amber-500 font-bold">500 Points</span> instantly!
+                            Tweet about Golden Goal using the hashtag <span className="text-blue-400 font-bold">#GoldenGoal</span> and paste your tweet link here to earn <span className="text-amber-500 font-bold">25 Points</span> instantly!
                         </p>
                         
                         {profile.twitterTaskStatus ? (

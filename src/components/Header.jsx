@@ -55,18 +55,21 @@ export default function Header() {
                             isWhitelisted ? (
                                 <Link 
                                     href="/markets" 
-                                    className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-bold py-2 px-6 rounded-full transition-all hover:scale-105 shadow-[0_0_15px_rgba(245,158,11,0.4)] flex items-center gap-1.5"
+                                    className="bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 bg-[length:200%_auto] hover:bg-[100%_0] text-zinc-950 font-black py-2 px-5 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] border border-emerald-400/30 flex items-center gap-1.5 whitespace-nowrap"
                                 >
-                                    Launch App 🚀
+                                    <span>Launch App</span>
+                                    <svg className="w-4 h-4 text-zinc-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
                                 </Link>
                             ) : (
                                 <button 
                                     disabled
-                                    className="bg-zinc-900/80 border border-red-500/30 text-red-500/90 font-bold py-2 px-5 rounded-full flex items-center gap-1.5 cursor-not-allowed shadow-[0_0_15px_rgba(239,68,68,0.05)]"
+                                    className="bg-zinc-900/80 border border-red-500/30 text-red-500/80 font-bold py-2 px-5 rounded-full flex items-center gap-1.5 cursor-not-allowed shadow-[0_0_15px_rgba(239,68,68,0.05)]"
                                     title="Coming Soon - This wallet address is not authorized for the closed beta testing phase."
                                 >
-                                    <svg className="w-4.5 h-4.5 text-red-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    <svg className="w-4.5 h-4.5 text-red-500/80 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
                                     <span>Coming Soon</span>
                                 </button>
@@ -74,9 +77,12 @@ export default function Header() {
                         ) : (
                             <button 
                                 onClick={() => setVisible(true)}
-                                className="bg-gradient-to-r from-yellow-500/10 to-amber-600/10 hover:from-yellow-500/20 hover:to-amber-600/20 text-yellow-400 hover:text-yellow-300 font-bold py-2 px-6 rounded-full border border-yellow-500/30 transition-all hover:scale-105 shadow-[0_0_10px_rgba(245,158,11,0.1)] flex items-center gap-1.5"
+                                className="bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-500 bg-[length:200%_auto] hover:bg-[100%_0] text-zinc-950 font-black py-2 px-5 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(245,158,11,0.25)] border border-yellow-400/30 flex items-center gap-1.5 whitespace-nowrap"
                             >
-                                Launch App
+                                <span>Launch App</span>
+                                <svg className="w-4 h-4 text-zinc-950 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                                </svg>
                             </button>
                         )}
 

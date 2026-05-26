@@ -527,9 +527,12 @@ export default function LandingPage() {
               isWhitelisted ? (
                 <Link 
                   href="/markets" 
-                  className="inline-block bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-black py-4 px-12 rounded-2xl text-base transition-transform hover:scale-105 uppercase tracking-wider shadow-[0_0_35px_rgba(245,158,11,0.3)]"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-500 bg-[length:200%_auto] hover:bg-[100%_0] text-zinc-950 font-black py-4 px-12 rounded-2xl text-base transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] uppercase tracking-wider shadow-[0_0_35px_rgba(245,158,11,0.3)] border border-yellow-400/40"
                 >
-                  Enter Platform 🚀
+                  <span>Enter Platform</span>
+                  <svg className="w-5 h-5 text-zinc-950 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                  </svg>
                 </Link>
               ) : (
                 <button 

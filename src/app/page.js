@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
@@ -10,7 +10,13 @@ export default function LandingPage() {
   const [activeTier, setActiveTier] = useState(4); // Default to Tier 4
   const { publicKey, connected } = useWallet();
   const { setVisible } = useWalletModal();
+  const [mounted, setMounted] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const showWalletUI = mounted && connected;
   const walletAddress = publicKey ? publicKey.toBase58() : null;
   const isWhitelisted = isWalletWhitelisted(walletAddress);
 
@@ -105,7 +111,7 @@ export default function LandingPage() {
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 w-full max-w-4xl mx-auto px-4 select-none">
-            {connected ? (
+            {showWalletUI ? (
               isWhitelisted ? (
                 <Link 
                   href="/markets?filter=live" 
@@ -174,7 +180,7 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {!isWhitelisted && connected && (
+          {!isWhitelisted && showWalletUI && (
             <p className="mt-4 text-red-500/80 text-xs font-semibold uppercase tracking-widest animate-pulse font-mono flex items-center gap-1.5 justify-center">
               <span>🔒 Coming Soon - Access Restricted to Whitelisted Testers</span>
             </p>
@@ -579,7 +585,7 @@ export default function LandingPage() {
             Connect your Phantom wallet in seconds, lock your predictions, climb the analyst ranks, and earn weekly $GG rewards risk-free.
           </p>
           <div className="flex justify-center">
-            {connected ? (
+            {showWalletUI ? (
               isWhitelisted ? (
                 <Link 
                   href="/markets?filter=live" 

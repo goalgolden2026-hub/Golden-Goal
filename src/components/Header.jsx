@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -19,6 +19,13 @@ export default function Header() {
     const isLandingPage = pathname === '/';
     const { publicKey, connected } = useWallet();
     const { setVisible } = useWalletModal();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const showWalletUI = mounted && connected;
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [mobilePredictionOpen, setMobilePredictionOpen] = useState(false);
@@ -49,7 +56,7 @@ export default function Header() {
                 {isLandingPage ? (
                     /* Landing Page Navbar - Minimalist & High Conversion */
                     <div className="flex items-center gap-4 relative z-50">
-                        {connected ? (
+                        {showWalletUI ? (
                             isWhitelisted ? (
                                 <Link 
                                     href="/markets?filter=live" 
@@ -84,7 +91,7 @@ export default function Header() {
                             </button>
                         )}
 
-                        {connected && (
+                        {showWalletUI && (
                             <WalletMultiButtonDynamic className="!bg-zinc-900 !border !border-white/10 hover:!bg-zinc-800 !transition-colors !rounded-full !h-9 !px-4 !font-semibold !text-[11px]" />
                         )}
                     </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import CustomModal from '@/components/CustomModal';
 import dynamic from 'next/dynamic';
 import confetti from 'canvas-confetti';
 
@@ -23,6 +24,15 @@ const WHEEL_SLICES = [
 
 export default function RewardBoxPage() {
     const { publicKey, connected } = useWallet();
+    const [modalConfig, setModalConfig] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        type: 'confirm',
+        onConfirm: null,
+        confirmText: 'Confirm',
+        cancelText: 'Cancel'
+    });
     const [loading, setLoading] = useState(true);
     const [status, setStatus] = useState(null);
     const [isSpinning, setIsSpinning] = useState(false);
@@ -118,11 +128,25 @@ export default function RewardBoxPage() {
                 }, 5000);
                 
             } else {
-                alert("Error: " + data.error);
+                setModalConfig({
+                    isOpen: true,
+                    title: "⚠️ Spin Error",
+                    message: data.error,
+                    type: "danger",
+                    confirmText: "Close",
+                    onConfirm: null
+                });
                 setIsSpinning(false);
             }
         } catch (error) {
-            alert("Server error");
+            setModalConfig({
+                isOpen: true,
+                title: "⚠️ Network Error",
+                message: "Failed to connect to reward-box spin server.",
+                type: "danger",
+                confirmText: "Close",
+                onConfirm: null
+            });
             setIsSpinning(false);
         }
     };
@@ -350,6 +374,16 @@ export default function RewardBoxPage() {
                 </div>
             )}
 
+            <CustomModal 
+                isOpen={modalConfig.isOpen}
+                onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                type={modalConfig.type}
+                onConfirm={modalConfig.onConfirm}
+                confirmText={modalConfig.confirmText}
+                cancelText={modalConfig.cancelText}
+            />
             </div>
         </div>
     );

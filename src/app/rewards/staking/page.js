@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import CustomModal from '@/components/CustomModal';
 
 export default function StakePage() {
   const { publicKey, connected } = useWallet();
@@ -10,6 +11,15 @@ export default function StakePage() {
   const [message, setMessage] = useState({ text: '', type: '' });
   const [refresh, setRefresh] = useState(0);
   const [stats, setStats] = useState({ tvl: 0, stakers: 0, userStaked: 0 });
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'confirm',
+    onConfirm: null,
+    confirmText: 'Confirm',
+    cancelText: 'Cancel'
+  });
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -198,39 +208,84 @@ export default function StakePage() {
     const tier = tiers.find(t => t.id === activeStake.tier);
     const hasPenalty = tier && tier.id > 1 && !isExpired;
 
+    let confirmTitle = "Unstake Request";
     let confirmMessage = "Are you sure you want to unstake and withdraw your tokens?";
+    let modalType = "confirm";
+
     if (hasPenalty) {
-      confirmMessage = "⚠️ WARNING: You are unstaking BEFORE your lock period has expired. A 10% early withdrawal penalty will be applied. Are you sure you want to proceed?";
+      confirmTitle = "⚠️ Warning: Early Withdrawal Penalty";
+      confirmMessage = "You are unstaking BEFORE your lock period has expired. A 10% early withdrawal penalty will be applied.\n\nAre you sure you want to proceed?";
+      modalType = "warning";
     } else if (tier && tier.id === 1) {
+      confirmTitle = "Soft Stake Withdrawal";
       confirmMessage = "Are you sure you want to unstake and withdraw your tokens from Soft Stake (0% penalty)?";
+      modalType = "confirm";
     } else {
-      confirmMessage = "Your lock period has expired! You can withdraw your tokens with 0% penalty. Are you sure you want to proceed?";
+      confirmTitle = "🎉 Lock Period Expired!";
+      confirmMessage = "Your lock period has expired! You can withdraw your tokens with 0% penalty.\n\nAre you sure you want to proceed?";
+      modalType = "success";
     }
 
-    if (!confirm(confirmMessage)) return;
-    
-    setLoading(true);
-    try {
-      const res = await fetch('/api/unstake', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ walletAddress: publicKey.toString() })
-      });
-      const data = await res.json();
-      if (data.success) {
-        if (data.penaltyApplied) {
-            showMessage(`Unstaked! Early penalty applied. You received ${data.returnedAmount} tokens.`, "warning");
-        } else {
-            showMessage(`Unstaked successfully!`, "success");
+    setModalConfig({
+      isOpen: true,
+      title: confirmTitle,
+      message: confirmMessage,
+      type: modalType,
+      confirmText: "Withdraw",
+      cancelText: "Cancel",
+      onConfirm: async () => {
+        setLoading(true);
+        try {
+          const res = await fetch('/api/unstake', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ walletAddress: publicKey.toString() })
+          });
+          const data = await res.json();
+          if (data.success) {
+            if (data.penaltyApplied) {
+                setModalConfig({
+                  isOpen: true,
+                  title: "⚠️ Penalty Applied",
+                  message: `Unstaked! Early penalty was applied. You received ${data.returnedAmount} tokens.`,
+                  type: "warning",
+                  confirmText: "Close",
+                  onConfirm: null
+                });
+            } else {
+                setModalConfig({
+                  isOpen: true,
+                  title: "🎉 Unstaked Successfully!",
+                  message: "Your staked tokens have been successfully returned to your wallet.",
+                  type: "success",
+                  confirmText: "Great",
+                  onConfirm: null
+                });
+            }
+            setRefresh(prev => prev + 1);
+          } else {
+            setModalConfig({
+              isOpen: true,
+              title: "Error",
+              message: data.error,
+              type: "error",
+              confirmText: "Close",
+              onConfirm: null
+            });
+          }
+        } catch (err) {
+          setModalConfig({
+            isOpen: true,
+            title: "Network Error",
+            message: "Failed to connect to server.",
+            type: "error",
+            confirmText: "Close",
+            onConfirm: null
+          });
         }
-        setRefresh(prev => prev + 1);
-      } else {
-        showMessage(data.error, "error");
+        setLoading(false);
       }
-    } catch (err) {
-      showMessage("Network error.", "error");
-    }
-    setLoading(false);
+    });
   };
 
   const showMessage = (text, type) => {
@@ -396,6 +451,17 @@ export default function StakePage() {
           NO PURCHASE NECESSARY. Void where prohibited by law. Standard daily prediction quotas are allocated for free. Locking tokens increases daily prediction limits and XP multipliers strictly for analytical skill-based simulation rankings.
         </p>
       </div>
+
+      <CustomModal 
+        isOpen={modalConfig.isOpen}
+        onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        type={modalConfig.type}
+        onConfirm={modalConfig.onConfirm}
+        confirmText={modalConfig.confirmText}
+        cancelText={modalConfig.cancelText}
+      />
 
     </div>
   );

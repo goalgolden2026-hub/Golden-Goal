@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { TEAM_FLAGS } from '@/lib/flags';
+import CustomModal from '@/components/CustomModal';
 
 export default function Dashboard() {
   const { connected, publicKey } = useWallet();
@@ -11,6 +12,15 @@ export default function Dashboard() {
   const [points, setPoints] = useState(0);
   const [managingPredictionId, setManagingPredictionId] = useState(null);
   const [changePredictionModal, setChangePredictionModal] = useState(null); // stores the prediction object being changed
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'confirm',
+    onConfirm: null,
+    confirmText: 'Confirm',
+    cancelText: 'Cancel'
+  });
   
   useEffect(() => {
     if (connected && publicKey) {
@@ -36,36 +46,70 @@ export default function Dashboard() {
   };
 
   const handleManagePrediction = async (predictionId, action, newPrediction = null) => {
+      const executeAction = async () => {
+          try {
+              setManagingPredictionId(predictionId);
+              const res = await fetch(`/api/predictions/manage`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      walletAddress: publicKey.toBase58(),
+                      predictionId: predictionId,
+                      action,
+                      newPrediction
+                  })
+              });
+              const data = await res.json();
+              if (data.success) {
+                  setModalConfig({
+                      isOpen: true,
+                      title: "🎉 Success!",
+                      message: data.message,
+                      type: "success",
+                      confirmText: "Great",
+                      onConfirm: null
+                  });
+                  if (changePredictionModal) setChangePredictionModal(null);
+                  fetchPredictions(); // Refresh list
+              } else {
+                  setModalConfig({
+                      isOpen: true,
+                      title: "⚠️ Action Failed",
+                      message: data.error,
+                      type: "danger",
+                      confirmText: "Close",
+                      onConfirm: null
+                  });
+              }
+          } catch (err) {
+              console.error("Manage prediction error:", err);
+              setModalConfig({
+                  isOpen: true,
+                  title: "⚠️ Server Error",
+                  message: err.message,
+                  type: "danger",
+                  confirmText: "Close",
+                  onConfirm: null
+              });
+          } finally {
+              setManagingPredictionId(null);
+          }
+      };
+
       if (action === 'CANCEL') {
-          if (!window.confirm("Are you sure you want to cancel this prediction? This will cost 200 Golden Tokens (100 burned, 100 to Treasury).")) return;
+          setModalConfig({
+              isOpen: true,
+              title: "🗑️ Cancel Prediction?",
+              message: "Are you sure you want to cancel this prediction?\n\nThis will cost 200 Golden Tokens (100 burned, 100 to Treasury).",
+              type: "warning",
+              confirmText: "Yes, Cancel",
+              cancelText: "No, Keep It",
+              onConfirm: executeAction
+          });
+          return;
       }
       
-      try {
-          setManagingPredictionId(predictionId);
-          const res = await fetch(`/api/predictions/manage`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                  walletAddress: publicKey.toBase58(),
-                  predictionId: predictionId,
-                  action,
-                  newPrediction
-              })
-          });
-          const data = await res.json();
-          if (data.success) {
-              alert(data.message);
-              if (changePredictionModal) setChangePredictionModal(null);
-              fetchPredictions(); // Refresh list
-          } else {
-              alert('Action failed: ' + data.error);
-          }
-      } catch (err) {
-          console.error("Manage prediction error:", err);
-          alert("Server error: " + err.message);
-      } finally {
-          setManagingPredictionId(null);
-      }
+      executeAction();
   };
 
   const getOptionsForPredictionType = (pred) => {
@@ -261,6 +305,17 @@ export default function Dashboard() {
               </div>
           </div>
       )}
+
+      <CustomModal 
+        isOpen={modalConfig.isOpen}
+        onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        type={modalConfig.type}
+        onConfirm={modalConfig.onConfirm}
+        confirmText={modalConfig.confirmText}
+        cancelText={modalConfig.cancelText}
+      />
     </div>
   );
 }

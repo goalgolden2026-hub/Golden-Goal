@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import CustomModal from '@/components/CustomModal';
 
 export default function AdminDashboard() {
   const { connected, publicKey } = useWallet();
@@ -12,6 +13,15 @@ export default function AdminDashboard() {
   // Resolve Modal State
   const [resolveModalOpen, setResolveModalOpen] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState(null);
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'confirm',
+    onConfirm: null,
+    confirmText: 'Confirm',
+    cancelText: 'Cancel'
+  });
 
   useEffect(() => {
     fetchMarkets();
@@ -35,28 +45,59 @@ export default function AdminDashboard() {
   };
 
   const handleResolve = async (predictionType, winningPrediction) => {
-      if (!confirm(`Are you sure you want to resolve ${predictionType} as ${winningPrediction}? Points will be distributed to winners instantly.`)) return;
-
-      setIsResolving(true);
-      try {
-          const res = await fetch('/api/admin/resolve', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ marketId: selectedMatch.id, predictionType, winningPrediction })
-          });
-          const data = await res.json();
-          
-          if (data.success) {
-              alert(data.message);
-          } else {
-              alert('Error resolving market: ' + data.error);
+      const executeResolve = async () => {
+          setIsResolving(true);
+          try {
+              const res = await fetch('/api/admin/resolve', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ marketId: selectedMatch.id, predictionType, winningPrediction })
+              });
+              const data = await res.json();
+              
+              if (data.success) {
+                  setModalConfig({
+                      isOpen: true,
+                      title: "🎉 Market Resolved!",
+                      message: data.message,
+                      type: "success",
+                      confirmText: "Great",
+                      onConfirm: null
+                  });
+              } else {
+                  setModalConfig({
+                      isOpen: true,
+                      title: "⚠️ Resolution Error",
+                      message: data.error,
+                      type: "danger",
+                      confirmText: "Close",
+                      onConfirm: null
+                  });
+              }
+          } catch (err) {
+              setModalConfig({
+                  isOpen: true,
+                  title: "⚠️ Server Error",
+                  message: "Failed to communicate with resolution flow server.",
+                  type: "danger",
+                  confirmText: "Close",
+                  onConfirm: null
+              });
+              console.error(err);
+          } finally {
+              setIsResolving(false);
           }
-      } catch (err) {
-          alert('Error during resolution flow');
-          console.error(err);
-      } finally {
-          setIsResolving(false);
-      }
+      };
+
+      setModalConfig({
+          isOpen: true,
+          title: "🏆 Resolve Market",
+          message: `Are you sure you want to resolve ${predictionType} as ${winningPrediction}?\n\nPoints will be distributed to winners instantly and cannot be reversed!`,
+          type: "warning",
+          confirmText: "Yes, Resolve",
+          cancelText: "No, Cancel",
+          onConfirm: executeResolve
+      });
   };
 
   const adminWalletsString = process.env.NEXT_PUBLIC_ADMIN_WALLET || "";
@@ -161,6 +202,17 @@ export default function AdminDashboard() {
               </div>
           </div>
       )}
+
+      <CustomModal 
+        isOpen={modalConfig.isOpen}
+        onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        type={modalConfig.type}
+        onConfirm={modalConfig.onConfirm}
+        confirmText={modalConfig.confirmText}
+        cancelText={modalConfig.cancelText}
+      />
     </div>
   );
 }

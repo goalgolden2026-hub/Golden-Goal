@@ -1,9 +1,9 @@
 "use client";
 
-import { useWallet } from '@solana/wallet-adapter-react';
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { TEAM_FLAGS } from '@/lib/flags';
+import CustomModal from '@/components/CustomModal';
 
 export default function MatchDetail() {
   const params = useParams();
@@ -17,6 +17,15 @@ export default function MatchDetail() {
   const [predictionModalOpen, setPredictionModalOpen] = useState(false);
   const [predictionType, setPredictionType] = useState('');
   const [predictionOption, setPredictionOption] = useState('');
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'confirm',
+    onConfirm: null,
+    confirmText: 'Confirm',
+    cancelText: 'Cancel'
+  });
 
   useEffect(() => {
     fetch(`/api/markets/${params.id}`)
@@ -42,7 +51,14 @@ export default function MatchDetail() {
 
   const openPredictionModal = (type, option) => {
     if (!connected) {
-        alert("Please connect your wallet first!");
+        setModalConfig({
+            isOpen: true,
+            title: "⚠️ Wallet Required",
+            message: "Please connect your Solana wallet first to lock in your match predictions.",
+            type: "warning",
+            confirmText: "Close",
+            onConfirm: null
+        });
         return;
     }
     setPredictionType(type);
@@ -70,14 +86,35 @@ export default function MatchDetail() {
         const data = await res.json();
         
         if (data.success) {
-            alert(`Prediction locked! You have ${data.remainingBets} predictions left today (Tier: ${data.tier}).`);
+            setModalConfig({
+                isOpen: true,
+                title: "🎯 Prediction Locked!",
+                message: `Your prediction has been successfully locked!\n\nYou have ${data.remainingBets} predictions left today (Tier: ${data.tier}).`,
+                type: "success",
+                confirmText: "Great",
+                onConfirm: null
+            });
             setPredictionModalOpen(false);
         } else {
-            alert('Prediction failed: ' + data.error);
+            setModalConfig({
+                isOpen: true,
+                title: "⚠️ Prediction Failed",
+                message: data.error,
+                type: "danger",
+                confirmText: "Close",
+                onConfirm: null
+            });
         }
     } catch (error) {
         console.error("Prediction request failed:", error);
-        alert("Server error: " + error.message);
+        setModalConfig({
+            isOpen: true,
+            title: "⚠️ Network Error",
+            message: "Failed to communicate with prediction processing server.",
+            type: "danger",
+            confirmText: "Close",
+            onConfirm: null
+        });
     } finally {
         setIsProcessing(false);
     }
@@ -183,6 +220,17 @@ export default function MatchDetail() {
               </div>
           </div>
       )}
+
+      <CustomModal 
+        isOpen={modalConfig.isOpen}
+        onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        type={modalConfig.type}
+        onConfirm={modalConfig.onConfirm}
+        confirmText={modalConfig.confirmText}
+        cancelText={modalConfig.cancelText}
+      />
     </div>
   );
 }

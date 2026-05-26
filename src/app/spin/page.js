@@ -180,13 +180,15 @@ export default function SpinPage() {
             <div className="flex flex-col items-center gap-4 w-full max-w-sm">
                 <button
                     onClick={handleSpin}
-                    disabled={isSpinning || (!status?.isEligibleForFreeSpin && false /* Assume balance check here */)}
+                    disabled={isSpinning || (!status?.isEligibleForFreeSpin && status?.balance < 500)}
                     className={`w-full py-5 rounded-2xl font-black text-xl uppercase tracking-widest transition-all ${
                         isSpinning 
                         ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
                         : status?.isEligibleForFreeSpin
                             ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.5)] hover:scale-105'
-                            : 'bg-gradient-to-r from-amber-500 to-red-600 text-white shadow-[0_0_20px_rgba(245,158,11,0.5)] hover:scale-105'
+                            : status?.balance >= 500 
+                                ? 'bg-gradient-to-r from-amber-500 to-red-600 text-white shadow-[0_0_20px_rgba(245,158,11,0.5)] hover:scale-105'
+                                : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
                     }`}
                 >
                     {isSpinning ? 'DÖNÜYOR...' : status?.isEligibleForFreeSpin ? 'ÜCRETSİZ ÇEVİR' : '500 TOKEN İLE ÇEVİR'}
@@ -195,6 +197,11 @@ export default function SpinPage() {
                 {!status?.isEligibleForFreeSpin && (
                     <p className="text-xs text-zinc-500 text-center">
                         Ücretsiz çevirme hakkınız bulunmuyor. Kilitli token (30 Gün) stake ederek her gün 1 ücretsiz hak kazanabilirsiniz.
+                        {status?.balance < 500 && (
+                            <span className="block text-red-500 mt-1 font-bold">
+                                Bakiye yetersiz ({status.balance} Golden). Çevirmek için 500 token gerekli.
+                            </span>
+                        )}
                     </p>
                 )}
             </div>

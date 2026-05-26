@@ -51,8 +51,27 @@ export async function GET(request) {
         `;
         const totalInvited = parseInt(referralStats.rows[0].totalInvited) || 0;
 
-        // Balance mock (Phase 6 will be on-chain)
-        const mockBalance = 30000;
+        // Dynamic Balance Calculation
+        let mockBalance = 30000;
+
+        // Deduct active stakes
+        const activeStakesTotalRes = await sql`SELECT SUM(amount) as total FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+        if (activeStakesTotalRes.rows[0].total) {
+            mockBalance -= parseInt(activeStakesTotalRes.rows[0].total);
+        }
+
+        // Apply treasury logs
+        const logsRes = await sql`SELECT amount, type FROM treasury_logs WHERE "walletAddress" = ${walletAddress}`;
+        for (const log of logsRes.rows) {
+            const amt = parseFloat(log.amount);
+            if (log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') {
+                mockBalance -= amt; // Deductions logged as positive
+            } else if (log.type === 'SPIN_PAYMENT') {
+                mockBalance += amt; // Already negative (-500)
+            } else if (log.type === 'REFERRAL_REWARD' || log.type === 'SPIN_REWARD_GOLDEN') {
+                mockBalance += amt; // Additions
+            }
+        }
 
         // Calculate Daily Bets Limit
         const activeStakeRes = await sql`SELECT tier FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;

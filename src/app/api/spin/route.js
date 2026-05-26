@@ -64,10 +64,23 @@ export async function GET(request) {
         const sql = await getDb();
         const isEligibleForFreeSpin = await checkFreeSpinEligibility(sql, walletAddress);
 
+        let dynamicBalance = 30000;
+        const activeStakesTotalRes = await sql`SELECT SUM(amount) as total FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+        if (activeStakesTotalRes.rows[0].total) dynamicBalance -= parseInt(activeStakesTotalRes.rows[0].total);
+
+        const logsRes = await sql`SELECT amount, type FROM treasury_logs WHERE "walletAddress" = ${walletAddress}`;
+        for (const log of logsRes.rows) {
+            const amt = parseFloat(log.amount);
+            if (log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') dynamicBalance -= amt;
+            else if (log.type === 'SPIN_PAYMENT') dynamicBalance += amt;
+            else if (log.type === 'REFERRAL_REWARD' || log.type === 'SPIN_REWARD_GOLDEN') dynamicBalance += amt;
+        }
+
         return NextResponse.json({ 
             success: true, 
             isEligibleForFreeSpin,
-            spinCost: 500 
+            spinCost: 500,
+            balance: dynamicBalance
         }, { status: 200 });
 
     } catch (error) {
@@ -93,12 +106,28 @@ export async function POST(request) {
                 WHERE "walletAddress" = ${walletAddress}
             `;
         } else {
-            // Deduct 500 Golden Tokens (mock via treasury or balance logic - since we mock balance everywhere as 30000, we'll just log it)
+            // Check dynamic balance before deducting
+            let dynamicBalance = 30000;
+            const activeStakesTotalRes = await sql`SELECT SUM(amount) as total FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+            if (activeStakesTotalRes.rows[0].total) dynamicBalance -= parseInt(activeStakesTotalRes.rows[0].total);
+
+            const logsRes = await sql`SELECT amount, type FROM treasury_logs WHERE "walletAddress" = ${walletAddress}`;
+            for (const log of logsRes.rows) {
+                const amt = parseFloat(log.amount);
+                if (log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') dynamicBalance -= amt;
+                else if (log.type === 'SPIN_PAYMENT') dynamicBalance += amt;
+                else if (log.type === 'REFERRAL_REWARD' || log.type === 'SPIN_REWARD_GOLDEN') dynamicBalance += amt;
+            }
+
+            if (dynamicBalance < 500) {
+                return NextResponse.json({ success: false, error: "Yetersiz Golden Token bakiyesi. Spin çevirmek için 500 token gereklidir." }, { status: 400 });
+            }
+
+            // Deduct 500 Golden Tokens
             await sql`
                 INSERT INTO treasury_logs ("walletAddress", amount, type) 
                 VALUES (${walletAddress}, -500, 'SPIN_PAYMENT')
             `;
-            // If real token balance tracking is implemented, we would verify balance >= 500 here and deduct it on-chain.
         }
 
         // 2. Spin RNG

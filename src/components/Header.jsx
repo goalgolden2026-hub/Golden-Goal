@@ -4,6 +4,9 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
+import { isWalletWhitelisted } from '@/lib/whitelist';
 
 const WalletMultiButtonDynamic = dynamic(
     async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
@@ -13,6 +16,11 @@ const WalletMultiButtonDynamic = dynamic(
 export default function Header() {
     const pathname = usePathname();
     const isLandingPage = pathname === '/';
+    const { publicKey, connected } = useWallet();
+    const { setVisible } = useWalletModal();
+
+    const walletAddress = publicKey ? publicKey.toBase58() : null;
+    const isWhitelisted = isWalletWhitelisted(walletAddress);
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/50 backdrop-blur-md">
@@ -42,9 +50,39 @@ export default function Header() {
                                 Pitch Deck
                             </Link>
                         </nav>
-                        <Link href="/markets" className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-bold py-2 px-6 rounded-full transition-all hover:scale-105 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
-                            Launch App
-                        </Link>
+                        
+                        {connected ? (
+                            isWhitelisted ? (
+                                <Link 
+                                    href="/markets" 
+                                    className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-bold py-2 px-6 rounded-full transition-all hover:scale-105 shadow-[0_0_15px_rgba(245,158,11,0.4)] flex items-center gap-1.5"
+                                >
+                                    Launch App 🚀
+                                </Link>
+                            ) : (
+                                <button 
+                                    disabled
+                                    className="bg-zinc-900/80 border border-red-500/30 text-red-500/90 font-bold py-2 px-5 rounded-full flex items-center gap-1.5 cursor-not-allowed shadow-[0_0_15px_rgba(239,68,68,0.05)]"
+                                    title="Coming Soon - Bu cüzdan adresi kapalı betada yetkilendirilmemiştir."
+                                >
+                                    <svg className="w-4.5 h-4.5 text-red-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                    <span>Coming Soon</span>
+                                </button>
+                            )
+                        ) : (
+                            <button 
+                                onClick={() => setVisible(true)}
+                                className="bg-gradient-to-r from-yellow-500/10 to-amber-600/10 hover:from-yellow-500/20 hover:to-amber-600/20 text-yellow-400 hover:text-yellow-300 font-bold py-2 px-6 rounded-full border border-yellow-500/30 transition-all hover:scale-105 shadow-[0_0_10px_rgba(245,158,11,0.1)] flex items-center gap-1.5"
+                            >
+                                Launch App
+                            </button>
+                        )}
+
+                        {connected && (
+                            <WalletMultiButtonDynamic className="!bg-zinc-900 !border !border-white/10 hover:!bg-zinc-800 !transition-colors !rounded-full !h-10 !px-4 !font-semibold !text-xs" />
+                        )}
                     </div>
                 ) : (
                     <>

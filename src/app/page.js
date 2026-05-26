@@ -2,9 +2,17 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
+import { isWalletWhitelisted } from '@/lib/whitelist';
 
 export default function LandingPage() {
   const [activeTier, setActiveTier] = useState(4); // Default to Tier 4
+  const { publicKey, connected } = useWallet();
+  const { setVisible } = useWalletModal();
+
+  const walletAddress = publicKey ? publicKey.toBase58() : null;
+  const isWhitelisted = isWalletWhitelisted(walletAddress);
 
   const stakingTiers = [
     {
@@ -86,12 +94,34 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 w-full max-w-lg mx-auto">
-            <Link 
-              href="/markets" 
-              className="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-black py-4 px-10 rounded-2xl text-base transition-all hover:scale-105 shadow-[0_0_35px_rgba(245,158,11,0.3)] text-center uppercase tracking-wider"
-            >
-              Launch Platform
-            </Link>
+            {connected ? (
+              isWhitelisted ? (
+                <Link 
+                  href="/markets" 
+                  className="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-black py-4 px-10 rounded-2xl text-base transition-all hover:scale-105 shadow-[0_0_35px_rgba(245,158,11,0.3)] text-center uppercase tracking-wider flex items-center justify-center gap-2"
+                >
+                  Launch Platform 🚀
+                </Link>
+              ) : (
+                <button 
+                  disabled
+                  className="w-full sm:w-auto bg-zinc-900/80 border border-red-500/30 text-red-500/90 font-black py-4 px-10 rounded-2xl text-base cursor-not-allowed flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.05)] uppercase tracking-wider"
+                  title="Coming Soon - Bu cüzdan adresi kapalı betada yetkilendirilmemiştir."
+                >
+                  <svg className="w-5 h-5 text-red-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  <span>Coming Soon</span>
+                </button>
+              )
+            ) : (
+              <button 
+                onClick={() => setVisible(true)}
+                className="w-full sm:w-auto bg-gradient-to-r from-yellow-500/10 to-amber-600/10 hover:from-yellow-500/20 hover:to-amber-600/20 text-yellow-400 hover:text-yellow-300 font-black py-4 px-10 rounded-2xl text-base border border-yellow-500/30 transition-all hover:scale-105 shadow-[0_0_25px_rgba(245,158,11,0.1)] flex items-center justify-center gap-2 uppercase tracking-wider"
+              >
+                Launch Platform
+              </button>
+            )}
             <Link 
               href="/docs" 
               className="w-full sm:w-auto bg-zinc-900/80 border border-white/10 hover:bg-zinc-800 text-white font-bold py-4 px-8 rounded-2xl text-base transition-all hover:scale-105 flex items-center justify-center gap-2 hover:border-white/20"
@@ -111,6 +141,11 @@ export default function LandingPage() {
               Pitch Deck
             </Link>
           </div>
+          {!isWhitelisted && connected && (
+            <p className="mt-4 text-red-500/80 text-xs font-semibold uppercase tracking-widest animate-pulse font-mono flex items-center gap-1.5 justify-center">
+              <span>🔒 Coming Soon - Access Restricted to Whitelisted Testers</span>
+            </p>
+          )}
         </section>
 
         {/* ECOSYSTEM STATS RIBBON */}

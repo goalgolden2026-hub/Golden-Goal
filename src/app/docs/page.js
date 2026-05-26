@@ -13,7 +13,7 @@ export default function DocsPage() {
     { id: 'problem-solution', label: '3. Problem & Solution' },
     { id: 'features', label: '4. Platform Features' },
     { id: 'staking', label: '5. VIP Staking System' },
-    { id: 'spin-system', label: '6. Lucky Spin Module' },
+    { id: 'spin-system', label: '6. Rewards Box Module' },
     { id: 'social-referral', label: '7. Social Hub & Referrals' },
     { id: 'tokenomics', label: '8. Tokenomics & Fair Launch' },
     { id: 'infrastructure', label: '9. AWS Infrastructure' },
@@ -28,7 +28,7 @@ export default function DocsPage() {
         tier: "Tier 4 (1-Month Locked)",
         bets: "+10 Daily Predictions",
         xp: "1.25x XP Multiplier",
-        spin: "1 Daily Rewards Box (then 250 $GG)",
+        rewardsBox: "1 Daily Rewards Box (then 250 $GG)",
         period: "30 Days Lock",
         color: "from-amber-400 to-yellow-600",
         unstakePenalty: "10% Penalty (50% Burned, 50% to Rewards)"
@@ -38,7 +38,7 @@ export default function DocsPage() {
         tier: "Tier 3 (15-Day Locked)",
         bets: "+5 Daily Predictions",
         xp: "1.10x XP Multiplier",
-        spin: "250 $GG per Spin (75% Off)",
+        rewardsBox: "250 $GG / Box (75% Off)",
         period: "15 Days Lock",
         color: "from-yellow-500 to-amber-500",
         unstakePenalty: "10% Penalty (50% Burned, 50% to Rewards)"
@@ -48,7 +48,7 @@ export default function DocsPage() {
         tier: "Tier 2 (7-Day Locked)",
         bets: "+3 Daily Predictions",
         xp: "1.0x XP Multiplier",
-        spin: "500 $GG per Spin (50% Off)",
+        rewardsBox: "500 $GG / Box (50% Off)",
         period: "7 Days Lock",
         color: "from-zinc-300 to-zinc-500",
         unstakePenalty: "10% Penalty (50% Burned, 50% to Rewards)"
@@ -58,7 +58,7 @@ export default function DocsPage() {
         tier: "Tier 1 (Soft Stake)",
         bets: "+1 Daily Prediction",
         xp: "1.0x XP Multiplier",
-        spin: "750 $GG per Spin (25% Off)",
+        rewardsBox: "750 $GG / Box (25% Off)",
         period: "1 Day Lock",
         color: "from-amber-700 to-yellow-900",
         unstakePenalty: "Flexible - Zero Penalty"
@@ -68,7 +68,7 @@ export default function DocsPage() {
         tier: "Tier 0 (Hold Min 10,000 $GG for features)",
         bets: "Base Daily Prediction Limit",
         xp: "1.0x XP Multiplier",
-        spin: "1,000 $GG per Spin",
+        rewardsBox: "1,000 $GG / Box Open",
         period: "No Lock",
         color: "from-zinc-700 to-zinc-800",
         unstakePenalty: "N/A"
@@ -312,8 +312,8 @@ export default function DocsPage() {
                   <div className="text-base font-bold text-blue-400 font-mono">{currentTier.xp}</div>
                 </div>
                 <div className="sm:col-span-2 border-t border-white/5 pt-3 mt-1">
-                  <h4 className="text-xs text-zinc-500 font-bold uppercase tracking-wider mb-1">Lucky Spin Discount</h4>
-                  <div className="text-sm font-bold text-yellow-400">{currentTier.spin}</div>
+                  <h4 className="text-xs text-zinc-500 font-bold uppercase tracking-wider mb-1">Rewards Box Discount</h4>
+                  <div className="text-sm font-bold text-yellow-400">{currentTier.rewardsBox}</div>
                 </div>
                 <div className="sm:col-span-2 border-t border-white/5 pt-3 mt-1">
                   <h4 className="text-xs text-zinc-500 font-bold uppercase tracking-wider mb-1">Lock Breach Penalty</h4>
@@ -327,13 +327,13 @@ export default function DocsPage() {
             </div>
           </section>
 
-          {/* 6. LUCKY SPIN SYSTEM */}
+          {/* 6. REWARDS BOX SYSTEM */}
           <section id="spin-system" className="scroll-mt-24 space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
-              <span className="text-amber-500">6.</span> Lucky Spin Module
+              <span className="text-amber-500">6.</span> Rewards Box Module
             </h2>
             <p className="text-zinc-400 text-sm md:text-base leading-relaxed">
-              The Lucky Spin is a provably fair gaming wheel designed to reward active token holders. It awards gamified rewards including XP Points (to advance in the Leaderboard ranks) and extra daily prediction quotas.
+              The Rewards Box is a provably fair gamified chest system designed to reward active token holders. It awards gamified rewards including XP Points (to advance in the Leaderboard ranks) and extra daily prediction quotas.
             </p>
 
             <div className="overflow-hidden border border-white/5 rounded-2xl">
@@ -341,7 +341,7 @@ export default function DocsPage() {
                 <thead>
                   <tr className="bg-zinc-900/80 text-zinc-400 border-b border-white/5">
                     <th className="p-4 font-semibold">User Staking Classification</th>
-                    <th className="p-4 font-semibold text-right">Cost Per Spin</th>
+                    <th className="p-4 font-semibold text-right">Access Cost</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5 bg-zinc-950/40 font-mono">
@@ -350,7 +350,7 @@ export default function DocsPage() {
                   <tr><td className="p-4 text-zinc-400 font-sans">1-Day Soft Stakers</td><td className="p-4 text-right text-zinc-300">750 $GG</td></tr>
                   <tr><td className="p-4 text-zinc-400 font-sans">7-Day Locked Stakers</td><td className="p-4 text-right text-zinc-300">500 $GG</td></tr>
                   <tr><td className="p-4 text-zinc-400 font-sans">15-Day Locked Stakers</td><td className="p-4 text-right text-zinc-300">250 $GG</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans font-semibold">30-Day Locked Stakers</td><td className="p-4 text-right text-emerald-400 font-bold">1 Daily Rewards Box</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans font-semibold">30-Day Locked Stakers</td><td className="p-4 text-right text-emerald-400 font-bold">1 Free Daily Box</td></tr>
                 </tbody>
               </table>
             </div>
@@ -403,7 +403,7 @@ export default function DocsPage() {
               <ul className="list-disc list-inside text-zinc-400 text-sm space-y-1">
                 <li>Staking early unstake penalty burns 50% of the penalty.</li>
                 <li>Prediction changes and deletion burn or lock micro $GG tokens.</li>
-                <li>Spin Wheel fee distributions return directly into the treasury pool.</li>
+                <li>Rewards Box fee distributions return directly into the treasury pool.</li>
               </ul>
             </div>
           </section>
@@ -471,7 +471,7 @@ export default function DocsPage() {
                 </span>
                 <h4 className="font-bold text-zinc-400">Phase 3: Gamified DeFi</h4>
                 <p className="text-zinc-400 text-xs mt-1">
-                  Multi-tier staking locks (1d, 7d, 15d, 30d Tiers), Lucky Spin Integration, and automated stake early penalty splits.
+                  Multi-tier staking locks (1d, 7d, 15d, 30d Tiers), Rewards Box Integration, and automated stake early penalty splits.
                 </p>
               </div>
 

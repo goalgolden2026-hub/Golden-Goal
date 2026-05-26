@@ -104,7 +104,7 @@ export default function PitchDeckPage() {
             </div>
           </div>
           <div className="bg-zinc-900/60 border border-white/5 p-4 rounded-2xl text-center text-xs text-zinc-400">
-            <strong>The Result:</strong> Football enthusiasts predict outcomes, unlock passive staking multipliers, and play the Lucky Spin without asset custody risks.
+            <strong>The Result:</strong> Football enthusiasts predict outcomes, unlock passive staking multipliers, and open Rewards Boxes without asset custody risks.
           </div>
         </div>
       )
@@ -126,11 +126,11 @@ export default function PitchDeckPage() {
           </div>
           <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-3">
             <div className="flex items-center gap-2">
-              <span className="text-amber-500">🎰</span>
-              <h4 className="font-bold text-white text-sm">Lucky Spin Module</h4>
+              <span className="text-amber-500">🎁</span>
+              <h4 className="font-bold text-white text-sm">Rewards Box Module</h4>
             </div>
             <p className="text-zinc-400 text-xs leading-relaxed">
-              A provably fair, high-fidelity gamified wheel awarding XP ranking points and extra prediction quotas with discounts scaled dynamically by Staking Tiers.
+              A provably fair, high-fidelity gamified chest system awarding XP ranking points and extra prediction quotas with discounts scaled dynamically by Staking Tiers.
             </p>
           </div>
           <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-3">
@@ -199,20 +199,20 @@ export default function PitchDeckPage() {
                   <th className="p-3 font-semibold">Requirement</th>
                   <th className="p-3 font-semibold">Daily Prediction Limit</th>
                   <th className="p-3 font-semibold">XP Points Booster</th>
-                  <th className="p-3 font-semibold">Lucky Spin Perks</th>
+                  <th className="p-3 font-semibold">Rewards Box Perks</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 bg-zinc-950/40 font-mono">
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 0 (Holder)</td><td className="p-3">Min 10,000 GG</td><td className="p-3">Base Limit</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">1,000 GG Cost</td></tr>
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 1 (Soft)</td><td className="p-3">Min 100 GG</td><td className="p-3 text-emerald-400">+1 Prediction</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">750 GG Cost</td></tr>
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 2 (7-Day)</td><td className="p-3">Min 500 GG</td><td className="p-3 text-emerald-400">+3 Predictions</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">500 GG Cost</td></tr>
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 3 (15-Day)</td><td className="p-3">Min 1,000 GG</td><td className="p-3 text-emerald-400">+5 Predictions</td><td className="p-3 text-blue-400">1.1x XP</td><td className="p-3">250 GG Cost</td></tr>
-                <tr><td className="p-3 font-sans text-amber-400 font-semibold">Tier 4 (30-Day)</td><td className="p-3 font-bold">Min 5,000 GG</td><td className="p-3 text-emerald-400 font-bold">+10 Predictions</td><td className="p-3 text-blue-400 font-bold">1.25x XP</td><td className="p-3 text-amber-400 font-bold">1 Daily Rewards Box</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 0 (Holder)</td><td className="p-3">Min 10,000 GG</td><td className="p-3">Base Limit</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">1,000 GG / Open</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 1 (Soft)</td><td className="p-3">Min 100 GG</td><td className="p-3 text-emerald-400">+1 Prediction</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">750 GG / Open</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 2 (7-Day)</td><td className="p-3">Min 500 GG</td><td className="p-3 text-emerald-400">+3 Predictions</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">500 GG / Open</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 3 (15-Day)</td><td className="p-3">Min 1,000 GG</td><td className="p-3 text-emerald-400">+5 Predictions</td><td className="p-3 text-blue-400">1.1x XP</td><td className="p-3">250 GG / Open</td></tr>
+                <tr><td className="p-3 font-sans text-amber-400 font-semibold">Tier 4 (30-Day)</td><td className="p-3 font-bold">Min 5,000 GG</td><td className="p-3 text-emerald-400 font-bold">+10 Predictions</td><td className="p-3 text-blue-400 font-bold">1.25x XP</td><td className="p-3 text-amber-400 font-bold">1 Free Daily Box</td></tr>
               </tbody>
             </table>
           </div>
           <div className="text-center text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">
-            STAKING DRIVES HIGHER DAILY PREDICTION LIMITS & SIGNIFICANT SPIN DISCOUNT UTILITIES
+            STAKING DRIVES HIGHER DAILY PREDICTION LIMITS & SIGNIFICANT REWARDS BOX DISCOUNT UTILITIES
           </div>
         </div>
       )
@@ -234,7 +234,7 @@ export default function PitchDeckPage() {
             <span className="text-2xl">🎰</span>
             <h4 className="font-bold text-amber-400 text-sm">Ecosystem Utility</h4>
             <p className="text-zinc-400 text-[10px] leading-relaxed">
-              $GG is consumed actively inside the platform to pay for prediction modifications, correct score locks, and Lucky Spin rounds, returning value back to the treasury.
+              $GG is consumed actively inside the platform to pay for prediction modifications, correct score locks, and Rewards Box openings, returning value back to the treasury.
             </p>
           </div>
           <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-2">
@@ -325,7 +325,7 @@ export default function PitchDeckPage() {
           <div className="bg-zinc-900/40 border border-white/5 p-4 rounded-xl space-y-1">
             <div className="text-[10px] text-zinc-500 font-bold">PHASE 3</div>
             <div className="font-bold text-white text-[11px] leading-tight">DeFi Features</div>
-            <div className="text-[9px] text-zinc-500">Staking Tiers (Tier 1-4), Lucky Spin, unstake penalty burns.</div>
+            <div className="text-[9px] text-zinc-500">Staking Tiers (Tier 1-4), Rewards Box, unstake penalty burns.</div>
           </div>
           <div className="bg-zinc-900/40 border border-white/5 p-4 rounded-xl space-y-1">
             <div className="text-[10px] text-zinc-500 font-bold">PHASE 4</div>

@@ -20,7 +20,7 @@ export default function LandingPage() {
       requirement: "Min 10,000 GG (Circulating)",
       predictions: "Base Daily Limit",
       xp: "1.0x XP",
-      spin: "1,000 GG per Spin",
+      rewardsBox: "1,000 GG / Box Open",
       perk: "Hold tokens in your Solana wallet to unlock basic prediction privileges.",
       color: "from-zinc-500 to-zinc-700",
       glow: "rgba(113, 113, 122, 0.15)"
@@ -30,7 +30,7 @@ export default function LandingPage() {
       requirement: "Min 100 GG Staked",
       predictions: "+1 Prediction / Day",
       xp: "1.0x XP",
-      spin: "750 GG per Spin (25% Off)",
+      rewardsBox: "750 GG / Box (25% Off)",
       perk: "Low-barrier lock with 1-day lockup. Perfect for casual forecasters.",
       color: "from-emerald-500 to-teal-600",
       glow: "rgba(16, 185, 129, 0.15)"
@@ -40,8 +40,8 @@ export default function LandingPage() {
       requirement: "Min 500 GG Staked",
       predictions: "+3 Predictions / Day",
       xp: "1.0x XP",
-      spin: "500 GG per Spin (50% Off)",
-      perk: "7-day lockup. Unlocks a 50% discount on the Lucky Spin wheel.",
+      rewardsBox: "500 GG / Box (50% Off)",
+      perk: "7-day lockup. Unlocks a 50% discount on the daily Rewards Box open fee.",
       color: "from-blue-500 to-indigo-600",
       glow: "rgba(59, 130, 246, 0.15)"
     },
@@ -50,7 +50,7 @@ export default function LandingPage() {
       requirement: "Min 1,000 GG Staked",
       predictions: "+5 Predictions / Day",
       xp: "1.1x XP Booster",
-      spin: "250 GG per Spin (75% Off)",
+      rewardsBox: "250 GG / Box (75% Off)",
       perk: "15-day lockup. Unlocks a 1.1x XP scaling multiplier for leaderboard domination.",
       color: "from-purple-500 to-violet-600",
       glow: "rgba(139, 92, 246, 0.15)"
@@ -60,8 +60,8 @@ export default function LandingPage() {
       requirement: "Min 5,000 GG Staked",
       predictions: "+10 Predictions / Day",
       xp: "1.25x XP Booster",
-      spin: "1 Daily Rewards Box!",
-      perk: "30-day lockup. Premium VIP benefits including a daily rewards box and maximum XP gains.",
+      rewardsBox: "1 Free Daily Rewards Box!",
+      perk: "30-day lockup. Premium VIP benefits including a free daily rewards box and maximum XP gains.",
       color: "from-yellow-400 via-amber-500 to-orange-500",
       glow: "rgba(245, 158, 11, 0.25)"
     }
@@ -181,22 +181,53 @@ export default function LandingPage() {
         </section>
 
         {/* ECOSYSTEM STATS RIBBON */}
-        <div className="w-full max-w-5xl bg-zinc-900/40 border border-white/5 backdrop-blur-md rounded-3xl p-6 mb-28 grid grid-cols-2 md:grid-cols-4 gap-6 text-center select-none">
-          <div className="space-y-1">
-            <div className="text-3xl font-black text-white font-mono">0%</div>
-            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Capital Loss Risk</div>
+        <div className="w-full max-w-5xl mb-28 grid grid-cols-1 md:grid-cols-3 gap-6 select-none relative group/ribbon">
+          {/* Decorative blur shadows under the ribbon */}
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 via-amber-500/5 to-orange-500/5 rounded-[32px] blur-2xl opacity-50 group-hover/ribbon:opacity-100 transition-opacity duration-500 -z-10"></div>
+          
+          {/* Stat 1: Capital Loss Risk */}
+          <div className="relative overflow-hidden bg-zinc-900/30 hover:bg-zinc-900/50 border border-white/5 hover:border-emerald-500/20 backdrop-blur-md rounded-3xl p-6 flex items-center justify-between transition-all duration-300 hover:scale-[1.02] shadow-[0_4px_30px_rgba(0,0,0,0.2)] group/stat">
+            <div className="space-y-1 text-left">
+              <div className="text-[10px] font-black text-emerald-400 font-mono tracking-widest uppercase flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Guaranteed
+              </div>
+              <div className="text-3xl font-black text-white tracking-tight">0%</div>
+              <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">Capital Loss Risk</div>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl group-hover/stat:scale-110 transition-transform duration-300">
+              🛡️
+            </div>
           </div>
-          <div className="space-y-1 border-l border-white/5">
-            <div className="text-3xl font-black text-amber-400 font-mono">Tier 0-4</div>
-            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">VIP Staking Programs</div>
+
+          {/* Stat 2: VIP Staking */}
+          <div className="relative overflow-hidden bg-zinc-900/30 hover:bg-zinc-900/50 border border-white/5 hover:border-amber-500/20 backdrop-blur-md rounded-3xl p-6 flex items-center justify-between transition-all duration-300 hover:scale-[1.02] shadow-[0_4px_30px_rgba(0,0,0,0.2)] group/stat">
+            <div className="space-y-1 text-left">
+              <div className="text-[10px] font-black text-amber-400 font-mono tracking-widest uppercase flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                Multi-Tiered
+              </div>
+              <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500 tracking-tight">Tiers 0-4</div>
+              <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">VIP Staking Programs</div>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl group-hover/stat:scale-110 transition-transform duration-300">
+              📈
+            </div>
           </div>
-          <div className="space-y-1 border-l border-white/5">
-            <div className="text-3xl font-black text-white font-mono">Provably Fair</div>
-            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Lucky Spin Engine</div>
-          </div>
-          <div className="space-y-1 border-l border-white/5">
-            <div className="text-3xl font-black text-amber-400 font-mono">10%</div>
-            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Unstake Burn Penalty</div>
+
+          {/* Stat 3: Rewards Box Module */}
+          <div className="relative overflow-hidden bg-zinc-900/30 hover:bg-zinc-900/50 border border-white/5 hover:border-red-500/20 backdrop-blur-md rounded-3xl p-6 flex items-center justify-between transition-all duration-300 hover:scale-[1.02] shadow-[0_4px_30px_rgba(0,0,0,0.2)] group/stat">
+            <div className="space-y-1 text-left">
+              <div className="text-[10px] font-black text-red-400 font-mono tracking-widest uppercase flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+                Provably Fair
+              </div>
+              <div className="text-3xl font-black text-white tracking-tight">Daily Drops</div>
+              <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">Rewards Box Engine</div>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-2xl group-hover/stat:scale-110 transition-transform duration-300">
+              🎁
+            </div>
           </div>
         </div>
 
@@ -415,8 +446,8 @@ export default function LandingPage() {
                   </div>
 
                   <div className="flex justify-between items-center pt-4">
-                    <span className="text-zinc-500">Lucky Spin Cost:</span>
-                    <span className="text-amber-400 font-bold">{stakingTiers[activeTier].spin}</span>
+                    <span className="text-zinc-500">Rewards Box:</span>
+                    <span className="text-amber-400 font-bold">{stakingTiers[activeTier].rewardsBox}</span>
                   </div>
 
                 </div>

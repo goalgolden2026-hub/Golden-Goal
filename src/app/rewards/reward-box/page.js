@@ -303,7 +303,7 @@ export default function RewardBoxPage() {
             `}</style>
 
             {/* GOLDEN MYSTERY CHEST CONTAINER */}
-            <div className="relative w-[320px] h-[320px] mb-12 flex items-center justify-center select-none">
+            <div className="relative w-[420px] h-[420px] mb-6 flex items-center justify-center select-none">
                 {/* Golden Radial Glow */}
                 <div className="absolute inset-0 rounded-full blur-3xl opacity-50 bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 animate-pulse z-0"></div>
                 
@@ -317,13 +317,13 @@ export default function RewardBoxPage() {
                     /* OPENED CHEST STATE */
                     <div className="relative flex flex-col items-center justify-center animate-bounce z-10">
                         {/* Golden Rays Backlight */}
-                        <div className="absolute w-72 h-72 rounded-full bg-gradient-to-tr from-yellow-500/30 via-amber-500/10 to-transparent blur-2xl pointer-events-none -z-10 animate-pulse"></div>
+                        <div className="absolute w-[380px] h-[380px] rounded-full bg-gradient-to-tr from-yellow-500/30 via-amber-500/10 to-transparent blur-2xl pointer-events-none -z-10 animate-pulse"></div>
                         
                         {/* 3D Photorealistic Open Chest Image */}
                         <img 
                             src="/chest-open.png" 
                             alt="Open Golden Chest" 
-                            className="w-64 h-64 object-contain drop-shadow-[0_20px_50px_rgba(245,158,11,0.5)] z-20"
+                            className="w-[360px] h-[360px] object-contain drop-shadow-[0_20px_50px_rgba(245,158,11,0.5)] z-20"
                         />
                     </div>
                 ) : (
@@ -333,7 +333,7 @@ export default function RewardBoxPage() {
                         <img 
                             src="/chest-closed.png" 
                             alt="Closed Golden Chest" 
-                            className="w-64 h-64 object-contain drop-shadow-[0_20px_40px_rgba(245,158,11,0.35)] z-20 animate-pulse"
+                            className="w-[360px] h-[360px] object-contain drop-shadow-[0_20px_40px_rgba(245,158,11,0.35)] z-20 animate-pulse"
                         />
                     </div>
                 )}

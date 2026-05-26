@@ -207,7 +207,7 @@ export default function PitchDeckPage() {
                 <tr><td className="p-3 font-sans text-zinc-300">Tier 1 (Soft)</td><td className="p-3">Min 100 GG</td><td className="p-3 text-emerald-400">+1 Prediction</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">750 GG Cost</td></tr>
                 <tr><td className="p-3 font-sans text-zinc-300">Tier 2 (7-Day)</td><td className="p-3">Min 500 GG</td><td className="p-3 text-emerald-400">+3 Predictions</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">500 GG Cost</td></tr>
                 <tr><td className="p-3 font-sans text-zinc-300">Tier 3 (15-Day)</td><td className="p-3">Min 1,000 GG</td><td className="p-3 text-emerald-400">+5 Predictions</td><td className="p-3 text-blue-400">1.1x XP</td><td className="p-3">250 GG Cost</td></tr>
-                <tr><td className="p-3 font-sans text-amber-400 font-semibold">Tier 4 (30-Day)</td><td className="p-3 font-bold">Min 5,000 GG</td><td className="p-3 text-emerald-400 font-bold">+10 Predictions</td><td className="p-3 text-blue-400 font-bold">1.25x XP</td><td className="p-3 text-amber-400 font-bold">1 Free Daily Spin</td></tr>
+                <tr><td className="p-3 font-sans text-amber-400 font-semibold">Tier 4 (30-Day)</td><td className="p-3 font-bold">Min 5,000 GG</td><td className="p-3 text-emerald-400 font-bold">+10 Predictions</td><td className="p-3 text-blue-400 font-bold">1.25x XP</td><td className="p-3 text-amber-400 font-bold">1 Daily Rewards Box</td></tr>
               </tbody>
             </table>
           </div>

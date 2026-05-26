@@ -28,7 +28,7 @@ export default function DocsPage() {
         tier: "Tier 4 (1-Month Locked)",
         bets: "+10 Daily Predictions",
         xp: "1.25x XP Multiplier",
-        spin: "1 Free Daily Spin (then 250 $GG)",
+        spin: "1 Daily Rewards Box (then 250 $GG)",
         period: "30 Days Lock",
         color: "from-amber-400 to-yellow-600",
         unstakePenalty: "10% Penalty (50% Burned, 50% to Rewards)"
@@ -350,7 +350,7 @@ export default function DocsPage() {
                   <tr><td className="p-4 text-zinc-400 font-sans">1-Day Soft Stakers</td><td className="p-4 text-right text-zinc-300">750 $GG</td></tr>
                   <tr><td className="p-4 text-zinc-400 font-sans">7-Day Locked Stakers</td><td className="p-4 text-right text-zinc-300">500 $GG</td></tr>
                   <tr><td className="p-4 text-zinc-400 font-sans">15-Day Locked Stakers</td><td className="p-4 text-right text-zinc-300">250 $GG</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans font-semibold">30-Day Locked Stakers</td><td className="p-4 text-right text-emerald-400 font-bold">1 Free Daily Spin</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans font-semibold">30-Day Locked Stakers</td><td className="p-4 text-right text-emerald-400 font-bold">1 Daily Rewards Box</td></tr>
                 </tbody>
               </table>
             </div>

@@ -164,7 +164,7 @@ export default function SpinPage() {
                         GOLDEN SPIN
                     </h1>
                     <p className="text-zinc-300 font-medium">
-                        Get <span className="text-yellow-400 font-bold">1 free spin</span> every day if you have a 30-Day active stake!
+                        Get <span className="text-yellow-400 font-bold">1 Rewards Box</span> every day if you have a 30-Day active stake!
                     </p>
                 </div>
 
@@ -261,14 +261,14 @@ export default function SpinPage() {
                             <span className="text-yellow-300 text-sm">G</span>
                         </div>
                     )}
-                    {isSpinning ? 'SPINNING...' : status?.isEligibleForFreeSpin ? 'FREE SPIN' : `SPIN FOR ${status?.spinCost || '...'} TOKENS`}
+                    {isSpinning ? 'SPINNING...' : status?.isEligibleForFreeSpin ? 'OPEN REWARDS BOX' : `SPIN FOR ${status?.spinCost || '...'} TOKENS`}
                 </button>
 
                 {!status?.isEligibleForFreeSpin && (
                     <div className="text-xs text-zinc-400 text-center flex items-start gap-2 max-w-sm mx-auto">
                         <span className="text-zinc-500 mt-0.5">ⓘ</span>
                         <p>
-                            Stake tokens to get massive discounts and up to 1 free spin daily!
+                            Stake tokens to get massive discounts and up to 1 Rewards Box daily!
                             
                             {status?.requiresMinBalance && status?.balance < 10000 && (
                                 <span className="block text-red-500 mt-2 font-bold">
@@ -291,7 +291,7 @@ export default function SpinPage() {
                 <div className="flex flex-col items-center text-center">
                     <div className="text-4xl mb-3 text-orange-400 drop-shadow-[0_0_10px_rgba(251,146,60,0.5)]">🎁</div>
                     <h3 className="text-xs font-bold text-orange-400 tracking-wider mb-2">EVERY DAY 1 SPIN</h3>
-                    <p className="text-[11px] text-zinc-500">Stake your tokens for 30 days and earn 1 free spin daily!</p>
+                    <p className="text-[11px] text-zinc-500">Stake your tokens for 30 days and earn 1 Rewards Box daily!</p>
                 </div>
                 <div className="flex flex-col items-center text-center">
                     <div className="text-4xl mb-3 text-red-400 drop-shadow-[0_0_10px_rgba(248,113,113,0.5)]">🛡️</div>

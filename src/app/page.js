@@ -60,8 +60,8 @@ export default function LandingPage() {
       requirement: "Min 5,000 GG Staked",
       predictions: "+10 Predictions / Day",
       xp: "1.25x XP Booster",
-      spin: "1 Free Daily Spin!",
-      perk: "30-day lockup. Premium VIP benefits including a free daily spin and maximum XP gains.",
+      spin: "1 Daily Rewards Box!",
+      perk: "30-day lockup. Premium VIP benefits including a daily rewards box and maximum XP gains.",
       color: "from-yellow-400 via-amber-500 to-orange-500",
       glow: "rgba(245, 158, 11, 0.25)"
     }
@@ -288,7 +288,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">2. Lucky Spin Wheel</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                A provably fair, high-fidelity interactive wheel game. Spin to win XP boosts or extra prediction quotas. Staking unlocks massive discounts and free daily spins.
+                A provably fair, high-fidelity interactive wheel game. Spin to win XP boosts or extra prediction quotas. Staking unlocks massive discounts and a daily Rewards Box.
               </p>
             </div>
 

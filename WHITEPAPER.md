@@ -86,7 +86,7 @@ graph TD
     B -->|Soft Stake: 1 Day| C[+1 Daily Bet / Flexible Cashout]
     B -->|7-Day Stake| D[+3 Daily Bets / 10% Unstake Penalty]
     B -->|15-Day Stake| E[+5 Daily Bets / 1.1x XP / 10% Unstake Penalty]
-    B -->|30-Day Stake| F[+10 Daily Bets / 1.25x XP / 1 Free Daily Spin]
+    B -->|30-Day Stake| F[+10 Daily Bets / 1.25x XP / 1 Daily Rewards Box]
 ```
 
 *   **Soft Stake:**
@@ -107,7 +107,7 @@ graph TD
 *   **1-Month Stake:**
     *   *Minimum:* 5,000 $GG tokens
     *   *Lock Period:* 30 Days
-    *   *Rewards:* +10 bonus daily prediction limit, **1.25x XP Multiplier**, and **1 Free Daily Spin** on the Lucky Spin wheel.
+    *   *Rewards:* +10 bonus daily prediction limit, **1.25x XP Multiplier**, and **1 Daily Rewards Box** in the rewards module.
 
 ---
 
@@ -128,7 +128,7 @@ The Lucky Spin is a high-engagement gamification module that allows users to tes
 | **1-Day Stakers** | Active Soft Stake | 750 $GG |
 | **7-Day Stakers** | Active 7-Day Locked Stake | 500 $GG |
 | **15-Day Stakers** | Active 15-Day Locked Stake | 250 $GG |
-| **1-Month Stakers** | Active 30-Day Locked Stake | **1 Free Spin Daily** (then 250 $GG) |
+| **1-Month Stakers** | Active 30-Day Locked Stake | **1 Rewards Box Daily** (then 250 $GG) |
 
 **Possible Spin Rewards:**
 *   Golden Goal ($GG) token payouts.

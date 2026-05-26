@@ -85,7 +85,7 @@ export default function StakePage() {
       rewards: [
         { text: "+10 Daily Predictions", type: "primary" },
         { text: "1.25x XP Multiplier", type: "multiplier" },
-        { text: "+1 Daily Free Spin", type: "spin" }
+        { text: "+1 Daily Rewards Box", type: "spin" }
       ], 
       min: 5000, 
       color: "border-purple-500/30", 
@@ -334,7 +334,7 @@ export default function StakePage() {
                       }`}
                     >
                       <span className="text-sm shrink-0">
-                        {reward.type === 'multiplier' ? '⚡' : reward.type === 'spin' ? '🎡' : '🎯'}
+                        {reward.type === 'multiplier' ? '⚡' : reward.type === 'spin' ? '🎁' : '🎯'}
                       </span>
                       <span className="leading-tight text-left">{reward.text}</span>
                     </div>

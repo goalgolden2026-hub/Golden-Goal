@@ -32,7 +32,7 @@ async function getSpinStatus(sql, walletAddress) {
     } else if (activeTier === 3) {
         spinCost = 250;
     } else if (activeTier === 4) {
-        spinCost = 150;
+        spinCost = 250;
         
         // Check free spin eligibility
         const today = new Date().toISOString().split('T')[0];

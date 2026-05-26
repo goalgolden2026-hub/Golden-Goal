@@ -317,55 +317,110 @@ export default function RewardBoxPage() {
                     /* OPENED CHEST STATE */
                     <div className="relative flex flex-col items-center justify-center animate-bounce z-10">
                         {/* Golden Rays Backlight */}
-                        <div className="absolute w-56 h-56 rounded-full bg-gradient-to-tr from-yellow-500/20 to-transparent blur-xl pointer-events-none -z-10 animate-pulse"></div>
+                        <div className="absolute w-72 h-72 rounded-full bg-gradient-to-tr from-yellow-500/30 via-amber-500/10 to-transparent blur-2xl pointer-events-none -z-10 animate-pulse"></div>
                         
-                        {/* SVG Open Chest Illustration */}
-                        <div className="w-48 h-36 bg-zinc-900 border-4 border-yellow-500 rounded-3xl relative shadow-[0_20px_45px_rgba(245,158,11,0.3)] flex flex-col justify-end">
-                            {/* Lid thrown back */}
-                            <div className="absolute -top-12 left-4 right-4 h-14 bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 border-4 border-yellow-500 rounded-t-2xl shadow-md origin-bottom -rotate-12 transition-all"></div>
+                        {/* Opened Chest Body (w-64 h-48) */}
+                        <div className="w-64 h-48 bg-gradient-to-b from-[#2a1705] via-[#3a2007] to-[#1f1003] border-4 border-yellow-500 rounded-3xl relative shadow-[0_25px_60px_rgba(245,158,11,0.4)] flex flex-col justify-end overflow-visible">
                             
-                            {/* Shiny Gold Inside */}
-                            <div className="absolute inset-x-2 top-2 bottom-12 bg-gradient-to-b from-yellow-400/40 via-yellow-500/10 to-transparent rounded-xl flex items-center justify-center">
-                                <span className="text-4xl animate-pulse">✨</span>
+                            {/* Wood Texture Planks */}
+                            <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.15)_1px,transparent_1px)] bg-[size:100%_16px] pointer-events-none rounded-2xl"></div>
+
+                            {/* Opened Lid Thrown Back (Moved up and rotated) */}
+                            <div className="absolute -top-16 left-2 right-2 h-20 bg-gradient-to-b from-[#3a2007] via-[#2a1705] to-[#1d0f04] border-t-4 border-l-4 border-r-4 border-yellow-500 rounded-t-2xl shadow-xl origin-bottom -rotate-12 transition-all flex justify-between px-6 items-center">
+                                {/* Lid gold bands */}
+                                <div className="w-4 h-full bg-gradient-to-b from-yellow-600 via-amber-400 to-yellow-700"></div>
+                                <div className="w-4 h-full bg-gradient-to-b from-yellow-600 via-amber-400 to-yellow-700"></div>
                             </div>
 
-                            {/* Padlock (Unlocked) */}
-                            <div className="absolute top-6 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-zinc-950 border-2 border-emerald-500 flex items-center justify-center z-10 shadow-lg">
-                                <span className="text-emerald-400 text-xs">🔓</span>
-                            </div>
-
-                            {/* Front Details */}
-                            <div className="h-12 bg-zinc-950/80 w-full flex items-center justify-between px-6 rounded-b-2xl border-t border-white/5">
-                                <div className="w-2 h-5 bg-yellow-500/40 rounded-full"></div>
-                                <div className="w-2 h-5 bg-yellow-500/40 rounded-full"></div>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    /* CLOSED CHEST STATE */
-                    <div className={`relative flex flex-col items-center justify-center z-10 transition-all duration-500 ${isSpinning ? 'animate-chest-shake' : 'hover:scale-[1.04]'}`}>
-                        {/* Closed Chest Illustration */}
-                        <div className="w-48 h-36 bg-zinc-900 border-4 border-yellow-500 rounded-3xl relative shadow-[0_20px_35px_rgba(245,158,11,0.2)] flex flex-col justify-end">
-                            
-                            {/* Lid (Top Half) */}
-                            <div className="absolute top-0 left-0 right-0 h-14 bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 border-b-4 border-yellow-500 rounded-t-2xl flex items-center justify-center shadow-lg">
-                                {/* Shiny center badge */}
-                                <div className="w-7 h-7 rounded-full bg-zinc-950 border border-yellow-400/30 flex items-center justify-center shadow-inner">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-ping"></div>
+                            {/* Overflowing Glowing Pile of Treasure */}
+                            <div className="absolute inset-x-2 top-2 bottom-10 bg-gradient-to-t from-yellow-500 via-amber-400 to-yellow-300 rounded-xl shadow-[inset_0_0_20px_rgba(0,0,0,0.5),0_0_30px_rgba(245,158,11,0.5)] flex flex-col items-center justify-center overflow-visible z-20">
+                                {/* Bursting treasure elements */}
+                                <div className="absolute -top-8 flex gap-2 animate-pulse text-2xl">
+                                    <span>🪙</span>
+                                    <span>💎</span>
+                                    <span>✨</span>
+                                    <span>🪙</span>
+                                </div>
+                                <div className="text-yellow-950 font-black text-xs tracking-wider uppercase bg-yellow-400/80 px-2 py-0.5 rounded-full border border-yellow-300/40 animate-pulse shadow-md">
+                                    TREASURE UNLOCKED
                                 </div>
                             </div>
 
-                            {/* Padlock (Locked) */}
-                            <div className="absolute top-[44px] left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-zinc-950 border-2 border-yellow-500 flex items-center justify-center z-10 shadow-lg">
-                                <span className="text-yellow-400 text-xs">🔒</span>
+                            {/* Giant Unlocked Padlock Hanging in center */}
+                            <div className="absolute top-14 left-1/2 -translate-x-1/2 w-16 h-16 bg-gradient-to-b from-zinc-800 to-zinc-950 border-2 border-emerald-500 rounded-2xl flex items-center justify-center z-30 shadow-[0_4px_15px_rgba(0,0,0,0.6)]">
+                                <div className="w-8 h-8 rounded-full bg-zinc-900 border border-emerald-500/20 flex items-center justify-center">
+                                    <span className="text-2xl text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]">🔓</span>
+                                </div>
                             </div>
 
-                            {/* Front Details */}
-                            <div className="h-12 bg-zinc-950/80 w-full flex items-center justify-between px-6 rounded-b-2xl border-t border-white/5">
-                                <div className="w-2 h-5 bg-yellow-500/40 rounded-full"></div>
-                                <div className="w-2 h-5 bg-yellow-500/40 rounded-full"></div>
+                            {/* Golden Corner Guards */}
+                            <div className="absolute top-0 left-0 w-8 h-8 bg-gradient-to-br from-yellow-300 via-amber-500 to-yellow-600 rounded-br-2xl border-r-2 border-b-2 border-yellow-400 z-10"></div>
+                            <div className="absolute top-0 right-0 w-8 h-8 bg-gradient-to-bl from-yellow-300 via-amber-500 to-yellow-600 rounded-bl-2xl border-l-2 border-b-2 border-yellow-400 z-10"></div>
+                            <div className="absolute bottom-0 left-0 w-8 h-8 bg-gradient-to-tr from-yellow-300 via-amber-500 to-yellow-600 rounded-tr-2xl border-r-2 border-t-2 border-yellow-400 z-10"></div>
+                            <div className="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-tl from-yellow-300 via-amber-500 to-yellow-600 rounded-tl-2xl border-l-2 border-t-2 border-yellow-400 z-10"></div>
+
+                            {/* Steel Rivets on Bottom Trim */}
+                            <div className="h-10 bg-zinc-950/60 w-full flex items-center justify-between px-6 rounded-b-2xl border-t border-white/5 relative z-10">
+                                <div className="w-3 h-3 rounded-full bg-gradient-to-br from-zinc-400 to-zinc-700 shadow-md"></div>
+                                <div className="w-3 h-3 rounded-full bg-gradient-to-br from-zinc-400 to-zinc-700 shadow-md"></div>
                             </div>
                         </div>
+
+                        {/* Side Chest Iron Handles */}
+                        <div className="absolute -left-3 top-24 w-3 h-12 bg-gradient-to-b from-yellow-600 via-amber-500 to-yellow-700 rounded-l-md border border-yellow-500/40 shadow-lg"></div>
+                        <div className="absolute -right-3 top-24 w-3 h-12 bg-gradient-to-b from-yellow-600 via-amber-500 to-yellow-700 rounded-r-md border border-yellow-500/40 shadow-lg"></div>
+                    </div>
+                ) : (
+                    /* CLOSED CHEST STATE */
+                    <div className={`relative flex flex-col items-center justify-center z-10 transition-all duration-500 ${isSpinning ? 'animate-chest-shake' : 'hover:scale-[1.05]'}`}>
+                        {/* Chest Body (w-64 h-48) */}
+                        <div className="w-64 h-48 bg-gradient-to-b from-[#2a1705] via-[#3a2007] to-[#1f1003] border-4 border-yellow-500 rounded-3xl relative shadow-[0_25px_50px_rgba(245,158,11,0.25)] flex flex-col justify-end overflow-hidden">
+                            
+                            {/* Wood Texture Planks */}
+                            <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.15)_1px,transparent_1px)] bg-[size:100%_16px] pointer-events-none"></div>
+
+                            {/* Golden Corner Guards */}
+                            <div className="absolute top-0 left-0 w-8 h-8 bg-gradient-to-br from-yellow-300 via-amber-500 to-yellow-600 rounded-br-2xl border-r-2 border-b-2 border-yellow-400 z-10"></div>
+                            <div className="absolute top-0 right-0 w-8 h-8 bg-gradient-to-bl from-yellow-300 via-amber-500 to-yellow-600 rounded-bl-2xl border-l-2 border-b-2 border-yellow-400 z-10"></div>
+                            <div className="absolute bottom-0 left-0 w-8 h-8 bg-gradient-to-tr from-yellow-300 via-amber-500 to-yellow-600 rounded-tr-2xl border-r-2 border-t-2 border-yellow-400 z-10"></div>
+                            <div className="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-tl from-yellow-300 via-amber-500 to-yellow-600 rounded-tl-2xl border-l-2 border-t-2 border-yellow-400 z-10"></div>
+
+                            {/* Vertical Metal Bands */}
+                            <div className="absolute left-14 top-0 bottom-0 w-5 bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-700 shadow-inner z-10 border-l border-r border-yellow-500/30 flex flex-col justify-between py-4">
+                                <div className="w-1.5 h-1.5 rounded-full bg-zinc-950/80 mx-auto"></div>
+                                <div className="w-1.5 h-1.5 rounded-full bg-zinc-950/80 mx-auto"></div>
+                                <div className="w-1.5 h-1.5 rounded-full bg-zinc-950/80 mx-auto"></div>
+                            </div>
+                            <div className="absolute right-14 top-0 bottom-0 w-5 bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-700 shadow-inner z-10 border-l border-r border-yellow-500/30 flex flex-col justify-between py-4">
+                                <div className="w-1.5 h-1.5 rounded-full bg-zinc-950/80 mx-auto"></div>
+                                <div className="w-1.5 h-1.5 rounded-full bg-zinc-950/80 mx-auto"></div>
+                                <div className="w-1.5 h-1.5 rounded-full bg-zinc-950/80 mx-auto"></div>
+                            </div>
+
+                            {/* Horizontal Lid Separator */}
+                            <div className="absolute top-20 left-0 right-0 h-2 bg-yellow-500 border-t border-b border-black/40 z-20 shadow-md"></div>
+
+                            {/* Lid Shape */}
+                            <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#3a2007] to-[#2a1705] rounded-t-2xl shadow-[inset_0_4px_10px_rgba(255,255,255,0.1)]"></div>
+
+                            {/* Padlock Plate & Giant Lock */}
+                            <div className="absolute top-14 left-1/2 -translate-x-1/2 w-16 h-16 bg-gradient-to-b from-zinc-800 to-zinc-950 border-2 border-yellow-500 rounded-2xl flex items-center justify-center z-30 shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
+                                <div className="w-8 h-8 rounded-full bg-zinc-900 border border-yellow-500/20 flex items-center justify-center">
+                                    <span className="text-2xl text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]">🔒</span>
+                                </div>
+                                <div className="absolute bottom-1 w-2 h-3 bg-yellow-500 rounded-full"></div>
+                            </div>
+
+                            {/* Steel Rivets on Bottom Trim */}
+                            <div className="h-10 bg-zinc-950/60 w-full flex items-center justify-between px-6 rounded-b-2xl border-t border-white/5 relative z-10">
+                                <div className="w-3 h-3 rounded-full bg-gradient-to-br from-zinc-400 to-zinc-700 shadow-md"></div>
+                                <div className="w-3 h-3 rounded-full bg-gradient-to-br from-zinc-400 to-zinc-700 shadow-md"></div>
+                            </div>
+                        </div>
+
+                        {/* Side Chest Iron Handles */}
+                        <div className="absolute -left-3 top-24 w-3 h-12 bg-gradient-to-b from-yellow-600 via-amber-500 to-yellow-700 rounded-l-md border border-yellow-500/40 shadow-lg"></div>
+                        <div className="absolute -right-3 top-24 w-3 h-12 bg-gradient-to-b from-yellow-600 via-amber-500 to-yellow-700 rounded-r-md border border-yellow-500/40 shadow-lg"></div>
                     </div>
                 )}
             </div>

@@ -85,7 +85,7 @@ The core locking and early unlock penalty mechanics of Golden Goal are enforced 
 ### Program & Token Verification
 - **GG SPL Token Mint**: `GGGoalp5m2FqyZUCeaMDjD35tSrKbu5R8KxXGcXGcXG`
 - **Lock Vault Program ID**: `GGVaultJNYRYZUCeaMDjD35tSrKbu5R8KxXGcXGcXG`
-- **Anchor Security Audits**: Audited by **Sec3** for state rent exemption, math overflows, and CPI authority vulnerabilities.
+- **Anchor Security Audits**: Audited by **Sec3** for state rent exemption, math overflows, and CPI authority vulnerabilities. Read the full [Sec3 Security Audit Report](audit/sec3_audit_report.md) for details.
 
 ---
 

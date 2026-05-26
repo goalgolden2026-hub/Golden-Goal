@@ -33,10 +33,65 @@ export default function StakePage() {
   }, [connected, publicKey, refresh]);
 
   const tiers = [
-    { id: 1, name: "Soft Stake", lock: "24h Lock", penalty: "0%", reward: "+1 Daily Prediction", min: 100, color: "border-blue-500/30", glow: "group-hover:bg-blue-500/20", icon: "🌱" },
-    { id: 2, name: "7-Day Stake", lock: "7 Days", penalty: "10%", reward: "+3 Daily Predictions", min: 500, color: "border-green-500/30", glow: "group-hover:bg-green-500/20", icon: "🛡️" },
-    { id: 3, name: "15-Day Stake", lock: "15 Days", penalty: "10%", reward: "+5 Predictions & 1.1x XP", min: 1000, color: "border-amber-500/30", glow: "group-hover:bg-amber-500/20", icon: "🔥" },
-    { id: 4, name: "1-Month Stake", lock: "30 Days", penalty: "10%", reward: "+10 Predictions & 1.25x XP", min: 5000, color: "border-purple-500/30", glow: "group-hover:bg-purple-500/20", icon: "👑" },
+    { 
+      id: 1, 
+      name: "Soft Stake", 
+      lock: "24h Lock", 
+      penalty: "0%", 
+      reward: "+1 Daily Prediction",
+      rewards: [
+        { text: "+1 Daily Prediction", type: "primary" }
+      ], 
+      min: 100, 
+      color: "border-blue-500/30", 
+      glow: "group-hover:bg-blue-500/20", 
+      icon: "🌱" 
+    },
+    { 
+      id: 2, 
+      name: "7-Day Stake", 
+      lock: "7 Days", 
+      penalty: "10%", 
+      reward: "+3 Daily Predictions",
+      rewards: [
+        { text: "+3 Daily Predictions", type: "primary" }
+      ], 
+      min: 500, 
+      color: "border-green-500/30", 
+      glow: "group-hover:bg-green-500/20", 
+      icon: "🛡️" 
+    },
+    { 
+      id: 3, 
+      name: "15-Day Stake", 
+      lock: "15 Days", 
+      penalty: "10%", 
+      reward: "+5 Predictions & 1.1x XP",
+      rewards: [
+        { text: "+5 Daily Predictions", type: "primary" },
+        { text: "1.1x XP Multiplier", type: "multiplier" }
+      ], 
+      min: 1000, 
+      color: "border-amber-500/30", 
+      glow: "group-hover:bg-amber-500/20", 
+      icon: "🔥" 
+    },
+    { 
+      id: 4, 
+      name: "1-Month Stake", 
+      lock: "30 Days", 
+      penalty: "10%", 
+      reward: "+10 Predictions & 1.25x XP",
+      rewards: [
+        { text: "+10 Daily Predictions", type: "primary" },
+        { text: "1.25x XP Multiplier", type: "multiplier" },
+        { text: "+1 Daily Free Spin", type: "spin" }
+      ], 
+      min: 5000, 
+      color: "border-purple-500/30", 
+      glow: "group-hover:bg-purple-500/20", 
+      icon: "👑" 
+    },
   ];
 
   const CountdownTimer = ({ targetDate }) => {
@@ -257,22 +312,35 @@ export default function StakePage() {
                   <span className="text-zinc-400 text-sm">Lock Period</span>
                   <span className="text-white font-semibold">{t.lock}</span>
                 </li>
-                <li className="flex justify-between items-center">
+                <li className="flex justify-between items-center pb-4 border-b border-white/5">
                   <span className="text-zinc-400 text-sm">Early Penalty</span>
                   <span className={t.penalty === '0%' ? 'text-green-400 font-semibold' : 'text-red-400 font-semibold'}>{t.penalty}</span>
                 </li>
-                <li className="bg-white/5 p-3 rounded-lg mt-2 border border-white/5 flex flex-col gap-1">
-                  <div className="flex justify-between items-center w-full">
-                    <span className="text-amber-400 text-sm font-bold tracking-wide shrink-0">REWARD</span>
-                    <span className="text-amber-400 font-extrabold text-xs lg:text-[13px] text-right whitespace-nowrap">{t.reward}</span>
-                  </div>
-                  {t.id === 4 && (
-                    <div className="flex justify-end">
-                      <span className="text-emerald-400 font-extrabold text-xs lg:text-[13px] text-right whitespace-nowrap">+ 1 Daily Free Spin</span>
-                    </div>
-                  )}
-                </li>
               </ul>
+
+              {/* Premium Rewards List */}
+              <div className="mb-8 flex flex-col gap-2">
+                <span className="text-zinc-500 text-[10px] font-extrabold tracking-widest uppercase mb-1">REWARDS & PERKS</span>
+                <div className="flex flex-col gap-2">
+                  {t.rewards.map((reward, idx) => (
+                    <div 
+                      key={idx} 
+                      className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-xs font-bold transition-all duration-300 hover:translate-x-1 ${
+                        reward.type === 'multiplier' 
+                          ? 'bg-amber-500/10 border-amber-500/20 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.05)]' 
+                          : reward.type === 'spin'
+                          ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.05)] animate-pulse'
+                          : 'bg-white/5 border-white/5 text-zinc-300 hover:bg-white/10'
+                      }`}
+                    >
+                      <span className="text-sm shrink-0">
+                        {reward.type === 'multiplier' ? '⚡' : reward.type === 'spin' ? '🎡' : '🎯'}
+                      </span>
+                      <span className="leading-tight text-left">{reward.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {activeStake && activeStake.tier === t.id ? (
                 <CountdownTimer targetDate={activeStake.unlockDate} />

@@ -95,9 +95,20 @@ export default function DocsPage() {
         
         {/* Left Side Sidebar - Floating Index */}
         <aside className="w-full md:w-64 shrink-0 border-b md:border-b-0 md:border-r border-white/5 p-4 md:p-6 md:sticky md:top-24 md:h-[calc(100vh-8rem)] overflow-y-auto mt-2 md:mt-0">
-          <div className="mb-6 hidden md:block">
-            <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-2">Documentation</h4>
-            <div className="h-0.5 w-12 bg-gradient-to-r from-yellow-400 to-amber-500 rounded"></div>
+          <div className="mb-6 hidden md:block select-none">
+            <div className="flex items-center gap-3 mb-6">
+              <img 
+                src="/logo.jpg" 
+                alt="Golden Goal Logo" 
+                className="w-12 h-12 rounded-full object-cover border border-yellow-500/30 shadow-[0_0_15px_rgba(245,158,11,0.15)] animate-pulse"
+              />
+              <div>
+                <h4 className="text-sm font-black text-white tracking-tight">Golden Goal</h4>
+                <p className="text-[10px] text-zinc-500 uppercase font-mono tracking-wider">Official Docs</p>
+              </div>
+            </div>
+            <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Index Table</h4>
+            <div className="h-0.5 w-8 bg-gradient-to-r from-yellow-400 to-amber-500 rounded"></div>
           </div>
           <nav className="space-y-1">
             {sections.map((section) => (

@@ -15,9 +15,11 @@ export default function PitchDeckPage() {
         <div className="flex flex-col items-center justify-center text-center h-full space-y-8 select-none">
           <div className="relative">
             <div className="absolute inset-0 bg-yellow-500/20 blur-[60px] rounded-full"></div>
-            <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-yellow-400 via-amber-500 to-orange-600 flex items-center justify-center border border-white/20 shadow-[0_0_50px_rgba(245,158,11,0.5)] animate-pulse">
-              <span className="text-black font-black text-4xl">G</span>
-            </div>
+            <img 
+              src="/logo.jpg" 
+              alt="Golden Goal Logo" 
+              className="w-24 h-24 rounded-full object-cover border-2 border-yellow-500/30 shadow-[0_0_50px_rgba(245,158,11,0.35)] hover:scale-105 transition-all duration-500"
+            />
           </div>
           <div className="space-y-4">
             <h2 className="text-4xl sm:text-6xl font-black tracking-tight leading-none">

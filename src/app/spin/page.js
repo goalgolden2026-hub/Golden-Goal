@@ -66,16 +66,12 @@ export default function SpinPage() {
 
             if (data.success) {
                 const targetIndex = data.reward.index;
-                // Each slice is 45 degrees. To point the arrow (which is usually at the top or right).
-                // Let's assume our arrow is at the TOP (0 degrees).
-                // The slice 0 is centered at 0 deg. Slice 1 is at 45 deg, etc.
-                // To bring index i to the top, we need to rotate backwards by i * 45 degrees.
-                // Or rotate forward by 360 - (i * 45).
-                // Add 5 full spins (5 * 360 = 1800) for effect.
                 const sliceDegree = 360 / WHEEL_SLICES.length;
-                // We add a tiny random offset so it doesn't land exactly on the line
+                // Center of the target slice
+                const targetCenterAngle = (targetIndex * sliceDegree) + (sliceDegree / 2);
+                // Tiny random offset to land naturally within the slice
                 const randomOffset = Math.floor(Math.random() * (sliceDegree - 10)) - (sliceDegree/2 - 5); 
-                const stopAngle = 1800 + (360 - (targetIndex * sliceDegree)) + randomOffset;
+                const stopAngle = 1800 + (360 - targetCenterAngle) + randomOffset;
                 
                 // Add to current rotation so it spins smoothly from current position
                 const newRotation = rotation + stopAngle + (360 - (rotation % 360));
@@ -146,24 +142,23 @@ export default function SpinPage() {
                     className="absolute inset-0 rounded-full border-4 border-zinc-800 shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden transition-transform ease-out"
                     style={{
                         transform: `rotate(${rotation}deg)`,
-                        transitionDuration: '5s' // 5 second spin animation
+                        transitionDuration: '5s', // 5 second spin animation
+                        background: `conic-gradient(${WHEEL_SLICES.map((s, i) => `${s.color} ${i * (360/WHEEL_SLICES.length)}deg ${(i+1) * (360/WHEEL_SLICES.length)}deg`).join(', ')})`
                     }}
                 >
                     {WHEEL_SLICES.map((slice, i) => {
-                        const deg = i * (360 / WHEEL_SLICES.length);
+                        const sliceAngle = 360 / WHEEL_SLICES.length;
+                        const deg = (i * sliceAngle) + (sliceAngle / 2);
                         return (
                             <div 
                                 key={i}
-                                className="absolute top-0 left-1/2 w-40 h-1/2 origin-bottom transform -translate-x-1/2"
+                                className="absolute top-0 left-0 w-full h-full flex items-start justify-center pointer-events-none"
                                 style={{
-                                    transform: `translateX(-50%) rotate(${deg}deg)`,
-                                    clipPath: 'polygon(0 0, 100% 0, 50% 100%)',
-                                    backgroundColor: slice.color,
-                                    transformOrigin: 'bottom center'
+                                    transform: `rotate(${deg}deg)`,
                                 }}
                             >
                                 <span 
-                                    className="block mt-4 text-white font-bold text-xs md:text-sm tracking-wider text-center"
+                                    className="block mt-6 text-white font-bold text-xs md:text-sm tracking-wider text-center"
                                     style={{
                                         textShadow: '0 2px 4px rgba(0,0,0,0.8)'
                                     }}

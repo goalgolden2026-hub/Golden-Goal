@@ -1,0 +1,240 @@
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import dynamic from 'next/dynamic';
+
+const WalletMultiButtonDynamic = dynamic(
+    async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
+    { ssr: false }
+);
+
+const WHEEL_SLICES = [
+    { label: 'Pas', color: '#3f3f46' },         // Index 0
+    { label: '1 Bet Hakkı', color: '#f59e0b' }, // Index 1
+    { label: '3 Bet Hakkı', color: '#10b981' }, // Index 2
+    { label: '5 Bet Hakkı', color: '#3b82f6' }, // Index 3
+    { label: '1000 Golden', color: '#eab308' }, // Index 4
+    { label: '1 USDC', color: '#6366f1' },      // Index 5
+    { label: '10 USDC', color: '#8b5cf6' },     // Index 6
+    { label: '5000 Golden', color: '#ec4899' }  // Index 7
+];
+
+export default function SpinPage() {
+    const { publicKey, connected } = useWallet();
+    const [loading, setLoading] = useState(true);
+    const [status, setStatus] = useState(null);
+    const [isSpinning, setIsSpinning] = useState(false);
+    const [rotation, setRotation] = useState(0);
+    const [reward, setReward] = useState(null);
+
+    useEffect(() => {
+        if (connected && publicKey) {
+            checkStatus();
+        } else {
+            setLoading(false);
+            setStatus(null);
+        }
+    }, [connected, publicKey]);
+
+    const checkStatus = async () => {
+        try {
+            const res = await fetch(`/api/spin?walletAddress=${publicKey.toBase58()}`);
+            const data = await res.json();
+            if (data.success) {
+                setStatus(data);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+        setLoading(false);
+    };
+
+    const handleSpin = async () => {
+        if (!status || isSpinning) return;
+        
+        setIsSpinning(true);
+        setReward(null);
+
+        try {
+            const res = await fetch('/api/spin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ walletAddress: publicKey.toBase58() })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                const targetIndex = data.reward.index;
+                // Each slice is 45 degrees. To point the arrow (which is usually at the top or right).
+                // Let's assume our arrow is at the TOP (0 degrees).
+                // The slice 0 is centered at 0 deg. Slice 1 is at 45 deg, etc.
+                // To bring index i to the top, we need to rotate backwards by i * 45 degrees.
+                // Or rotate forward by 360 - (i * 45).
+                // Add 5 full spins (5 * 360 = 1800) for effect.
+                const sliceDegree = 360 / WHEEL_SLICES.length;
+                // We add a tiny random offset so it doesn't land exactly on the line
+                const randomOffset = Math.floor(Math.random() * (sliceDegree - 10)) - (sliceDegree/2 - 5); 
+                const stopAngle = 1800 + (360 - (targetIndex * sliceDegree)) + randomOffset;
+                
+                // Add to current rotation so it spins smoothly from current position
+                const newRotation = rotation + stopAngle + (360 - (rotation % 360));
+
+                setRotation(newRotation);
+
+                // Wait for animation to finish (5 seconds)
+                setTimeout(() => {
+                    setReward(data.reward);
+                    setIsSpinning(false);
+                    checkStatus(); // Refresh eligibility
+                }, 5000);
+                
+            } else {
+                alert("Hata: " + data.error);
+                setIsSpinning(false);
+            }
+        } catch (error) {
+            alert("Sunucu hatası");
+            setIsSpinning(false);
+        }
+    };
+
+    if (!connected) {
+        return (
+            <div className="flex-1 flex flex-col items-center justify-center p-4">
+                <div className="text-center mb-8">
+                    <h1 className="text-5xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-500">
+                        Şans Çarkı
+                    </h1>
+                    <p className="text-zinc-400 max-w-md mx-auto">
+                        Çarkı çevirmek ve muhteşem ödüller kazanmak için cüzdanınızı bağlayın.
+                    </p>
+                </div>
+                <WalletMultiButtonDynamic className="!bg-amber-500 hover:!bg-amber-600 !text-black !font-bold !rounded-full !px-8 !py-4" />
+            </div>
+        );
+    }
+
+    if (loading) {
+        return <div className="flex-1 flex items-center justify-center text-zinc-500">Yükleniyor...</div>;
+    }
+
+    return (
+        <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-12 flex flex-col items-center">
+            
+            <div className="text-center mb-12">
+                <h1 className="text-4xl md:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]">
+                    Golden Spin
+                </h1>
+                <p className="text-zinc-400">
+                    Kilitli tokeni olanlara her gün 1 bedava çevirme hakkı!
+                </p>
+            </div>
+
+            {/* WHEEL CONTAINER */}
+            <div className="relative w-80 h-80 md:w-96 md:h-96 mb-12 flex items-center justify-center">
+                {/* Glow Background */}
+                <div className="absolute inset-0 rounded-full blur-3xl opacity-30 bg-gradient-to-r from-yellow-500 to-red-600 animate-pulse"></div>
+                
+                {/* Selector Arrow (Top) */}
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20 drop-shadow-2xl">
+                    <div className="w-8 h-10 bg-white" style={{ clipPath: 'polygon(50% 100%, 0 0, 100% 0)' }}></div>
+                </div>
+
+                {/* The Wheel */}
+                <div 
+                    className="absolute inset-0 rounded-full border-4 border-zinc-800 shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden transition-transform ease-out"
+                    style={{
+                        transform: `rotate(${rotation}deg)`,
+                        transitionDuration: '5s' // 5 second spin animation
+                    }}
+                >
+                    {WHEEL_SLICES.map((slice, i) => {
+                        const deg = i * (360 / WHEEL_SLICES.length);
+                        return (
+                            <div 
+                                key={i}
+                                className="absolute top-0 left-1/2 w-40 h-1/2 origin-bottom transform -translate-x-1/2"
+                                style={{
+                                    transform: `translateX(-50%) rotate(${deg}deg)`,
+                                    clipPath: 'polygon(0 0, 100% 0, 50% 100%)',
+                                    backgroundColor: slice.color,
+                                    transformOrigin: 'bottom center'
+                                }}
+                            >
+                                <span 
+                                    className="block mt-4 text-white font-bold text-xs md:text-sm tracking-wider text-center"
+                                    style={{
+                                        textShadow: '0 2px 4px rgba(0,0,0,0.8)'
+                                    }}
+                                >
+                                    {slice.label}
+                                </span>
+                            </div>
+                        );
+                    })}
+                    
+                    {/* Inner Center Circle */}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-zinc-900 border-4 border-zinc-800 rounded-full z-10 flex items-center justify-center shadow-inner">
+                        <span className="text-amber-500 font-black text-xl">G</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Controls */}
+            <div className="flex flex-col items-center gap-4 w-full max-w-sm">
+                <button
+                    onClick={handleSpin}
+                    disabled={isSpinning || (!status?.isEligibleForFreeSpin && false /* Assume balance check here */)}
+                    className={`w-full py-5 rounded-2xl font-black text-xl uppercase tracking-widest transition-all ${
+                        isSpinning 
+                        ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+                        : status?.isEligibleForFreeSpin
+                            ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.5)] hover:scale-105'
+                            : 'bg-gradient-to-r from-amber-500 to-red-600 text-white shadow-[0_0_20px_rgba(245,158,11,0.5)] hover:scale-105'
+                    }`}
+                >
+                    {isSpinning ? 'DÖNÜYOR...' : status?.isEligibleForFreeSpin ? 'ÜCRETSİZ ÇEVİR' : '500 TOKEN İLE ÇEVİR'}
+                </button>
+
+                {!status?.isEligibleForFreeSpin && (
+                    <p className="text-xs text-zinc-500 text-center">
+                        Ücretsiz çevirme hakkınız bulunmuyor. Kilitli token (30 Gün) stake ederek her gün 1 ücretsiz hak kazanabilirsiniz.
+                    </p>
+                )}
+            </div>
+
+            {/* Reward Modal */}
+            {reward && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+                    <div className="bg-zinc-900 border border-zinc-700 rounded-3xl p-8 max-w-md w-full text-center relative overflow-hidden shadow-2xl shadow-amber-500/20">
+                        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-amber-500/10 to-transparent pointer-events-none"></div>
+                        
+                        <h2 className="text-3xl font-black text-white mb-2">
+                            {reward.type === 'EMPTY' ? 'Tüh!' : 'Tebrikler! 🎉'}
+                        </h2>
+                        
+                        <div className="my-8 py-8 bg-black/50 rounded-2xl border border-zinc-800">
+                            {reward.type === 'EMPTY' ? (
+                                <span className="text-2xl text-zinc-400 block">Maalesef boş çıktı.<br/>Tekrar dene!</span>
+                            ) : (
+                                <>
+                                    <span className="text-amber-500 text-sm font-bold tracking-widest uppercase mb-2 block">Kazandığın Ödül</span>
+                                    <span className="text-5xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">{reward.label}</span>
+                                </>
+                            )}
+                        </div>
+
+                        <button 
+                            onClick={() => setReward(null)}
+                            className="bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-3 px-8 rounded-xl transition-colors"
+                        >
+                            Kapat
+                        </button>
+                    </div>
+                </div>
+            )}
+
+        </div>
+    );
+}

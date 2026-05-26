@@ -18,7 +18,9 @@ export async function getDb() {
                     "lastBetDate" DATE DEFAULT CURRENT_DATE,
                     "referralCode" TEXT UNIQUE,
                     "referredBy" TEXT,
-                    "referralPoints" INTEGER DEFAULT 0
+                    "referralPoints" INTEGER DEFAULT 0,
+                    "lastFreeSpinDate" DATE,
+                    "spinBonusBets" INTEGER DEFAULT 0
                 );
             `;
 
@@ -85,6 +87,8 @@ export async function getDb() {
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "referralCode" TEXT UNIQUE;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "referredBy" TEXT;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "referralPoints" INTEGER DEFAULT 0;`;
+            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "lastFreeSpinDate" DATE;`;
+            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "spinBonusBets" INTEGER DEFAULT 0;`;
 
             // Seed initial World Cup markets if none exist
             const { rows } = await sql`SELECT COUNT(*) as count FROM markets;`;

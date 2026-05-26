@@ -62,7 +62,7 @@ export async function POST(request) {
             else if (stakeTier === 4) bonusBets = 10;
         }
 
-        let finalLimit = limit + bonusBets;
+        let finalLimit = limit + bonusBets + (user.spinBonusBets || 0);
 
         // 3. Reset daily limit if it's a new day
         const today = new Date().toISOString().split('T')[0];
@@ -70,10 +70,14 @@ export async function POST(request) {
 
         if (today !== lastBetDate) {
             user.betsToday = 0;
+            user.spinBonusBets = 0;
             await sql`
-                UPDATE users SET "betsToday" = 0, "lastBetDate" = CURRENT_DATE 
+                UPDATE users 
+                SET "betsToday" = 0, "spinBonusBets" = 0, "lastBetDate" = CURRENT_DATE 
                 WHERE "walletAddress" = ${walletAddress}
             `;
+            // Recalculate finalLimit since spinBonusBets is reset
+            finalLimit = limit + bonusBets;
         }
 
         // 4. Check Daily Limit

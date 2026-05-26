@@ -23,6 +23,7 @@ export default function StakePage() {
             stakers: data.activeStakers,
             userStaked: data.userStaked
           });
+          setActiveStake(data.activeStake);
         }
       } catch (err) {
         console.error("Failed to fetch stats", err);
@@ -32,11 +33,45 @@ export default function StakePage() {
   }, [connected, publicKey, refresh]);
 
   const tiers = [
-    { id: 1, name: "Soft Stake", lock: "No Lock", penalty: "0%", reward: "+1 Daily Bet", min: 100, color: "border-blue-500/30", glow: "group-hover:bg-blue-500/20", icon: "🌱" },
+    { id: 1, name: "Soft Stake", lock: "24h Lock", penalty: "0%", reward: "+1 Daily Bet", min: 100, color: "border-blue-500/30", glow: "group-hover:bg-blue-500/20", icon: "🌱" },
     { id: 2, name: "7-Day Stake", lock: "7 Days", penalty: "10%", reward: "+3 Daily Bets", min: 500, color: "border-green-500/30", glow: "group-hover:bg-green-500/20", icon: "🛡️" },
     { id: 3, name: "15-Day Stake", lock: "15 Days", penalty: "10%", reward: "+5 Bets & 1.1x XP", min: 1000, color: "border-amber-500/30", glow: "group-hover:bg-amber-500/20", icon: "🔥" },
     { id: 4, name: "1-Month Stake", lock: "30 Days", penalty: "10%", reward: "+10 Bets & 1.25x XP", min: 5000, color: "border-purple-500/30", glow: "group-hover:bg-purple-500/20", icon: "👑" },
   ];
+
+  const CountdownTimer = ({ targetDate }) => {
+    const [timeLeft, setTimeLeft] = useState("");
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const now = new Date().getTime();
+        const target = new Date(targetDate).getTime();
+        const distance = target - now;
+
+        if (distance < 0) {
+          clearInterval(interval);
+          setTimeLeft("Unlocked");
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        setTimeLeft(`${days > 0 ? days + 'd ' : ''}${hours}h ${minutes}m ${seconds}s`);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }, [targetDate]);
+
+    return (
+      <div className="w-full py-3 bg-zinc-800/80 rounded-xl border border-zinc-700 flex flex-col items-center justify-center">
+        <span className="text-zinc-400 text-xs font-bold uppercase tracking-wider mb-1">Unlocks in</span>
+        <span className="text-white font-mono font-bold text-lg">{timeLeft || '...'}</span>
+      </div>
+    );
+  };
 
   const handleStake = async (tierId, minAmount) => {
     if (!connected) {
@@ -192,13 +227,17 @@ export default function StakePage() {
                 </li>
               </ul>
 
-              <button 
-                onClick={() => handleStake(t.id, t.min)}
-                disabled={loading || !connected}
-                className="w-full py-4 rounded-xl font-bold transition-all bg-zinc-800 text-white hover:bg-zinc-700 disabled:opacity-50"
-              >
-                Stake Now
-              </button>
+              {activeStake && activeStake.tier === t.id ? (
+                <CountdownTimer targetDate={activeStake.unlockDate} />
+              ) : (
+                <button 
+                  onClick={() => handleStake(t.id, t.min)}
+                  disabled={loading || !connected || activeStake}
+                  className="w-full py-4 rounded-xl font-bold transition-all bg-zinc-800 text-white hover:bg-zinc-700 disabled:opacity-50"
+                >
+                  {activeStake ? 'Already Staked' : 'Stake Now'}
+                </button>
+              )}
             </div>
           </div>
         ))}

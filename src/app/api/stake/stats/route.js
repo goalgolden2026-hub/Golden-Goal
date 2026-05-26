@@ -18,10 +18,15 @@ export async function GET(request) {
 
         // Fetch User Staked (if wallet provided)
         let userStaked = 0;
+        let activeStake = null;
         if (walletAddress) {
-            const userStakeRes = await sql`SELECT amount FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+            const userStakeRes = await sql`SELECT amount, tier, "unlockDate" FROM stakes WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
             if (userStakeRes.rowCount > 0) {
                 userStaked = userStakeRes.rows[0].amount;
+                activeStake = {
+                    tier: userStakeRes.rows[0].tier,
+                    unlockDate: userStakeRes.rows[0].unlockDate
+                };
             }
         }
 
@@ -29,7 +34,8 @@ export async function GET(request) {
             success: true, 
             totalValueLocked: Number(totalValueLocked),
             activeStakers: Number(activeStakers),
-            userStaked: Number(userStaked)
+            userStaked: Number(userStaked),
+            activeStake: activeStake
         }, { status: 200 });
 
     } catch (error) {

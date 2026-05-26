@@ -30,13 +30,14 @@ export async function POST(request) {
         }
 
         // Calculate unlock date
-        let unlockDate = null;
         let daysToLock = 0;
         
-        if (tier === 2) daysToLock = 7;
+        if (tier === 1) daysToLock = 1; // 24-Hour lock for Soft Stake
+        else if (tier === 2) daysToLock = 7;
         else if (tier === 3) daysToLock = 15;
         else if (tier === 4) daysToLock = 30;
 
+        let unlockDate = null;
         if (daysToLock > 0) {
             const date = new Date();
             date.setDate(date.getDate() + daysToLock);

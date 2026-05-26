@@ -1,6 +1,7 @@
 export const WHITELISTED_WALLETS = [
   // Burhan Selection Wallet & Team Whitelist Addresses
   "2iF2q7hjEqEe8o6PTdJnYRYZUCeaMDjD35tSrKbu5R8K", // User's wallet address
+  "HMsWAhRC9wom6JVBpuo2gjAGp7Sb59FEyMraLpC4YXGc", // New authorized admin wallet
   "BurhanSelectionWalletPlaceHolder1111111",
   "GoalGoldenAdminWalletPlaceHolder222222",
 ];

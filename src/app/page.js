@@ -93,23 +93,26 @@ export default function LandingPage() {
             The next-generation competitive sports forecasting ecosystem on Solana. Hold or stake <span className="text-amber-400 font-semibold">$GG</span> to forecast matches, spin the provably fair Lucky Wheel, and dominate dual ladders with <span className="text-white font-semibold">zero capital loss.</span>
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 w-full max-w-lg mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl mx-auto px-4 select-none">
             {connected ? (
               isWhitelisted ? (
                 <Link 
                   href="/markets" 
-                  className="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-black py-4 px-10 rounded-2xl text-base transition-all hover:scale-105 shadow-[0_0_35px_rgba(245,158,11,0.3)] text-center uppercase tracking-wider flex items-center justify-center gap-2"
+                  className="h-14 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 bg-[length:200%_auto] hover:bg-[100%_0] text-zinc-950 font-black rounded-2xl text-sm transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] shadow-[0_0_30px_rgba(16,185,129,0.3)] border border-emerald-400/40 text-center uppercase tracking-wider flex items-center justify-center gap-2 group whitespace-nowrap"
                 >
-                  Launch Platform 🚀
+                  <span>Launch Platform</span>
+                  <svg className="w-5 h-5 text-zinc-950 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
                 </Link>
               ) : (
                 <button 
                   disabled
-                  className="w-full sm:w-auto bg-zinc-900/80 border border-red-500/30 text-red-500/90 font-black py-4 px-10 rounded-2xl text-base cursor-not-allowed flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.05)] uppercase tracking-wider"
+                  className="h-14 bg-zinc-950/80 border border-red-500/30 text-red-500/80 font-black rounded-2xl text-sm cursor-not-allowed flex items-center justify-center gap-2 shadow-[inset_0_0_20px_rgba(239,68,68,0.1)] uppercase tracking-wider relative group whitespace-nowrap"
                   title="Coming Soon - This wallet address is not authorized for the closed beta testing phase."
                 >
-                  <svg className="w-5 h-5 text-red-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  <svg className="w-5 h-5 text-red-500/80 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                   <span>Coming Soon</span>
                 </button>
@@ -117,39 +120,64 @@ export default function LandingPage() {
             ) : (
               <button 
                 onClick={() => setVisible(true)}
-                className="w-full sm:w-auto bg-gradient-to-r from-yellow-500/10 to-amber-600/10 hover:from-yellow-500/20 hover:to-amber-600/20 text-yellow-400 hover:text-yellow-300 font-black py-4 px-10 rounded-2xl text-base border border-yellow-500/30 transition-all hover:scale-105 shadow-[0_0_25px_rgba(245,158,11,0.1)] flex items-center justify-center gap-2 uppercase tracking-wider"
+                className="h-14 bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-500 bg-[length:200%_auto] hover:bg-[100%_0] text-zinc-950 font-black rounded-2xl text-sm transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] shadow-[0_0_30px_rgba(245,158,11,0.3)] border border-yellow-400/40 uppercase tracking-wider flex items-center justify-center gap-2 whitespace-nowrap"
               >
-                Launch Platform
+                <span>Launch Platform</span>
+                <svg className="w-5 h-5 text-zinc-950 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                </svg>
               </button>
             )}
+
+            {/* Whitepaper Secondary Button */}
             <Link 
               href="/docs" 
-              className="w-full sm:w-auto bg-zinc-900/80 border border-white/10 hover:bg-zinc-800 text-white font-bold py-4 px-8 rounded-2xl text-base transition-all hover:scale-105 flex items-center justify-center gap-2 hover:border-white/20"
+              className="h-14 bg-white/[0.02] border border-white/10 hover:border-yellow-500/30 hover:bg-yellow-500/[0.04] text-zinc-300 hover:text-white font-bold rounded-2xl text-sm transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-2 shadow-[0_4px_30px_rgba(0,0,0,0.4)] backdrop-blur-md group whitespace-nowrap"
             >
-              <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              <svg className="w-5 h-5 text-yellow-500/80 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
-              Whitepaper
+              <span>Whitepaper</span>
             </Link>
+
+            {/* Pitch Deck Secondary Button */}
             <Link 
               href="/pitchdeck" 
-              className="w-full sm:w-auto bg-zinc-900/80 border border-white/10 hover:bg-zinc-800 text-white font-bold py-4 px-8 rounded-2xl text-base transition-all hover:scale-105 flex items-center justify-center gap-2 hover:border-white/20"
+              className="h-14 bg-white/[0.02] border border-white/10 hover:border-amber-500/30 hover:bg-amber-500/[0.04] text-zinc-300 hover:text-white font-bold rounded-2xl text-sm transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-2 shadow-[0_4px_30px_rgba(0,0,0,0.4)] backdrop-blur-md group whitespace-nowrap"
             >
-              <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              <svg className="w-5 h-5 text-amber-500/80 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
-              Pitch Deck
+              <span>Pitch Deck</span>
             </Link>
           </div>
+
           {!isWhitelisted && connected && (
             <p className="mt-4 text-red-500/80 text-xs font-semibold uppercase tracking-widest animate-pulse font-mono flex items-center gap-1.5 justify-center">
               <span>🔒 Coming Soon - Access Restricted to Whitelisted Testers</span>
             </p>
           )}
 
-          <p className="mt-8 text-[11px] uppercase tracking-widest font-mono text-zinc-500 max-w-xl mx-auto select-none leading-relaxed">
-            ⚠️ NO PURCHASE NECESSARY. Void where prohibited by law. Standard daily prediction quotas are allocated for free. Competitions are decided strictly based on sports analytical skill and forecasting accuracy, not chance.
-          </p>
+          {/* PREMIUM LEGAL COMPLIANCE SHIELD CARD */}
+          <div className="w-full max-w-2xl mx-auto mt-12 p-5 rounded-2xl bg-zinc-950/60 border border-yellow-500/10 hover:border-yellow-500/30 backdrop-blur-xl shadow-[0_0_35px_rgba(245,158,11,0.02)] transition-all duration-300 select-none text-left flex items-start gap-4 group">
+            <div className="p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 flex items-center justify-center shrink-0 group-hover:bg-yellow-500/20 group-hover:scale-105 transition-all duration-300">
+              <svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div className="space-y-1.5 flex-1">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <span className="text-xs font-black tracking-widest text-amber-400 font-mono uppercase">⚖️ Legal Notice & Compliance Shield</span>
+                <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono">
+                  <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse"></span>
+                  COMPLIANCE VERIFIED
+                </span>
+              </div>
+              <p className="text-[11px] font-medium leading-relaxed text-zinc-400">
+                <strong className="text-zinc-200">NO PURCHASE NECESSARY.</strong> Void where prohibited by law. Standard daily prediction quotas are allocated free of charge. Platform operations strictly simulate a football analytical index. Leaderboards are decided 100% based on predictive foresight, football acumen, and data modelling—completely free of capital hazard or chance elements.
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* ECOSYSTEM STATS RIBBON */}

@@ -59,42 +59,65 @@ function MarketsContent() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {group.matches.map((m) => (
-                  <Link href={`/markets/${m.id}`} key={m.id} className="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-3xl p-6 hover:border-blue-500/40 transition-all duration-300 relative overflow-hidden flex flex-col items-center gap-6 block cursor-pointer">
-                      
-                      {/* Match Info */}
-                      <div className="w-full text-center">
-                          <span className="text-sm font-mono text-zinc-500 mb-2 block">{m.timeStr} GMT</span>
-                          <div className="flex items-center justify-center gap-6 text-xl font-bold">
-                              <div className="flex flex-col items-center gap-1">
-                                  <span className="text-3xl drop-shadow-md">{TEAM_FLAGS[m.teamA] || '🏳️'}</span>
-                                  <span>{m.teamA}</span>
-                              </div>
-                              <span className="text-zinc-600 text-sm font-normal">vs</span>
-                              <div className="flex flex-col items-center gap-1">
-                                  <span className="text-3xl drop-shadow-md">{TEAM_FLAGS[m.teamB] || '🏳️'}</span>
-                                  <span>{m.teamB}</span>
-                              </div>
-                          </div>
-                      </div>
+              {group.matches.map((m) => {
+                  const isMexicoSA = m.teamA === 'Mexico' && m.teamB === 'South Africa';
+                  
+                  return (
+                    <Link 
+                      href={`/markets/${m.id}`} 
+                      key={m.id} 
+                      className={`backdrop-blur-md border transition-all duration-500 relative overflow-hidden flex flex-col items-center gap-6 block cursor-pointer rounded-3xl p-6 ${
+                        isMexicoSA 
+                          ? 'border-emerald-500/20 hover:border-amber-500/40 shadow-[0_4px_30px_rgba(0,0,0,0.4)] hover:shadow-[0_10px_40px_rgba(245,158,11,0.15)] hover:scale-[1.02]' 
+                          : 'bg-zinc-900/80 border-zinc-800 hover:border-blue-500/40'
+                      }`}
+                      style={isMexicoSA ? {
+                        backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.45), rgba(10, 10, 10, 0.85)), url('/mexico-sa-bg.jpg')",
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      } : {}}
+                    >
+                        
+                        {/* Match Info */}
+                        <div className="w-full text-center relative z-10">
+                            <span className={`text-sm font-mono mb-2 block ${isMexicoSA ? 'text-zinc-300 font-bold' : 'text-zinc-500'}`}>{m.timeStr} GMT</span>
+                            <div className="flex items-center justify-center gap-6 text-xl font-bold">
+                                <div className="flex flex-col items-center gap-1">
+                                    <span className="text-3xl drop-shadow-md">{TEAM_FLAGS[m.teamA] || '🏳️'}</span>
+                                    <span className={isMexicoSA ? 'text-white' : ''}>{m.teamA}</span>
+                                </div>
+                                <span className={isMexicoSA ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" : "text-zinc-600 text-sm font-normal"}>
+                                    {isMexicoSA ? 'VS' : 'vs'}
+                                </span>
+                                <div className="flex flex-col items-center gap-1">
+                                    <span className="text-3xl drop-shadow-md">{TEAM_FLAGS[m.teamB] || '🏳️'}</span>
+                                    <span className={isMexicoSA ? 'text-white' : ''}>{m.teamB}</span>
+                                </div>
+                            </div>
+                        </div>
 
-                      {/* Prediction Action Buttons */}
-                      <div className="flex w-full gap-2 mt-2">
-                          <button 
-                              disabled={m.isLocked}
-                              className="w-full bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent text-white font-medium py-3 px-4 rounded-xl transition-all"
-                          >
-                              {m.isLocked ? 'LOCKED' : 'View Markets'}
-                          </button>
-                      </div>
-                      
-                      {m.isLocked && (
-                          <div className="absolute top-0 right-0 bg-red-500/10 text-red-500 text-xs font-bold px-3 py-1 rounded-bl-xl border-b border-l border-red-500/20">
-                              LOCKED
-                          </div>
-                      )}
-                  </Link>
-              ))}
+                        {/* Prediction Action Buttons */}
+                        <div className="flex w-full gap-2 mt-2 relative z-10">
+                            <button 
+                                disabled={m.isLocked}
+                                className={`w-full font-bold py-3 px-4 rounded-xl transition-all ${
+                                  isMexicoSA
+                                    ? 'bg-gradient-to-r from-emerald-600 to-amber-600 hover:from-emerald-500 hover:to-amber-500 text-white shadow-[0_4px_20px_rgba(16,185,129,0.2)] hover:shadow-[0_4px_25px_rgba(245,158,11,0.25)] border border-white/10'
+                                    : 'bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent text-white font-medium'
+                                }`}
+                            >
+                                {m.isLocked ? 'LOCKED' : 'View Markets'}
+                            </button>
+                        </div>
+                        
+                        {m.isLocked && (
+                            <div className="absolute top-0 right-0 bg-red-500/10 text-red-500 text-xs font-bold px-3 py-1 rounded-bl-xl border-b border-l border-red-500/20 z-20">
+                                LOCKED
+                            </div>
+                        )}
+                    </Link>
+                  );
+              })}
           </div>
       </div>
   );

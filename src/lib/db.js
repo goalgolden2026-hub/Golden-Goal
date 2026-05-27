@@ -113,6 +113,9 @@ export async function getDb() {
                 );
             `;
 
+            // Migration: Add txSignature to locks table
+            await sql`ALTER TABLE locks ADD COLUMN IF NOT EXISTS "txSignature" TEXT UNIQUE;`;
+
             await sql`
                 CREATE TABLE IF NOT EXISTS treasury_logs (
                     id SERIAL PRIMARY KEY,

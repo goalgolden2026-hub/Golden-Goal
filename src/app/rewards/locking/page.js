@@ -3,9 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import CustomModal from '@/components/CustomModal';
+import { Connection, PublicKey, Transaction } from '@solana/web3.js';
+import { getAssociatedTokenAddress, createTransferInstruction } from '@solana/spl-token';
+
+const VAULT_WALLET = "GwnoqZegE4QuxENTLUKPrmkM4zapUDHkjVc6hy2BMtMY";
+const TOKEN_MINT = "HxWrnZznqF5iYf3ckMw3FTaZQvubB53ohzpjPSNUpump";
 
 export default function LockingPage() {
-  const { publicKey, connected, signMessage } = useWallet();
+  const { publicKey, connected, signMessage, sendTransaction } = useWallet();
   const [loading, setLoading] = useState(false);
   const [activeLock, setActiveLock] = useState(null);
   const [message, setMessage] = useState({ text: '', type: '' });
@@ -172,24 +177,81 @@ export default function LockingPage() {
   };
 
   const handleLock = async (tierId, minAmount) => {
-    if (!connected) {
+    if (!connected || !publicKey) {
       showMessage("Please connect your wallet first.", "error");
       return;
     }
     
     setLoading(true);
+    showMessage("Initializing connection to Solana...", "info");
+    
     try {
-      if (!signMessage) {
-        showMessage("Wallet does not support message signing. Please use Phantom, Backpack or Solflare.", "error");
+      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const mintPubKey = new PublicKey(TOKEN_MINT);
+      const vaultPubKey = new PublicKey(VAULT_WALLET);
+
+      // Derive Associated Token Accounts
+      const userAta = await getAssociatedTokenAddress(mintPubKey, publicKey);
+      const vaultAta = await getAssociatedTokenAddress(mintPubKey, vaultPubKey);
+
+      // 1. Verify user actually has the tokens
+      showMessage("Checking your wallet balance...", "info");
+      try {
+        const balanceInfo = await connection.getTokenAccountBalance(userAta);
+        if (!balanceInfo || balanceInfo.value.uiAmount < minAmount) {
+          showMessage(`Insufficient balance. You need at least ${minAmount} tokens to lock.`, "error");
+          setLoading(false);
+          return;
+        }
+      } catch (balErr) {
+        showMessage("You do not own any of this token in your wallet. Please buy some first.", "error");
         setLoading(false);
         return;
       }
 
-      const msgText = `Authenticate Golden Goal Lock Transaction:\nWallet: ${publicKey.toString()}\nAmount: ${minAmount}\nTier: ${tierId}\nTimestamp: ${Date.now()}`;
-      const encodedMessage = new TextEncoder().encode(msgText);
-      const signatureBytes = await signMessage(encodedMessage);
-      const signatureHex = Array.from(signatureBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+      // 2. Fetch mint decimals dynamically
+      let decimals = 6;
+      try {
+        const mintInfo = await connection.getParsedAccountInfo(mintPubKey);
+        if (mintInfo?.value?.data?.parsed?.info?.decimals !== undefined) {
+          decimals = mintInfo.value.data.parsed.info.decimals;
+        }
+      } catch (decErr) {
+        console.error("Failed to fetch mint decimals, defaulting to 6", decErr);
+      }
 
+      const rawAmount = Math.round(minAmount * Math.pow(10, decimals));
+
+      // 3. Build the transfer instruction
+      const transaction = new Transaction().add(
+        createTransferInstruction(
+          userAta,
+          vaultAta,
+          publicKey,
+          rawAmount
+        )
+      );
+
+      // Set recent blockhash and fee payer
+      const { blockhash } = await connection.getLatestBlockhash('confirmed');
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = publicKey;
+
+      // 4. Request wallet signature and broadcast transaction
+      showMessage("Awaiting signature in cüzdan...", "info");
+      const txSignature = await sendTransaction(transaction, connection);
+
+      // 5. Wait for block confirmation
+      showMessage("Transaction submitted. Confirming on Solana Ledger...", "info");
+      const latestBlockhash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        signature: txSignature,
+        blockhash: latestBlockhash.blockhash,
+        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
+      }, 'confirmed');
+
+      // 6. Submit to backend API for verification and reward logging
+      showMessage("Verifying lock record on server...", "info");
       const res = await fetch('/api/lock', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -197,19 +259,20 @@ export default function LockingPage() {
           walletAddress: publicKey.toString(),
           tier: tierId,
           amount: minAmount,
-          message: msgText,
-          signature: signatureHex
+          txSignature: txSignature
         })
       });
+      
       const data = await res.json();
       if (data.success) {
-        showMessage(`Successfully locked ${minAmount} tokens!`, "success");
+        showMessage(`🎉 Successfully locked ${minAmount} tokens! Rewards active.`, "success");
         setRefresh(prev => prev + 1);
       } else {
-        showMessage(data.error, "error");
+        showMessage(data.error || "Lock verification failed.", "error");
       }
     } catch (err) {
-      showMessage("Lock cancelled or network error.", "error");
+      console.error("Lock error:", err);
+      showMessage(err.message || "Lock cancelled or network error.", "error");
     }
     setLoading(false);
   };

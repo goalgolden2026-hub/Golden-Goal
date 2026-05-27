@@ -57,7 +57,7 @@ export default function LockingPage() {
       rewards: [
         { text: "+1 Daily Prediction", type: "primary" }
       ], 
-      min: 100, 
+      min: 1000, 
       color: "border-blue-500/30", 
       glow: "group-hover:bg-blue-500/20", 
       icon: "🌱" 
@@ -71,7 +71,7 @@ export default function LockingPage() {
       rewards: [
         { text: "+3 Daily Predictions", type: "primary" }
       ], 
-      min: 500, 
+      min: 1000, 
       color: "border-green-500/30", 
       glow: "group-hover:bg-green-500/20", 
       icon: "🛡️" 
@@ -102,7 +102,7 @@ export default function LockingPage() {
         { text: "1.25x XP Multiplier", type: "multiplier" },
         { text: "+1 Daily Rewards Box", type: "spin" }
       ], 
-      min: 5000, 
+      min: 1000, 
       color: "border-purple-500/30", 
       glow: "group-hover:bg-purple-500/20", 
       icon: "👑" 

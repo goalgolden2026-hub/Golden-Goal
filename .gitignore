@@ -40,3 +40,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env*.local
+
+# database
+golden.db
+
+# local helper scripts
+/scripts/
+
+# heavy public image assets (Zauth quota savers)
+/public/*.png
+/public/*.jpg
+/public/*.svg
+

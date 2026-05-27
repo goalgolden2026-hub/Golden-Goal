@@ -2,10 +2,15 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { ANCHOR_PROGRAM_SOURCE } from '../../components/smart_contracts/AnchorProgramSource';
+import { ANCHOR_TEST_CASES } from '../../components/smart_contracts/AnchorTestCases';
+import { AUDIT_METADATA, AUDIT_FINDINGS, THREAT_MATRIX } from '../../components/smart_contracts/audit_data';
 
 export default function DocsPage() {
   const [activeSection, setActiveSection] = useState('introduction');
   const [lockAmount, setLockAmount] = useState(1000);
+  const [showCode, setShowCode] = useState(false);
+  const [codeTab, setCodeTab] = useState('program');
 
   const sections = [
     { id: 'introduction', label: '1. Introduction' },
@@ -502,7 +507,7 @@ export default function DocsPage() {
           {/* 11. DISCLAIMER */}
           <section id="disclaimer" className="scroll-mt-24 space-y-4 border-t border-white/5 pt-8">
             <h2 className="text-xl font-bold text-zinc-400 flex items-center gap-2">
-              <span className="text-zinc-600">11.</span> Legal Disclaimers
+                    <span className="text-zinc-600">11.</span> Legal Disclaimers
             </h2>
             <p className="text-zinc-500 text-xs leading-relaxed">
               Golden Goal ($GG) is an entertainment-based decentralized prediction ecosystem. Participation in predictions is risk-free and carries no direct asset cost. Locking cryptocurrency tokens carries systemic smart contract, blockchain network, and market volatility risks. The $GG token functions purely as a utility token within the application and represents no equity, security share, or debt claim on the development project team.
@@ -536,13 +541,120 @@ export default function DocsPage() {
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl bg-[#130b29]/50 border border-purple-500/20 space-y-3">
-              <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                <span>🛡️</span> Security Audits & Technical Guarantee
-              </h4>
+            {/* Smart Contract Source Code Inspector */}
+            <div className="p-5 rounded-2xl bg-zinc-900/40 border border-white/5 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <h4 className="font-bold text-white text-sm flex items-center gap-2">
+                    <span>⚽</span> Solana Smart Contract Inspector
+                  </h4>
+                  <p className="text-zinc-500 text-[10px] mt-0.5">Explore the verified Anchor program Rust codebase and TypeScript tests.</p>
+                </div>
+                <button
+                  onClick={() => setShowCode(!showCode)}
+                  className="bg-amber-500 hover:bg-amber-600 transition-colors text-zinc-950 font-black text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 self-start sm:self-center cursor-pointer"
+                >
+                  <span>{showCode ? "Hide Code Inspector" : "Open Code Inspector"}</span>
+                  <span className="text-[10px]">{showCode ? "▲" : "▼"}</span>
+                </button>
+              </div>
+
+              {showCode && (
+                <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="flex border-b border-white/5 gap-2">
+                    <button
+                      onClick={() => setCodeTab('program')}
+                      className={`px-3 py-2 text-xs font-bold transition-all border-b-2 ${
+                        codeTab === 'program'
+                          ? 'border-amber-500 text-amber-400'
+                          : 'border-transparent text-zinc-500 hover:text-zinc-300'
+                      }`}
+                    >
+                      lib.rs (Rust Program)
+                    </button>
+                    <button
+                      onClick={() => setCodeTab('tests')}
+                      className={`px-3 py-2 text-xs font-bold transition-all border-b-2 ${
+                        codeTab === 'tests'
+                          ? 'border-amber-500 text-amber-400'
+                          : 'border-transparent text-zinc-500 hover:text-zinc-300'
+                      }`}
+                    >
+                      golden-goal.ts (Anchor Tests)
+                    </button>
+                  </div>
+                  <div className="bg-black/60 rounded-xl p-4 border border-white/5 max-h-[350px] overflow-y-auto font-mono text-xs text-zinc-300 leading-relaxed whitespace-pre-wrap select-all scrollbar-thin">
+                    {codeTab === 'program' ? ANCHOR_PROGRAM_SOURCE : ANCHOR_TEST_CASES}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Sec3 Security Audit Compliance Dashboard */}
+            <div className="p-6 rounded-2xl bg-[#130b29]/40 border border-purple-500/20 space-y-4">
+              <div className="flex items-center justify-between border-b border-purple-500/10 pb-3">
+                <h4 className="font-extrabold text-white text-base flex items-center gap-2">
+                  <span>🛡️</span> Sec3 Security Audit Compliance Dashboard
+                </h4>
+                <span className="px-2.5 py-1 bg-emerald-500/20 border border-emerald-400/30 text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-wider animate-pulse">
+                  {AUDIT_METADATA.status}
+                </span>
+              </div>
               <p className="text-zinc-400 text-xs leading-relaxed">
-                The smart contracts have undergone a rigorous formal security audit by <span className="text-amber-400 font-semibold">Sec3</span> to verify the safety of locking balances and mathematical fair odds. All backend API communication validates standard Ed25519 signature cryptography using Solana wallet adapters, fully mitigating replay attacks.
+                {AUDIT_METADATA.summary}
               </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-purple-950/10 p-4 rounded-xl border border-purple-500/5">
+                <div>
+                  <span className="text-[10px] uppercase font-mono text-zinc-500 block">Audit Ref</span>
+                  <span className="text-xs font-bold text-zinc-300">{AUDIT_METADATA.reference}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-mono text-zinc-500 block">Security Score</span>
+                  <span className="text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500">{AUDIT_METADATA.score}</span>
+                </div>
+              </div>
+
+              {/* Interactive Audit Findings Matrix */}
+              <div className="space-y-3 pt-2">
+                <h5 className="font-bold text-zinc-200 text-xs uppercase tracking-wider">Sec3 Audited Vulnerability Matrix:</h5>
+                <div className="space-y-2.5">
+                  {AUDIT_FINDINGS.map((finding) => (
+                    <div key={finding.id} className="p-3 bg-black/40 border border-white/5 rounded-xl space-y-1.5 hover:border-purple-500/20 transition-all duration-300">
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold text-purple-400">{finding.id}: {finding.description}</span>
+                        <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${
+                          finding.severity === "High" ? "bg-red-500/10 text-red-400 border border-red-500/20" :
+                          finding.severity === "Medium" ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20" :
+                          "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                        }`}>
+                          {finding.severity} Severity
+                        </span>
+                      </div>
+                      <p className="text-zinc-500 text-[10px] leading-relaxed"><strong>Mitigation:</strong> {finding.mitigation}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Threat Matrix Checks */}
+              <div className="space-y-3 pt-2">
+                <h5 className="font-bold text-zinc-200 text-xs uppercase tracking-wider">Audit Threat Mitigation Verification:</h5>
+                <div className="space-y-2.5">
+                  {THREAT_MATRIX.map((threatInfo, idx) => (
+                    <div key={idx} className="p-3 bg-black/40 border border-white/5 rounded-xl space-y-1.5 hover:border-purple-500/20 transition-all duration-300">
+                      <div className="flex items-center justify-between">
+                        <span className="font-sans text-xs font-bold text-zinc-200">{threatInfo.threat}</span>
+                        <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded text-[9px] font-black uppercase tracking-wider">
+                          {threatInfo.status}
+                        </span>
+                      </div>
+                      <p className="text-zinc-500 text-[10px] leading-relaxed">{threatInfo.verification}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
             </div>
           </section>
 

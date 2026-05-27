@@ -18,6 +18,9 @@ export async function GET(request) {
             return NextResponse.json({ success: false, error: "Missing walletAddress parameter" }, { status: 400 });
         }
 
+        console.log(`\n🔍 [API BALANCE CHECK] - Querying balance for wallet: ${walletAddress}`);
+        console.log(`🔍 [API BALANCE CHECK] - Token Mint: ${tokenMint}\n`);
+
         const mintPubKey = new PublicKey(tokenMint);
         const userPubKey = new PublicKey(walletAddress);
         const userAta = await getAssociatedTokenAddress(mintPubKey, userPubKey);

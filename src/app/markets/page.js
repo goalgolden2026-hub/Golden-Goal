@@ -69,13 +69,15 @@ function MarketsContent() {
                       className={`backdrop-blur-md border transition-all duration-500 relative overflow-hidden flex flex-col items-center gap-6 block cursor-pointer rounded-3xl p-6 group ${
                         isMexicoSA 
                           ? 'border-yellow-600/30 hover:border-yellow-500/50 shadow-[0_4px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_10px_40px_rgba(245,158,11,0.1)] hover:scale-[1.01]' 
-                          : 'bg-zinc-900/80 border-zinc-800 hover:border-blue-500/40'
+                          : 'border-zinc-800/80 hover:border-blue-500/40 shadow-[0_4px_25px_rgba(0,0,0,0.35)] hover:shadow-[0_8px_30px_rgba(59,130,246,0.15)] hover:scale-[1.01]'
                       }`}
-                      style={isMexicoSA ? {
-                        backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.45), rgba(10, 10, 10, 0.85)), url('/mexico-sa-bg.jpg')",
+                      style={{
+                        backgroundImage: isMexicoSA 
+                          ? "linear-gradient(to bottom, rgba(10, 10, 10, 0.45), rgba(10, 10, 10, 0.85)), url('/mexico-sa-bg.jpg')"
+                          : "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-stadium-bg.png')",
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
-                      } : {}}
+                      }}
                     >
                         
                         {/* Match Info */}
@@ -84,14 +86,14 @@ function MarketsContent() {
                             <div className="flex items-center justify-center gap-6 text-xl font-bold">
                                 <div className="flex flex-col items-center gap-1">
                                     <span className="text-3xl drop-shadow-md">{TEAM_FLAGS[m.teamA] || '🏳️'}</span>
-                                    <span className={isMexicoSA ? 'text-zinc-100 font-semibold' : ''}>{m.teamA}</span>
+                                    <span className="text-zinc-100 font-semibold">{m.teamA}</span>
                                 </div>
-                                <span className={isMexicoSA ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" : "text-zinc-600 text-sm font-normal"}>
+                                <span className={isMexicoSA ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" : "text-zinc-400 text-sm font-semibold"}>
                                     {isMexicoSA ? 'VS' : 'vs'}
                                 </span>
                                 <div className="flex flex-col items-center gap-1">
                                     <span className="text-3xl drop-shadow-md">{TEAM_FLAGS[m.teamB] || '🏳️'}</span>
-                                    <span className={isMexicoSA ? 'text-zinc-100 font-semibold' : ''}>{m.teamB}</span>
+                                    <span className="text-zinc-100 font-semibold">{m.teamB}</span>
                                 </div>
                             </div>
                         </div>
@@ -100,18 +102,14 @@ function MarketsContent() {
                         <div className="flex w-full gap-2 mt-2 relative z-10">
                             <button 
                                 disabled={m.isLocked}
-                                className={`w-full py-3.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-bold ${
-                                  isMexicoSA
-                                    ? 'bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_30px_rgba(255,255,255,0.05)]'
-                                    : 'bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent text-white font-medium'
-                                }`}
+                                className="w-full py-3.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-bold bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_30px_rgba(255,255,255,0.05)] disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {m.isLocked ? (
                                   'LOCKED'
                                 ) : (
                                   <>
                                     <span>View Markets</span>
-                                    {isMexicoSA && <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>}
+                                    <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                                   </>
                                 )}
                             </button>

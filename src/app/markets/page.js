@@ -86,7 +86,7 @@ function MarketsContent() {
                                     <span className="text-3xl drop-shadow-md">{TEAM_FLAGS[m.teamA] || '🏳️'}</span>
                                     <span className={isMexicoSA ? 'text-zinc-100 font-semibold' : ''}>{m.teamA}</span>
                                 </div>
-                                <span className={isMexicoSA ? "text-zinc-400/80 text-xl font-bold tracking-widest drop-shadow-[0_0_8px_rgba(255,255,255,0.25)] px-2" : "text-zinc-600 text-sm font-normal"}>
+                                <span className={isMexicoSA ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" : "text-zinc-600 text-sm font-normal"}>
                                     {isMexicoSA ? 'VS' : 'vs'}
                                 </span>
                                 <div className="flex flex-col items-center gap-1">

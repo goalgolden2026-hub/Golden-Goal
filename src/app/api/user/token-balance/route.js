@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 
+const TOKEN_PROGRAM_ID = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+const TOKEN_2022_PROGRAM_ID = new PublicKey("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
+
 const SOLANA_RPCS = [
     "https://api.mainnet-beta.solana.com",
     "https://solana-api.projectserum.com",
@@ -23,36 +26,60 @@ export async function GET(request) {
 
         const mintPubKey = new PublicKey(tokenMint);
         const userPubKey = new PublicKey(walletAddress);
-        const userAta = await getAssociatedTokenAddress(mintPubKey, userPubKey);
 
         let balance = 0;
         let decimals = 6;
         let success = false;
         let lastError = null;
+        let isToken2022 = false;
+        let tokenProgramId = TOKEN_PROGRAM_ID;
 
+        // 1. Query the token mint on-chain to detect the owner program (Token vs Token-2022)
+        for (const rpcUrl of SOLANA_RPCS) {
+            try {
+                const connection = new Connection(rpcUrl, 'confirmed');
+                const mintInfo = await connection.getParsedAccountInfo(mintPubKey);
+                
+                if (mintInfo?.value?.owner) {
+                    const ownerStr = mintInfo.value.owner.toString();
+                    if (ownerStr === TOKEN_2022_PROGRAM_ID.toString()) {
+                        tokenProgramId = TOKEN_2022_PROGRAM_ID;
+                        isToken2022 = true;
+                        console.log(`🔍 [API MINT DETECT] - Detected modern Token-2022 standard.`);
+                    } else {
+                        console.log(`🔍 [API MINT DETECT] - Detected legacy SPL Token standard.`);
+                    }
+
+                    // Extract decimals if available from parsed info
+                    if (mintInfo.value.data?.parsed?.info?.decimals !== undefined) {
+                        decimals = mintInfo.value.data.parsed.info.decimals;
+                    }
+                }
+                break; // Stop at first successful RPC check
+            } catch (e) {
+                console.error(`Failed to fetch mint info on RPC ${rpcUrl}:`, e.message);
+                lastError = e.message;
+            }
+        }
+
+        // 2. Derive the correct ATA account address using the correct program ID
+        const userAta = await getAssociatedTokenAddress(mintPubKey, userPubKey, false, tokenProgramId);
+        console.log(`🔍 [ATA DERIVED] - Derived ATA: ${userAta.toString()}`);
+
+        // 3. Query the balance using the correct derived ATA
         for (const rpcUrl of SOLANA_RPCS) {
             try {
                 const connection = new Connection(rpcUrl, 'confirmed');
                 
-                // Fetch decimals dynamically
-                try {
-                    const mintInfo = await connection.getParsedAccountInfo(mintPubKey);
-                    if (mintInfo?.value?.data?.parsed?.info?.decimals !== undefined) {
-                        decimals = mintInfo.value.data.parsed.info.decimals;
-                    }
-                } catch (decErr) {
-                    console.error("Failed to parse mint decimals on server", decErr);
-                }
-
                 try {
                     const balanceInfo = await connection.getTokenAccountBalance(userAta);
                     if (balanceInfo?.value) {
                         balance = balanceInfo.value.uiAmount || 0;
                     }
                     success = true;
-                    break; // Success!
+                    break;
                 } catch (balErr) {
-                    // If the account does not exist on-chain yet, balance is indeed 0
+                    // If the account does not exist on-chain yet, balance is 0
                     if (balErr.message.includes("could not find account") || balErr.message.includes("does not exist") || balErr.message.includes("Invalid param")) {
                         balance = 0;
                         success = true;
@@ -70,7 +97,9 @@ export async function GET(request) {
             return NextResponse.json({ success: false, error: `Solana RPC error: ${lastError || "Unreachable"}` }, { status: 500 });
         }
 
-        return NextResponse.json({ success: true, balance, decimals }, { status: 200 });
+        console.log(`🔍 [API RESPONSE] - Balance: ${balance}, Decimals: ${decimals}, isToken2022: ${isToken2022}\n`);
+
+        return NextResponse.json({ success: true, balance, decimals, isToken2022 }, { status: 200 });
 
     } catch (error) {
         console.error("GET /api/user/token-balance error:", error);

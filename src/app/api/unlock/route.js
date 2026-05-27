@@ -7,6 +7,9 @@ import { getOrCreateAssociatedTokenAccount, createTransferInstruction } from '@s
 
 const TOKEN_MINT = "HxWrnZznqF5iYf3ckMw3FTaZQvubB53ohzpjPSNUpump";
 
+const TOKEN_PROGRAM_ID = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+const TOKEN_2022_PROGRAM_ID = new PublicKey("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
+
 // Redundant mainnet connections
 const SOLANA_RPCS = [
     "https://api.mainnet-beta.solana.com",
@@ -120,15 +123,23 @@ export async function POST(request) {
         const mintPubKey = new PublicKey(TOKEN_MINT);
         const userPubKey = new PublicKey(walletAddress);
 
-        // Fetch mint decimals
+        // Fetch mint decimals and program owner dynamically
         let decimals = 6;
+        let tokenProgramId = TOKEN_PROGRAM_ID;
         try {
             const mintInfo = await connection.getParsedAccountInfo(mintPubKey);
+            if (mintInfo?.value?.owner) {
+                const ownerStr = mintInfo.value.owner.toString();
+                if (ownerStr === TOKEN_2022_PROGRAM_ID.toString()) {
+                    tokenProgramId = TOKEN_2022_PROGRAM_ID;
+                    console.log("Unlock payout: detected Token-2022 program.");
+                }
+            }
             if (mintInfo?.value?.data?.parsed?.info?.decimals !== undefined) {
                 decimals = mintInfo.value.data.parsed.info.decimals;
             }
         } catch (e) {
-            console.error("Failed to parse mint decimals, defaulting to 6", e);
+            console.error("Failed to parse mint decimals/owner, defaulting to legacy standard", e);
         }
 
         const rawReturnedAmount = BigInt(Math.round(returnedAmount * Math.pow(10, decimals)));
@@ -140,14 +151,22 @@ export async function POST(request) {
                 connection,
                 distributorKeypair,
                 mintPubKey,
-                distributorKeypair.publicKey
+                distributorKeypair.publicKey,
+                false,
+                'confirmed',
+                undefined,
+                tokenProgramId
             );
 
             userAta = await getOrCreateAssociatedTokenAccount(
                 connection,
                 distributorKeypair,
                 mintPubKey,
-                userPubKey
+                userPubKey,
+                false,
+                'confirmed',
+                undefined,
+                tokenProgramId
             );
         } catch (ataErr) {
             console.error("Associated Token Account error:", ataErr);
@@ -170,7 +189,9 @@ export async function POST(request) {
                     distributorAta.address,
                     userAta.address,
                     distributorKeypair.publicKey,
-                    rawReturnedAmount
+                    rawReturnedAmount,
+                    [],
+                    tokenProgramId
                 )
             );
 

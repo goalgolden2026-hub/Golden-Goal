@@ -9,6 +9,9 @@ import { getAssociatedTokenAddress, createTransferInstruction } from '@solana/sp
 const VAULT_WALLET = "GwnoqZegE4QuxENTLUKPrmkM4zapUDHkjVc6hy2BMtMY";
 const TOKEN_MINT = "HxWrnZznqF5iYf3ckMw3FTaZQvubB53ohzpjPSNUpump";
 
+const TOKEN_PROGRAM_ID = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+const TOKEN_2022_PROGRAM_ID = new PublicKey("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
+
 export default function LockingPage() {
   const { publicKey, connected, signMessage, sendTransaction } = useWallet();
   const [loading, setLoading] = useState(false);
@@ -189,10 +192,6 @@ export default function LockingPage() {
       const mintPubKey = new PublicKey(TOKEN_MINT);
       const vaultPubKey = new PublicKey(VAULT_WALLET);
 
-      // Derive Associated Token Accounts
-      const userAta = await getAssociatedTokenAddress(mintPubKey, publicKey);
-      const vaultAta = await getAssociatedTokenAddress(mintPubKey, vaultPubKey);
-
       // 1. Verify user actually has the tokens by calling our server-side API (bypassing browser CORS 403 blocks)
       showMessage("Checking your wallet balance...", "info");
       
@@ -207,6 +206,8 @@ export default function LockingPage() {
       
       const userBalance = balanceData.balance || 0;
       const decimals = balanceData.decimals || 6;
+      const isToken2022 = balanceData.isToken2022 || false;
+      const tokenProgramId = isToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID;
       
       if (userBalance < minAmount) {
         showMessage(`Insufficient balance. You need at least ${minAmount} tokens to lock. You currently have ${userBalance}.`, "error");
@@ -214,18 +215,24 @@ export default function LockingPage() {
         return;
       }
 
+      // Derive Associated Token Accounts using the correct derived token program ID
+      const userAta = await getAssociatedTokenAddress(mintPubKey, publicKey, false, tokenProgramId);
+      const vaultAta = await getAssociatedTokenAddress(mintPubKey, vaultPubKey, false, tokenProgramId);
+
       const rawAmount = Math.round(minAmount * Math.pow(10, decimals));
       
       // Initialize connection for transaction preparation
       const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
 
-      // 3. Build the transfer instruction
+      // 3. Build the transfer instruction using the correct tokenProgramId (essential for Token-2022 transfers)
       const transaction = new Transaction().add(
         createTransferInstruction(
           userAta,
           vaultAta,
           publicKey,
-          rawAmount
+          rawAmount,
+          [],
+          tokenProgramId
         )
       );
 

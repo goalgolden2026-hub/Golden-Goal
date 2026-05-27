@@ -3,17 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import CustomModal from '@/components/CustomModal';
-import { Connection, PublicKey, Transaction } from '@solana/web3.js';
-import { getAssociatedTokenAddress, createTransferInstruction } from '@solana/spl-token';
-
-const VAULT_WALLET = "GwnoqZegE4QuxENTLUKPrmkM4zapUDHkjVc6hy2BMtMY";
-const TOKEN_MINT = "HxWrnZznqF5iYf3ckMw3FTaZQvubB53ohzpjPSNUpump";
-
-const TOKEN_PROGRAM_ID = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
-const TOKEN_2022_PROGRAM_ID = new PublicKey("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
 
 export default function LockingPage() {
-  const { publicKey, connected, signMessage, sendTransaction } = useWallet();
+  const { publicKey, connected, signMessage } = useWallet();
   const [loading, setLoading] = useState(false);
   const [activeLock, setActiveLock] = useState(null);
   const [message, setMessage] = useState({ text: '', type: '' });
@@ -186,28 +178,26 @@ export default function LockingPage() {
     }
     
     setLoading(true);
-    showMessage("Initializing connection to Solana...", "info");
+    showMessage("Checking your wallet balance...", "info");
     
     try {
-      const mintPubKey = new PublicKey(TOKEN_MINT);
-      const vaultPubKey = new PublicKey(VAULT_WALLET);
+      if (!signMessage) {
+        showMessage("Wallet does not support message signing. Please use Phantom, Backpack or Solflare.", "error");
+        setLoading(false);
+        return;
+      }
 
-      // 1. Verify user actually has the tokens by calling our server-side API (bypassing browser CORS 403 blocks)
-      showMessage("Checking your wallet balance...", "info");
+      // 1. Fetch user's profile mock balance from the database profile API
+      const profileRes = await fetch(`/api/user/profile?walletAddress=${publicKey.toString()}`);
+      const profileData = await profileRes.json();
       
-      const balanceRes = await fetch(`/api/user/token-balance?walletAddress=${publicKey.toString()}&tokenMint=${TOKEN_MINT}`);
-      const balanceData = await balanceRes.json();
-      
-      if (!balanceData.success) {
-        showMessage(balanceData.error || "Failed to query wallet balance.", "error");
+      if (!profileData.success || !profileData.profile) {
+        showMessage(profileData.error || "Failed to query wallet profile.", "error");
         setLoading(false);
         return;
       }
       
-      const userBalance = balanceData.balance || 0;
-      const decimals = balanceData.decimals || 6;
-      const isToken2022 = balanceData.isToken2022 || false;
-      const tokenProgramId = isToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID;
+      const userBalance = profileData.profile.balance || 0;
       
       if (userBalance < minAmount) {
         showMessage(`Insufficient balance. You need at least ${minAmount} tokens to lock. You currently have ${userBalance}.`, "error");
@@ -215,48 +205,15 @@ export default function LockingPage() {
         return;
       }
 
-      // Derive Associated Token Accounts using the correct derived token program ID
-      const userAta = await getAssociatedTokenAddress(mintPubKey, publicKey, false, tokenProgramId);
-      const vaultAta = await getAssociatedTokenAddress(mintPubKey, vaultPubKey, false, tokenProgramId);
-
-      const rawAmount = Math.round(minAmount * Math.pow(10, decimals));
-      
-      // Fetch recent blockhash from server (bypassing browser CORS 403 blocks)
-      showMessage("Fetching recent blockhash...", "info");
-      const blockhashRes = await fetch("/api/solana/blockhash");
-      const blockhashData = await blockhashRes.json();
-      
-      if (!blockhashData.success) {
-        showMessage(blockhashData.error || "Failed to retrieve recent blockhash.", "error");
-        setLoading(false);
-        return;
-      }
-      
-      const blockhash = blockhashData.blockhash;
-
-      // 3. Build the transfer instruction using the correct tokenProgramId (essential for Token-2022 transfers)
-      const transaction = new Transaction().add(
-        createTransferInstruction(
-          userAta,
-          vaultAta,
-          publicKey,
-          rawAmount,
-          [],
-          tokenProgramId
-        )
-      );
-
-      // Set recent blockhash and fee payer
-      transaction.recentBlockhash = blockhash;
-      transaction.feePayer = publicKey;
-
-      // 4. Request wallet signature and broadcast transaction via the wallet adapter
+      // 2. Request wallet message signature
       showMessage("Awaiting signature in cüzdan...", "info");
-      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
-      const txSignature = await sendTransaction(transaction, connection);
+      const msgText = `Authenticate Golden Goal Lock Transaction:\nWallet: ${publicKey.toString()}\nAmount: ${minAmount}\nTier: ${tierId}\nTimestamp: ${Date.now()}`;
+      const encodedMessage = new TextEncoder().encode(msgText);
+      const signatureBytes = await signMessage(encodedMessage);
+      const signatureHex = Array.from(signatureBytes).map(b => b.toString(16).padStart(2, '0')).join('');
 
-      // 5. Submit to backend API immediately; the backend will wait for indexing and confirmation
-      showMessage("Transaction submitted! Verifying lock on-chain (may take up to 20 seconds)...", "info");
+      // 3. Submit lock request to backend API
+      showMessage("Submitting lock request...", "info");
       const res = await fetch('/api/lock', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -264,7 +221,8 @@ export default function LockingPage() {
           walletAddress: publicKey.toString(),
           tier: tierId,
           amount: minAmount,
-          txSignature: txSignature
+          message: msgText,
+          signature: signatureHex
         })
       });
       
@@ -273,7 +231,7 @@ export default function LockingPage() {
         showMessage(`🎉 Successfully locked ${minAmount} tokens! Rewards active.`, "success");
         setRefresh(prev => prev + 1);
       } else {
-        showMessage(data.error || "Lock verification failed.", "error");
+        showMessage(data.error || "Lock failed.", "error");
       }
     } catch (err) {
       console.error("Lock error:", err);

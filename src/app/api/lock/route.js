@@ -1,92 +1,45 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
-import { Connection } from '@solana/web3.js';
+import nacl from 'tweetnacl';
+import bs58 from 'bs58';
 
-const VAULT_WALLET = "GwnoqZegE4QuxENTLUKPrmkM4zapUDHkjVc6hy2BMtMY";
-const TOKEN_MINT = "HxWrnZznqF5iYf3ckMw3FTaZQvubB53ohzpjPSNUpump";
-
-// Redundant public Mainnet RPC pool for high reliability
-const SOLANA_RPCS = [
-    "https://api.mainnet-beta.solana.com",
-    "https://solana-api.projectserum.com",
-    "https://rpc.ankr.com/solana"
-];
-
-async function verifySolanaTransaction(txSignature, walletAddress, expectedAmount) {
-    let lastError = null;
-    
-    for (const rpcUrl of SOLANA_RPCS) {
-        try {
-            const connection = new Connection(rpcUrl, 'confirmed');
-            
-            // Server-side retry loop to wait for transaction propagation and indexing
-            let tx = null;
-            for (let attempt = 0; attempt < 12; attempt++) {
-                tx = await connection.getParsedTransaction(txSignature, {
-                    maxSupportedTransactionVersion: 0,
-                    commitment: 'confirmed'
-                });
-                if (tx) break;
-                console.log(`[VERIFY RETRY] - Transaction not indexed yet on RPC ${rpcUrl}, waiting 2s (Attempt ${attempt + 1}/12)...`);
-                await new Promise(resolve => setTimeout(resolve, 2000));
-            }
-            
-            if (!tx) {
-                throw new Error("Transaction not found or not confirmed on the Solana network yet.");
-            }
-            
-            if (tx.meta?.err) {
-                throw new Error("Transaction failed on-chain.");
-            }
-            
-            // 1. Verify user's wallet address actually signed this transaction
-            const signers = tx.transaction.message.accountKeys.filter(k => k.signer);
-            const isSigner = signers.some(s => s.pubkey.toString() === walletAddress);
-            if (!isSigner) {
-                throw new Error("The lock owner wallet address did not sign this transaction.");
-            }
-            
-            // 2. Verify vault wallet received the correct amount of the correct token mint
-            const vaultPost = tx.meta.postTokenBalances?.find(
-                b => b.owner === VAULT_WALLET && b.mint === TOKEN_MINT
-            );
-            
-            if (!vaultPost) {
-                throw new Error("Vault wallet did not receive the target token mint in this transaction.");
-            }
-            
-            const vaultPre = tx.meta.preTokenBalances?.find(
-                b => b.accountIndex === vaultPost.accountIndex
-            );
-            
-            const postAmount = BigInt(vaultPost.uiTokenAmount.amount);
-            const preAmount = vaultPre ? BigInt(vaultPre.uiTokenAmount.amount) : 0n;
-            const diffAmount = postAmount - preAmount;
-            
-            const decimals = vaultPost.uiTokenAmount.decimals || 6;
-            const expectedRaw = BigInt(expectedAmount) * (10n ** BigInt(decimals));
-            
-            if (diffAmount < expectedRaw) {
-                throw new Error(`Insufficient amount transferred to vault. Expected: ${expectedAmount}, Received: ${Number(diffAmount) / (10 ** decimals)}`);
-            }
-            
-            return { success: true };
-        } catch (err) {
-            console.error(`Solana verification failure on RPC ${rpcUrl}:`, err.message);
-            lastError = err.message;
-        }
+function verifySignature(walletAddress, message, signatureHex) {
+    try {
+        const messageBytes = new TextEncoder().encode(message);
+        const signatureBytes = new Uint8Array(
+            signatureHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16))
+        );
+        const publicKeyBytes = bs58.decode(walletAddress);
+        return nacl.sign.detached.verify(messageBytes, signatureBytes, publicKeyBytes);
+    } catch (err) {
+        console.error("verifySignature error:", err);
+        return false;
     }
-    
-    return { success: false, error: lastError || "Failed to verify transaction across all RPC endpoints." };
 }
 
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { walletAddress, tier, amount, txSignature } = body;
+        const { walletAddress, tier, amount, message, signature } = body;
 
-        if (!walletAddress || !tier || !amount || !txSignature) {
-            return NextResponse.json({ success: false, error: "Missing required fields (walletAddress, tier, amount, txSignature)" }, { status: 400 });
+        // 1. Perform Cryptographic Signature Verification
+        if (!message || !signature) {
+            return NextResponse.json({ success: false, error: "Cryptographic authentication required. Please sign the transaction." }, { status: 401 });
+        }
+
+        // Check if message format matches lock request
+        if (!message.includes("Authenticate Golden Goal Lock Transaction") || !message.includes(walletAddress)) {
+            return NextResponse.json({ success: false, error: "Invalid signature message payload." }, { status: 400 });
+        }
+
+        // Verify signature
+        const isVerified = verifySignature(walletAddress, message, signature);
+        if (!isVerified) {
+            return NextResponse.json({ success: false, error: "Signature verification failed. Impersonation blocked." }, { status: 401 });
+        }
+
+        if (!walletAddress || !tier || !amount) {
+            return NextResponse.json({ success: false, error: "Missing required fields (walletAddress, tier, amount)" }, { status: 400 });
         }
 
         const sql = await getDb();
@@ -100,22 +53,36 @@ export async function POST(request) {
             `;
         }
 
+        // 2. Double-check user's mock balance from the database profile
+        let mockBalance = 30000;
+
+        // Deduct active locks
+        const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+        if (activeLocksTotalRes.rows[0].total) {
+            mockBalance -= parseInt(activeLocksTotalRes.rows[0].total);
+        }
+
+        // Apply treasury logs
+        const logsRes = await sql`SELECT amount, type FROM treasury_logs WHERE "walletAddress" = ${walletAddress}`;
+        for (const log of logsRes.rows) {
+            const amt = parseFloat(log.amount);
+            if (log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') {
+                mockBalance -= amt; // Deductions logged as positive
+            } else if (log.type === 'SPIN_PAYMENT') {
+                mockBalance += amt; // Already negative
+            } else if (log.type === 'REFERRAL_REWARD' || log.type === 'SPIN_REWARD_GOLDEN') {
+                mockBalance += amt; // Additions
+            }
+        }
+
+        if (mockBalance < amount) {
+            return NextResponse.json({ success: false, error: `Insufficient simulated balance. You need at least ${amount} tokens to lock. You currently have ${mockBalance}.` }, { status: 400 });
+        }
+
         // Check for existing active lock (one active lock per user)
         const activeLockRes = await sql`SELECT * FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
         if (activeLockRes.rowCount > 0) {
             return NextResponse.json({ success: false, error: "You already have an active lock. Unlock first." }, { status: 400 });
-        }
-
-        // Double-spending / Replay protection check
-        const replayRes = await sql`SELECT * FROM locks WHERE "txSignature" = ${txSignature}`;
-        if (replayRes.rowCount > 0) {
-            return NextResponse.json({ success: false, error: "This transaction signature has already been used for a lock." }, { status: 400 });
-        }
-
-        // Cryptographically verify Solana mainnet transfer
-        const verification = await verifySolanaTransaction(txSignature, walletAddress, amount);
-        if (!verification.success) {
-            return NextResponse.json({ success: false, error: `On-chain verification failed: ${verification.error}` }, { status: 400 });
         }
 
         // Calculate unlock date
@@ -132,13 +99,13 @@ export async function POST(request) {
             unlockDate = date.toISOString();
         }
 
-        // Record the lock with the validated txSignature
+        // Record the lock (simulated signature is stored as a proof/transaction record if needed, but not on-chain)
         await sql`
-            INSERT INTO locks ("walletAddress", tier, amount, "unlockDate", "txSignature", status)
-            VALUES (${walletAddress}, ${tier}, ${amount}, ${unlockDate}, ${txSignature}, 'ACTIVE')
+            INSERT INTO locks ("walletAddress", tier, amount, "unlockDate", status)
+            VALUES (${walletAddress}, ${tier}, ${amount}, ${unlockDate}, 'ACTIVE')
         `;
 
-        return NextResponse.json({ success: true, message: "On-chain lock successful", unlockDate }, { status: 201 });
+        return NextResponse.json({ success: true, message: "Simulated lock successful", unlockDate }, { status: 201 });
     } catch (error) {
         console.error("POST /api/lock error:", error);
         return NextResponse.json({ success: false, error: "Failed to lock tokens" }, { status: 500 });

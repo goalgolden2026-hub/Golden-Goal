@@ -193,66 +193,31 @@ export default function LockingPage() {
       const userAta = await getAssociatedTokenAddress(mintPubKey, publicKey);
       const vaultAta = await getAssociatedTokenAddress(mintPubKey, vaultPubKey);
 
-      // 1. Verify user actually has the tokens with RPC pool failover
+      // 1. Verify user actually has the tokens by calling our server-side API (bypassing browser CORS 403 blocks)
       showMessage("Checking your wallet balance...", "info");
       
-      const rpcs = [
-        "https://api.mainnet-beta.solana.com",
-        "https://solana-api.projectserum.com",
-        "https://rpc.ankr.com/solana"
-      ];
+      const balanceRes = await fetch(`/api/user/token-balance?walletAddress=${publicKey.toString()}&tokenMint=${TOKEN_MINT}`);
+      const balanceData = await balanceRes.json();
       
-      let balanceInfo = null;
-      let connection = null;
-      let accountExists = true;
-      let lastRpcError = null;
-
-      for (const rpcUrl of rpcs) {
-        try {
-          connection = new Connection(rpcUrl, "confirmed");
-          balanceInfo = await connection.getTokenAccountBalance(userAta);
-          lastRpcError = null;
-          break; // Success!
-        } catch (e) {
-          console.error(`Balance check failed on RPC: ${rpcUrl}`, e);
-          lastRpcError = e.message;
-          if (e.message.includes("could not find account") || e.message.includes("does not exist") || e.message.includes("Invalid param")) {
-            accountExists = false;
-            break;
-          }
-        }
-      }
-
-      if (lastRpcError) {
-        showMessage("Solana RPC network is currently busy. Please try again in a few seconds.", "error");
+      if (!balanceData.success) {
+        showMessage(balanceData.error || "Failed to query wallet balance.", "error");
         setLoading(false);
         return;
       }
-
-      if (!accountExists || !balanceInfo) {
-        showMessage("You do not own any of this token in your wallet. Please buy some first.", "error");
+      
+      const userBalance = balanceData.balance || 0;
+      const decimals = balanceData.decimals || 6;
+      
+      if (userBalance < minAmount) {
+        showMessage(`Insufficient balance. You need at least ${minAmount} tokens to lock. You currently have ${userBalance}.`, "error");
         setLoading(false);
         return;
-      }
-
-      if (balanceInfo.value.uiAmount < minAmount) {
-        showMessage(`Insufficient balance. You need at least ${minAmount} tokens to lock. You currently have ${balanceInfo.value.uiAmount}.`, "error");
-        setLoading(false);
-        return;
-      }
-
-      // 2. Fetch mint decimals dynamically
-      let decimals = 6;
-      try {
-        const mintInfo = await connection.getParsedAccountInfo(mintPubKey);
-        if (mintInfo?.value?.data?.parsed?.info?.decimals !== undefined) {
-          decimals = mintInfo.value.data.parsed.info.decimals;
-        }
-      } catch (decErr) {
-        console.error("Failed to fetch mint decimals, defaulting to 6", decErr);
       }
 
       const rawAmount = Math.round(minAmount * Math.pow(10, decimals));
+      
+      // Initialize connection for transaction preparation
+      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
 
       // 3. Build the transfer instruction
       const transaction = new Transaction().add(

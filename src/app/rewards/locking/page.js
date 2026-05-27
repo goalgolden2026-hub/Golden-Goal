@@ -221,8 +221,18 @@ export default function LockingPage() {
 
       const rawAmount = Math.round(minAmount * Math.pow(10, decimals));
       
-      // Initialize connection for transaction preparation
-      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      // Fetch recent blockhash from server (bypassing browser CORS 403 blocks)
+      showMessage("Fetching recent blockhash...", "info");
+      const blockhashRes = await fetch("/api/solana/blockhash");
+      const blockhashData = await blockhashRes.json();
+      
+      if (!blockhashData.success) {
+        showMessage(blockhashData.error || "Failed to retrieve recent blockhash.", "error");
+        setLoading(false);
+        return;
+      }
+      
+      const blockhash = blockhashData.blockhash;
 
       // 3. Build the transfer instruction using the correct tokenProgramId (essential for Token-2022 transfers)
       const transaction = new Transaction().add(
@@ -237,25 +247,16 @@ export default function LockingPage() {
       );
 
       // Set recent blockhash and fee payer
-      const { blockhash } = await connection.getLatestBlockhash('confirmed');
       transaction.recentBlockhash = blockhash;
       transaction.feePayer = publicKey;
 
-      // 4. Request wallet signature and broadcast transaction
+      // 4. Request wallet signature and broadcast transaction via the wallet adapter
       showMessage("Awaiting signature in cüzdan...", "info");
+      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
       const txSignature = await sendTransaction(transaction, connection);
 
-      // 5. Wait for block confirmation
-      showMessage("Transaction submitted. Confirming on Solana Ledger...", "info");
-      const latestBlockhash = await connection.getLatestBlockhash();
-      await connection.confirmTransaction({
-        signature: txSignature,
-        blockhash: latestBlockhash.blockhash,
-        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
-      }, 'confirmed');
-
-      // 6. Submit to backend API for verification and reward logging
-      showMessage("Verifying lock record on server...", "info");
+      // 5. Submit to backend API immediately; the backend will wait for indexing and confirmation
+      showMessage("Transaction submitted! Verifying lock on-chain (may take up to 20 seconds)...", "info");
       const res = await fetch('/api/lock', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

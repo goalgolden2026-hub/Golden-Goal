@@ -17,13 +17,22 @@ async function verifySolanaTransaction(txSignature, walletAddress, expectedAmoun
     
     for (const rpcUrl of SOLANA_RPCS) {
         try {
-            const connection = new Connection(rpcUrl, 'finalized');
-            const tx = await connection.getParsedTransaction(txSignature, {
-                maxSupportedTransactionVersion: 0
-            });
+            const connection = new Connection(rpcUrl, 'confirmed');
+            
+            // Server-side retry loop to wait for transaction propagation and indexing
+            let tx = null;
+            for (let attempt = 0; attempt < 12; attempt++) {
+                tx = await connection.getParsedTransaction(txSignature, {
+                    maxSupportedTransactionVersion: 0,
+                    commitment: 'confirmed'
+                });
+                if (tx) break;
+                console.log(`[VERIFY RETRY] - Transaction not indexed yet on RPC ${rpcUrl}, waiting 2s (Attempt ${attempt + 1}/12)...`);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
             
             if (!tx) {
-                throw new Error("Transaction not found or not finalized on Solana yet.");
+                throw new Error("Transaction not found or not confirmed on the Solana network yet.");
             }
             
             if (tx.meta?.err) {

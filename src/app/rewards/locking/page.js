@@ -186,7 +186,6 @@ export default function LockingPage() {
     showMessage("Initializing connection to Solana...", "info");
     
     try {
-      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
       const mintPubKey = new PublicKey(TOKEN_MINT);
       const vaultPubKey = new PublicKey(VAULT_WALLET);
 
@@ -194,17 +193,50 @@ export default function LockingPage() {
       const userAta = await getAssociatedTokenAddress(mintPubKey, publicKey);
       const vaultAta = await getAssociatedTokenAddress(mintPubKey, vaultPubKey);
 
-      // 1. Verify user actually has the tokens
+      // 1. Verify user actually has the tokens with RPC pool failover
       showMessage("Checking your wallet balance...", "info");
-      try {
-        const balanceInfo = await connection.getTokenAccountBalance(userAta);
-        if (!balanceInfo || balanceInfo.value.uiAmount < minAmount) {
-          showMessage(`Insufficient balance. You need at least ${minAmount} tokens to lock.`, "error");
-          setLoading(false);
-          return;
+      
+      const rpcs = [
+        "https://api.mainnet-beta.solana.com",
+        "https://solana-api.projectserum.com",
+        "https://rpc.ankr.com/solana"
+      ];
+      
+      let balanceInfo = null;
+      let connection = null;
+      let accountExists = true;
+      let lastRpcError = null;
+
+      for (const rpcUrl of rpcs) {
+        try {
+          connection = new Connection(rpcUrl, "confirmed");
+          balanceInfo = await connection.getTokenAccountBalance(userAta);
+          lastRpcError = null;
+          break; // Success!
+        } catch (e) {
+          console.error(`Balance check failed on RPC: ${rpcUrl}`, e);
+          lastRpcError = e.message;
+          if (e.message.includes("could not find account") || e.message.includes("does not exist") || e.message.includes("Invalid param")) {
+            accountExists = false;
+            break;
+          }
         }
-      } catch (balErr) {
+      }
+
+      if (lastRpcError) {
+        showMessage("Solana RPC network is currently busy. Please try again in a few seconds.", "error");
+        setLoading(false);
+        return;
+      }
+
+      if (!accountExists || !balanceInfo) {
         showMessage("You do not own any of this token in your wallet. Please buy some first.", "error");
+        setLoading(false);
+        return;
+      }
+
+      if (balanceInfo.value.uiAmount < minAmount) {
+        showMessage(`Insufficient balance. You need at least ${minAmount} tokens to lock. You currently have ${balanceInfo.value.uiAmount}.`, "error");
         setLoading(false);
         return;
       }

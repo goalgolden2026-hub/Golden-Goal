@@ -157,21 +157,34 @@ export default function MatchDetail() {
       </button>
 
       {/* Match Header */}
-      <div className="text-center mb-12 relative">
-          <span className="text-sm font-mono text-yellow-500 mb-2 block">{market.dateStr} • {market.timeStr} GMT</span>
-          <div className="flex items-center justify-center gap-8 text-3xl md:text-5xl font-extrabold mb-4">
+      <div 
+        className={`text-center mb-12 relative overflow-hidden rounded-3xl p-8 border ${
+          market.teamA === 'Mexico' && market.teamB === 'South Africa'
+            ? 'border-emerald-500/20 shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
+            : 'border-zinc-800 bg-zinc-900/40 backdrop-blur-md'
+        }`}
+        style={market.teamA === 'Mexico' && market.teamB === 'South Africa' ? {
+          backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/mexico-sa-bg.jpg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        } : {}}
+      >
+          <span className={`text-sm font-mono mb-2 block ${market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'text-amber-400 font-bold' : 'text-zinc-500'}`}>{market.dateStr} • {market.timeStr} GMT</span>
+          <div className="flex items-center justify-center gap-8 text-3xl md:text-5xl font-extrabold mb-4 relative z-10">
               <div className="flex flex-col items-center gap-2">
                   <span className="text-5xl md:text-6xl drop-shadow-lg">{TEAM_FLAGS[market.teamA] || '🏳️'}</span>
                   <span>{market.teamA}</span>
               </div>
-              <span className="text-zinc-600 text-2xl font-normal mt-12">vs</span>
+              <span className={market.teamA === 'Mexico' && market.teamB === 'South Africa' ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20 mt-12" : "text-zinc-600 text-2xl font-normal mt-12"}>
+                  {market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'VS' : 'vs'}
+              </span>
               <div className="flex flex-col items-center gap-2">
                   <span className="text-5xl md:text-6xl drop-shadow-lg">{TEAM_FLAGS[market.teamB] || '🏳️'}</span>
                   <span>{market.teamB}</span>
               </div>
           </div>
           {market.isLocked && (
-              <div className="inline-block bg-red-500/10 text-red-500 text-sm font-bold px-4 py-2 rounded-full border border-red-500/20 mt-4">
+              <div className="inline-block bg-red-500/10 text-red-500 text-sm font-bold px-4 py-2 rounded-full border border-red-500/20 mt-4 relative z-10">
                   MATCH LOCKED
               </div>
           )}

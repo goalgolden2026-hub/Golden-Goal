@@ -3,12 +3,14 @@ import { getDb } from '@/lib/db';
 import nacl from 'tweetnacl';
 import bs58 from 'bs58';
 import { Connection, PublicKey, Keypair, Transaction } from '@solana/web3.js';
-import { getOrCreateAssociatedTokenAccount, createTransferInstruction } from '@solana/spl-token';
+import { getOrCreateAssociatedTokenAccount, createTransferInstruction, createBurnInstruction } from '@solana/spl-token';
 
 const TOKEN_MINT = "HxWrnZznqF5iYf3ckMw3FTaZQvubB53ohzpjPSNUpump";
 
 const TOKEN_PROGRAM_ID = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
 const TOKEN_2022_PROGRAM_ID = new PublicKey("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
+
+const REWARDS_TREASURY_WALLET = "FoUActw9raWWU6UshX5TQ2AHSFHUXDMtMGudiHmf2zmV";
 
 // Redundant mainnet connections
 const SOLANA_RPCS = [
@@ -143,9 +145,16 @@ export async function POST(request) {
         }
 
         const rawReturnedAmount = BigInt(Math.round(returnedAmount * Math.pow(10, decimals)));
+        
+        let rawBurnAmount = 0n;
+        let rawTreasuryAmount = 0n;
+        if (isEarly && penaltyAmount > 0) {
+            rawBurnAmount = BigInt(Math.round((penaltyAmount * 0.5) * Math.pow(10, decimals)));
+            rawTreasuryAmount = BigInt(Math.round((penaltyAmount * 0.5) * Math.pow(10, decimals)));
+        }
 
         // Retrieve or initialize Associated Token Accounts on-chain
-        let distributorAta, userAta;
+        let distributorAta, userAta, treasuryAta;
         try {
             distributorAta = await getOrCreateAssociatedTokenAccount(
                 connection,
@@ -168,13 +177,28 @@ export async function POST(request) {
                 undefined,
                 tokenProgramId
             );
+
+            if (isEarly && penaltyAmount > 0) {
+                const treasuryPubKey = new PublicKey(REWARDS_TREASURY_WALLET);
+                treasuryAta = await getOrCreateAssociatedTokenAccount(
+                    connection,
+                    distributorKeypair,
+                    mintPubKey,
+                    treasuryPubKey,
+                    false,
+                    'confirmed',
+                    undefined,
+                    tokenProgramId
+                );
+            }
         } catch (ataErr) {
             console.error("Associated Token Account error:", ataErr);
             return NextResponse.json({ success: false, error: `Solana account initialization failed: ${ataErr.message}` }, { status: 500 });
         }
 
         // Verify distributor has enough balance
-        if (distributorAta.amount < rawReturnedAmount) {
+        const totalNeeded = rawReturnedAmount + rawBurnAmount + rawTreasuryAmount;
+        if (distributorAta.amount < totalNeeded) {
             return NextResponse.json({ 
                 success: false, 
                 error: `Payout distributor wallet balance is insufficient. Server wallet: ${distributorKeypair.publicKey.toString()}` 
@@ -194,6 +218,34 @@ export async function POST(request) {
                     tokenProgramId
                 )
             );
+
+            if (isEarly && penaltyAmount > 0) {
+                // Add real on-chain Burn instruction
+                tx.add(
+                    createBurnInstruction(
+                        distributorAta.address,
+                        mintPubKey,
+                        distributorKeypair.publicKey,
+                        rawBurnAmount,
+                        [],
+                        tokenProgramId
+                    )
+                );
+
+                // Add real on-chain Rewards Treasury transfer instruction
+                tx.add(
+                    createTransferInstruction(
+                        distributorAta.address,
+                        treasuryAta.address,
+                        distributorKeypair.publicKey,
+                        rawTreasuryAmount,
+                        [],
+                        tokenProgramId
+                    )
+                );
+                
+                console.log(`[PENALTY APPLIED] - On-chain Burn: ${Number(rawBurnAmount) / (10 ** decimals)} FWC, Treasury: ${Number(rawTreasuryAmount) / (10 ** decimals)} FWC`);
+            }
 
             const { blockhash } = await connection.getLatestBlockhash('confirmed');
             tx.recentBlockhash = blockhash;

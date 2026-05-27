@@ -72,9 +72,7 @@ function MarketsContent() {
                           : 'border-zinc-800/80 hover:border-blue-500/40 shadow-[0_4px_25px_rgba(0,0,0,0.35)] hover:shadow-[0_8px_30px_rgba(59,130,246,0.15)] hover:scale-[1.01]'
                       }`}
                       style={{
-                        backgroundImage: isMexicoSA 
-                          ? "linear-gradient(to bottom, rgba(10, 10, 10, 0.45), rgba(10, 10, 10, 0.85)), url('/mexico-sa-bg.jpg')"
-                          : "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-stadium-bg.png')",
+                        backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-stadium-bg.png')",
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                       }}

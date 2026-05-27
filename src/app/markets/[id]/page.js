@@ -164,9 +164,7 @@ export default function MatchDetail() {
             : 'border-zinc-800/80 shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
         }`}
         style={{
-          backgroundImage: market.teamA === 'Mexico' && market.teamB === 'South Africa'
-            ? "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/mexico-sa-bg.jpg')"
-            : "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-stadium-bg.png')",
+          backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-stadium-bg.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}

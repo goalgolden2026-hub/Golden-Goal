@@ -101,16 +101,7 @@ export default function AdminDashboard() {
   };
 
   const adminWalletsString = process.env.NEXT_PUBLIC_ADMIN_WALLET || "";
-  const hardcodedAdmins = [
-    "2iF2q7hjEqEe8o6PTdJnYRYZUCeaMDjD35tSrKbu5R8K", // Owner / primary administrator
-    "HMsWAhRC9wom6JVBpuo2gjAGp7Sb59FEyMraLpC4YXGc", // Newly authorized administrator
-    "5taHGRqDNFGRMGUZRCgdF5bGikwqZ7smxsH5YF5WPyc7", // Newly requested authorized admin
-    "62dBE6cVZmG728DkbZssDjrJm6Dn1as9Me2dMCh6HMPN"  // Newly requested authorized admin 2
-  ];
-  const authorizedWallets = [
-    ...hardcodedAdmins,
-    ...adminWalletsString.split(',').map(w => w.trim()).filter(Boolean)
-  ];
+  const authorizedWallets = adminWalletsString.split(',').map(w => w.trim()).filter(Boolean);
   
   if (!connected) {
       return (

@@ -46,5 +46,6 @@ export const TEAM_FLAGS = {
   'England': '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
   'Croatia': '🇭🇷',
   'Ghana': '🇬🇭',
-  'Panama': '🇵🇦'
+  'Panama': '🇵🇦',
+  'North Macedonia': '🇲🇰'
 };

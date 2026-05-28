@@ -9,6 +9,8 @@ export default function AdminDashboard() {
   const [markets, setMarkets] = useState([]);
   
   const [isResolving, setIsResolving] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   
   // Resolve Modal State
   const [resolveModalOpen, setResolveModalOpen] = useState(false);
@@ -26,6 +28,28 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchMarkets();
   }, []);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (!connected || !publicKey) {
+        setIsAuthorized(false);
+        setCheckingAuth(false);
+        return;
+      }
+      try {
+        setCheckingAuth(true);
+        const res = await fetch(`/api/admin/check?wallet=${publicKey.toBase58()}`);
+        const data = await res.json();
+        setIsAuthorized(data.success && data.authorized);
+      } catch (err) {
+        console.error("Auth check failed", err);
+        setIsAuthorized(false);
+      } finally {
+        setCheckingAuth(false);
+      }
+    };
+    checkAuth();
+  }, [connected, publicKey]);
 
   const fetchMarkets = async () => {
     try {
@@ -100,9 +124,6 @@ export default function AdminDashboard() {
       });
   };
 
-  const adminWalletsString = process.env.NEXT_PUBLIC_ADMIN_WALLET || "";
-  const authorizedWallets = adminWalletsString.split(',').map(w => w.trim()).filter(Boolean);
-  
   if (!connected) {
       return (
           <div className="flex-1 flex flex-col items-center justify-center p-4">
@@ -113,7 +134,17 @@ export default function AdminDashboard() {
       );
   }
 
-  if (publicKey && !authorizedWallets.includes(publicKey.toBase58())) {
+  if (checkingAuth) {
+      return (
+          <div className="flex-1 flex flex-col items-center justify-center p-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500 mb-4"></div>
+              <h2 className="text-xl font-bold">Verifying Credentials...</h2>
+              <p className="text-zinc-500">Checking secure server authorizations.</p>
+          </div>
+      );
+  }
+
+  if (!isAuthorized) {
       return (
           <div className="flex-1 flex flex-col items-center justify-center p-4">
               <span className="text-6xl mb-4">⛔</span>

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import crypto from 'crypto';
+import { isWalletWhitelisted } from '@/lib/whitelist';
 
 function generateReferralCode() {
     return crypto.randomBytes(3).toString('hex').toUpperCase(); // 6 character code
@@ -95,7 +96,10 @@ export async function GET(request) {
             displaySpinBonus = 0; // they expired
         }
 
-        const maxPredictions = baseLimit + bonusPredictions + displaySpinBonus;
+        let maxPredictions = baseLimit + bonusPredictions + displaySpinBonus;
+        if (isWalletWhitelisted(walletAddress)) {
+            maxPredictions = Math.max(maxPredictions, 20);
+        }
 
         return NextResponse.json({ 
             success: true, 

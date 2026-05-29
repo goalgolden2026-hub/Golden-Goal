@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { isWalletWhitelisted } from '@/lib/whitelist';
 
 // Simulate SPL Token Balance Check (In Production, use Solana web3.js + getAccountInfo)
 async function getTokenBalance(walletAddress) {
@@ -82,6 +83,10 @@ export async function POST(request) {
         }
 
         // 4. Check Daily Limit
+        if (isWalletWhitelisted(walletAddress)) {
+            finalLimit = Math.max(finalLimit, 20);
+        }
+
         if (user.predictionsToday >= finalLimit) {
             return NextResponse.json({ success: false, error: `Daily limit reached (${finalLimit} predictions). Come back tomorrow!` }, { status: 429 });
         }

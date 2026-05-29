@@ -301,35 +301,34 @@ function MarketsContent() {
         <section className="relative py-28 px-4 text-center overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-20" style={{ backgroundImage: "url('/hero-bg.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}></div>
         <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/0 via-black/60 to-[#0A0A0A]"></div>
-        <div className="relative z-10">
-            <span className="text-[10px] font-extrabold tracking-[0.25em] text-amber-500 uppercase bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.1)] inline-block mb-4">
+        <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
+            {/* Brand Logo at the Top */}
+            <div className="relative mb-6">
+              <div className="absolute inset-0 bg-yellow-500/10 blur-2xl rounded-full"></div>
+              <img 
+                src="/logo.jpg" 
+                alt="Golden Goal Logo" 
+                className="w-20 h-20 rounded-full object-cover border border-yellow-500/30 shadow-[0_0_20px_rgba(245,158,11,0.25)] hover:scale-105 transition-transform duration-300 relative z-10"
+              />
+            </div>
+
+            <span className="text-[10px] font-extrabold tracking-[0.25em] text-amber-500 uppercase bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.1)] inline-block mb-6">
                 {isUpcomingMode ? 'UPCOMING MATCHES' : 'LIVE MATCHES'}
             </span>
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
+            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-none">
                 {isUpcomingMode ? (
                     <>Upcoming <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500 drop-shadow-[0_0_15px_rgba(99,102,241,0.5)]">Fixtures</span></>
                 ) : (
                     <>Predict the <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-600 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">World Cup</span></>
                 )}
             </h1>
-            <p className="text-zinc-300 font-medium text-lg md:text-xl max-w-2xl mx-auto mb-10 text-shadow-sm">
+            <p className="text-zinc-300 font-medium text-lg md:text-xl max-w-2xl mx-auto text-shadow-sm leading-relaxed">
                 {isUpcomingMode ? (
                     "Analyze scheduled matches after the next 3 days. Lock in your predictions ahead of time and secure your leaderboard multiplier!"
                 ) : (
                     "Hold Golden Tokens to place free predictions on active FIFA World Cup 2026 matches. Correct predictions earn you points and rank you up the leaderboard."
                 )}
             </p>
-            
-            {connected ? (
-            <div className="inline-block bg-zinc-900/60 border border-amber-500/30 rounded-2xl p-6 backdrop-blur-md shadow-2xl">
-                <h3 className="text-xl font-medium text-amber-400 mb-2">Wallet Connected</h3>
-                <p className="text-zinc-300">Scroll down to lock in your predictions.</p>
-            </div>
-            ) : (
-            <button className="bg-gradient-to-r from-yellow-500 to-amber-600 text-black font-bold py-4 px-8 rounded-full hover:scale-105 transition-transform shadow-[0_0_30px_rgba(245,158,11,0.4)]">
-                Connect to Predict
-            </button>
-            )}
         </div>
       </section>
 

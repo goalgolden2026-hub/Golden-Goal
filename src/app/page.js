@@ -333,8 +333,10 @@ export default function LandingPage() {
             {/* Feature 1 */}
             <div className="bg-zinc-900/50 border border-white/5 hover:border-amber-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl group-hover:bg-amber-500/10 transition-all"></div>
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 text-2xl animate-pulse">
-                ⚽
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 text-2xl">
+                <svg className="w-6 h-6 text-amber-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">1. Football Predictor</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
@@ -346,7 +348,9 @@ export default function LandingPage() {
             <div className="bg-zinc-900/50 border border-white/5 hover:border-red-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl group-hover:bg-red-500/10 transition-all"></div>
               <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-6 text-2xl">
-                🎁
+                <svg className="w-6 h-6 text-red-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">2. Rewards Box Module</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
@@ -358,7 +362,9 @@ export default function LandingPage() {
             <div className="bg-zinc-900/50 border border-white/5 hover:border-emerald-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-all"></div>
               <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-2xl">
-                🛡️
+                <svg className="w-6 h-6 text-emerald-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">3. Deflationary Locking</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
@@ -367,10 +373,13 @@ export default function LandingPage() {
             </div>
 
             {/* Feature 4 */}
+            {/* Feature 4 */}
             <div className="bg-zinc-900/50 border border-white/5 hover:border-blue-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl group-hover:bg-blue-500/10 transition-all"></div>
               <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-6 text-2xl">
-                📊
+                <svg className="w-6 h-6 text-blue-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 8v8m-4-5v5m-4-2v2M2 4h20a2 2 0 012 2v12a2 2 0 01-2 2H2a2 2 0 01-2-2V6a2 2 0 012-2z" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">4. Dual Leaderboards</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
@@ -382,7 +391,9 @@ export default function LandingPage() {
             <div className="bg-zinc-900/50 border border-white/5 hover:border-cyan-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-3xl group-hover:bg-cyan-500/10 transition-all"></div>
               <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6 text-2xl">
-                🌾
+                <svg className="w-6 h-6 text-cyan-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">5. Twitter Farming Hub</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
@@ -394,7 +405,9 @@ export default function LandingPage() {
             <div className="bg-zinc-900/50 border border-white/5 hover:border-purple-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-3xl group-hover:bg-purple-500/10 transition-all"></div>
               <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6 text-2xl">
-                ☁️
+                <svg className="w-6 h-6 text-purple-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">6. AWS Cloud Shield</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">

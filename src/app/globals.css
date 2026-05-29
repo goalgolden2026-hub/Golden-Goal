@@ -25,7 +25,7 @@ body {
   }
   100% {
     filter: blur(0px);
-    opacity: 0.16; /* Low opacity to seamlessly blend into our dark theme */
+    opacity: 0.70; /* Boosted opacity from 0.16 to 0.70 for clear, premium visibility */
     transform: scale(1) translateY(0);
   }
 }

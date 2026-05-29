@@ -157,7 +157,7 @@ export default function IntroAnimation() {
           <h1 style={{fontFamily:"'Impact','Arial Black',sans-serif",fontSize:'clamp(72px,13vw,158px)',fontWeight:900,fontStyle:'italic',lineHeight:1,
             background:'linear-gradient(180deg,#FFF 0%,#FFD700 38%,#FF8C00 100%)',
             WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',
-            filter:'drop-shadow(0 0 45px rgba(255,215,0,.95))'}}>GOOOL!</h1>
+            filter:'drop-shadow(0 0 45px rgba(255,215,0,.95))'}}>GOOOOALLLL!</h1>
           <p style={{color:'#fff',fontWeight:700,fontSize:'clamp(16px,2.8vw,30px)',letterSpacing:'.42em',textTransform:'uppercase',marginTop:18,
             textShadow:'0 0 24px rgba(255,215,0,.9)',opacity:.96}}>✦ GOLDEN GOAL ✦</p>
         </div>

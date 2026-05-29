@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <!-- Premium Golden Gradients -->
+    <linearGradient id="goldLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF5C3" />
+      <stop offset="30%" stop-color="#FFD700" />
+      <stop offset="70%" stop-color="#FF9E00" />
+      <stop offset="100%" stop-color="#B8860B" />
+    </linearGradient>
+    <linearGradient id="goldDark" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8A6605" />
+      <stop offset="50%" stop-color="#FFD700" />
+      <stop offset="100%" stop-color="#D4AF37" />
+    </linearGradient>
+    <radialGradient id="goldGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#FFD700" stop-opacity="0" />
+    </radialGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Ambient Golden Glow -->
+  <circle cx="50" cy="50" r="48" fill="url(#goldGlow)" />
+
+  <!-- Outer Ring Shield -->
+  <circle cx="50" cy="50" r="42" fill="#0A0A0C" stroke="url(#goldLight)" stroke-width="2.5" filter="url(#glow)" />
+  <circle cx="50" cy="50" r="39" fill="none" stroke="url(#goldDark)" stroke-width="1" opacity="0.6" />
+
+  <!-- Abstract Sleek Football Panel Lines -->
+  <!-- Center Pentagon -->
+  <polygon points="50,42 58,48 55,57 45,57 42,48" fill="none" stroke="url(#goldLight)" stroke-width="1.5" opacity="0.85" />
+  
+  <!-- Outer Radial Seams -->
+  <line x1="50" y1="42" x2="50" y2="28" stroke="url(#goldLight)" stroke-width="1.5" opacity="0.8" />
+  <line x1="58" y1="48" x2="68" y2="44" stroke="url(#goldLight)" stroke-width="1.5" opacity="0.8" />
+  <line x1="55" y1="57" x2="62" y2="68" stroke="url(#goldLight)" stroke-width="1.5" opacity="0.8" />
+  <line x1="45" y1="57" x2="38" y2="68" stroke="url(#goldLight)" stroke-width="1.5" opacity="0.8" />
+  <line x1="42" y1="48" x2="32" y2="44" stroke="url(#goldLight)" stroke-width="1.5" opacity="0.8" />
+
+  <!-- Curved Outer Panels -->
+  <path d="M50 28 C58 28, 64 34, 68 44" fill="none" stroke="url(#goldLight)" stroke-width="1.2" opacity="0.75" />
+  <path d="M68 44 C72 52, 70 60, 62 68" fill="none" stroke="url(#goldLight)" stroke-width="1.2" opacity="0.75" />
+  <path d="M62 68 C54 74, 46 74, 38 68" fill="none" stroke="url(#goldLight)" stroke-width="1.2" opacity="0.75" />
+  <path d="M38 68 C30 60, 28 52, 32 44" fill="none" stroke="url(#goldLight)" stroke-width="1.2" opacity="0.75" />
+  <path d="M32 44 C36 34, 42 28, 50 28" fill="none" stroke="url(#goldLight)" stroke-width="1.2" opacity="0.75" />
+
+  <!-- Majestic Crown at the Top -->
+  <path d="M43 22 L45 25 L50 20 L55 25 L57 22 L55 27 L45 27 Z" fill="url(#goldLight)" filter="url(#glow)" />
+  
+  <!-- Glowing Center Star -->
+  <path d="M50 46.5 L51 49 L53.5 50 L51 51 L50 53.5 L49 51 L46.5 50 L49 49 Z" fill="#FFF" filter="url(#glow)" />
+</svg>

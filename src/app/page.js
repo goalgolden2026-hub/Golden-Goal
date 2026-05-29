@@ -87,9 +87,9 @@ export default function LandingPage() {
             <div className="relative">
               <div className="absolute inset-0 bg-yellow-500/10 blur-2xl rounded-full"></div>
               <img 
-                src="/logo.jpg" 
+                src="/logo.svg" 
                 alt="Golden Goal Logo" 
-                className="w-32 h-32 sm:w-36 sm:h-36 rounded-full object-cover border-2 border-yellow-500/30 shadow-[0_0_50px_rgba(245,158,11,0.25)] hover:scale-105 transition-all duration-500 relative z-10"
+                className="w-32 h-32 sm:w-36 sm:h-36 object-contain hover:scale-105 transition-all duration-500 relative z-10"
               />
             </div>
           </div>
@@ -226,8 +226,10 @@ export default function LandingPage() {
               <div className="text-3xl font-black text-white tracking-tight">0%</div>
               <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">Capital Loss Risk</div>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl group-hover/stat:scale-110 transition-transform duration-300">
-              🛡️
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center group-hover/stat:scale-110 transition-transform duration-300">
+              <svg className="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
             </div>
           </div>
 
@@ -241,8 +243,10 @@ export default function LandingPage() {
               <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500 tracking-tight">Tiers 0-4</div>
               <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">VIP Locking Programs</div>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl group-hover/stat:scale-110 transition-transform duration-300">
-              📈
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center group-hover/stat:scale-110 transition-transform duration-300">
+              <svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
             </div>
           </div>
 
@@ -256,8 +260,10 @@ export default function LandingPage() {
               <div className="text-3xl font-black text-white tracking-tight">Daily Drops</div>
               <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">Rewards Box Engine</div>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-2xl group-hover/stat:scale-110 transition-transform duration-300">
-              🎁
+            <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center group-hover/stat:scale-110 transition-transform duration-300">
+              <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
             </div>
           </div>
         </div>
@@ -292,7 +298,11 @@ export default function LandingPage() {
               <div className="lg:col-span-7 col-span-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {/* Pillar 1 */}
                 <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
-                  <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🧠</div>
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 .364l-.707 .707M21 12h-1M4 12H3m.337-6.929l.707 .707M12 21v-1m4.243-1.757l-.707-.707M7.757 19.243l-.707-.707M19 12a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
                   <h4 className="text-base font-bold text-white mb-2">Football Knowledge</h4>
                   <p className="text-zinc-400 text-xs leading-relaxed font-medium">
                     Test your in-depth understanding of league standings, tactical matching, team rosters, and historical head-to-head dynamics.
@@ -301,7 +311,11 @@ export default function LandingPage() {
 
                 {/* Pillar 2 */}
                 <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
-                  <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">📈</div>
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
                   <h4 className="text-base font-bold text-white mb-2">Prediction Accuracy</h4>
                   <p className="text-zinc-400 text-xs leading-relaxed font-medium">
                     Your foresight is graded mathematically. Build long-term win streaks across diverse match outcome types to scale your reputation.
@@ -310,7 +324,11 @@ export default function LandingPage() {
 
                 {/* Pillar 3 */}
                 <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
-                  <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🏆</div>
+                  <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                    </svg>
+                  </div>
                   <h4 className="text-base font-bold text-white mb-2">Leaderboard Dominance</h4>
                   <p className="text-zinc-400 text-xs leading-relaxed font-medium">
                     Outperform the global community. Dual ladders reward analytical brilliance and active community engagement with top ranks.

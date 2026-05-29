@@ -6,33 +6,6 @@ let scoreCache = null;
 let lastCacheTime = 0;
 const CACHE_TTL = 60 * 1000; 
 
-// Helper to determine realistic, deterministic scores based on elapsed time (prevents score changes on refresh)
-function getSimulatedScore(marketId, elapsedMinutes) {
-    if (elapsedMinutes < 0) return { goalsA: 0, goalsB: 0, elapsed: 0, status: 'NS' }; // Not Started
-    
-    // Seed-based stable calculations
-    let status = '1H';
-    let elapsed = elapsedMinutes;
-
-    if (elapsedMinutes >= 45 && elapsedMinutes < 60) {
-        status = 'HT';
-        elapsed = 45;
-    } else if (elapsedMinutes >= 60 && elapsedMinutes < 105) {
-        status = '2H';
-        elapsed = elapsedMinutes - 15;
-    } else if (elapsedMinutes >= 105) {
-        status = 'FT';
-        elapsed = 90;
-    }
-
-    // Deterministic progression of goals
-    // Goals are calculated based on elapsed time to simulate actual game progression
-    const goalsA = (marketId * 7 + Math.floor(elapsed / 30)) % 4;
-    const goalsB = (marketId * 3 + Math.floor(elapsed / 40)) % 3;
-
-    return { goalsA, goalsB, elapsed, status };
-}
-
 export async function GET() {
     try {
         const sql = await getDb();
@@ -95,10 +68,15 @@ export async function GET() {
                                 status: matchingFixture.fixture.status.short // '1H', '2H', 'HT', 'FT', etc.
                             };
                         } else {
-                            // Fallback to simulation if match has started but is not found in the live API feed
+                            // If match has started but is not found in the live API feed -> Set as OFFLINE
                             const elapsedMinutes = Math.floor((now - matchTime) / 60000);
                             if (elapsedMinutes >= 0 && elapsedMinutes < 120) {
-                                liveScores[market.id] = getSimulatedScore(market.id, elapsedMinutes);
+                                liveScores[market.id] = {
+                                    goalsA: null,
+                                    goalsB: null,
+                                    elapsed: null,
+                                    status: 'OFFLINE'
+                                };
                             }
                         }
                     }
@@ -109,18 +87,24 @@ export async function GET() {
                     return NextResponse.json({ success: true, scores: liveScores }, { status: 200 });
                 }
             } catch (apiError) {
-                console.error("API-Football request failed, falling back to simulation:", apiError);
+                console.error("API-Football request failed, setting playing matches as OFFLINE:", apiError);
             }
         }
 
-        // Fallback / Simulation Mode (Always reliable, doesn't deplete API quotas during development/testing)
+        // Fallback: If no API Key is set or an API request fails, set all currently playing matches as OFFLINE.
+        // This ensures the site displays honest "offline / unavailable" statuses rather than generating fake simulation scores.
         for (const market of activeMarkets) {
             const matchTime = new Date(market.matchDate).getTime();
             const elapsedMinutes = Math.floor((now - matchTime) / 60000);
             
             // If the match is currently playing (elapsed between 0 and 120 minutes)
             if (elapsedMinutes >= 0 && elapsedMinutes < 120) {
-                liveScores[market.id] = getSimulatedScore(market.id, elapsedMinutes);
+                liveScores[market.id] = {
+                    goalsA: null,
+                    goalsB: null,
+                    elapsed: null,
+                    status: 'OFFLINE'
+                };
             }
         }
 

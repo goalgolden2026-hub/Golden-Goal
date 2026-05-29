@@ -87,9 +87,9 @@ export default function LandingPage() {
             <div className="relative">
               <div className="absolute inset-0 bg-yellow-500/10 blur-2xl rounded-full"></div>
               <img 
-                src="/logo.svg" 
+                src="/logo.jpg" 
                 alt="Golden Goal Logo" 
-                className="w-32 h-32 sm:w-36 sm:h-36 object-contain hover:scale-105 transition-all duration-500 relative z-10"
+                className="w-32 h-32 sm:w-36 sm:h-36 rounded-full object-cover border-2 border-yellow-500/30 shadow-[0_0_50px_rgba(245,158,11,0.25)] hover:scale-105 transition-all duration-500 relative z-10"
               />
             </div>
           </div>

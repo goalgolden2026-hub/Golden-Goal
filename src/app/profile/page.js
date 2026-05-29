@@ -42,10 +42,10 @@ export default function ProfilePage() {
             <div className="flex-1 flex flex-col items-center justify-center p-4 min-h-[60vh]">
                 <div className="text-center mb-8">
                     <h1 className="text-5xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 drop-shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-                        VIP Profile
+                        Wallet Profile
                     </h1>
                     <p className="text-zinc-400 max-w-md mx-auto">
-                        Connect your Solana wallet to access your premium VIP Dashboard and check your balance.
+                        Connect your Solana wallet to access your Wallet Profile and check your balance.
                     </p>
                 </div>
                 <WalletMultiButtonDynamic className="!bg-amber-500 hover:!bg-amber-600 !text-black !font-bold !rounded-full !px-8 !py-4" />
@@ -71,11 +71,8 @@ export default function ProfilePage() {
             <div className="relative z-10 flex flex-col items-center">
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <span className="text-[10px] font-extrabold tracking-[0.25em] text-amber-500 uppercase bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
-                        GOLDEN MEMBER
-                    </span>
                     <h1 className="text-4xl sm:text-5xl font-black mt-4 text-white tracking-tight">
-                        VIP <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.2)]">Dashboard</span>
+                        Wallet <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.2)]">Profile</span>
                     </h1>
                 </div>
 
@@ -146,7 +143,7 @@ export default function ProfilePage() {
 
                 {/* Footnote */}
                 <p className="text-zinc-600 text-[10px] uppercase font-mono tracking-widest text-center mt-12 select-none max-w-xl leading-relaxed">
-                    NO PURCHASE NECESSARY. Standard daily prediction quotas are allocated for free. VIP Membership levels strictly track non-financial skill simulation analytics. Void where prohibited by law.
+                    NO PURCHASE NECESSARY. Standard daily prediction quotas are allocated for free. Wallet profile metrics strictly track non-financial skill simulation analytics. Void where prohibited by law.
                 </p>
             </div>
         </div>

@@ -11,6 +11,7 @@ export default function MatchDetail() {
   const router = useRouter();
   const { connected, publicKey } = useWallet();
   const [market, setMarket] = useState(null);
+  const [scoreInfo, setScoreInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   
@@ -48,6 +49,23 @@ export default function MatchDetail() {
         console.error("Failed to load match:", err);
         setLoading(false);
       });
+  }, [params.id]);
+
+  useEffect(() => {
+    const fetchScore = async () => {
+      try {
+        const res = await fetch('/api/markets/live-scores');
+        const data = await res.json();
+        if (data.success && data.scores && data.scores[params.id]) {
+          setScoreInfo(data.scores[params.id]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch live score:", err);
+      }
+    };
+    fetchScore();
+    const interval = setInterval(fetchScore, 60 * 1000);
+    return () => clearInterval(interval);
   }, [params.id]);
 
   const openPredictionModal = (type, option) => {
@@ -169,21 +187,37 @@ export default function MatchDetail() {
           backgroundPosition: 'center',
         }}
       >
-          <span className={`text-sm font-mono mb-2 block ${market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'text-amber-400 font-bold' : 'text-zinc-300'}`}>{market.dateStr} • {market.timeStr} GMT</span>
+          {scoreInfo ? (
+              <div className="flex items-center justify-center gap-2 mb-2">
+                  <span className="text-xs font-extrabold tracking-widest text-red-400 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.3)]">
+                      • LIVE {scoreInfo.status === 'HT' ? 'HT' : scoreInfo.status === 'FT' ? 'FT' : `${scoreInfo.elapsed}'`}
+                  </span>
+              </div>
+          ) : (
+              <span className={`text-sm font-mono mb-2 block ${market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'text-amber-400 font-bold' : 'text-zinc-300'}`}>{market.dateStr} • {market.timeStr} GMT</span>
+          )}
           <div className="flex items-center justify-center gap-8 text-3xl md:text-5xl font-extrabold mb-4 relative z-10">
               <div className="flex flex-col items-center gap-2">
                   <span className="text-5xl md:text-6xl drop-shadow-lg">{TEAM_FLAGS[market.teamA] || '🏳️'}</span>
                   <span className="text-zinc-100">{market.teamA}</span>
               </div>
-              <span className={market.teamA === 'Mexico' && market.teamB === 'South Africa' ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20 mt-12" : "text-zinc-400 text-2xl font-bold mt-12"}>
-                  {market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'VS' : 'vs'}
-              </span>
+              {scoreInfo ? (
+                  <div className="flex flex-col items-center justify-center px-4 min-w-[100px] mt-12">
+                      <span className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.55)] tracking-tight">
+                          {scoreInfo.goalsA} - {scoreInfo.goalsB}
+                      </span>
+                  </div>
+              ) : (
+                  <span className={market.teamA === 'Mexico' && market.teamB === 'South Africa' ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20 mt-12" : "text-zinc-400 text-2xl font-bold mt-12"}>
+                      {market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'VS' : 'vs'}
+                  </span>
+              )}
               <div className="flex flex-col items-center gap-2">
                   <span className="text-5xl md:text-6xl drop-shadow-lg">{TEAM_FLAGS[market.teamB] || '🏳️'}</span>
                   <span className="text-zinc-100">{market.teamB}</span>
               </div>
           </div>
-          {market.isLocked && (
+          {market.isLocked && !scoreInfo && (
               <div className="inline-block bg-red-500/10 text-red-500 text-sm font-bold px-4 py-2 rounded-full border border-red-500/20 mt-4 relative z-10">
                   MATCH LOCKED
               </div>

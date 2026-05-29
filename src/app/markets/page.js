@@ -9,6 +9,7 @@ import { TEAM_FLAGS } from '@/lib/flags';
 function MarketsContent() {
   const { connected } = useWallet();
   const [markets, setMarkets] = useState([]);
+  const [scores, setScores] = useState({});
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const filter = searchParams.get('filter') || 'live';
@@ -24,6 +25,21 @@ function MarketsContent() {
         console.error("Failed to load markets:", err);
         setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    const fetchScores = async () => {
+      try {
+        const res = await fetch('/api/markets/live-scores');
+        const data = await res.json();
+        if (data.success) setScores(data.scores);
+      } catch (err) {
+        console.error("Failed to fetch live scores:", err);
+      }
+    };
+    fetchScores();
+    const interval = setInterval(fetchScores, 60 * 1000);
+    return () => clearInterval(interval);
   }, []);
 
   const groupedMarkets = [];
@@ -61,6 +77,7 @@ function MarketsContent() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {group.matches.map((m) => {
                   const isMexicoSA = m.teamA === 'Mexico' && m.teamB === 'South Africa';
+                  const scoreInfo = scores[m.id];
                   
                   return (
                     <Link 
@@ -80,15 +97,31 @@ function MarketsContent() {
                         
                         {/* Match Info */}
                         <div className="w-full text-center relative z-10">
-                            <span className={`text-sm font-mono mb-2 block ${isMexicoSA ? 'text-zinc-400 font-medium' : 'text-zinc-500'}`}>{m.timeStr} GMT</span>
+                            {scoreInfo ? (
+                                <div className="flex items-center justify-center gap-2 mb-2">
+                                    <span className="text-[10px] font-extrabold tracking-widest text-red-400 bg-red-500/10 border border-red-500/30 px-2.5 py-0.5 rounded-full animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.25)]">
+                                        • LIVE {scoreInfo.status === 'HT' ? 'HT' : scoreInfo.status === 'FT' ? 'FT' : `${scoreInfo.elapsed}'`}
+                                    </span>
+                                </div>
+                            ) : (
+                                <span className={`text-sm font-mono mb-2 block ${isMexicoSA ? 'text-zinc-400 font-medium' : 'text-zinc-500'}`}>{m.timeStr} GMT</span>
+                            )}
                             <div className="flex items-center justify-center gap-6 text-xl font-bold">
                                 <div className="flex flex-col items-center gap-1">
                                     <span className="text-3xl drop-shadow-md">{TEAM_FLAGS[m.teamA] || '🏳️'}</span>
                                     <span className="text-zinc-100 font-semibold">{m.teamA}</span>
                                 </div>
-                                <span className={isMexicoSA ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" : "text-zinc-400 text-sm font-semibold"}>
-                                    {isMexicoSA ? 'VS' : 'vs'}
-                                </span>
+                                {scoreInfo ? (
+                                    <div className="flex flex-col items-center justify-center px-3 min-w-[80px]">
+                                        <span className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.45)] tracking-tight">
+                                            {scoreInfo.goalsA} - {scoreInfo.goalsB}
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <span className={isMexicoSA ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" : "text-zinc-400 text-sm font-semibold"}>
+                                        {isMexicoSA ? 'VS' : 'vs'}
+                                    </span>
+                                )}
                                 <div className="flex flex-col items-center gap-1">
                                     <span className="text-3xl drop-shadow-md">{TEAM_FLAGS[m.teamB] || '🏳️'}</span>
                                     <span className="text-zinc-100 font-semibold">{m.teamB}</span>

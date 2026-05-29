@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 
-const BallImage = ({ size = 130, style = {} }) => {
+const BallImage = ({ size = 90, style = {} }) => {
   return (
     <img 
       src="/golden-ball.png" 
@@ -134,7 +134,7 @@ export default function IntroAnimation() {
         onClick={handleShoot}
       >
         <div ref={ballWrapRef} className={isIdle?'ball-idle':''} style={{display:'inline-block'}}>
-          <BallImage size={130}/>
+          <BallImage size={90}/>
         </div>
 
         {isIdle && (

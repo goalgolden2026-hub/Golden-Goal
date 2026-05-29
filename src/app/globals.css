@@ -16,3 +16,24 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+@keyframes cinematicUnblur {
+  0% {
+    filter: blur(25px);
+    opacity: 0;
+    transform: scale(0.93) translateY(12px);
+  }
+  100% {
+    filter: blur(0px);
+    opacity: 0.16; /* Low opacity to seamlessly blend into our dark theme */
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-cinematic-slow {
+  animation: cinematicUnblur 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-cinematic-normal {
+  animation: cinematicUnblur 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

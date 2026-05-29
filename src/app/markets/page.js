@@ -6,6 +6,32 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { TEAM_FLAGS } from '@/lib/flags';
 
+const LEFT_LEGENDS = [
+  'ronaldo.png', 
+  'pele.png', 
+  'totti.png', 
+  'gerrard.png', 
+  'haaland.png',
+  'baggio.png',
+  'carlos.png',
+  'kante.png',
+  'neuer.png',
+  'rijkaard.png'
+];
+const RIGHT_LEGENDS = [
+  'messi.png', 
+  'maradona.png', 
+  'lampard.png', 
+  'owen.png', 
+  'mbappe.png',
+  'figo.png',
+  'dembele.png',
+  'buffon.png',
+  'nakata.png',
+  'gullit.png',
+  'basten.png'
+];
+
 function MarketsContent() {
   const { connected } = useWallet();
   const [markets, setMarkets] = useState([]);
@@ -13,6 +39,37 @@ function MarketsContent() {
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const filter = searchParams.get('filter') || 'live';
+
+  // Staggered index tracking for the 4 slots (Ronaldo/Messi always first, others cycle through the rest of the array)
+  // Left side list: ['ronaldo.png', 'pele.png', 'totti.png', 'gerrard.png', 'haaland.png']
+  // Right side list: ['messi.png', 'maradona.png', 'lampard.png', 'owen.png', 'mbappe.png']
+  const [legendIndex, setLegendIndex] = useState(0);
+  const [isRotating, setIsRotating] = useState(false);
+
+  useEffect(() => {
+    const initialTimeout = setTimeout(() => {
+      setIsRotating(true);
+    }, 5000); // 5 seconds initial delay to unblur first legends fully
+
+    return () => clearTimeout(initialTimeout);
+  }, []);
+
+  useEffect(() => {
+    if (!isRotating) return;
+
+    const interval = setInterval(() => {
+      setLegendIndex((prev) => (prev + 1) % LEFT_LEGENDS.length);
+    }, 3000); // 3 seconds gorgeous cycling sequence
+
+    return () => clearInterval(interval);
+  }, [isRotating]);
+
+  // Dynamic slot resolvers to show 2 players on each side (total 4 stacked legends)
+  const leftSlotA = LEFT_LEGENDS[legendIndex]; // Top Sol Player
+  const leftSlotB = LEFT_LEGENDS[(legendIndex + 2) % LEFT_LEGENDS.length]; // Bottom Sol Player
+
+  const rightSlotA = RIGHT_LEGENDS[legendIndex]; // Top Sağ Player
+  const rightSlotB = RIGHT_LEGENDS[(legendIndex + 2) % RIGHT_LEGENDS.length]; // Bottom Sağ Player
 
   useEffect(() => {
     fetch('/api/markets')
@@ -159,9 +216,89 @@ function MarketsContent() {
   );
 
   return (
-    <div className="flex flex-col flex-1">
-      {/* Hero Section */}
-      <section className="relative py-28 px-4 text-center overflow-hidden">
+    <div className="flex flex-col flex-1 relative min-h-screen overflow-x-hidden bg-black">
+      
+      {/* Left Side Rail (Rotating Stack - 2 Players Alt Alta) - Responsive Width, Z-0 (slides behind main content) */}
+      <div className="hidden lg:flex fixed left-0 top-[8vh] w-[15vw] max-w-[220px] min-w-[120px] h-[85vh] z-0 flex-col justify-around items-center gap-4 pointer-events-none select-none">
+        
+        {/* Left Slot 1 (Top Left) - Facing RIGHT (Mirrored so he looks right) */}
+        <div className="relative w-full h-[40vh] scale-x-[-1]">
+          <img 
+            key={leftSlotA}
+            src={`/legends/${leftSlotA}`} 
+            alt="Golden Goal Legend Left Top" 
+            className={`w-full h-full object-contain opacity-70 ${
+              legendIndex === 0 && !isRotating 
+                ? 'animate-cinematic-slow' 
+                : 'animate-cinematic-normal'
+            }`}
+            style={{
+              mixBlendMode: 'screen',
+              maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)'
+            }}
+          />
+        </div>
+
+        {/* Left Slot 2 (Bottom Left) - Facing RIGHT (Mirrored so he looks right) */}
+        <div className="relative w-full h-[40vh] scale-x-[-1]">
+          <img 
+            key={leftSlotB}
+            src={`/legends/${leftSlotB}`} 
+            alt="Golden Goal Legend Left Bottom" 
+            className="w-full h-full object-contain opacity-70 animate-cinematic-normal"
+            style={{
+              mixBlendMode: 'screen',
+              maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)'
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Right Side Rail (Rotating Stack Mirror - 2 Players Alt Alta) - Responsive Width, Z-0 (slides behind main content) */}
+      {/* We REMOVE the global scale-x-[-1] here and control image directions individually so they look at each other */}
+      <div className="hidden lg:flex fixed right-0 top-[8vh] w-[15vw] max-w-[220px] min-w-[120px] h-[85vh] z-0 flex-col justify-around items-center gap-4 pointer-events-none select-none">
+        
+        {/* Right Slot 1 (Top Right) - Facing LEFT (Mirrored individually so he looks left) */}
+        <div className="relative w-full h-[40vh] scale-x-[-1]">
+          <img 
+            key={rightSlotA}
+            src={`/legends/${rightSlotA}`} 
+            alt="Golden Goal Legend Right Top" 
+            className={`w-full h-full object-contain opacity-70 ${
+              legendIndex === 0 && !isRotating 
+                ? 'animate-cinematic-slow' 
+                : 'animate-cinematic-normal'
+            }`}
+            style={{
+              mixBlendMode: 'screen',
+              maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)'
+            }}
+          />
+        </div>
+
+        {/* Right Slot 2 (Bottom Right) - Facing LEFT (Mirrored individually so he looks left) */}
+        <div className="relative w-full h-[40vh] scale-x-[-1]">
+          <img 
+            key={rightSlotB}
+            src={`/legends/${rightSlotB}`} 
+            alt="Golden Goal Legend Right Bottom" 
+            className="w-full h-full object-contain opacity-70 animate-cinematic-normal"
+            style={{
+              mixBlendMode: 'screen',
+              maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)'
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Main Content Wrapper - Elevated above side rails with z-10 */}
+      <div className="relative z-10 w-full flex flex-col flex-1">
+        {/* Hero Section */}
+        <section className="relative py-28 px-4 text-center overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-20" style={{ backgroundImage: "url('/hero-bg.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}></div>
         <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/0 via-black/60 to-[#0A0A0A]"></div>
         <div className="relative z-10">
@@ -197,7 +334,7 @@ function MarketsContent() {
       </section>
 
       {/* Markets Section */}
-      <section className="py-12 px-4 max-w-5xl mx-auto w-full">
+      <section className="py-12 px-4 max-w-5xl mx-auto w-full relative z-10">
         
         {loading ? (
             <div className="text-center text-zinc-500 py-12">
@@ -263,6 +400,7 @@ function MarketsContent() {
             </>
         )}
       </section>
+      </div>
     </div>
   );
 }

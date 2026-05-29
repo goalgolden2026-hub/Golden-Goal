@@ -55,7 +55,14 @@ export default function LockingPage() {
       min: 1000, 
       color: "border-blue-500/30", 
       glow: "group-hover:bg-blue-500/20", 
-      icon: "🌱" 
+      icon: (
+        <svg className="w-10 h-10 text-blue-400 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 22V10" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 14c4-1.5 6-4.5 6-7.5s-2.5-1-4-1c-1.5 0-2 1.5-2 3.5 0 2.5 0 5 0 5z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 16c-3-1-4.5-3-4.5-5.5s1.5-1 2.5-1c1 0 1.5 1 2 2.5" />
+          <circle cx="12" cy="22" r="1.5" className="fill-current text-blue-400" />
+        </svg>
+      )
     },
     { 
       id: 2, 
@@ -69,7 +76,13 @@ export default function LockingPage() {
       min: 1000, 
       color: "border-green-500/30", 
       glow: "group-hover:bg-green-500/20", 
-      icon: "🛡️" 
+      icon: (
+        <svg className="w-10 h-10 text-emerald-400 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 11l2 2 4-4" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8 6h8" />
+        </svg>
+      )
     },
     { 
       id: 3, 
@@ -84,7 +97,13 @@ export default function LockingPage() {
       min: 1000, 
       color: "border-amber-500/30", 
       glow: "group-hover:bg-amber-500/20", 
-      icon: "🔥" 
+      icon: (
+        <svg className="w-10 h-10 text-amber-400 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 2C9.5 5 7.5 7.5 7.5 11c0 2.5 1.5 4.5 4.5 5.5 3-1 4.5-3 4.5-5.5 0-3.5-2-6-4.5-9z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 7c-1.5 2-2.5 3.5-2.5 5.5 0 1.5.8 2.5 2.5 3.1 1.7-.6 2.5-1.6 2.5-3.1 0-2-1-3.5-2-5.5z" />
+          <circle cx="12" cy="19" r="0.75" className="fill-current text-amber-400" />
+        </svg>
+      )
     },
     { 
       id: 4, 
@@ -100,7 +119,16 @@ export default function LockingPage() {
       min: 1000, 
       color: "border-purple-500/30", 
       glow: "group-hover:bg-purple-500/20", 
-      icon: "👑" 
+      icon: (
+        <svg className="w-10 h-10 text-purple-400 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 18h16l1.5-9-4.5 3.5L12 4 7 12.5 2.5 9 4 18z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18c0 1.5 2.5 2 6 2s6-.5 6-2" />
+          <circle cx="12" cy="4" r="1" className="fill-current text-purple-400" />
+          <circle cx="2.5" cy="9" r="1" className="fill-current text-purple-400" />
+          <circle cx="21.5" cy="9" r="1" className="fill-current text-purple-400" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 12v3" />
+        </svg>
+      )
     },
   ];
 
@@ -358,11 +386,18 @@ export default function LockingPage() {
     <div className="flex-1 w-full max-w-6xl mx-auto px-4 py-12">
       
       {/* Header */}
-      <div className="text-center mb-16">
-        <h1 className="text-4xl sm:text-5xl font-extrabold mb-4">
-          Token <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">Locking</span>
+      <div className="text-center mb-16 flex flex-col items-center">
+        <h1 className="text-4xl sm:text-5xl font-extrabold mb-4 text-white leading-none flex items-center justify-center gap-3">
+          <img 
+            src="/logo.jpg" 
+            alt="Golden Goal Logo" 
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border border-yellow-500/30 shadow-[0_0_15px_rgba(245,158,11,0.25)] shrink-0 hover:scale-105 transition-transform duration-300"
+          />
+          <span>
+            Token <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">Locking</span>
+          </span>
         </h1>
-        <p className="text-zinc-400 max-w-2xl mx-auto text-lg">
+        <p className="text-zinc-400 max-w-2xl mx-auto text-lg leading-relaxed mt-2">
           Lock your Golden Tokens to unlock powerful multipliers, extra daily predictions, and secure the network.
         </p>
       </div>
@@ -382,7 +417,9 @@ export default function LockingPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         <div className="bg-zinc-900/50 border border-white/10 rounded-2xl p-6 flex items-center gap-4 transition-all hover:bg-zinc-800/50">
           <div className="w-14 h-14 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400 text-2xl shadow-[0_0_15px_rgba(249,115,22,0.2)]">
-            🏦
+            <svg className="w-6 h-6 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M6 21V10M18 21V10M12 21V10M3 21h18M12 3L3 10h18L12 3z" />
+            </svg>
           </div>
           <div>
             <div className="text-zinc-500 text-xs font-bold tracking-wider mb-1 uppercase">Total Value Locked</div>
@@ -392,7 +429,9 @@ export default function LockingPage() {
 
         <div className="bg-zinc-900/50 border border-white/10 rounded-2xl p-6 flex items-center gap-4 transition-all hover:bg-zinc-800/50">
           <div className="w-14 h-14 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-2xl shadow-[0_0_15px_rgba(245,158,11,0.2)]">
-            👥
+            <svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
           </div>
           <div>
             <div className="text-zinc-500 text-xs font-bold tracking-wider mb-1 uppercase">Active Lockers</div>
@@ -402,7 +441,9 @@ export default function LockingPage() {
 
         <div className="bg-zinc-900/50 border border-white/10 rounded-2xl p-6 flex items-center gap-4 transition-all hover:bg-zinc-800/50">
           <div className="w-14 h-14 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-2xl shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-            👤
+            <svg className="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
           </div>
           <div>
             <div className="text-zinc-500 text-xs font-bold tracking-wider mb-1 uppercase">Your Locked</div>

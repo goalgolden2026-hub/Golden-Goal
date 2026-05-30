@@ -1,10 +1,23 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import fs from 'fs';
+import path from 'path';
 
 const SPORTRADAR_API_KEY = process.env.SPORTRADAR_API_KEY || 'Et17n0p8lXDbQIPqyEqWjjaNjWHACZKBLBELV6J0';
 const SPORTRADAR_BASE_URL = 'https://api.sportradar.com/soccer/trial/v4/en';
 
-// Helper to normalize and match team names (e.g., "CA Racing de Cordoba" -> "caracingdecordoba" / "USA" -> "usa")
+// Server-side persistent log helper
+function writeLog(message) {
+    try {
+        const logFilePath = path.join(process.cwd(), 'sportradar_sync_logs.txt');
+        const timestamp = new Date().toISOString();
+        fs.appendFileSync(logFilePath, `[${timestamp}] ${message}\n`, 'utf8');
+    } catch (e) {
+        console.error("Local logger failed:", e);
+    }
+}
+
+// Helper to normalize and match team names
 function normalizeName(name) {
     return name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
 }
@@ -15,17 +28,22 @@ export async function POST(request) {
         const { date } = body; // Format: YYYY-MM-DD
         
         if (!date) {
+            writeLog(`[ERROR] Sync triggered but missing date parameter.`);
             return NextResponse.json({ success: false, error: 'Missing date parameter' }, { status: 400 });
         }
+
+        writeLog(`[START] Sync automation triggered for target date: ${date}`);
 
         // 1. Fetch daily schedule from Sportradar
         const sportradarUrl = `${SPORTRADAR_BASE_URL}/schedules/${date}/schedules.json?api_key=${SPORTRADAR_API_KEY}`;
         const srResponse = await fetch(sportradarUrl);
         if (!srResponse.ok) {
+            writeLog(`[ERROR] Sportradar API schedule request failed: ${srResponse.statusText}`);
             return NextResponse.json({ success: false, error: `Sportradar API error: ${srResponse.statusText}` }, { status: srResponse.status });
         }
         const srData = await srResponse.json();
         const srEvents = srData.schedules || [];
+        writeLog(`[FETCH] Successfully fetched Sportradar schedule. Found ${srEvents.length} daily events.`);
 
         const sql = await getDb();
 
@@ -36,6 +54,7 @@ export async function POST(request) {
             WHERE status = 'ACTIVE' OR "scoreA" IS NULL OR "scoreB" IS NULL
         `;
         const dbMarkets = dbMarketsRes.rows;
+        writeLog(`[DB] Found ${dbMarkets.length} active/unresolved markets in database.`);
 
         let processedMatches = 0;
         let resolvedCount = 0;
@@ -60,12 +79,16 @@ export async function POST(request) {
                 return match1 || match2;
             });
 
-            if (!matchedSrEvent) continue;
+            if (!matchedSrEvent) {
+                continue;
+            }
 
             const eventStatus = matchedSrEvent.sport_event_status || {};
+            writeLog(`[MATCH] Found Sportradar match for DB Market ID ${dbMarket.id} (${dbMarket.teamA} vs ${dbMarket.teamB}). Sportradar status: ${eventStatus.status} | match_status: ${eventStatus.match_status}`);
             
             // Only process matches that are fully concluded
             if (eventStatus.status !== 'closed' || eventStatus.match_status !== 'ended') {
+                writeLog(`[SKIP] Match ID ${dbMarket.id} is not fully ended yet. Skipping resolution.`);
                 continue;
             }
 
@@ -73,6 +96,7 @@ export async function POST(request) {
             const awayScore = parseInt(eventStatus.away_score);
             const teamA = dbMarket.teamA;
             const teamB = dbMarket.teamB;
+            writeLog(`[SCORE] Match ID ${dbMarket.id} ended. Score: ${teamA} ${homeScore} - ${awayScore} ${teamB}`);
 
             // --- 4. Resolve the 6 Prediction Sub-Markets ---
             const outcomes = {};
@@ -97,12 +121,12 @@ export async function POST(request) {
                 else if (fhAway > fhHome) outcomes['FIRST_HALF'] = teamB;
                 else outcomes['FIRST_HALF'] = 'Draw';
             } else {
-                outcomes['FIRST_HALF'] = 'Draw'; // Fallback if periods are missing
+                outcomes['FIRST_HALF'] = 'Draw';
             }
 
             // 5. DOUBLE_CHANCE (Double Chance)
             if (homeScore === awayScore) {
-                outcomes['DOUBLE_CHANCE'] = 'DRAW'; // Handled dynamically in prediction payout transaction below
+                outcomes['DOUBLE_CHANCE'] = 'DRAW';
             } else if (homeScore > awayScore) {
                 outcomes['DOUBLE_CHANCE'] = `${teamA} & Draw`;
             } else {
@@ -129,14 +153,15 @@ export async function POST(request) {
                         }
                     }
                 } catch (e) {
-                    console.error(`Timeline error for event ${matchedSrEvent.sport_event.id}:`, e);
+                    writeLog(`[WARNING] Failed to query play-by-play timeline for match ${matchedSrEvent.sport_event.id}: ${e.message}`);
                 }
                 
-                // Final safety fallback if timeline fails
                 if (!outcomes['FIRST_GOAL']) {
                     outcomes['FIRST_GOAL'] = 'No Goal';
                 }
             }
+
+            writeLog(`[OUTCOMES] Calculated Outcomes for ID ${dbMarket.id}: ${JSON.stringify(outcomes)}`);
 
             // --- 5. Database Payout & Resolution Transaction ---
             const resolvedKeys = Object.keys(outcomes);
@@ -149,33 +174,35 @@ export async function POST(request) {
                 WHERE "marketId" = ${dbMarket.id} AND status = 'PENDING'
             `;
 
+            writeLog(`[PAYOUT] Found ${pendingPreds.length} pending user predictions for match ID ${dbMarket.id}.`);
+
             for (const pred of pendingPreds) {
                 const pType = pred.predictionType;
                 let isWinner = false;
 
                 if (pType === 'DOUBLE_CHANCE' && outcomes['DOUBLE_CHANCE'] === 'DRAW') {
-                    // Under a Draw outcome, both Double Chance predictions win
                     isWinner = pred.prediction.includes('Draw');
                 } else {
                     isWinner = pred.prediction === outcomes[pType];
                 }
 
                 if (isWinner) {
-                    // Update prediction to WON
                     await sql`UPDATE predictions SET status = 'WON', "updatedAt" = CURRENT_TIMESTAMP WHERE id = ${pred.id}`;
                     
-                    // Fetch lock multiplier and award points
                     const lockRes = await sql`SELECT tier FROM locks WHERE "walletAddress" = ${pred.walletAddress} AND status = 'ACTIVE'`;
                     let points = 100;
+                    let activeTier = 0;
                     if (lockRes.rowCount > 0) {
                         const tier = lockRes.rows[0].tier;
+                        activeTier = tier;
                         if (tier === 3) points = 110;
                         else if (tier === 4) points = 125;
                     }
                     await sql`UPDATE users SET points = points + ${points} WHERE "walletAddress" = ${pred.walletAddress}`;
+                    writeLog(`[WINNER] Pred ID: ${pred.id} | Wallet: ${pred.walletAddress.slice(0,6)}... | Type: ${pType} | Prediction: ${pred.prediction} | Points: +${points} (Tier ${activeTier})`);
                 } else {
-                    // Update prediction to LOST
                     await sql`UPDATE predictions SET status = 'LOST', "updatedAt" = CURRENT_TIMESTAMP WHERE id = ${pred.id}`;
+                    writeLog(`[LOSER] Pred ID: ${pred.id} | Wallet: ${pred.walletAddress.slice(0,6)}... | Type: ${pType} | Prediction: ${pred.prediction}`);
                 }
                 resolvedCount++;
             }
@@ -190,15 +217,18 @@ export async function POST(request) {
                     "resolvedOutcomes" = ${JSON.stringify(outcomes)}
                 WHERE id = ${dbMarket.id}
             `;
+            writeLog(`[RESOLVED] Market ID ${dbMarket.id} successfully locked and updated to RESOLVED.`);
             processedMatches++;
         }
 
+        writeLog(`[SUCCESS] Sync completed. Processed: ${processedMatches} markets, Resolved: ${resolvedCount} user predictions.`);
         return NextResponse.json({
             success: true,
             message: `Successfully synchronized ${processedMatches} matches. Resolved ${resolvedCount} user predictions automatically.`
         });
 
     } catch (error) {
+        writeLog(`[CRITICAL] Server error in Sync route: ${error.message}`);
         console.error("POST /api/admin/sportradar-sync error:", error);
         return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
     }

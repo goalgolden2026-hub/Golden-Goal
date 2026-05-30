@@ -100,7 +100,7 @@ function MarketsContent() {
   }, []);
 
   const groupedMarkets = [];
-  markets.filter(m => m.status === 'ACTIVE').forEach(m => {
+  markets.filter(m => m.status === 'ACTIVE' && !(m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined)).forEach(m => {
       const dateObj = new Date(m.matchDate);
       const dateStr = dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
       let group = groupedMarkets.find(g => g.date === dateStr);
@@ -115,7 +115,7 @@ function MarketsContent() {
       });
   });
 
-  const resolvedMarkets = markets.filter(m => m.status !== 'ACTIVE');
+  const resolvedMarkets = markets.filter(m => m.status !== 'ACTIVE' || (m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined));
   
   // Separator: first 3 groups (Live/Active), remaining groups (Upcoming)
   const initialGroups = groupedMarkets.slice(0, 3);
@@ -400,33 +400,72 @@ function MarketsContent() {
 
               {/* Resolved Markets */}
               <h2 className="text-2xl font-bold mb-8 text-zinc-500 border-t border-white/5 pt-12">Resolved Matches</h2>
-              <div className="flex flex-col gap-4 opacity-70">
-                {resolvedMarkets.map((m) => (
-                    <div key={m.id} className="bg-zinc-950/80 backdrop-blur-md border border-zinc-800 rounded-3xl p-6 relative overflow-hidden flex flex-col md:flex-row items-center gap-6 grayscale-[50%]">
-                        <div className="absolute inset-0 bg-black/20 z-10 pointer-events-none"></div>
-                        
-                        <div className="flex-1 w-full text-center md:text-left relative z-20">
-                            <span className="text-sm font-mono text-zinc-600 mb-2 block">{new Date(m.matchDate).toLocaleDateString('en-GB')}</span>
-                            <div className="flex items-center justify-center md:justify-start gap-4 text-xl font-bold text-zinc-400">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-2xl opacity-70">{TEAM_FLAGS[m.teamA] || '🏳️'}</span>
-                                    <span>{m.teamA}</span>
+              <div className="flex flex-col gap-4">
+                {resolvedMarkets.map((m) => {
+                    const hasScores = m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined;
+                    
+                    if (hasScores) {
+                        return (
+                            <div key={m.id} className="bg-zinc-950/80 backdrop-blur-md border border-zinc-800 rounded-3xl p-6 relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6">
+                                <div className="flex-1 w-full text-center md:text-left relative z-20">
+                                    <span className="text-sm font-mono text-zinc-600 mb-2 block">{new Date(m.matchDate).toLocaleDateString('en-GB')}</span>
+                                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 md:gap-6 text-xl font-bold text-zinc-100">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-2xl">{TEAM_FLAGS[m.teamA] || '🏳️'}</span>
+                                            <span>{m.teamA}</span>
+                                        </div>
+                                        
+                                        <span className="text-amber-500 font-extrabold text-2xl px-4 py-1 bg-amber-500/10 border border-amber-500/20 rounded-xl tracking-tight">
+                                            {m.scoreA} - {m.scoreB}
+                                        </span>
+                                        
+                                        <div className="flex items-center gap-2">
+                                            <span>{m.teamB}</span>
+                                            <span className="text-2xl">{TEAM_FLAGS[m.teamB] || '🏳️'}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <span className="text-zinc-700 text-sm font-normal">vs</span>
-                                <div className="flex items-center gap-2">
-                                    <span>{m.teamB}</span>
-                                    <span className="text-2xl opacity-70">{TEAM_FLAGS[m.teamB] || '🏳️'}</span>
+
+                                <div className="flex gap-2 w-full md:w-auto relative z-20 shrink-0">
+                                    <Link 
+                                      href={`/markets/${m.id}`}
+                                      className="w-full md:w-auto px-6 py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-bold bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 hover:border-emerald-500/50 text-emerald-400 shadow-[0_4px_20px_rgba(16,185,129,0.1)] text-sm"
+                                    >
+                                        <span>View Results</span>
+                                        <span>→</span>
+                                    </Link>
                                 </div>
                             </div>
-                        </div>
+                        );
+                    }
 
-                        <div className="flex justify-center items-center py-3 px-6 bg-zinc-900 rounded-xl border border-zinc-800 relative z-20">
-                            <span className="font-bold text-green-500">
-                                ✓ {m.status.replace('RESOLVED_', '').toUpperCase()} WON
-                            </span>
+                    return (
+                        <div key={m.id} className="bg-zinc-950/80 backdrop-blur-md border border-zinc-800 rounded-3xl p-6 relative overflow-hidden flex flex-col md:flex-row items-center gap-6 grayscale-[50%]">
+                            <div className="absolute inset-0 bg-black/20 z-10 pointer-events-none"></div>
+                            
+                            <div className="flex-1 w-full text-center md:text-left relative z-20">
+                                <span className="text-sm font-mono text-zinc-600 mb-2 block">{new Date(m.matchDate).toLocaleDateString('en-GB')}</span>
+                                <div className="flex items-center justify-center md:justify-start gap-4 text-xl font-bold text-zinc-400">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-2xl opacity-70">{TEAM_FLAGS[m.teamA] || '🏳️'}</span>
+                                        <span>{m.teamA}</span>
+                                    </div>
+                                    <span className="text-zinc-700 text-sm font-normal">vs</span>
+                                    <div className="flex items-center gap-2">
+                                        <span>{m.teamB}</span>
+                                        <span className="text-2xl opacity-70">{TEAM_FLAGS[m.teamB] || '🏳️'}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-center items-center py-3 px-6 bg-zinc-900 rounded-xl border border-zinc-800 relative z-20">
+                                <span className="font-bold text-green-500">
+                                    ✓ {m.status.replace('RESOLVED_', '').toUpperCase()} WON
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
                 {resolvedMarkets.length === 0 && (
                     <div className="text-center py-8 text-zinc-600">No past matches yet.</div>
                 )}

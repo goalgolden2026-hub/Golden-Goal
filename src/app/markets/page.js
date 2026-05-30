@@ -135,6 +135,7 @@ function MarketsContent() {
               {group.matches.map((m) => {
                   const isMexicoSA = m.teamA === 'Mexico' && m.teamB === 'South Africa';
                   const scoreInfo = scores[m.id];
+                  const isLive = scoreInfo && scoreInfo.status !== 'OFFLINE';
                   
                   return (
                     <Link 
@@ -154,7 +155,7 @@ function MarketsContent() {
                         
                         {/* Match Info */}
                         <div className="w-full text-center relative z-10">
-                            {scoreInfo ? (
+                            {isLive ? (
                                 <div className="flex items-center justify-center gap-2 mb-2">
                                     <span className="text-[10px] font-extrabold tracking-widest text-red-400 bg-red-500/10 border border-red-500/30 px-2.5 py-0.5 rounded-full animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.25)]">
                                         • LIVE {scoreInfo.status === 'HT' ? 'HT' : scoreInfo.status === 'FT' ? 'FT' : `${scoreInfo.elapsed}'`}
@@ -168,7 +169,7 @@ function MarketsContent() {
                                     <span className="text-3xl drop-shadow-md">{TEAM_FLAGS[m.teamA] || '🏳️'}</span>
                                     <span className="text-zinc-100 font-semibold">{m.teamA}</span>
                                 </div>
-                                {scoreInfo ? (
+                                {isLive ? (
                                     <div className="flex flex-col items-center justify-center px-3 min-w-[80px]">
                                         <span className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.45)] tracking-tight">
                                             {scoreInfo.goalsA} - {scoreInfo.goalsB}

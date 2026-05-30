@@ -38,6 +38,7 @@ export default function MatchDetail() {
   const { connected, publicKey } = useWallet();
   const [market, setMarket] = useState(null);
   const [scoreInfo, setScoreInfo] = useState(null);
+  const isLive = scoreInfo && scoreInfo.status !== 'OFFLINE';
   const [loading, setLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   
@@ -352,7 +353,7 @@ export default function MatchDetail() {
               backgroundPosition: 'center',
             }}
           >
-              {scoreInfo ? (
+              {isLive ? (
                   <div className="flex items-center justify-center gap-2 mb-2">
                       <span className="text-xs font-extrabold tracking-widest text-red-400 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.3)]">
                           • LIVE {scoreInfo.status === 'HT' ? 'HT' : scoreInfo.status === 'FT' ? 'FT' : `${scoreInfo.elapsed}'`}
@@ -366,7 +367,7 @@ export default function MatchDetail() {
                       <span className="text-5xl md:text-6xl drop-shadow-lg">{TEAM_FLAGS[market.teamA] || '🏳️'}</span>
                       <span className="text-zinc-100">{market.teamA}</span>
                   </div>
-                  {scoreInfo ? (
+                  {isLive ? (
                       <div className="flex flex-col items-center justify-center px-4 min-w-[100px] mt-12">
                           <span className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.55)] tracking-tight">
                               {scoreInfo.goalsA} - {scoreInfo.goalsB}
@@ -382,7 +383,7 @@ export default function MatchDetail() {
                       <span className="text-zinc-100">{market.teamB}</span>
                   </div>
               </div>
-              {market.isLocked && !scoreInfo && (
+              {market.isLocked && !isLive && (
                   <div className="inline-block bg-red-500/10 text-red-500 text-sm font-bold px-4 py-2 rounded-full border border-red-500/20 mt-4 relative z-10">
                       MATCH LOCKED
                   </div>

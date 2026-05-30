@@ -16,6 +16,7 @@ export async function GET(request) {
                 u."predictionsToday",
                 (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress") as "totalPredictions",
                 (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status = 'WON') as "wonPredictions",
+                (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status != 'PENDING') as "resolvedPredictions",
                 (
                     SELECT COALESCE(SUM(m."pointsReward"), 0) 
                     FROM predictions p 
@@ -32,7 +33,8 @@ export async function GET(request) {
         const leaderboardWithStats = leaderboard.map(user => {
             const totalPredictions = parseInt(user.totalPredictions) || 0;
             const wonPredictions = parseInt(user.wonPredictions) || 0;
-            const winrate = totalPredictions > 0 ? Math.round((wonPredictions / totalPredictions) * 100) : 0;
+            const resolvedPredictions = parseInt(user.resolvedPredictions) || 0;
+            const winrate = resolvedPredictions > 0 ? Math.round((wonPredictions / resolvedPredictions) * 100) : 0;
             return {
                 ...user,
                 totalPredictions,
@@ -54,6 +56,7 @@ export async function GET(request) {
                         u.points, 
                         (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress") as "totalPredictions",
                         (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status = 'WON') as "wonPredictions",
+                        (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status != 'PENDING') as "resolvedPredictions",
                         (
                             SELECT COALESCE(SUM(m."pointsReward"), 0) 
                             FROM predictions p 
@@ -69,11 +72,12 @@ export async function GET(request) {
                 if (userRow.length > 0) {
                     const totalPredictions = parseInt(userRow[0].totalPredictions) || 0;
                     const wonPredictions = parseInt(userRow[0].wonPredictions) || 0;
+                    const resolvedPredictions = parseInt(userRow[0].resolvedPredictions) || 0;
                     userStats = {
                         ...userRow[0],
                         totalPredictions,
                         wonPredictions,
-                        winrate: totalPredictions > 0 ? Math.round((wonPredictions / totalPredictions) * 100) : 0,
+                        winrate: resolvedPredictions > 0 ? Math.round((wonPredictions / resolvedPredictions) * 100) : 0,
                         weeklyPoints: parseInt(userRow[0].weeklyPoints) || 0,
                         rank: parseInt(userRow[0].rank) || 0
                     };

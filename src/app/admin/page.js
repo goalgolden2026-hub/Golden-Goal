@@ -210,15 +210,15 @@ export default function AdminDashboard() {
           <div className="lg:col-span-3 space-y-4">
               <h2 className="text-xl font-bold mb-4">Manage World Cup Matches</h2>
               {markets.map(m => {
-                  let resolvedList = [];
+                  let resolvedList = m.resolvedMarkets ? m.resolvedMarkets.split(',').filter(Boolean) : [];
                   if (m.resolvedOutcomes) {
                       try {
-                          resolvedList = Object.keys(JSON.parse(m.resolvedOutcomes));
+                          const outcomesKeys = Object.keys(JSON.parse(m.resolvedOutcomes));
+                          const combined = new Set([...resolvedList, ...outcomesKeys]);
+                          resolvedList = Array.from(combined);
                       } catch (e) {
-                          resolvedList = m.resolvedMarkets ? m.resolvedMarkets.split(',').filter(Boolean) : [];
+                          // Keep resolvedList as is
                       }
-                  } else {
-                      resolvedList = m.resolvedMarkets ? m.resolvedMarkets.split(',').filter(Boolean) : [];
                   }
                   const isFullyResolved = resolvedList.length >= 6;
                   

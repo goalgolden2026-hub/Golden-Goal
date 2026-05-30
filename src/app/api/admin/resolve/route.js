@@ -29,6 +29,20 @@ export async function POST(request) {
                 console.error("Error parsing resolvedOutcomes JSON:", e);
             }
         }
+
+        // Fetch distinct WON predictions as a fallback/merge for database healing & backward compatibility
+        const wonPredictionsRes = await sql`
+            SELECT DISTINCT "predictionType", prediction 
+            FROM predictions 
+            WHERE "marketId" = ${marketId} AND status = 'WON'
+        `;
+        wonPredictionsRes.rows.forEach(r => {
+            if (outcomes[r.predictionType] === undefined) {
+                outcomes[r.predictionType] = r.prediction;
+            }
+        });
+
+        // Add the new resolution
         outcomes[finalPredictionType] = winningPrediction;
         const newOutcomesStr = JSON.stringify(outcomes);
 

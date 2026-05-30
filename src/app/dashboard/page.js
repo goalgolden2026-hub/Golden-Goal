@@ -137,7 +137,7 @@ export default function Dashboard() {
   }
 
   const activePredictions = predictions.filter(p => p.predictionStatus === 'PENDING');
-  const pastPredictions = predictions.filter(p => p.predictionStatus !== 'PENDING');
+  const pastPredictions = predictions.filter(p => p.predictionStatus === 'WON' || p.predictionStatus === 'LOST');
 
   // Calculate stats
   const correctPredictions = pastPredictions.filter(p => p.predictionStatus === 'WON').length;

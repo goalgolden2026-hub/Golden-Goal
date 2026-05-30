@@ -19,6 +19,10 @@ export default function AdminDashboard() {
   const [scoreA, setScoreA] = useState('');
   const [scoreB, setScoreB] = useState('');
   const [isSavingScore, setIsSavingScore] = useState(false);
+  const [syncDate, setSyncDate] = useState('2026-06-11'); // Default to World Cup start date
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncLogs, setSyncLogs] = useState('');
+
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     title: '',
@@ -212,6 +216,55 @@ export default function AdminDashboard() {
       });
   };
 
+  const handleSportradarSync = async () => {
+      if (!syncDate) return;
+      setIsSyncing(true);
+      setSyncLogs('Starting Sportradar Soccer v4 Sync...\nConnecting to Sportradar servers...');
+      try {
+          const res = await fetch('/api/admin/sportradar-sync', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ date: syncDate })
+          });
+          const data = await res.json();
+          if (data.success) {
+              setSyncLogs(prev => prev + `\n\n🟢 SUCCESS:\n${data.message}`);
+              fetchMarkets(); // Refresh match lists
+              setModalConfig({
+                  isOpen: true,
+                  title: "🟢 Sync Completed!",
+                  message: data.message,
+                  type: "success",
+                  confirmText: "Awesome",
+                  onConfirm: null
+              });
+          } else {
+              setSyncLogs(prev => prev + `\n\n🔴 ERROR:\n${data.error}`);
+              setModalConfig({
+                  isOpen: true,
+                  title: "⚠️ Sync Failed",
+                  message: data.error || "Failed to sync daily schedule.",
+                  type: "danger",
+                  confirmText: "Close",
+                  onConfirm: null
+              });
+          }
+      } catch (err) {
+          console.error("Sync error:", err);
+          setSyncLogs(prev => prev + `\n\n🔴 Network/Server error:\n${err.message}`);
+          setModalConfig({
+              isOpen: true,
+              title: "⚠️ Server Error",
+              message: "Failed to connect to automated sync server.",
+              type: "danger",
+              confirmText: "Close",
+              onConfirm: null
+          });
+      } finally {
+          setIsSyncing(false);
+      }
+  };
+
   if (!connected) {
       return (
           <div className="flex-1 flex flex-col items-center justify-center p-4">
@@ -279,7 +332,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Active Markets List */}
-          <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-2 space-y-4">
               <h2 className="text-xl font-bold mb-4">Manage World Cup Matches</h2>
               {markets.map(m => {
                   let resolvedList = m.resolvedMarkets ? m.resolvedMarkets.split(',').filter(Boolean) : [];
@@ -335,6 +388,61 @@ export default function AdminDashboard() {
                   );
               })}
               {markets.length === 0 && <p className="text-zinc-500">No matches found.</p>}
+          </div>
+
+          {/* Sportradar Automation Panel */}
+          <div className="lg:col-span-1 space-y-6">
+              <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
+                  
+                  <div className="flex items-center gap-2 mb-6">
+                      <span className="text-2xl animate-pulse">⚡</span>
+                      <h2 className="text-xl font-bold text-white">Sportradar Sync</h2>
+                  </div>
+
+                  <p className="text-xs text-zinc-400 mb-6 leading-relaxed">
+                      Automatically fetch match scores, resolve all 6 prediction sub-markets, and distribute points to winning lockers using the Sportradar v4 Soccer API.
+                  </p>
+
+                  <div className="space-y-4 mb-6">
+                      <div>
+                          <label className="block text-xs font-bold text-zinc-400 uppercase mb-2">Select Target Date</label>
+                          <input 
+                              type="date"
+                              value={syncDate}
+                              onChange={(e) => setSyncDate(e.target.value)}
+                              className="w-full h-11 px-4 rounded-xl bg-zinc-900 border border-zinc-800 text-sm text-zinc-100 font-bold focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20"
+                          />
+                      </div>
+
+                      <button
+                          onClick={handleSportradarSync}
+                          disabled={isSyncing}
+                          className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-zinc-950 font-black text-sm transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.15)] disabled:opacity-50 flex items-center justify-center gap-2"
+                      >
+                          {isSyncing ? (
+                              <>
+                                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-zinc-950 animate-pulse"></div>
+                                  Syncing Fixtures...
+                              </>
+                          ) : (
+                              <>
+                                  <span>🔄</span>
+                                  Run Auto-Resolver
+                              </>
+                          )}
+                      </button>
+                  </div>
+
+                  {syncLogs && (
+                      <div>
+                          <label className="block text-xs font-bold text-zinc-500 uppercase mb-2">Automation Activity Log</label>
+                          <pre className="w-full p-4 rounded-xl bg-zinc-950 border border-zinc-800 text-[10px] font-mono text-zinc-400 overflow-x-auto whitespace-pre-wrap max-h-48 leading-normal custom-scrollbar">
+                              {syncLogs}
+                          </pre>
+                      </div>
+                  )}
+              </div>
           </div>
 
       </div>

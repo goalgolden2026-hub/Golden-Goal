@@ -1,130 +1,173 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 
+const SPORTRADAR_API_KEY = process.env.SPORTRADAR_API_KEY || 'Et17n0p8lXDbQIPqyEqWjjaNjWHACZKBLBELV6J0';
+const SPORTRADAR_BASE_URL = 'https://api.sportradar.com/soccer/trial/v4/en';
+
 function normalizeTeamName(name) {
     if (!name) return '';
     return name
         .toLowerCase()
-        // Remove diacritics / accents (e.g. Curaçao -> Curacao, España -> Espana, Türkiye -> Turkiye)
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
-        // Common synonym maps
-        .replace(/\b(united states|usa|us)\b/g, 'usa')
-        .replace(/\b(korea republic|south korea|korea)\b/g, 'south korea')
-        .replace(/\b(korea dpr|north korea)\b/g, 'north korea')
-        .replace(/\b(cote d'ivoire|ivory coast)\b/g, 'ivory coast')
-        .replace(/\b(turkiye|turkey)\b/g, 'turkey')
-        .replace(/[^a-z0-9]/g, ' ') // Strip non-alphanumeric
+        .replace(/[^a-z0-9]/g, ' ')
         .trim();
 }
 
-// Simple in-memory cache to stay under API-Football daily rate limits (60 seconds cache)
-let scoreCache = null;
+// In-memory cache to respect API rate limits (30 seconds cache)
+let liveCache = null;
 let lastCacheTime = 0;
-const CACHE_TTL = 60 * 1000; 
+const CACHE_TTL = 30 * 1000;
 
-export async function GET() {
+export async function GET(request) {
     try {
         const sql = await getDb();
         const { rows: activeMarkets } = await sql`
             SELECT id, "teamA", "teamB", "matchDate", status 
             FROM markets 
-            WHERE status = 'ACTIVE'
+            WHERE status = 'ACTIVE' OR "scoreA" IS NULL OR "scoreB" IS NULL
         `;
+
+        if (activeMarkets.length === 0) {
+            return NextResponse.json({ success: true, scores: {} });
+        }
 
         const now = Date.now();
         const liveScores = {};
 
-        // If we have an API Key, try fetching real scores from API-Football
-        const apiKey = process.env.FOOTBALL_API_KEY;
-        
-        if (apiKey && apiKey.trim().length > 0) {
-            // Check cache validity
-            if (scoreCache && (now - lastCacheTime < CACHE_TTL)) {
-                console.log("Serving live scores from server-side cache...");
-                return NextResponse.json({ success: true, scores: scoreCache }, { status: 200 });
-            }
-
-            try {
-                console.log("Fetching live scores from API-Football...");
-                const response = await fetch('https://v3.football.api-sports.io/fixtures?live=all', {
-                    headers: {
-                        'x-apisports-key': apiKey,
-                        'x-rapidapi-key': apiKey
-                    },
-                    next: { revalidate: 60 } // Vercel cache fallback
-                });
-                
-                const apiData = await response.json();
-                
-                if (apiData && apiData.response) {
-                    const apiFixtures = apiData.response;
-                    
-                    // Match API-Football fixtures to our active database markets
-                    for (const market of activeMarkets) {
-                        const matchDate = new Date(market.matchDate);
-                        const matchTime = matchDate.getTime();
-                        
-                        // Look for a fixture matching our team names (using robust diacritic normalization)
-                        const matchingFixture = apiFixtures.find(f => {
-                            const home = normalizeTeamName(f.teams.home.name);
-                            const away = normalizeTeamName(f.teams.away.name);
-                            const a = normalizeTeamName(market.teamA);
-                            const b = normalizeTeamName(market.teamB);
-                            
-                            const matchA = home.includes(a) || a.includes(home);
-                            const matchB = away.includes(b) || b.includes(away);
-                            
-                            return matchA && matchB;
-                        });
-                        
-                        if (matchingFixture) {
-                            liveScores[market.id] = {
-                                goalsA: matchingFixture.goals.home ?? 0,
-                                goalsB: matchingFixture.goals.away ?? 0,
-                                elapsed: matchingFixture.fixture.status.elapsed ?? 0,
-                                status: matchingFixture.fixture.status.short // '1H', '2H', 'HT', 'FT', etc.
-                            };
-                        } else {
-                            // If match has started but is not found in the live API feed -> Set as OFFLINE
-                            const elapsedMinutes = Math.floor((now - matchTime) / 60000);
-                            if (elapsedMinutes >= 0 && elapsedMinutes < 120) {
-                                liveScores[market.id] = {
-                                    goalsA: null,
-                                    goalsB: null,
-                                    elapsed: null,
-                                    status: 'OFFLINE'
-                                };
-                            }
-                        }
-                    }
-                    
-                    // Update cache
-                    scoreCache = liveScores;
-                    lastCacheTime = now;
-                    return NextResponse.json({ success: true, scores: liveScores }, { status: 200 });
-                }
-            } catch (apiError) {
-                console.error("API-Football request failed, setting playing matches as OFFLINE:", apiError);
-            }
+        // Serve from cache if valid
+        if (liveCache && (now - lastCacheTime < CACHE_TTL)) {
+            return NextResponse.json({ success: true, scores: liveCache });
         }
 
-        // Fallback: If no API Key is set or an API request fails, set all currently playing matches as OFFLINE.
-        // This ensures the site displays honest "offline / unavailable" statuses rather than generating fake simulation scores.
+        // 1. Fetch live matches from Sportradar
+        let srLiveEvents = [];
+        try {
+            const liveUrl = `${SPORTRADAR_BASE_URL}/schedules/live/schedules.json?api_key=${SPORTRADAR_API_KEY}`;
+            const response = await fetch(liveUrl);
+            if (response.ok) {
+                const data = await response.json();
+                srLiveEvents = data.schedules || [];
+            }
+        } catch (e) {
+            console.error("Failed to fetch live matches from Sportradar:", e);
+        }
+
+        // 2. We also fetch today's full schedule to detect finished matches for background auto-resolution
+        let srDailyEvents = [];
+        try {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const dailyUrl = `${SPORTRADAR_BASE_URL}/schedules/${todayStr}/schedules.json?api_key=${SPORTRADAR_API_KEY}`;
+            const response = await fetch(dailyUrl);
+            if (response.ok) {
+                const data = await response.json();
+                srDailyEvents = data.schedules || [];
+            }
+        } catch (e) {
+            console.error("Failed to fetch daily schedule for resolution check:", e);
+        }
+
+        // 3. Match our database markets
         for (const market of activeMarkets) {
-            const matchTime = new Date(market.matchDate).getTime();
-            const elapsedMinutes = Math.floor((now - matchTime) / 60000);
-            
-            // If the match is currently playing (elapsed between 0 and 120 minutes)
-            if (elapsedMinutes >= 0 && elapsedMinutes < 120) {
+            const dbA = normalizeTeamName(market.teamA);
+            const dbB = normalizeTeamName(market.teamB);
+
+            // Check if match is currently live
+            const matchedLiveEvent = srLiveEvents.find(event => {
+                const competitors = event.sport_event?.competitors || [];
+                const home = normalizeTeamName(competitors.find(c => c.qualifier === 'home')?.name || '');
+                const away = normalizeTeamName(competitors.find(c => c.qualifier === 'away')?.name || '');
+                return (
+                    (dbA === home && dbB === away) || (dbA === away && dbB === home) ||
+                    home.includes(dbA) || dbA.includes(home) ||
+                    away.includes(dbB) || dbB.includes(away)
+                );
+            });
+
+            if (matchedLiveEvent) {
+                const status = matchedLiveEvent.sport_event_status || {};
                 liveScores[market.id] = {
-                    goalsA: null,
-                    goalsB: null,
-                    elapsed: null,
-                    status: 'OFFLINE'
+                    goalsA: status.home_score ?? 0,
+                    goalsB: status.away_score ?? 0,
+                    elapsed: status.clock?.played ? parseInt(status.clock.played.split(':')[0]) : 0,
+                    status: 'LIVE',
+                    matchStatus: status.match_status || '1st_half'
                 };
+                continue;
+            }
+
+            // If not live, check if the match was recently concluded today
+            const matchedDailyEvent = srDailyEvents.find(event => {
+                const competitors = event.sport_event?.competitors || [];
+                const home = normalizeTeamName(competitors.find(c => c.qualifier === 'home')?.name || '');
+                const away = normalizeTeamName(competitors.find(c => c.qualifier === 'away')?.name || '');
+                return (
+                    (dbA === home && dbB === away) || (dbA === away && dbB === home) ||
+                    home.includes(dbA) || dbA.includes(home) ||
+                    away.includes(dbB) || dbB.includes(away)
+                );
+            });
+
+            if (matchedDailyEvent) {
+                const status = matchedDailyEvent.sport_event_status || {};
+                
+                if (status.status === 'closed' && status.match_status === 'ended') {
+                    // Match has finished! Trigger background database payout automatically
+                    const homeScore = parseInt(status.home_score);
+                    const awayScore = parseInt(status.away_score);
+
+                    liveScores[market.id] = {
+                        goalsA: homeScore,
+                        goalsB: awayScore,
+                        elapsed: 90,
+                        status: 'FT'
+                    };
+
+                    // Trigger the auto-resolution background process asynchronously
+                    try {
+                        const todayStr = new Date().toISOString().split('T')[0];
+                        fetch(`${request.nextUrl.origin}/api/admin/sportradar-sync`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ date: todayStr })
+                        }).catch(e => console.error("Async background sync failed:", e));
+                    } catch (e) {
+                        console.error("Failed to dispatch async background resolution:", e);
+                    }
+                } else if (status.status === 'postponed' || status.match_status === 'postponed') {
+                    liveScores[market.id] = {
+                        goalsA: null,
+                        goalsB: null,
+                        elapsed: null,
+                        status: 'POSTPONED'
+                    };
+                } else {
+                    liveScores[market.id] = {
+                        goalsA: null,
+                        goalsB: null,
+                        elapsed: null,
+                        status: 'UPCOMING'
+                    };
+                }
+            } else {
+                // Not playing yet or offline
+                const matchTime = new Date(market.matchDate).getTime();
+                const elapsedMinutes = Math.floor((now - matchTime) / 60000);
+
+                if (elapsedMinutes >= 0 && elapsedMinutes < 120) {
+                    liveScores[market.id] = {
+                        goalsA: null,
+                        goalsB: null,
+                        elapsed: null,
+                        status: 'OFFLINE'
+                    };
+                }
             }
         }
+
+        // Cache update
+        liveCache = liveScores;
+        lastCacheTime = now;
 
         return NextResponse.json({ success: true, scores: liveScores }, { status: 200 });
     } catch (error) {

@@ -4,14 +4,27 @@ import { getDb } from '@/lib/db';
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { marketId, betType, predictionType, winningPrediction } = body;
+        const { marketId, betType, predictionType, winningPrediction, scoreA, scoreB } = body;
         const finalPredictionType = predictionType || betType;
+        const hasScores = scoreA !== undefined && scoreB !== undefined && scoreA !== null && scoreB !== null;
 
-        if (!marketId || !finalPredictionType || !winningPrediction) {
-            return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
+        if (!marketId) {
+            return NextResponse.json({ success: false, error: "Missing marketId" }, { status: 400 });
         }
 
         const sql = await getDb();
+
+        if (!finalPredictionType || !winningPrediction) {
+            if (hasScores) {
+                await sql`
+                    UPDATE markets 
+                    SET "scoreA" = ${parseInt(scoreA)}, "scoreB" = ${parseInt(scoreB)}
+                    WHERE id = ${marketId}
+                `;
+                return NextResponse.json({ success: true, message: "Match score updated successfully!" });
+            }
+            return NextResponse.json({ success: false, error: "Missing required fields for resolution" }, { status: 400 });
+        }
 
         // 1. Get Market Info
         const marketRes = await sql`SELECT * FROM markets WHERE id = ${marketId}`;
@@ -59,11 +72,19 @@ export async function POST(request) {
         const bets = betsRes.rows;
         if (bets.length === 0) {
              // Save even if there are no pending user predictions to keep track of selection state
-             await sql`
-                 UPDATE markets 
-                 SET "resolvedMarkets" = ${newResolvedStr}, "resolvedOutcomes" = ${newOutcomesStr} 
-                 WHERE id = ${marketId}
-             `;
+             if (hasScores) {
+                 await sql`
+                     UPDATE markets 
+                     SET "resolvedMarkets" = ${newResolvedStr}, "resolvedOutcomes" = ${newOutcomesStr}, "scoreA" = ${parseInt(scoreA)}, "scoreB" = ${parseInt(scoreB)}
+                     WHERE id = ${marketId}
+                 `;
+             } else {
+                 await sql`
+                     UPDATE markets 
+                     SET "resolvedMarkets" = ${newResolvedStr}, "resolvedOutcomes" = ${newOutcomesStr} 
+                     WHERE id = ${marketId}
+                 `;
+             }
              return NextResponse.json({ success: true, message: `No pending predictions found for ${finalPredictionType}. Resolution saved.`, winnersCount: 0 });
         }
 
@@ -95,11 +116,19 @@ export async function POST(request) {
         }
 
         // 4. Update the resolvedMarkets list and resolvedOutcomes in the markets table
-        await sql`
-            UPDATE markets 
-            SET "resolvedMarkets" = ${newResolvedStr}, "resolvedOutcomes" = ${newOutcomesStr} 
-            WHERE id = ${marketId}
-        `;
+        if (hasScores) {
+            await sql`
+                UPDATE markets 
+                SET "resolvedMarkets" = ${newResolvedStr}, "resolvedOutcomes" = ${newOutcomesStr}, "scoreA" = ${parseInt(scoreA)}, "scoreB" = ${parseInt(scoreB)}
+                WHERE id = ${marketId}
+            `;
+        } else {
+            await sql`
+                UPDATE markets 
+                SET "resolvedMarkets" = ${newResolvedStr}, "resolvedOutcomes" = ${newOutcomesStr} 
+                WHERE id = ${marketId}
+            `;
+        }
 
         return NextResponse.json({ 
             success: true, 

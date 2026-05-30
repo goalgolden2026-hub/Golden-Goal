@@ -16,6 +16,9 @@ export default function AdminDashboard() {
   const [resolveModalOpen, setResolveModalOpen] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [resolvedInfo, setResolvedInfo] = useState({});
+  const [scoreA, setScoreA] = useState('');
+  const [scoreB, setScoreB] = useState('');
+  const [isSavingScore, setIsSavingScore] = useState(false);
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     title: '',
@@ -66,6 +69,8 @@ export default function AdminDashboard() {
 
   const openResolveModal = async (match) => {
       setSelectedMatch(match);
+      setScoreA(match.scoreA !== null && match.scoreA !== undefined ? String(match.scoreA) : '');
+      setScoreB(match.scoreB !== null && match.scoreB !== undefined ? String(match.scoreB) : '');
       setResolveModalOpen(true);
       setResolvedInfo({});
       try {
@@ -79,6 +84,61 @@ export default function AdminDashboard() {
       }
   };
 
+  const handleSaveScore = async () => {
+      if (!selectedMatch) return;
+      setIsSavingScore(true);
+      try {
+          const res = await fetch('/api/admin/resolve', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  marketId: selectedMatch.id,
+                  scoreA: scoreA !== '' ? parseInt(scoreA) : null,
+                  scoreB: scoreB !== '' ? parseInt(scoreB) : null
+              })
+          });
+          const data = await res.json();
+          if (data.success) {
+              setModalConfig({
+                  isOpen: true,
+                  title: "⚽ Score Saved!",
+                  message: "Match final score has been successfully updated in the database.",
+                  type: "success",
+                  confirmText: "Great",
+                  onConfirm: null
+              });
+              fetchMarkets(); // Refresh matches score on the main admin list
+              // Update selectedMatch with new scores in-place so modal inputs stay in sync
+              setSelectedMatch(prev => ({
+                  ...prev,
+                  scoreA: scoreA !== '' ? parseInt(scoreA) : null,
+                  scoreB: scoreB !== '' ? parseInt(scoreB) : null
+              }));
+          } else {
+              setModalConfig({
+                  isOpen: true,
+                  title: "⚠️ Save Error",
+                  message: data.error || "Failed to update match score.",
+                  type: "danger",
+                  confirmText: "Close",
+                  onConfirm: null
+              });
+          }
+      } catch (err) {
+          console.error(err);
+          setModalConfig({
+              isOpen: true,
+              title: "⚠️ Server Error",
+              message: "Failed to connect to resolution flow server.",
+              type: "danger",
+              confirmText: "Close",
+              onConfirm: null
+          });
+      } finally {
+          setIsSavingScore(false);
+      }
+  };
+
   const handleResolve = async (predictionType, winningPrediction) => {
       const executeResolve = async () => {
           setIsResolving(true);
@@ -86,7 +146,13 @@ export default function AdminDashboard() {
               const res = await fetch('/api/admin/resolve', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ marketId: selectedMatch.id, predictionType, winningPrediction })
+                  body: JSON.stringify({ 
+                      marketId: selectedMatch.id, 
+                      predictionType, 
+                      winningPrediction,
+                      scoreA: scoreA !== '' ? parseInt(scoreA) : null,
+                      scoreB: scoreB !== '' ? parseInt(scoreB) : null
+                  })
               });
               const data = await res.json();
               
@@ -96,6 +162,12 @@ export default function AdminDashboard() {
                       [predictionType]: winningPrediction
                   }));
                   fetchMarkets(); // Refresh progress badges
+                  // Update selectedMatch in place
+                  setSelectedMatch(prev => ({
+                      ...prev,
+                      scoreA: scoreA !== '' ? parseInt(scoreA) : null,
+                      scoreB: scoreB !== '' ? parseInt(scoreB) : null
+                  }));
                   setModalConfig({
                       isOpen: true,
                       title: "🎉 Market Resolved!",
@@ -280,6 +352,46 @@ export default function AdminDashboard() {
                   <h3 className="text-2xl font-bold mb-6">Resolve Markets: {selectedMatch.teamA} vs {selectedMatch.teamB}</h3>
                   
                   <div className="max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                      {/* Match Score Input Section */}
+                      <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <div>
+                              <p className="text-white font-bold text-sm mb-1">Set Match Score</p>
+                              <p className="text-zinc-500 text-xs">Enter the final score to display on cards</p>
+                          </div>
+                          <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-2">
+                                  <span className="text-xs font-bold text-zinc-400">{selectedMatch.teamA}</span>
+                                  <input 
+                                      type="number"
+                                      placeholder="0"
+                                      min="0"
+                                      value={scoreA}
+                                      onChange={(e) => setScoreA(e.target.value)}
+                                      className="w-12 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-center font-bold text-white focus:outline-none focus:border-amber-500 text-sm"
+                                  />
+                              </div>
+                              <span className="text-zinc-600 font-bold">-</span>
+                              <div className="flex items-center gap-2">
+                                  <input 
+                                      type="number"
+                                      placeholder="0"
+                                      min="0"
+                                      value={scoreB}
+                                      onChange={(e) => setScoreB(e.target.value)}
+                                      className="w-12 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-center font-bold text-white focus:outline-none focus:border-amber-500 text-sm"
+                                  />
+                                  <span className="text-xs font-bold text-zinc-400">{selectedMatch.teamB}</span>
+                              </div>
+                              <button
+                                  onClick={handleSaveScore}
+                                  disabled={isSavingScore}
+                                  className="ml-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold text-xs rounded-lg transition-colors disabled:opacity-50"
+                              >
+                                  {isSavingScore ? 'Saving...' : 'Save Score'}
+                              </button>
+                          </div>
+                      </div>
+
                       {renderResolveSection("Match Result", "MAIN", [selectedMatch.teamA, "Draw", selectedMatch.teamB])}
                       {renderResolveSection("Total Goals", "TOTAL_GOALS", ["Under 2.5", "Over 2.5"])}
                       {renderResolveSection("Both Teams to Score", "BTTS", ["Yes", "No"])}

@@ -121,6 +121,10 @@ export async function getDb() {
             
             // Migration: Add resolvedOutcomes to markets table
             await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "resolvedOutcomes" TEXT;`;
+            
+            // Migration: Add scoreA and scoreB to markets table
+            await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "scoreA" INTEGER;`;
+            await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "scoreB" INTEGER;`;
 
             await sql`
                 CREATE TABLE IF NOT EXISTS treasury_logs (

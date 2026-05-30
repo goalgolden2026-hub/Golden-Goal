@@ -161,6 +161,18 @@ function MarketsContent() {
                                         • LIVE {scoreInfo.status === 'HT' ? 'HT' : scoreInfo.status === 'FT' ? 'FT' : `${scoreInfo.elapsed}'`}
                                     </span>
                                 </div>
+                            ) : (m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined) ? (
+                                <div className="flex items-center justify-center gap-2 mb-2">
+                                    <span className="text-[10px] font-extrabold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.25)]">
+                                        ✓ MATCH ENDED
+                                    </span>
+                                </div>
+                            ) : m.isLocked ? (
+                                <div className="flex items-center justify-center gap-2 mb-2">
+                                    <span className="text-[10px] font-extrabold tracking-widest text-amber-500 bg-amber-500/10 border border-amber-500/30 px-2.5 py-0.5 rounded-full shadow-[0_0_12px_rgba(245,158,11,0.2)]">
+                                        🔒 LOCKED / PLAYING
+                                    </span>
+                                </div>
                             ) : (
                                 <span className={`text-sm font-mono mb-2 block ${isMexicoSA ? 'text-zinc-400 font-medium' : 'text-zinc-500'}`}>{m.timeStr} GMT</span>
                             )}
@@ -173,6 +185,12 @@ function MarketsContent() {
                                     <div className="flex flex-col items-center justify-center px-3 min-w-[80px]">
                                         <span className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.45)] tracking-tight">
                                             {scoreInfo.goalsA} - {scoreInfo.goalsB}
+                                        </span>
+                                    </div>
+                                ) : (m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined) ? (
+                                    <div className="flex flex-col items-center justify-center px-3 min-w-[80px]">
+                                        <span className="text-2xl md:text-3xl font-black text-amber-400 drop-shadow-[0_0_15px_rgba(245,158,11,0.45)] tracking-tight">
+                                            {m.scoreA} - {m.scoreB}
                                         </span>
                                     </div>
                                 ) : (
@@ -189,24 +207,40 @@ function MarketsContent() {
 
                         {/* Prediction Action Buttons */}
                         <div className="flex w-full gap-2 mt-2 relative z-10">
-                            <button 
-                                disabled={m.isLocked}
-                                className="w-full py-3.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-bold bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_30px_rgba(255,255,255,0.05)] disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {m.isLocked ? (
-                                  'LOCKED'
-                                ) : (
-                                  <>
+                            {(m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined) ? (
+                                <button 
+                                    disabled={false}
+                                    className="w-full py-3.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-bold bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 hover:border-emerald-500/50 text-emerald-400 shadow-[0_4px_20px_rgba(16,185,129,0.1)] hover:shadow-[0_4px_30px_rgba(16,185,129,0.2)]"
+                                >
+                                    <span>View Results</span>
+                                    <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                                </button>
+                            ) : m.isLocked ? (
+                                <button 
+                                    disabled={true}
+                                    className="w-full py-3.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-bold bg-zinc-800/40 border border-zinc-800 text-zinc-500 opacity-60 cursor-not-allowed"
+                                >
+                                    🔒 LOCKED
+                                </button>
+                            ) : (
+                                <button 
+                                    disabled={false}
+                                    className="w-full py-3.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-bold bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_30px_rgba(255,255,255,0.05)]"
+                                >
                                     <span>View Markets</span>
                                     <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                                  </>
-                                )}
-                            </button>
+                                </button>
+                            )}
                         </div>
                         
-                        {m.isLocked && (
+                        {m.isLocked && !(m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined) && (
                             <div className="absolute top-0 right-0 bg-red-500/10 text-red-500 text-xs font-bold px-3 py-1 rounded-bl-xl border-b border-l border-red-500/20 z-20">
                                 LOCKED
+                            </div>
+                        )}
+                        {(m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined) && (
+                            <div className="absolute top-0 right-0 bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-bl-xl border-b border-l border-emerald-500/20 z-20">
+                                ENDED
                             </div>
                         )}
                     </Link>

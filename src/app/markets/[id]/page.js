@@ -39,6 +39,7 @@ export default function MatchDetail() {
   const [market, setMarket] = useState(null);
   const [scoreInfo, setScoreInfo] = useState(null);
   const isLive = scoreInfo && scoreInfo.status !== 'OFFLINE';
+  const isMatchEnded = market && market.scoreA !== null && market.scoreB !== null && market.scoreA !== undefined && market.scoreB !== undefined;
   const [loading, setLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   
@@ -57,6 +58,7 @@ export default function MatchDetail() {
   });
 
   const [userPredictions, setUserPredictions] = useState([]);
+  const [resolvedOutcomes, setResolvedOutcomes] = useState({});
   const [legendIndex, setLegendIndex] = useState(0);
   const [isRotating, setIsRotating] = useState(false);
 
@@ -89,6 +91,21 @@ export default function MatchDetail() {
     
     loadUserPredictions();
   }, [params.id, connected, publicKey]);
+
+  useEffect(() => {
+    const loadResolvedOutcomes = async () => {
+      try {
+        const res = await fetch(`/api/admin/resolved-predictions?marketId=${params.id}`);
+        const data = await res.json();
+        if (data.success && data.resolved) {
+          setResolvedOutcomes(data.resolved);
+        }
+      } catch (err) {
+        console.error("Failed to load resolved outcomes:", err);
+      }
+    };
+    loadResolvedOutcomes();
+  }, [params.id]);
 
   useEffect(() => {
     const initialTimeout = setTimeout(() => {
@@ -245,18 +262,41 @@ export default function MatchDetail() {
                   const isSelected = userPredictions.some(p => p.predictionType === type && p.prediction === opt);
                   const hasPredictedThisType = userPredictions.some(p => p.predictionType === type);
 
+                  const winningOpt = resolvedOutcomes[type];
+                  const isSubMarketResolved = winningOpt !== undefined;
+                  const isWinner = isSubMarketResolved && winningOpt === opt;
+                  const isUserWrongChoice = isSelected && isSubMarketResolved && !isWinner;
+
+                  let btnStyle = "";
+                  let statusIndicator = null;
+
+                  if (isSubMarketResolved) {
+                      if (isWinner) {
+                          btnStyle = "bg-emerald-950/40 border-emerald-500/70 text-emerald-400 font-extrabold shadow-[0_0_15px_rgba(16,185,129,0.25)] cursor-default";
+                          statusIndicator = <span className="text-emerald-400 text-base font-bold">✓</span>;
+                      } else if (isUserWrongChoice) {
+                          btnStyle = "bg-rose-950/40 border-rose-500/70 text-rose-400 font-extrabold shadow-[0_0_15px_rgba(244,63,94,0.25)] cursor-default";
+                          statusIndicator = <span className="text-rose-400 text-base font-bold">✗</span>;
+                      } else {
+                          btnStyle = "bg-zinc-950/50 border-zinc-900/80 text-zinc-600 cursor-default opacity-40";
+                      }
+                  } else {
+                      if (isSelected) {
+                          btnStyle = "bg-gradient-to-r from-amber-500/20 to-yellow-600/10 border-amber-500/60 text-amber-400 font-extrabold shadow-[0_0_15px_rgba(245,158,11,0.25)] animate-pulse";
+                          statusIndicator = <span className="text-amber-400 text-base">✓</span>;
+                      } else {
+                          btnStyle = "bg-zinc-800 hover:bg-zinc-700 border-transparent text-white disabled:opacity-30 disabled:cursor-not-allowed";
+                      }
+                  }
+
                   return (
                       <button 
                           key={idx}
-                          onClick={() => openPredictionModal(type, opt)}
-                          disabled={market.isLocked || (hasPredictedThisType && !isSelected)}
-                          className={`flex-1 min-w-[120px] font-medium py-4 px-4 rounded-xl text-sm text-center flex items-center justify-center gap-2 border transition-all duration-300 ${
-                              isSelected 
-                                ? 'bg-gradient-to-r from-amber-500/20 to-yellow-600/10 border-amber-500/60 text-amber-400 font-extrabold shadow-[0_0_15px_rgba(245,158,11,0.25)] animate-pulse'
-                                : 'bg-zinc-800 hover:bg-zinc-700 border-transparent text-white disabled:opacity-30 disabled:cursor-not-allowed'
-                          }`}
+                          onClick={() => !isSubMarketResolved && openPredictionModal(type, opt)}
+                          disabled={market.isLocked || isSubMarketResolved || (hasPredictedThisType && !isSelected)}
+                          className={`flex-1 min-w-[120px] font-medium py-4 px-4 rounded-xl text-sm text-center flex items-center justify-center gap-2 border transition-all duration-300 ${btnStyle}`}
                       >
-                          {isSelected && <span className="text-amber-400 text-base">✓</span>}
+                          {statusIndicator}
                           <span>{opt}</span>
                       </button>
                   );
@@ -359,6 +399,12 @@ export default function MatchDetail() {
                           • LIVE {scoreInfo.status === 'HT' ? 'HT' : scoreInfo.status === 'FT' ? 'FT' : `${scoreInfo.elapsed}'`}
                       </span>
                   </div>
+              ) : isMatchEnded ? (
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                      <span className="text-xs font-extrabold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.25)]">
+                          ✓ MATCH ENDED
+                      </span>
+                  </div>
               ) : (
                   <span className={`text-sm font-mono mb-2 block ${market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'text-amber-400 font-bold' : 'text-zinc-300'}`}>{market.dateStr} • {market.timeStr} GMT</span>
               )}
@@ -373,6 +419,12 @@ export default function MatchDetail() {
                               {scoreInfo.goalsA} - {scoreInfo.goalsB}
                           </span>
                       </div>
+                  ) : isMatchEnded ? (
+                      <div className="flex flex-col items-center justify-center px-4 min-w-[100px] mt-12">
+                          <span className="text-4xl md:text-6xl font-black text-amber-400 drop-shadow-[0_0_20px_rgba(245,158,11,0.55)] tracking-tight">
+                              {market.scoreA} - {market.scoreB}
+                          </span>
+                      </div>
                   ) : (
                       <span className={market.teamA === 'Mexico' && market.teamB === 'South Africa' ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20 mt-12" : "text-zinc-400 text-2xl font-bold mt-12"}>
                           {market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'VS' : 'vs'}
@@ -383,7 +435,7 @@ export default function MatchDetail() {
                       <span className="text-zinc-100">{market.teamB}</span>
                   </div>
               </div>
-              {market.isLocked && !isLive && (
+              {market.isLocked && !isLive && !isMatchEnded && (
                   <div className="inline-block bg-red-500/10 text-red-500 text-sm font-bold px-4 py-2 rounded-full border border-red-500/20 mt-4 relative z-10">
                       MATCH LOCKED
                   </div>

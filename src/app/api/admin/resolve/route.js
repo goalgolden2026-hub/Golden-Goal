@@ -32,11 +32,9 @@ export async function POST(request) {
         outcomes[finalPredictionType] = winningPrediction;
         const newOutcomesStr = JSON.stringify(outcomes);
 
-        const currentResolved = market.resolvedMarkets ? market.resolvedMarkets.split(',').filter(Boolean) : [];
-        if (!currentResolved.includes(finalPredictionType)) {
-            currentResolved.push(finalPredictionType);
-        }
-        const newResolvedStr = currentResolved.join(',');
+        // Keep resolvedMarkets perfectly in sync with the keys of resolvedOutcomes
+        const resolvedKeys = Object.keys(outcomes);
+        const newResolvedStr = resolvedKeys.join(',');
 
         // 2. Fetch all PENDING predictions for this market and predictionType
         const betsRes = await sql`

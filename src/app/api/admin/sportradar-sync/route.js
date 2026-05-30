@@ -53,12 +53,11 @@ export async function POST(request) {
                 const normHome = normalizeName(home);
                 const normAway = normalizeName(away);
 
-                return (
-                    (dbA === normHome && dbB === normAway) ||
-                    (dbA === normAway && dbB === normHome) ||
-                    normHome.includes(dbA) || dbA.includes(normHome) ||
-                    normAway.includes(dbB) || dbB.includes(normAway)
-                );
+                const match1 = (normHome === dbA || normHome.includes(dbA) || dbA.includes(normHome)) && 
+                               (normAway === dbB || normAway.includes(dbB) || dbB.includes(normAway));
+                const match2 = (normHome === dbB || normHome.includes(dbB) || dbB.includes(normHome)) && 
+                               (normAway === dbA || normAway.includes(dbA) || dbA.includes(normAway));
+                return match1 || match2;
             });
 
             if (!matchedSrEvent) continue;

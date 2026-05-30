@@ -1,6 +1,23 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 
+function normalizeTeamName(name) {
+    if (!name) return '';
+    return name
+        .toLowerCase()
+        // Remove diacritics / accents (e.g. Curaçao -> Curacao, España -> Espana, Türkiye -> Turkiye)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        // Common synonym maps
+        .replace(/\b(united states|usa|us)\b/g, 'usa')
+        .replace(/\b(korea republic|south korea|korea)\b/g, 'south korea')
+        .replace(/\b(korea dpr|north korea)\b/g, 'north korea')
+        .replace(/\b(cote d'ivoire|ivory coast)\b/g, 'ivory coast')
+        .replace(/\b(turkiye|turkey)\b/g, 'turkey')
+        .replace(/[^a-z0-9]/g, ' ') // Strip non-alphanumeric
+        .trim();
+}
+
 // Simple in-memory cache to stay under API-Football daily rate limits (60 seconds cache)
 let scoreCache = null;
 let lastCacheTime = 0;
@@ -48,16 +65,17 @@ export async function GET() {
                         const matchDate = new Date(market.matchDate);
                         const matchTime = matchDate.getTime();
                         
-                        // Look for a fixture matching our team names
+                        // Look for a fixture matching our team names (using robust diacritic normalization)
                         const matchingFixture = apiFixtures.find(f => {
-                            const homeName = f.teams.home.name.toLowerCase();
-                            const awayName = f.teams.away.name.toLowerCase();
-                            const teamA = market.teamA.toLowerCase();
-                            const teamB = market.teamB.toLowerCase();
+                            const home = normalizeTeamName(f.teams.home.name);
+                            const away = normalizeTeamName(f.teams.away.name);
+                            const a = normalizeTeamName(market.teamA);
+                            const b = normalizeTeamName(market.teamB);
                             
-                            // Check for direct name match or sub-string match (handling translation variations like Turkey / Türkiye)
-                            return (homeName.includes(teamA) || teamA.includes(homeName) || homeName.includes('turk') && teamA.includes('turk')) &&
-                                   (awayName.includes(teamB) || teamB.includes(awayName));
+                            const matchA = home.includes(a) || a.includes(home);
+                            const matchB = away.includes(b) || b.includes(away);
+                            
+                            return matchA && matchB;
                         });
                         
                         if (matchingFixture) {

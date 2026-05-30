@@ -14,10 +14,10 @@ function normalizeTeamName(name) {
         .trim();
 }
 
-// In-memory cache to respect API rate limits (30 seconds cache)
+// In-memory cache to respect API rate limits (60 seconds cache)
 let liveCache = null;
 let lastCacheTime = 0;
-const CACHE_TTL = 30 * 1000;
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(request) {
     try {

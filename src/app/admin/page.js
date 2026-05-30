@@ -15,6 +15,7 @@ export default function AdminDashboard() {
   // Resolve Modal State
   const [resolveModalOpen, setResolveModalOpen] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState(null);
+  const [resolvedInfo, setResolvedInfo] = useState({});
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     title: '',
@@ -63,9 +64,19 @@ export default function AdminDashboard() {
     }
   };
 
-  const openResolveModal = (match) => {
+  const openResolveModal = async (match) => {
       setSelectedMatch(match);
       setResolveModalOpen(true);
+      setResolvedInfo({});
+      try {
+          const res = await fetch(`/api/admin/resolved-predictions?marketId=${match.id}`);
+          const data = await res.json();
+          if (data.success && data.resolved) {
+              setResolvedInfo(data.resolved);
+          }
+      } catch (err) {
+          console.error("Failed to fetch resolved predictions", err);
+      }
   };
 
   const handleResolve = async (predictionType, winningPrediction) => {
@@ -80,6 +91,10 @@ export default function AdminDashboard() {
               const data = await res.json();
               
               if (data.success) {
+                  setResolvedInfo(prev => ({
+                      ...prev,
+                      [predictionType]: winningPrediction
+                  }));
                   setModalConfig({
                       isOpen: true,
                       title: "🎉 Market Resolved!",
@@ -154,23 +169,35 @@ export default function AdminDashboard() {
       );
   }
 
-  const renderResolveSection = (title, type, options) => (
-      <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 mb-4">
-          <p className="text-zinc-400 text-sm mb-2 font-bold">{title}</p>
-          <div className="flex flex-wrap gap-2">
-              {options.map(opt => (
-                  <button
-                      key={opt}
-                      onClick={() => handleResolve(type, opt)}
-                      disabled={isResolving}
-                      className="flex-1 bg-zinc-800 hover:bg-green-600/50 hover:text-white hover:border-green-500/50 text-zinc-300 border border-zinc-700 py-2 px-3 rounded-lg text-sm font-medium transition-all"
-                  >
-                      {opt} Won
-                  </button>
-              ))}
+  const renderResolveSection = (title, type, options) => {
+      const selectedOpt = resolvedInfo[type];
+      
+      return (
+          <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 mb-4">
+              <p className="text-zinc-400 text-sm mb-2 font-bold">{title}</p>
+              <div className="flex flex-wrap gap-2">
+                  {options.map(opt => {
+                      const isSelected = selectedOpt === opt;
+                      return (
+                          <button
+                              key={opt}
+                              onClick={() => handleResolve(type, opt)}
+                              disabled={isResolving}
+                              className={`flex-1 py-2.5 px-3 rounded-xl text-sm font-bold border transition-all duration-300 ${
+                                  isSelected 
+                                    ? 'bg-gradient-to-r from-amber-500/20 to-yellow-600/10 border-amber-500/60 text-amber-400 font-extrabold shadow-[0_0_15px_rgba(245,158,11,0.25)]'
+                                    : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-300 disabled:opacity-50'
+                              }`}
+                          >
+                              {isSelected && <span className="mr-1.5 text-amber-400 font-bold">✓</span>}
+                              {opt} Won
+                          </button>
+                      );
+                  })}
+              </div>
           </div>
-      </div>
-  );
+      );
+  };
 
   return (
     <div className="flex-1 p-8 max-w-7xl mx-auto w-full">

@@ -115,6 +115,9 @@ export async function getDb() {
 
             // Migration: Add txSignature to locks table
             await sql`ALTER TABLE locks ADD COLUMN IF NOT EXISTS "txSignature" TEXT UNIQUE;`;
+            
+            // Migration: Add resolvedMarkets to markets table
+            await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "resolvedMarkets" TEXT;`;
 
             await sql`
                 CREATE TABLE IF NOT EXISTS treasury_logs (

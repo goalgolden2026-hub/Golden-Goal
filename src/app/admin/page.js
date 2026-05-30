@@ -95,6 +95,7 @@ export default function AdminDashboard() {
                       ...prev,
                       [predictionType]: winningPrediction
                   }));
+                  fetchMarkets(); // Refresh progress badges
                   setModalConfig({
                       isOpen: true,
                       title: "🎉 Market Resolved!",
@@ -208,23 +209,50 @@ export default function AdminDashboard() {
           {/* Active Markets List */}
           <div className="lg:col-span-3 space-y-4">
               <h2 className="text-xl font-bold mb-4">Manage World Cup Matches</h2>
-              {markets.map(m => (
-                  <div key={m.id} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                      <div className="flex-1">
-                          <h3 className="text-xl font-bold mb-1">{m.teamA} vs {m.teamB}</h3>
-                          <p className="text-xs text-zinc-500">Date: {new Date(m.matchDate).toLocaleString()}</p>
+              {markets.map(m => {
+                  const resolvedList = m.resolvedMarkets ? m.resolvedMarkets.split(',').filter(Boolean) : [];
+                  const isFullyResolved = resolvedList.length >= 6;
+                  
+                  return (
+                      <div 
+                          key={m.id} 
+                          className={`bg-zinc-900 border rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-center gap-4 transition-all duration-300 ${
+                              isFullyResolved 
+                                ? 'border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.05)] hover:border-emerald-500/30' 
+                                : 'border-zinc-800 hover:border-zinc-700'
+                          }`}
+                      >
+                          <div className="flex-1 text-left">
+                              <div className="flex flex-wrap items-center gap-3 mb-1.5">
+                                  <h3 className="text-xl font-bold text-white leading-none">{m.teamA} vs {m.teamB}</h3>
+                                  {isFullyResolved ? (
+                                      <span className="text-[10px] font-extrabold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.15)] flex items-center gap-1 shrink-0">
+                                          ✓ FULLY RESOLVED
+                                      </span>
+                                  ) : resolvedList.length > 0 ? (
+                                      <span className="text-[10px] font-extrabold tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-0.5 rounded-full shrink-0">
+                                          {resolvedList.length}/6 RESOLVED
+                                      </span>
+                                  ) : null}
+                              </div>
+                              <p className="text-xs text-zinc-500">Date: {new Date(m.matchDate).toLocaleString()}</p>
+                          </div>
+                          
+                          <div className="flex gap-2 w-full sm:w-auto">
+                              <button 
+                                onClick={() => openResolveModal(m)} 
+                                className={`flex-1 sm:flex-none py-2.5 px-6 rounded-xl text-sm font-bold border transition-colors ${
+                                    isFullyResolved
+                                      ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                                      : 'bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border-blue-500/30'
+                                }`}
+                              >
+                                  {isFullyResolved ? 'Edit Resolution' : 'Resolve Sub-Markets'}
+                              </button>
+                          </div>
                       </div>
-                      
-                      <div className="flex gap-2 w-full sm:w-auto">
-                          <button 
-                            onClick={() => openResolveModal(m)} 
-                            className="flex-1 sm:flex-none bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 py-2 px-6 rounded-xl text-sm font-bold transition-colors"
-                          >
-                              Resolve Sub-Markets
-                          </button>
-                      </div>
-                  </div>
-              ))}
+                  );
+              })}
               {markets.length === 0 && <p className="text-zinc-500">No matches found.</p>}
           </div>
 

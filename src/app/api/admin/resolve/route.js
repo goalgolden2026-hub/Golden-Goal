@@ -28,6 +28,12 @@ export async function POST(request) {
         
         const bets = betsRes.rows;
         if (bets.length === 0) {
+             const currentResolved = market.resolvedMarkets ? market.resolvedMarkets.split(',') : [];
+             if (!currentResolved.includes(finalPredictionType)) {
+                 currentResolved.push(finalPredictionType);
+                 const newResolvedStr = currentResolved.join(',');
+                 await sql`UPDATE markets SET "resolvedMarkets" = ${newResolvedStr} WHERE id = ${marketId}`;
+             }
              return NextResponse.json({ success: true, message: `No pending predictions found for ${finalPredictionType}.`, winnersCount: 0 });
         }
 
@@ -56,6 +62,14 @@ export async function POST(request) {
                 // Loss
                 await sql`UPDATE predictions SET status = 'LOST' WHERE id = ${bet.id}`;
             }
+        }
+
+        // 4. Update the resolvedMarkets list in the markets table
+        const currentResolved = market.resolvedMarkets ? market.resolvedMarkets.split(',') : [];
+        if (!currentResolved.includes(finalPredictionType)) {
+            currentResolved.push(finalPredictionType);
+            const newResolvedStr = currentResolved.join(',');
+            await sql`UPDATE markets SET "resolvedMarkets" = ${newResolvedStr} WHERE id = ${marketId}`;
         }
 
         return NextResponse.json({ 

@@ -33,10 +33,11 @@ const RIGHT_LEGENDS = [
 ];
 
 function MarketsContent() {
-  const { connected } = useWallet();
+  const { connected, publicKey } = useWallet();
   const [markets, setMarkets] = useState([]);
   const [scores, setScores] = useState({});
   const [loading, setLoading] = useState(true);
+  const [userPredictions, setUserPredictions] = useState([]);
   const searchParams = useSearchParams();
   const filter = searchParams.get('filter') || 'live';
 
@@ -83,6 +84,21 @@ function MarketsContent() {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (connected && publicKey) {
+        fetch(`/api/user/predictions?wallet=${publicKey.toBase58()}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+                setUserPredictions(data.predictions);
+            }
+          })
+          .catch(err => console.error("Failed to load user predictions", err));
+    } else {
+        setUserPredictions([]);
+    }
+  }, [connected, publicKey]);
 
   useEffect(() => {
     const fetchScores = async () => {
@@ -136,6 +152,7 @@ function MarketsContent() {
                   const isMexicoSA = m.teamA === 'Mexico' && m.teamB === 'South Africa';
                   const scoreInfo = scores[m.id];
                   const isLive = scoreInfo && scoreInfo.status !== 'OFFLINE';
+                  const userPredCount = userPredictions.filter(p => p.marketId === m.id).length;
                   
                   return (
                     <Link 
@@ -175,6 +192,15 @@ function MarketsContent() {
                                 </div>
                             ) : (
                                 <span className={`text-sm font-mono mb-2 block ${isMexicoSA ? 'text-zinc-400 font-medium' : 'text-zinc-500'}`}>{m.timeStr} GMT</span>
+                            )}
+                            
+                            {/* Predictions Placed Badge */}
+                            {userPredCount > 0 && (
+                                <div className="flex items-center justify-center gap-2 mb-2">
+                                    <span className="text-[10px] font-extrabold tracking-widest text-amber-400 bg-gradient-to-r from-amber-500/20 to-yellow-600/10 border border-amber-500/50 px-3 py-1 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.15)] flex items-center gap-1.5 leading-none">
+                                        ✓ {userPredCount}/6 PREDICTIONS PLACED
+                                    </span>
+                                </div>
                             )}
                             <div className="flex items-center justify-center gap-6 text-xl font-bold">
                                 <div className="flex flex-col items-center gap-1">

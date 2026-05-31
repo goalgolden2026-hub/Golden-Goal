@@ -235,7 +235,7 @@ export default function PitchDeckPage() {
             </p>
           </div>
           <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-2">
-            <span className="text-2xl">🎰</span>
+            <span className="text-2xl">⚙️</span>
             <h4 className="font-bold text-amber-400 text-sm">Ecosystem Sinks</h4>
             <p className="text-zinc-400 text-xs leading-relaxed">
               $GG is locked within utility contracts to increase limits, while daily Rewards Box openings consume accumulated XP, creating active point-based loops.

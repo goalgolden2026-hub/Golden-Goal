@@ -151,7 +151,7 @@ export default function DocsPage() {
               <span className="text-zinc-500 text-xs">Updated: May 2026</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
-              Solana <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">Golden Goal</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">Golden Goal</span>
             </h1>
             <p className="text-zinc-400 text-lg leading-relaxed max-w-3xl">
               Official whitepaper detailing the decentralized, gamified prediction economy, VIP locking utility matrix, provably fair mechanics, and AWS global cluster architecture.
@@ -166,7 +166,7 @@ export default function DocsPage() {
             <div className="p-0.5 rounded-3xl bg-gradient-to-br from-white/10 to-transparent">
               <div className="bg-zinc-900/50 backdrop-blur-md p-6 rounded-[22px] space-y-4 text-zinc-300 leading-relaxed text-sm md:text-base">
                 <p>
-                  Solana <strong>Golden Goal</strong> is a next-generation Web3 sports prediction ecosystem engineered to unite high-fidelity gamification, passive locking mechanics, and sports oracle pipelines.
+                  <strong>Golden Goal</strong> is a next-generation Web3 sports prediction ecosystem engineered to unite high-fidelity gamification, passive locking mechanics, and sports oracle pipelines.
                 </p>
                 <p>
                   By creating a <strong>sustainable prediction economy</strong>, users can place risk-free predictions on global fixtures (such as World Cup matches) completely free, claim Experience Points (XP) for success, and win high-yielding payouts from weekly token rewards.
@@ -281,7 +281,7 @@ export default function DocsPage() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
               
               <h3 className="font-extrabold text-white text-lg mb-4 flex items-center gap-2">
-                <span>🎰</span> Locking Benefit Simulator
+                <span>⚙️</span> Locking Benefit Simulator
               </h3>
 
               <div className="space-y-4 mb-6">

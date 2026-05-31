@@ -116,7 +116,7 @@ export default function OnePagerPage() {
             📌 Vision & Project Summary
           </h2>
           <p className="text-sm text-zinc-300 leading-relaxed print:text-zinc-800">
-            Golden Goal is a pioneering <strong className="text-white print:text-zinc-900">Skill-Based Prediction Market</strong> simulator built on Solana, designed to <strong className="text-white print:text-zinc-900">entirely eliminate the financial loss risks</strong> associated with traditional sports betting platforms. Instead of losing or risking capital to make predictions, players hold or lock (<code className="text-amber-400">Lock</code>) their tokens in their wallets. This seamlessly merges fan passion, analytical skill, and Web3 gamification into a completely risk-free ecosystem.
+            Golden Goal is a pioneering <strong className="text-white print:text-zinc-900">Skill-Based Social Prediction Hub</strong> built on Solana, designed to <strong className="text-white print:text-zinc-900">entirely eliminate the financial loss risks</strong> associated with traditional sports betting platforms. Instead of losing or risking capital to make predictions, players hold or lock their tokens in their wallets to unlock active prediction quotas. Fully integrated with the <strong className="text-white print:text-zinc-900">Sportradar Soccer v4 API</strong>, the platform tracks matches in real-time, features 6 granular prediction sub-markets per fixture, and automates result resolution seamlessly under a premium, highly gamified aesthetic.
           </p>
         </div>
 
@@ -129,9 +129,9 @@ export default function OnePagerPage() {
               <h3 className="font-extrabold text-sm uppercase tracking-wider">Critical Industry Problems</h3>
             </div>
             <ul className="space-y-2 text-xs text-zinc-400 leading-relaxed print:text-zinc-700 list-disc list-inside">
-              <li><strong className="text-zinc-300 print:text-zinc-900">High Financial Risk:</strong> Traditional sports forecasting platforms force casual fans to constantly risk capital just to participate, creating high stress.</li>
-              <li><strong className="text-zinc-300 print:text-zinc-900">Passive Fan Tokens:</strong> Existing sports fan tokens lack concrete platform utility sinks or deflationary mechanisms, driving high sell pressure.</li>
-              <li><strong className="text-zinc-300 print:text-zinc-900">Isolated Action:</strong> Legacy platforms lack viral SocialFi integrations, leaderboard competitions, and communal feedback loops, leaving players isolated.</li>
+              <li><strong className="text-zinc-300 print:text-zinc-900">High Financial Risk:</strong> Traditional sports forecasting forces casual fans to constantly risk their own savings, creating high stress.</li>
+              <li><strong className="text-zinc-300 print:text-zinc-900">Manual & Opaque Results:</strong> Outdated systems process results manually, leading to delayed payouts and a lack of real-time sports synchronization.</li>
+              <li><strong className="text-zinc-300 print:text-zinc-900">Passive Sports Tokens:</strong> Existing sports fan tokens lack real utility sinks, daily gamification rewards, or sustainable tokenomics, yielding immense sell pressure.</li>
             </ul>
           </div>
 
@@ -142,9 +142,9 @@ export default function OnePagerPage() {
               <h3 className="font-extrabold text-sm uppercase tracking-wider">Golden Goal Solutions</h3>
             </div>
             <ul className="space-y-2 text-xs text-zinc-400 leading-relaxed print:text-zinc-700 list-disc list-inside">
-              <li><strong className="text-zinc-300 print:text-zinc-900">Zero Capital Loss (0% Risk):</strong> Players make predictions completely free of charge. Locked tokens are never spent or lost, ensuring a safe fan experience.</li>
-              <li><strong className="text-zinc-300 print:text-zinc-900">Deep Token Utility ($GG):</strong> Ecosystem utility locks directly grant premium VIP multipliers, extra daily prediction quotas, and daily Rewards Box openings.</li>
-              <li><strong className="text-zinc-300 print:text-zinc-900">Data-Driven Leaderboards:</strong> Features a dual leaderboard system (Pro & Social) to reward top analytical minds and community champions weekly.</li>
+              <li><strong className="text-zinc-300 print:text-zinc-900">Zero Loss (0% Risk):</strong> Players submit predictions completely free of charge. Locked tokens are never spent or lost, ensuring a premium risk-free fan loop.</li>
+              <li><strong className="text-zinc-300 print:text-zinc-900">Sportradar Automation:</strong> Automatic scores, live match clock tracking, and background prediction auto-resolution keep the platform fully synchronized.</li>
+              <li><strong className="text-zinc-300 print:text-zinc-900">6 Sub-Market Forecasts:</strong> Deep engagement through Match Outcome (`MAIN`), Over/Under (`TOTAL_GOALS`), BTTS, First Half Winner, Double Chance, and First Goalscorer.</li>
             </ul>
           </div>
         </div>
@@ -157,23 +157,23 @@ export default function OnePagerPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             <div className="space-y-1.5 text-center sm:text-left">
               <div className="text-xl">🎯</div>
-              <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">1. Football Predictor</h4>
+              <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">1. Sportradar Predictor & Badges</h4>
               <p className="text-[11px] text-zinc-400 leading-relaxed print:text-zinc-700">
-                A skill-based prediction market where users forecast global league matches, leveraging their football acumen and analytical skills.
+                Predict global fixtures across 6 active sub-markets with dynamic glow-in-the-dark checkmarks, side-scrolling football legends, and card indicators displaying <code className="text-emerald-400 font-bold">✓ X/6 PREDICTIONS PLACED</code>.
               </p>
             </div>
             <div className="space-y-1.5 text-center sm:text-left border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-5 print:border-zinc-200">
               <div className="text-xl">🔒</div>
-              <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">2. Multi-Tier Locking</h4>
+              <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">2. VIP Multi-Tier Locking</h4>
               <p className="text-[11px] text-zinc-400 leading-relaxed print:text-zinc-700">
-                A robust utility locker offering lockup options from 1 to 30 days. Increasing locked amounts directly unlocks premium platform perks.
+                A robust utility locker (Tiers 0 to 4) offering 1 to 30 day options. Locks grant extra daily prediction limits, XP multipliers (up to 1.25x), and a 10% early breach penalty (50% permanently burned, 50% recycled into weekly pools).
               </p>
             </div>
             <div className="space-y-1.5 text-center sm:text-left border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-5 print:border-zinc-200">
               <div className="text-xl">🎁</div>
               <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">3. Rewards Box Module</h4>
               <p className="text-[11px] text-zinc-400 leading-relaxed print:text-zinc-700">
-                A provably fair daily drops engine that offers extra prediction quotas and booster XP, completely free or heavily discounted for VIP lockers.
+                A gamified daily drops system awarding massive XP points and booster prediction quotas. Lockers receive deep discounts (up to 75% off), with Tier 4 lockers claiming 1 free box opening every single day.
               </p>
             </div>
           </div>
@@ -198,7 +198,7 @@ export default function OnePagerPage() {
               <tbody className="text-zinc-300 divide-y divide-white/5 print:text-zinc-800 print:divide-zinc-200">
                 <tr>
                   <td className="py-2 px-3 font-semibold print:text-zinc-950">Tier 0 (Holder)</td>
-                  <td className="py-2 px-3">Min 10,000 GG in Wallet</td>
+                  <td className="py-2 px-3">Min 10,000 GG in Wallet (No Lock)</td>
                   <td className="py-2 px-3">Base Limit</td>
                   <td className="py-2 px-3">1.0x</td>
                   <td className="py-2 px-3">100 XP</td>
@@ -221,14 +221,14 @@ export default function OnePagerPage() {
                   <td className="py-2 px-3 font-semibold text-purple-400 print:text-purple-800">Tier 3 (Fortnight)</td>
                   <td className="py-2 px-3 font-medium">1,000 GG (15-Day Lock)</td>
                   <td className="py-2 px-3">+5 Predictions / Day</td>
-                  <td className="py-2 px-3">1.1x Booster</td>
+                  <td className="py-2 px-3">1.1x XP Booster</td>
                   <td className="py-2 px-3">25 XP (75% Off)</td>
                 </tr>
                 <tr className="bg-yellow-500/5 print:bg-yellow-50/50">
                   <td className="py-2 px-3 font-semibold text-yellow-400 print:text-amber-800">Tier 4 (Monthly)</td>
                   <td className="py-2 px-3 font-medium">5,000 GG (30-Day Lock)</td>
                   <td className="py-2 px-3 font-black">+10 Predictions / Day</td>
-                  <td className="py-2 px-3 font-black">1.25x Booster ⚡</td>
+                  <td className="py-2 px-3 font-black">1.25x XP Booster ⚡</td>
                   <td className="py-2 px-3 font-black text-yellow-400 print:text-amber-800">1 Free Daily 🎁</td>
                 </tr>
               </tbody>
@@ -246,7 +246,7 @@ export default function OnePagerPage() {
             <ul className="space-y-2 text-xs text-zinc-400 print:text-zinc-700 leading-relaxed">
               <li className="flex items-start gap-2">
                 <span className="text-yellow-500">✔</span>
-                <span><strong className="text-zinc-200 print:text-zinc-900">Solana Speed & Low Cost:</strong> Utilizes Solana's low gas fees and sub-second execution speeds for absolute efficiency.</span>
+                <span><strong className="text-zinc-200 print:text-zinc-900">Sportradar Enterprise Engine:</strong> Integrates Soccer v4 API feeds with server-side 60-second caching, optimizing trial key limits to preserve quota.</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-yellow-500">✔</span>
@@ -254,7 +254,7 @@ export default function OnePagerPage() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-yellow-500">✔</span>
-                <span><strong className="text-zinc-200 print:text-zinc-900">AWS Cloud Synergy:</strong> Combines robust Next.js server-side routing with AWS global clusters to ensure fast loads and reliable, low-latency API handling.</span>
+                <span><strong className="text-zinc-200 print:text-zinc-900">AWS Cloud Isolation:</strong> Secure private subnets, advanced firewall shields, and VPC setups protect user prediction logs and profiles from DDoS spikes.</span>
               </li>
             </ul>
           </div>
@@ -266,20 +266,20 @@ export default function OnePagerPage() {
             </h3>
             <div className="space-y-3 text-[11px] text-zinc-400 print:text-zinc-700 font-medium">
               <div className="flex items-center justify-between border-b border-white/5 pb-1 print:border-zinc-200">
-                <span>Phase 2: Platform Launch & Whitelist Beta</span>
-                <span className="text-[9px] bg-yellow-500/10 text-yellow-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-yellow-50 print:text-yellow-800">Active Beta</span>
+                <span>Phase 1: Foundation (Solana adapter & visual rail setup)</span>
+                <span className="text-[9px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-emerald-50 print:text-emerald-800">Completed</span>
               </div>
               <div className="flex items-center justify-between border-b border-white/5 pb-1 print:border-zinc-200">
-                <span>Phase 3: Football Predictor & Leaderboards</span>
-                <span className="text-[9px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-blue-50 print:text-blue-800">Coming Soon</span>
+                <span>Phase 2: Launch (Twitter Farming & Pro/Social Boards)</span>
+                <span className="text-[9px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-emerald-50 print:text-emerald-800">Completed</span>
               </div>
               <div className="flex items-center justify-between border-b border-white/5 pb-1 print:border-zinc-200">
-                <span>Phase 4: Rewards Box & Multi-Tier Locking</span>
-                <span className="text-[9px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-purple-50 print:text-purple-800">In Development</span>
+                <span>Phase 3: Live Sync (Sportradar, 6 Sub-Markets, Tiers 1-4)</span>
+                <span className="text-[9px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-emerald-50 print:text-emerald-800">Completed</span>
               </div>
               <div className="flex items-center justify-between">
-                <span>Phase 5: Mobile Apps & DAO Governance</span>
-                <span className="text-[9px] bg-zinc-500/10 text-zinc-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-zinc-100 print:text-zinc-600">Planned</span>
+                <span>Phase 4: Expansion (Dedicated Mobile Apps & custom avatars)</span>
+                <span className="text-[9px] bg-yellow-500/10 text-yellow-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-yellow-50 print:text-yellow-800">Active</span>
               </div>
             </div>
           </div>
@@ -295,11 +295,7 @@ export default function OnePagerPage() {
           <div className="space-y-1.5 flex-1">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <span className="text-xs font-black tracking-widest text-amber-400 font-mono uppercase print:text-amber-800">⚖️ Legal Notice & Compliance Shield</span>
-              <span className="inline-flex items-center gap-1.5 text-[9px] font-black text-emerald-300 bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-400/50 font-mono shadow-[0_0_18px_rgba(52,211,153,0.45)] animate-pulse print:bg-emerald-50 print:text-emerald-700 print:border-emerald-300 print:shadow-none">
-                <span className="relative flex h-2 w-2 print:hidden">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-100"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
-                </span>
+              <span className="inline-flex items-center gap-1.5 text-[9px] font-black text-emerald-300 bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-400/50 font-mono shadow-[0_0_18px_rgba(52,211,153,0.45)] print:bg-emerald-50 print:text-emerald-700 print:border-emerald-300">
                 COMPLIANCE VERIFIED
               </span>
             </div>

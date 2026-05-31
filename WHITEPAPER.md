@@ -1,7 +1,7 @@
 # Golden Goal ($GG) Whitepaper
 *Solana Üzerinde Merkeziyetsiz, Oyunlaştırılmış Spor Tahminleri ve Sosyal Kehanet Merkezi*
 
-**Sürüm:** 1.2.0  
+**Sürüm:** 1.3.0  
 **Yayınlanma Tarihi:** Mayıs 2026  
 **Resmi Platform Alan Adı:** [www.goldengoalsol.com](https://www.goldengoalsol.com)  
 
@@ -22,7 +22,7 @@ Platform; üst düzey bir kullanıcı deneyimi sunmak amacıyla oyunlaştırma m
 Golden Goal'ün vizyonu; dünyanın en büyük futbol tahmin ve taraftar etkileşim platformunu inşa etmektir.
 
 Bu hedefe ulaşmak için platform, kullanıcılarına aşağıdaki imkanları sunar:
-*   **Ücretsiz Tahminler Yapma:** Herhangi bir finansal risk taşımadan gerçek dünya futbol maçlarının sonuçlarını tahmin etme.
+*   **Risksiz Tahminler Yapma:** Herhangi bir finansal risk taşımadan gerçek dünya futbol maçlarının sonuçlarını tahmin etme.
 *   **Haftalık Liderlik Tablolarında Rekabet:** İsabetli tahminler yaparak üst sıralara yükselme ve haftalık ödüller kazanma.
 *   **Staking Avantajları:** Token kilitleyerek pasif avantajlar, tahmin çarpanları ve sadakat ödül indirimleri kazanma.
 *   **Sosyal Görevlerle Kazanma:** Platformun sosyal medyada viral büyümesine yardımcı olarak topluluk ödülleri elde etme.
@@ -52,62 +52,69 @@ Golden Goal, bu sorunları modern Web3 mimarisiyle çözer:
 
 ## 4. Platform Özellikleri
 
-### 4.1 Ücretsiz Tahmin Sistemi
-Kullanıcılar, Dünya Kupası gibi büyük uluslararası turnuvalar da dahil olmak üzere gerçek dünya futbol maçlarına tahminler yerleştirebilirler.
-*   **Tahmin Piyasaları:** Maç Sonucu (1X2), Toplam Gol (Alt/Üst), Karşılıklı Gol Var/Yok, İlk Yarı Sonucu, İlk Golü Kim Atar ve Çifte Şans gibi popüler standart pazarlar.
-*   **Risksiz Tahmin Mekaniği:** Tahminler tamamen ücretsizdir. Günlük tahmin limitleri kullanıcının Staking kademesine göre belirlenir.
-*   **Kazanılan Ödüller:** Doğru tahminler kullanıcılara şunları kazandırır:
-    *   **Deneyim Puanı (XP):** Haftalık liderlik tablosundaki sıralamayı yükseltir.
-    *   **Sosyal Puanlar:** Sosyal görev seviyelerine katkıda bulunur.
-    *   **Liderlik Tablosu Puanı:** Haftalık ödül havuzundaki payı doğrudan etkiler.
-*   **Dinamik Değişiklik:** Kullanıcılar kişisel kontrol panelleri üzerinden, maçın başlama saatine 5 dakika kalana kadar tahminlerini değiştirebilir veya iptal edebilirler.
+### 4.1 Altı (6) Farklı Tahmin Alt Pazarı
+Golden Goal, kullanıcıların analiz gücünü en iyi şekilde yansıtabilmesi için her maça özel 6 derinlemesine tahmin alt pazarı sunmaktadır:
+1.  **Maç Sonucu (`MAIN`):** Karşılaşmanın 90 dakikalık (ve duraklama süreleri dahil) resmi sonucunu tahmin etme. Seçenekler: Ev Sahibi Kazanır (`1`), Beraberlik (`X`), Deplasman Kazanır (`2`).
+2.  **Toplam Gol (`TOTAL_GOALS`):** Karşılaşmada atılacak toplam gol sayısının Alt veya Üst baremini (standart 2.5 baremi) tahmin etme. Seçenekler: `ALT`, `ÜST`.
+3.  **Karşılıklı Gol Var/Yok (`BTTS`):** Her iki takımın da karşılaşmada en az birer gol atıp atamayacağını tahmin etme. Seçenekler: `VAR` (her iki takım da gol atar), `YOK` (en az bir takım gol atamaz).
+4.  **İlk Yarı Sonucu (`FIRST_HALF`):** Karşılaşmanın ilk 45 dakikalık (artı duraklama) bölümünün sonucunu tahmin etme. Seçenekler: Ev Sahibi Kazanır (`1`), Beraberlik (`X`), Deplasman Kazanır (`2`).
+5.  **Çifte Şans (`DOUBLE_CHANCE`):** Kullanıcının beraberlik veya deplasman risklerini minimize etmesini sağlayan ve iki sonucu birden kapsayan premium pazar. Seçenekler: `1X` (Ev Sahibi veya Beraberlik), `12` (Ev Sahibi veya Deplasman), `X2` (Beraberlik veya Deplasman).
+6.  **İlk Golü Atan Oyuncu (`FIRST_GOAL`):** Karşılaşmada ilk golü atacak oyuncuyu tahmin etme. Maçta gol olmaması durumunda `"Hiçbiri"` seçeneği geçerli sayılır ve maç içi dinamik golcü listelerine göre otomatik sonuçlandırılır.
 
-### 4.2 Haftalık Ödül Havuzu
-Golden Goal'ün rekabetçi kalbi haftalık Liderlik Tablosudur. Her hafta, liderlik tablosundaki en başarılı ilk 10 tahminci **Golden Goal ($GG) tokenları** ile ödüllendirilir.
-
-Ödül dağıtımı aktif kullanıcı hacmine, tamamlanan fikstürlere ve hazine gelirlerine göre dinamik olarak ölçeklenir; böylece en iyi analiz yeteneğine sahip 10 kullanıcı sürekli olarak premium kazançlarla teşvik edilir. Güncel ödül miktarları ve dağılımları her maç haftasının başında şeffaf bir şekilde kontrol panelinde sergilenir. Bu esneklik, Dünya Kupası gibi küresel şampiyonalarda ödül havuzlarının çok daha yüksek seviyelere çıkarılmasına olanak tanır.
+### 4.2 Sportradar Canlı Skor Entegrasyonu ve Otomatik Çözümleyici
+Eşsiz ve kesintisiz bir kullanıcı deneyimi sağlamak amacıyla Golden Goal, endüstri standardı **Sportradar Soccer v4 API** servislerini entegre etmiştir.
+*   **Otomatik Canlı Skor & Maç Saati:** Maç başladığı andan itibaren canlı skor verileri, maçın anlık dakikası (örneğin "83'") platform arayüzündeki maç kartlarına yansıtılır.
+*   **Gerçek Zamanlı Çözümleme (Auto-Resolution):** Karşılaşmalar tamamlandığı an (FT - Full Time), Sportradar API üzerinden çekilen resmi verilerle 6 alt pazarın tamamına ait tahminler milisaniyeler içinde otomatik olarak çözümlenir, kazanan tahmin sahiplerine XP puanları anında dağıtılır ve maç kartı "Çözümlenmiş Maçlar" (Resolved Matches) sekmesine aktarılır.
+*   **Enterprise Kota Koruma & 60 Saniyelik Sunucu Caching:** Sportradar API kotalarının verimli kullanımı ve limit aşımlarının önlenmesi amacıyla platform, 60 saniyelik sunucu taraflı in-memory önbellekleme (caching) mekanizması uygular. Bu sayede 115 dakikalık bir canlı maç yayını boyunca Sportradar sunucularına sadece ~115 istek atılır, aylık kota tüketimi en üst seviyede korunur.
 
 ---
 
-### 4.3 VIP Analiz Paneli (Dashboard)
-Her katılımcı, şu analitik verileri barındıran premium bir kişisel panele erişebilir:
-*   **Toplam Puan & Aktif Tahminler:** Aktif tahmin durumlarının anlık görünümü.
-*   **Başarı Oranı (WR):** Tüm tahmin kategorilerindeki tarihsel başarı yüzdesi.
-*   **Tahmin Geçmişi:** Geçmiş tüm tahminlerin, kazanılan puanların ve kesinleşen maç skorlarının şeffaf dökümü.
+### 4.3 VIP Analiz Paneli (Dashboard) ve Premium Arayüz Estetiği
+Kullanıcı deneyimini büyüleyici hale getirmek için Golden Goal, benzersiz bir görsel şıklık ve dinamik arayüz öğeleriyle tasarlanmıştır:
+*   **Efsane Futbolcular Yan Rayları (Side Rails):** Arayüzün her iki yanında bisiklet döngüsüyle değişen premium futbol efsaneleri (Maradona, Pele, Messi, Ronaldo, Baggio, van Basten, Buffon, Roberto Carlos, Gerrard, Lampard, Mbappe, Kante, Gullit) yer alır.
+*   **Dinamik Tahmin Sayacı Rozeti (`✓ X/6 PREDICTIONS PLACED`):** Kullanıcılar bir maç kartı üzerinde kaç tahminde bulunduklarını (6 tahmin pazarından kaçını doldurduklarını) kartı açmadan anında görebilirler. Kartların üzerinde parlayan altın yeşil renkli bu sayaç, cüzdan bazlı anlık durum takibini mükemmel hale getirir.
+*   **Cinematik Doğrulama Modalı:** Tahmin yerleştirirken veya güncellerken ekrana gelen modal, efsane futbolcuların stüdyo siyahı portreleriyle çevrelenir ve işlem tamamlandığında parıldayan altın onay işaretleriyle premium bir his uyandırır.
+*   **Kişisel Veri Takibi:** Dashboard üzerinde toplam puan, geçmiş tahmin dökümleri ve **Net Başarı Oranı (Win Rate)** anlık olarak gösterilir. Liderlik hesaplamalarında "İptal Edilen" veya "Ertelenen" maçlar başarı oranı hesaplamasından filtrelenerek adil bir rekabet ortamı sağlanır.
 
 ---
 
 ### 4.4 Token Kilitleme (Locking) Sistemi
-Uzun vadeli sadakati teşvik etmek, token talebini artırmak ve dolaşımdaki arzı dengelemek için Golden Goal kademeli bir kilitleme protokolü uygular.
+Uzun vadeli sadakati teşvik etmek, token talebini artırmak ve dolaşımdaki arzı dengelemek için Golden Goal kademeli bir kilitleme protokolü uygular. Cüzdandaki token miktarı ve kilitleme süresine göre 5 farklı VIP Kademesi (Tier 0 - Tier 4) belirlenmiştir:
 
 ```mermaid
 graph TD
-    A[Kullanıcı $GG Kilitler] --> B{Kilit Süresini Seç}
-    B -->|Soft Lock: 1 Gün| C[+1 Günlük Tahmin / Esnek Çekim]
-    B -->|7 Günlük Kilit| D[+3 Günlük Tahmin / %10 Erken Kilit Açma Cezası]
-    B -->|15 Günlük Kilit| E[+5 Günlük Tahmin / 1.1x XP / %10 Erken Kilit Açma Cezası]
-    B -->|30 Günlük Kilit| F[+10 Günlük Tahmin / 1.25x XP / 1 Ücretsiz Günlük Kutu]
+    A[Kullanıcı $GG Kilitler] --> B{VIP Kademe ve Kilit Süresi}
+    B -->|Tier 0: Cüzdanda Tutma| C[Temel Limitler / 1.0x XP / 100 XP Kutu Maliyeti]
+    B -->|Tier 1: Soft Lock - 1 Gün| D[+1 Ek Günlük Tahmin / 1.0x XP / 75 XP Kutu Maliyeti]
+    B -->|Tier 2: 7 Günlük Kilit| E[+3 Ek Günlük Tahmin / 1.0x XP / 50 XP Kutu Maliyeti]
+    B -->|Tier 3: 15 Günlük Kilit| F[+5 Ek Günlük Tahmin / 1.1x XP / 25 XP Kutu Maliyeti]
+    B -->|Tier 4: 30 Günlük Kilit| G[+10 Ek Günlük Tahmin / 1.25x XP / Her Gün 1 Ücretsiz Kutu]
 ```
 
-*   **Soft Lock (Esnek Kilitleme):**
-    *   *Minimum:* 100 $GG token
-    *   *Kilit Süresi:* 1 Gün
-    *   *Ödül:* Günlük +1 ek tahmin limiti
-    *   *Çekim:* Sıfır ceza ile tamamen esnek çekim.
-*   **7 Günlük Kilitleme:**
-    *   *Minimum:* 500 $GG token
-    *   *Kilit Süresi:* 7 Gün
-    *   *Ödül:* Günlük +3 ek tahmin limiti
-    *   *Erken Çekim Cezası:* Kilit süresi dolmadan çekim yapıldığında ana paradan %10 kesinti.
-*   **15 Günlük Kilitleme:**
-    *   *Minimum:* 1,000 $GG token
-    *   *Kilit Süresi:* 15 Gün
-    *   *Ödüller:* Günlük +5 ek tahmin limiti & **1.1x XP Çarpanı**
-    *   *Erken Çekim Cezası:* Kilit süresi dolmadan çekim yapıldığında ana paradan %10 kesinti.
-*   **1 Aylık Kilitleme (Tier 4):**
-    *   *Minimum:* 5,000 $GG token
-    *   *Kilit Süresi:* 30 Gün
-    *   *Ödüller:* Günlük +10 ek tahmin limiti, **1.25x XP Çarpanı** ve sadakat modülünde **Her Gün 1 Ücretsiz Ödül Kutusu**.
+*   **Tier 0 (Holder):**
+    *   *Gereksinim:* Cüzdanda en az 10,000 $GG token bulundurmak (Aktif kilit yok).
+    *   *Avantajlar:* Temel günlük tahmin limiti, 1.0x standart XP çarpanı.
+    *   *Ödül Kutusu Maliyeti:* 100 XP (İndirimsiz).
+*   **Tier 1 (Soft Lock):**
+    *   *Gereksinim:* Minimum 100 $GG token kilitleme.
+    *   *Kilit Süresi:* 1 Gün.
+    *   *Avantajlar:* Günlük +1 ek tahmin limiti, 1.0x XP çarpanı.
+    *   *Ödül Kutusu Maliyeti:* 75 XP (%25 İndirimli).
+    *   *Esneklik:* Cezası bulunmayan günlük esnek kilit yapısı.
+*   **Tier 2 (7 Günlük Kilitleme):**
+    *   *Gereksinim:* Minimum 500 $GG token kilitleme.
+    *   *Kilit Süresi:* 7 Gün.
+    *   *Avantajlar:* Günlük +3 ek tahmin limiti, 1.0x XP çarpanı.
+    *   *Ödül Kutusu Maliyeti:* 50 XP (%50 İndirimli).
+*   **Tier 3 (15 Günlük Kilitleme):**
+    *   *Gereksinim:* Minimum 1,000 $GG token kilitleme.
+    *   *Kilit Süresi:* 15 Gün.
+    *   *Avantajlar:* Günlük +5 ek tahmin limiti, **1.1x XP Puan Çarpanı**.
+    *   *Ödül Kutusu Maliyeti:* 25 XP (%75 İndirimli).
+*   **Tier 4 (1 Aylık Kilitleme):**
+    *   *Gereksinim:* Minimum 5,000 $GG token kilitleme.
+    *   *Kilit Süresi:* 30 Gün.
+    *   *Avantajlar:* Günlük +10 ek tahmin limiti, **1.25x En Yüksek XP Çarpanı** ve sadakat modülünde **Her Gün 1 Adet Tamamen Ücretsiz Ödül Kutusu** (sonraki açımlar 25 XP).
 
 ---
 
@@ -119,15 +126,7 @@ Kilit süresi dolmadan erken token çekimlerinde uygulanan **%10 ceza ücreti**,
 ---
 
 ### 4.6 Ödül Kutusu (Rewards Box)
-Ödül Kutusu, kullanıcıların sadakat ödülleri, devasa XP puanları veya ek tahmin limitleri kazanmasını sağlayan yüksek etkileşimli bir oyunlaştırma modülüdür. Kutu açımları tamamen XP Puanları ile gerçekleştirilir ve kilitleme (locking) kademelerine göre büyük indirimlerle sunulur:
-
-| Kullanıcı Kategorisi | Kilitleme Durumu | Kutu Açım Maliyeti (XP) |
-| :--- | :--- | :--- |
-| **Kilit Yapmayanlar (Tier 0)** | 0 $GG veya aktif kilidi bulunmayan cüzdanlar | 100 XP |
-| **1 Günlük Lockerlar (Tier 1)** | Aktif Soft Lock | 75 XP |
-| **7 Günlük Lockerlar (Tier 2)** | Aktif 7 Günlük Kilitli Lock | 50 XP |
-| **15 Günlük Lockerlar (Tier 3)** | Aktif 15 Günlük Kilitli Lock | 25 XP |
-| **1 Aylık Lockerlar (Tier 4)** | Aktif 30 Günlük Kilitli Lock | **Her Gün 1 Kutu ÜCRETSİZ**, sonrakiler 25 XP |
+Ödül Kutusu, kullanıcıların sadakat ödülleri, devasa XP puanları veya ek tahmin limitleri kazanmasını sağlayan yüksek etkileşimli bir oyunlaştırma modülüdür. Kutu açımları tamamen XP Puanları ile gerçekleştirilir ve kilitleme (locking) kademelerine göre büyük indirimlerle sunulur.
 
 **Ödül Kutusundan Çıkabilecek Olası Ödüller:**
 *   Liderlik sıralamasında yükselmenizi sağlayacak XP Puanları (+100, +250, +500, +1000 XP).
@@ -164,7 +163,7 @@ Platformun temel taşı olan **Golden Goal ($GG)** tokenı, tüm ekosistem boyun
 ## 6. Sürdürülebilir Tokenomics & Adil Lansman
 
 ### 6.1 Token Sürdürülebilirliği Mekanizmaları
-Golden Goal token ekonomisi, enflasyona dayalı olmak yerine ekosistem içi sürekli fayda ve yakım (sink) mekanizmalarıyla dengelenir:
+Golden Goal token ekonomiisi, enflasyona dayalı olmak yerine ekosistem içi sürekli fayda ve yakım (sink) mekanizmalarıyla dengelenir:
 *   **Erken Kilit Açma Cezaları:** Süresi dolmadan yapılan kilit iptali cezalarının %50'si kalıcı olarak yakılarak dolaşımdaki arzdan silinir.
 *   **Ödül Kutusu Katkıları:** Kutu açımlardan elde edilen gelirlerin bir kısmı ekosistem havuzunu beslemek üzere hazineye aktarılır.
 *   **Deflasyonist Mikro Ücretler:** Tahmin değiştirme ve iptallerinden alınan mikro token kesintileri sürekli deflasyonist etki yaratır.
@@ -204,17 +203,19 @@ Liderlik tablosu ödüllerinin bütünlüğünü ve adaletini korumak için back
                                  ▼
   ┌─────────────────────────────────────────────────────────────┐
   │ AŞAMA 2: Çekirdek Platformun Devreye Alınması               │
-  │  ⏳ Haftalık Rekabetçi Liderlik Tablosunun Aktif Edilmesi    │
-  │  ⏳ Viral Sosyal Görevler (Twitter Farming) & Davet Sistemi │
-  │  ⏳ Solana Cüzdan Entegrasyonları Suite (Phantom, vb.)      │
+  │  ✓ Haftalık Rekabetçi Liderlik Tablosunun Aktif Edilmesi    │
+  │  ✓ Viral Sosyal Görevler (Twitter Farming) & Davet Sistemi │
+  │  ✓ Solana Cüzdan Entegrasyonları Suite (Phantom, vb.)      │
   └──────────────────────────────┬──────────────────────────────┘
                                  │
                                  ▼
   ┌─────────────────────────────────────────────────────────────┐
-  │ AŞAMA 3: Oyunlaştırma & DeFi Özellikleri                    │
-  │  ⏳ Kademeli Kilitleme Protokolü (Soft, 7g, 15g, 30g Kilit)   │
-  │  ⏳ Ödül Kutusu (Rewards Box - Sadakat Modülü) Entegrasyonu │
-  │  ⏳ Deflasyonist Erken Kilit Açma Ceza Yakımları             │
+  │ AŞAMA 3: Canlı Veri ve DeFi Özellikleri                     │
+  │  ✓ Sportradar Soccer v4 API Canlı Skor ve Çözümleme         │
+  │  ✓ Altı (6) Tahmin Alt Pazarı Entegrasyonu                  │
+  │  ✓ Kademeli Kilitleme Protokolü (Soft, 7g, 15g, 30g Kilit)   │
+  │  ✓ Ödül Kutusu (Rewards Box - Sadakat Modülü) Entegrasyonu │
+  │  ✓ Deflasyonist Erken Kilit Açma Ceza Yakımları             │
   └──────────────────────────────┬──────────────────────────────┘
                                  │
                                  ▼

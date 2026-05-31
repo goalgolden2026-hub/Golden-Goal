@@ -17,7 +17,7 @@ export default function DocsPage() {
     { id: 'vision', label: '2. Vision & Core Philosophy' },
     { id: 'problem-solution', label: '3. Problem & Solution' },
     { id: 'features', label: '4. Platform Features' },
-    { id: 'staking', label: '5. VIP Locking System' },
+    { id: 'staking', label: '5. Locking System' },
     { id: 'spin-system', label: '6. Rewards Box Module' },
     { id: 'social-referral', label: '7. Social Hub & Referrals' },
     { id: 'tokenomics', label: '8. Tokenomics & Fair Launch' },
@@ -154,7 +154,7 @@ export default function DocsPage() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">Golden Goal</span>
             </h1>
             <p className="text-zinc-400 text-lg leading-relaxed max-w-3xl">
-              Official whitepaper detailing the decentralized, gamified prediction economy, VIP locking utility matrix, provably fair mechanics, and AWS global cluster architecture.
+              Official whitepaper detailing the decentralized, gamified prediction economy, tiered locking utility matrix, provably fair mechanics, and AWS global cluster architecture.
             </p>
           </div>
 
@@ -267,10 +267,10 @@ export default function DocsPage() {
             </div>
           </section>
 
-          {/* 5. VIP LOCKING SYSTEM (WITH INTERACTIVE CALCULATOR) */}
+          {/* 5. LOCKING SYSTEM (WITH INTERACTIVE CALCULATOR) */}
           <section id="staking" className="scroll-mt-24 space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
-              <span className="text-amber-500">5.</span> VIP Locking System
+              <span className="text-amber-500">5.</span> Locking System
             </h2>
             <p className="text-zinc-400 text-sm md:text-base leading-relaxed">
               Locking your $GG tokens reduces circulating market supply while unlocking elite platform advantages. Use the interactive calculator below to explore your loyalty benefits in real-time.

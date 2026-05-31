@@ -233,7 +233,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Stat 2: VIP Locking */}
+          {/* Stat 2: Tiered Locking */}
           <div className="relative overflow-hidden bg-zinc-900/30 hover:bg-zinc-900/50 border border-white/5 hover:border-amber-500/20 backdrop-blur-md rounded-3xl p-6 flex items-center justify-between transition-all duration-300 hover:scale-[1.02] shadow-[0_4px_30px_rgba(0,0,0,0.2)] group/stat">
             <div className="space-y-1 text-left">
               <div className="text-[10px] font-black text-amber-400 font-mono tracking-widest uppercase flex items-center gap-1.5">
@@ -241,7 +241,7 @@ export default function LandingPage() {
                 Multi-Tiered
               </div>
               <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500 tracking-tight">Tiers 0-4</div>
-              <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">VIP Locking Programs</div>
+              <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">Tiered Locking Programs</div>
             </div>
             <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center group-hover/stat:scale-110 transition-transform duration-300">
               <svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -386,7 +386,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">3. Deflationary Locking</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                Lock your $GG tokens to scale your prediction capabilities, boost your XP multiplier, and unlock VIP access levels. Drive premium value through long-term loyalty.
+                Lock your $GG tokens to scale your prediction capabilities, boost your XP multiplier, and unlock higher access levels. Drive premium value through long-term loyalty.
               </p>
             </div>
 
@@ -445,7 +445,7 @@ export default function LandingPage() {
             <div className="space-y-6">
               <div className="space-y-2">
                 <span className="text-amber-500 font-mono text-xs uppercase tracking-widest font-bold">UTILITY HUB</span>
-                <h3 className="text-3xl sm:text-4xl font-black text-white">VIP Locking Programs</h3>
+                <h3 className="text-3xl sm:text-4xl font-black text-white">Tiered Locking Programs</h3>
                 <p className="text-zinc-400 text-sm leading-relaxed font-medium">
                   Locking your $GG tokens contracts circulating market supply while unlocking compound benefits across the platform. Click on a tier level below to preview its specific gaming benefits:
                 </p>
@@ -587,7 +587,7 @@ export default function LandingPage() {
               <div className="sm:w-2/3">
                 <h4 className="font-bold text-white text-base mb-2">Rewards Box & Locking Engine</h4>
                 <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-                  Unlocking the gamified Rewards Box module for daily XP & prediction quota claims, and launching the multi-tier lockup VIP Locking programs.
+                  Unlocking the gamified Rewards Box module for daily XP & prediction quota claims, and launching the multi-tier lockup tiered locking programs.
                 </p>
               </div>
             </div>

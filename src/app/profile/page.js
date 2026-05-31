@@ -76,14 +76,14 @@ export default function ProfilePage() {
                     </h1>
                 </div>
 
-                {/* VIP Membership Card */}
+                {/* Membership Card */}
                 <div className="w-full bg-zinc-950/80 backdrop-blur-2xl border border-white/10 rounded-[32px] p-8 md:p-10 shadow-2xl relative overflow-hidden group hover:border-amber-500/20 transition-all duration-500">
                     {/* Decorative Shiny Lines */}
                     <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
                     <div className="absolute -top-[150px] -right-[150px] w-[300px] h-[300px] bg-amber-500/5 rounded-full blur-3xl group-hover:bg-amber-500/10 transition-colors duration-500"></div>
 
                     <div className="flex flex-col gap-8">
-                        {/* Upper Section: Brand & VIP Level */}
+                        {/* Upper Section: Brand & Level */}
                         <div className="flex justify-between items-center pb-6 border-b border-white/5">
                             <div className="flex items-center gap-2">
                                 <img 

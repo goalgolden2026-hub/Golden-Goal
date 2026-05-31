@@ -164,7 +164,7 @@ export default function OnePagerPage() {
             </div>
             <div className="space-y-1.5 text-center sm:text-left border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-5 print:border-zinc-200">
               <div className="text-xl">🔒</div>
-              <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">2. VIP Multi-Tier Locking</h4>
+              <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">2. Multi-Tier Locking</h4>
               <p className="text-[11px] text-zinc-400 leading-relaxed print:text-zinc-700">
                 A robust utility locker (Tiers 0 to 4) offering 1 to 30 day options. Locks grant extra daily prediction limits, XP multipliers (up to 1.25x), and a 10% early breach penalty (50% permanently burned, 50% recycled into weekly pools).
               </p>
@@ -182,7 +182,7 @@ export default function OnePagerPage() {
         {/* STAKING/LOCKING TIERS TABLE */}
         <div className="bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-3xl p-6 mb-8 print-bg-card print:p-5 print:mb-5">
           <h2 className="text-lg font-black tracking-wider text-amber-400 uppercase mb-4 print:text-amber-800">
-            📈 VIP Token Locking Tiers
+            📈 Token Locking Tiers
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">

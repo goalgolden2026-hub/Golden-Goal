@@ -69,7 +69,7 @@ Eşsiz ve kesintisiz bir kullanıcı deneyimi sağlamak amacıyla Golden Goal, e
 
 ---
 
-### 4.3 VIP Analiz Paneli (Dashboard) ve Premium Arayüz Estetiği
+### 4.3 Analiz Paneli (Dashboard) ve Premium Arayüz Estetiği
 Kullanıcı deneyimini büyüleyici hale getirmek için Golden Goal, benzersiz bir görsel şıklık ve dinamik arayüz öğeleriyle tasarlanmıştır:
 *   **Efsane Futbolcular Yan Rayları (Side Rails):** Arayüzün her iki yanında bisiklet döngüsüyle değişen premium futbol efsaneleri (Maradona, Pele, Messi, Ronaldo, Baggio, van Basten, Buffon, Roberto Carlos, Gerrard, Lampard, Mbappe, Kante, Gullit) yer alır.
 *   **Dinamik Tahmin Sayacı Rozeti (`✓ X/6 PREDICTIONS PLACED`):** Kullanıcılar bir maç kartı üzerinde kaç tahminde bulunduklarını (6 tahmin pazarından kaçını doldurduklarını) kartı açmadan anında görebilirler. Kartların üzerinde parlayan altın yeşil renkli bu sayaç, cüzdan bazlı anlık durum takibini mükemmel hale getirir.
@@ -79,11 +79,11 @@ Kullanıcı deneyimini büyüleyici hale getirmek için Golden Goal, benzersiz b
 ---
 
 ### 4.4 Token Kilitleme (Locking) Sistemi
-Uzun vadeli sadakati teşvik etmek, token talebini artırmak ve dolaşımdaki arzı dengelemek için Golden Goal kademeli bir kilitleme protokolü uygular. Cüzdandaki token miktarı ve kilitleme süresine göre 5 farklı VIP Kademesi (Tier 0 - Tier 4) belirlenmiştir:
+Uzun vadeli sadakati teşvik etmek, token talebini artırmak ve dolaşımdaki arzı dengelemek için Golden Goal kademeli bir kilitleme protokolü uygular. Cüzdandaki token miktarı ve kilitleme süresine göre 5 farklı Kilitleme Kademesi (Tier 0 - Tier 4) belirlenmiştir:
 
 ```mermaid
 graph TD
-    A[Kullanıcı $GG Kilitler] --> B{VIP Kademe ve Kilit Süresi}
+    A[Kullanıcı $GG Kilitler] --> B{Kilitleme Kademesi ve Kilit Süresi}
     B -->|Tier 0: Cüzdanda Tutma| C[Temel Limitler / 1.0x XP / 100 XP Kutu Maliyeti]
     B -->|Tier 1: Soft Lock - 1 Gün| D[+1 Ek Günlük Tahmin / 1.0x XP / 75 XP Kutu Maliyeti]
     B -->|Tier 2: 7 Günlük Kilit| E[+3 Ek Günlük Tahmin / 1.0x XP / 50 XP Kutu Maliyeti]
@@ -151,7 +151,7 @@ Sosyal medyada sürekli görünürlük sağlamak amacıyla Golden Goal, viral to
 ## 5. Token Faydası (Utility)
 
 Platformun temel taşı olan **Golden Goal ($GG)** tokenı, tüm ekosistem boyunca derin işlevsel faydalara sahiptir:
-1.  **Kilitleme (Locking):** VIP çarpan seviyelerini, günlük ekstra tahmin limitlerini ve özel platform imtiyazlarını aktifleştirme.
+1.  **Kilitleme (Locking):** Kademeli çarpan seviyelerini, günlük ekstra tahmin limitlerini ve özel platform imtiyazlarını aktifleştirme.
 2.  **Kutu Açma Avantajı:** Kilitleme kademelerine bağlı olarak Ödül Kutusu açımlarında devasa XP indirimleri veya günlük ücretsiz açım hakları.
 3.  **Ekosistem Ödülleri:** Liderlik tablosundaki en başarılı analizcilere haftalık olarak yapılan ödemelerin para birimi olması.
 4.  **XP ve Puan Artırıcılar:** Liderlik sıralamasında avantaj elde etmek için XP çarpanları satın alma.

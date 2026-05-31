@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 const SPORTRADAR_API_KEY = process.env.SPORTRADAR_API_KEY || 'Et17n0p8lXDbQIPqyEqWjjaNjWHACZKBLBELV6J0';
 const SPORTRADAR_BASE_URL = 'https://api.sportradar.com/soccer/trial/v4/en';
 
@@ -77,11 +79,12 @@ export async function GET(request) {
                 const competitors = event.sport_event?.competitors || [];
                 const home = normalizeTeamName(competitors.find(c => c.qualifier === 'home')?.name || '');
                 const away = normalizeTeamName(competitors.find(c => c.qualifier === 'away')?.name || '');
-                return (
-                    (dbA === home && dbB === away) || (dbA === away && dbB === home) ||
-                    home.includes(dbA) || dbA.includes(home) ||
-                    away.includes(dbB) || dbB.includes(away)
-                );
+                
+                const match1 = (home === dbA || home.includes(dbA) || dbA.includes(home)) && 
+                               (away === dbB || away.includes(dbB) || dbB.includes(away));
+                const match2 = (home === dbB || home.includes(dbB) || dbB.includes(home)) && 
+                               (away === dbA || away.includes(dbA) || dbA.includes(away));
+                return match1 || match2;
             });
 
             if (matchedLiveEvent) {
@@ -101,11 +104,12 @@ export async function GET(request) {
                 const competitors = event.sport_event?.competitors || [];
                 const home = normalizeTeamName(competitors.find(c => c.qualifier === 'home')?.name || '');
                 const away = normalizeTeamName(competitors.find(c => c.qualifier === 'away')?.name || '');
-                return (
-                    (dbA === home && dbB === away) || (dbA === away && dbB === home) ||
-                    home.includes(dbA) || dbA.includes(home) ||
-                    away.includes(dbB) || dbB.includes(away)
-                );
+                
+                const match1 = (home === dbA || home.includes(dbA) || dbA.includes(home)) && 
+                               (away === dbB || away.includes(dbB) || dbB.includes(away));
+                const match2 = (home === dbB || home.includes(dbB) || dbB.includes(home)) && 
+                               (away === dbA || away.includes(dbA) || dbA.includes(away));
+                return match1 || match2;
             });
 
             if (matchedDailyEvent) {

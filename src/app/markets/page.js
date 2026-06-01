@@ -460,7 +460,7 @@ function MarketsContent() {
             </h1>
             <p className="text-zinc-300 font-medium text-lg md:text-xl max-w-2xl mx-auto text-shadow-sm leading-relaxed">
                 {isUpcomingMode ? (
-                    "Analyze scheduled matches after the next 3 days. Lock in your predictions ahead of time and secure your leaderboard multiplier!"
+                    "Analyze scheduled matches. Lock in your predictions ahead of time and secure your leaderboard multiplier!"
                 ) : (
                     "Hold Golden Tokens to place free predictions on active FIFA World Cup 2026 matches. Correct predictions earn you points and rank you up the leaderboard."
                 )}
@@ -484,17 +484,13 @@ function MarketsContent() {
                     {/* Left Column: Section Title */}
                     <div className="text-center md:text-left">
                         <h2 className="text-3xl font-black text-white">
-                            {isUpcomingMode ? 'Upcoming Match Program' : 'Active Matches'}
+                            {isUpcomingMode ? 'Upcoming Matches' : 'Active Matches'}
                         </h2>
                     </div>
 
                     {/* Center Column: Kickoff Countdown / Tag */}
                     <div className="flex justify-center">
-                        {isUpcomingMode ? (
-                          <span className="text-xs text-zinc-500 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full font-mono font-bold">
-                            3+ Days Out
-                          </span>
-                        ) : (
+                        {isUpcomingMode ? null : (
                           <div>
                             {!timeLeft.expired ? (
                               <div className="flex items-center gap-2.5">

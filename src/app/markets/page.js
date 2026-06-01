@@ -43,6 +43,34 @@ const RIGHT_LEGENDS = [
   'kluivert.png'
 ];
 
+const GROUPS = {
+  'Group A': ['Mexico', 'South Africa', 'South Korea', 'Czechia'],
+  'Group B': ['Canada', 'Bosnia and Herzegovina', 'Qatar', 'Switzerland'],
+  'Group C': ['Brazil', 'Morocco', 'Haiti', 'Scotland'],
+  'Group D': ['USA', 'Paraguay', 'Australia', 'Turkey'],
+  'Group E': ['Germany', 'Curacao', 'Ivory Coast', 'Ecuador'],
+  'Group F': ['Netherlands', 'Japan', 'Sweden', 'Tunisia'],
+  'Group G': ['Belgium', 'Egypt', 'Iran', 'New Zealand'],
+  'Group H': ['Spain', 'Cape Verde', 'Saudi Arabia', 'Uruguay'],
+  'Group I': ['France', 'Senegal', 'Iraq', 'Norway'],
+  'Group J': ['Argentina', 'Algeria', 'Austria', 'Jordan'],
+  'Group K': ['Portugal', 'DR Congo', 'Uzbekistan', 'Colombia'],
+  'Group L': ['England', 'Croatia', 'Ghana', 'Panama']
+};
+
+function getTeamGroup(teamName) {
+  if (!teamName) return null;
+  const normalized = teamName.toLowerCase().trim();
+  for (const [groupName, teams] of Object.entries(GROUPS)) {
+    const matched = teams.some(t => {
+      const tNorm = t.toLowerCase().trim();
+      return tNorm === normalized || tNorm.includes(normalized) || normalized.includes(tNorm);
+    });
+    if (matched) return groupName;
+  }
+  return null;
+}
+
 function MarketsContent() {
   const { connected, publicKey } = useWallet();
   const [markets, setMarkets] = useState([]);
@@ -211,6 +239,11 @@ function MarketsContent() {
                         
                         {/* Match Info */}
                         <div className="w-full text-center relative z-10">
+                            {/* Group Tag */}
+                            <span className="text-[9px] font-black tracking-[0.25em] text-yellow-500/80 uppercase block mb-3.5 select-none">
+                              {getTeamGroup(m.teamA) || 'Tournament Match'}
+                            </span>
+
                             {isLive ? (
                                 <div className="flex items-center justify-center gap-2 mb-2">
                                     <span className="text-[10px] font-extrabold tracking-widest text-red-400 bg-red-500/10 border border-red-500/30 px-2.5 py-0.5 rounded-full animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.25)]">

@@ -130,14 +130,14 @@ export default function GroupStage() {
 
       {/* Hero Section with Embedded Stadium Banner */}
       <section className="relative py-24 px-4 text-center overflow-hidden mb-12">
-        <div className="absolute inset-0 z-0 opacity-20" style={{ backgroundImage: "url('/hero-bg.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}></div>
+        <div className="absolute inset-0 z-0 opacity-40" style={{ backgroundImage: "url('/hero-bg.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}></div>
         <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/0 via-black/60 to-black"></div>
         
         <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
           <img 
             src="/logo.jpg" 
             alt="Golden Goal Logo" 
-            className="w-20 h-20 rounded-full object-cover border border-yellow-500/30 shadow-[0_0_25px_rgba(245,158,11,0.3)] mb-6 select-none animate-pulse"
+            className="w-24 h-24 rounded-full object-cover border border-yellow-500/30 shadow-[0_0_30px_rgba(245,158,11,0.35)] mb-6 select-none animate-pulse"
           />
           <h1 className="text-4xl md:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 drop-shadow-[0_0_30px_rgba(245,158,11,0.2)] tracking-tight uppercase mb-4">
             Tournament Group Stage

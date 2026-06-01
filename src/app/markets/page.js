@@ -16,7 +16,8 @@ const LEFT_LEGENDS = [
   'carlos.png',
   'kante.png',
   'neuer.png',
-  'rijkaard.png'
+  'rijkaard.png',
+  'zidane.png'
 ];
 const RIGHT_LEGENDS = [
   'messi.png', 

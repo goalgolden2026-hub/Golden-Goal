@@ -38,7 +38,7 @@ export default function MatchDetail() {
   const { connected, publicKey } = useWallet();
   const [market, setMarket] = useState(null);
   const [scoreInfo, setScoreInfo] = useState(null);
-  const isLive = scoreInfo && scoreInfo.status !== 'OFFLINE';
+  const isLive = scoreInfo && scoreInfo.status === 'LIVE';
   const isMatchEnded = market && market.scoreA !== null && market.scoreB !== null && market.scoreA !== undefined && market.scoreB !== undefined;
   const [loading, setLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);

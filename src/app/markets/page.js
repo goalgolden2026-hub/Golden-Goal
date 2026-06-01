@@ -151,7 +151,7 @@ function MarketsContent() {
               {group.matches.map((m) => {
                   const isMexicoSA = m.teamA === 'Mexico' && m.teamB === 'South Africa';
                   const scoreInfo = scores[m.id];
-                  const isLive = scoreInfo && scoreInfo.status !== 'OFFLINE';
+                  const isLive = scoreInfo && scoreInfo.status === 'LIVE';
                   const userPredCount = userPredictions.filter(p => p.marketId === m.id).length;
                   
                   return (

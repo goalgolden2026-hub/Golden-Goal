@@ -13,6 +13,8 @@ function normalizeTeamName(name) {
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .replace(/[^a-z0-9]/g, ' ')
+        .replace(/turkiye/g, 'turkey')
+        .replace(/turkiya/g, 'turkey')
         .trim();
 }
 

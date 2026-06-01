@@ -17,9 +17,15 @@ function writeLog(message) {
     }
 }
 
-// Helper to normalize and match team names
 function normalizeName(name) {
-    return name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+    if (!name) return '';
+    return name
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/g, "")
+        .replace(/turkiye/g, "turkey")
+        .replace(/turkiya/g, "turkey");
 }
 
 export async function POST(request) {

@@ -31,10 +31,19 @@ function getTeamGroup(teamName) {
   return null;
 }
 
+function formatMatchTime(dateStr) {
+  if (!dateStr) return '';
+  const dateObj = new Date(dateStr);
+  const formattedDate = dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  const formattedTime = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  return `${formattedDate} • ${formattedTime} GMT`;
+}
+
 export default function GroupDetail() {
   const params = useParams();
   const router = useRouter();
   const [matches, setMatches] = useState([]);
+  const [liveScores, setLiveScores] = useState({});
   const [loading, setLoading] = useState(true);
 
   // Group Identifier, e.g. "A", "B", etc.
@@ -43,18 +52,42 @@ export default function GroupDetail() {
   const groupTeams = GROUPS[groupName];
 
   useEffect(() => {
-    fetch('/api/markets')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setMatches(data.markets || []);
+    const fetchMarkets = () => {
+      fetch('/api/markets')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setMatches(data.markets || []);
+          }
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error('Failed to fetch fixtures:', err);
+          setLoading(false);
+        });
+    };
+
+    fetchMarkets();
+    const marketInterval = setInterval(fetchMarkets, 60 * 1000);
+
+    const fetchScores = async () => {
+      try {
+        const res = await fetch('/api/markets/live-scores');
+        const data = await res.json();
+        if (data.success && data.scores) {
+          setLiveScores(data.scores);
         }
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Failed to fetch fixtures:', err);
-        setLoading(false);
-      });
+      } catch (err) {
+        console.error("Failed to fetch live scores:", err);
+      }
+    };
+    fetchScores();
+    const scoreInterval = setInterval(fetchScores, 30 * 1000);
+
+    return () => {
+      clearInterval(marketInterval);
+      clearInterval(scoreInterval);
+    };
   }, []);
 
   if (!groupTeams) {
@@ -248,48 +281,88 @@ export default function GroupDetail() {
                 ) : (
                   groupMatches.map((match, idx) => {
                     const isConcluded = match.scoreA !== null && match.scoreB !== null && match.scoreA !== undefined && match.scoreB !== undefined;
+                    const liveScore = liveScores[match.id];
+                    const isLive = liveScore && liveScore.status === 'LIVE';
+                    const isLiveConcluded = liveScore && liveScore.status === 'FT' && !isConcluded;
+
                     return (
                       <div 
                         key={idx} 
-                        className="bg-zinc-950/60 border border-zinc-800/60 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:border-zinc-700/60 transition-colors"
+                        className="bg-zinc-950/60 border border-zinc-800/60 p-4 rounded-2xl flex flex-col gap-3 hover:border-zinc-700/60 transition-colors"
                       >
-                        {/* Match details & teams */}
-                        <div className="flex items-center justify-between sm:justify-start gap-3 flex-1 min-w-0">
-                          {/* Team A */}
-                          <div className="flex items-center gap-2 flex-1 min-w-0 justify-end sm:flex-initial sm:w-[110px]">
-                            <span className="text-zinc-200 text-xs font-bold truncate text-right">{match.teamA}</span>
-                            <span className="text-xl shrink-0">{TEAM_FLAGS[match.teamA] || '🏳️'}</span>
-                          </div>
-
-                          {/* Score or VS */}
-                          <div className="shrink-0 flex items-center justify-center min-w-[54px]">
-                            {isConcluded ? (
-                              <span className="text-[11px] font-extrabold text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 px-2 py-0.5 rounded-md font-mono shadow-[0_0_10px_rgba(245,158,11,0.1)]">
-                                {match.scoreA} - {match.scoreB}
-                              </span>
-                            ) : (
-                              <span className="text-[8px] font-black text-amber-500 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded uppercase tracking-wider animate-pulse">
-                                VS
-                              </span>
-                            )}
-                          </div>
-
-                          {/* Team B */}
-                          <div className="flex items-center gap-2 flex-1 min-w-0 justify-start sm:flex-initial sm:w-[110px]">
-                            <span className="text-xl shrink-0">{TEAM_FLAGS[match.teamB] || '🏳️'}</span>
-                            <span className="text-zinc-200 text-xs font-bold truncate">{match.teamB}</span>
-                          </div>
+                        {/* Match Header: Date & Time / Live status */}
+                        <div className="flex justify-between items-center text-[10px] text-zinc-500 font-mono tracking-wider border-b border-white/5 pb-2 select-none">
+                          <span>{formatMatchTime(match.matchDate)}</span>
+                          {isLive && (
+                            <span className="text-[9px] font-extrabold tracking-widest text-red-400 bg-red-500/10 px-2 py-0.5 rounded-full animate-pulse border border-red-500/20 flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
+                              <span>LIVE {liveScore.elapsed ? `${liveScore.elapsed}'` : 'HT'}</span>
+                            </span>
+                          )}
+                          {isLiveConcluded && (
+                            <span className="text-[9px] font-extrabold tracking-widest text-zinc-400 bg-zinc-500/10 px-2 py-0.5 rounded-full border border-zinc-500/20 flex items-center gap-1.5">
+                              <span>FT (Awaiting Sync)</span>
+                            </span>
+                          )}
                         </div>
 
-                        {/* Action predict button */}
-                        {!isConcluded && (
-                          <button
-                            onClick={() => router.push(`/markets/${match.id}`)}
-                            className="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-amber-600 text-zinc-950 font-black text-[10px] uppercase tracking-wider px-4 py-2 rounded-xl hover:opacity-90 transition-opacity whitespace-nowrap self-stretch flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(245,158,11,0.15)]"
-                          >
-                            Predict
-                          </button>
-                        )}
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                          {/* Match details & teams */}
+                          <div className="flex items-center justify-between sm:justify-start gap-3 flex-1 min-w-0">
+                            {/* Team A */}
+                            <div className="flex items-center gap-2 flex-1 min-w-0 justify-end sm:flex-initial sm:w-[110px]">
+                              <span className="text-zinc-200 text-xs font-bold truncate text-right">{match.teamA}</span>
+                              <span className="text-xl shrink-0">{TEAM_FLAGS[match.teamA] || '🏳️'}</span>
+                            </div>
+
+                            {/* Score or VS */}
+                            <div className="shrink-0 flex items-center justify-center min-w-[54px]">
+                              {isConcluded ? (
+                                <span className="text-[11px] font-extrabold text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 px-2 py-0.5 rounded-md font-mono shadow-[0_0_10px_rgba(245,158,11,0.1)]">
+                                  {match.scoreA} - {match.scoreB}
+                                </span>
+                              ) : isLive ? (
+                                <span className="text-[11px] font-extrabold text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-md font-mono shadow-[0_0_10px_rgba(239,68,68,0.1)] animate-pulse">
+                                  {liveScore.goalsA} - {liveScore.goalsB}
+                                </span>
+                              ) : isLiveConcluded ? (
+                                <span className="text-[11px] font-extrabold text-yellow-400/80 bg-yellow-500/5 border border-yellow-500/10 px-2 py-0.5 rounded-md font-mono shadow-[0_0_10px_rgba(245,158,11,0.05)]">
+                                  {liveScore.goalsA} - {liveScore.goalsB}
+                                </span>
+                              ) : (
+                                <span className="text-[8px] font-black text-amber-500 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded uppercase tracking-wider animate-pulse">
+                                  VS
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Team B */}
+                            <div className="flex items-center gap-2 flex-1 min-w-0 justify-start sm:flex-initial sm:w-[110px]">
+                              <span className="text-xl shrink-0">{TEAM_FLAGS[match.teamB] || '🏳️'}</span>
+                              <span className="text-zinc-200 text-xs font-bold truncate">{match.teamB}</span>
+                            </div>
+                          </div>
+
+                          {/* Action predict button */}
+                          {!isConcluded && !isLive && !isLiveConcluded && (
+                            <button
+                              onClick={() => router.push(`/markets/${match.id}`)}
+                              className="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-amber-600 text-zinc-950 font-black text-[10px] uppercase tracking-wider px-4 py-2 rounded-xl hover:opacity-90 transition-opacity whitespace-nowrap self-stretch flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(245,158,11,0.15)]"
+                            >
+                              Predict
+                            </button>
+                          )}
+                          {!isConcluded && isLive && (
+                            <div className="w-full sm:w-auto text-[9px] font-black uppercase text-red-400 bg-red-500/10 border border-red-500/20 px-4 py-2 rounded-xl whitespace-nowrap text-center select-none shadow-[0_0_12px_rgba(239,68,68,0.1)]">
+                              LIVE IN PLAY
+                            </div>
+                          )}
+                          {!isConcluded && isLiveConcluded && (
+                            <div className="w-full sm:w-auto text-[9px] font-black uppercase text-zinc-400 bg-zinc-500/10 border border-zinc-500/20 px-4 py-2 rounded-xl whitespace-nowrap text-center select-none">
+                              FINISHED
+                            </div>
+                          )}
+                        </div>
                       </div>
                     );
                   })

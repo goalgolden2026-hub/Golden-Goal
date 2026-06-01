@@ -283,15 +283,15 @@ function MarketsContent() {
     <div className="flex flex-col flex-1 relative min-h-screen overflow-x-hidden bg-black">
       
       {/* Left Side Rail (Rotating Stack - 2 Players Alt Alta) - Responsive Width, Z-0 (slides behind main content) */}
-      <div className="hidden lg:flex fixed left-0 top-[8vh] w-[15vw] max-w-[220px] min-w-[120px] h-[85vh] z-0 flex-col justify-around items-center gap-4 pointer-events-none select-none">
+      <div className="hidden lg:flex fixed left-0 top-[8vh] w-[18vw] max-w-[280px] min-w-[150px] h-[88vh] z-0 flex-col justify-around items-center gap-4 pointer-events-none select-none">
         
         {/* Left Slot 1 (Top Left) - Facing RIGHT (Mirrored so he looks right) */}
-        <div className="relative w-full h-[40vh] scale-x-[-1]">
+        <div className="relative w-full h-[44vh] scale-x-[-1]">
           <img 
             key={leftSlotA}
             src={`/legends/${leftSlotA}`} 
             alt="Golden Goal Legend Left Top" 
-            className={`w-full h-full object-contain opacity-70 ${
+            className={`w-full h-full object-contain opacity-80 ${
               legendIndex === 0 && !isRotating 
                 ? 'animate-cinematic-slow' 
                 : 'animate-cinematic-normal'
@@ -305,12 +305,12 @@ function MarketsContent() {
         </div>
 
         {/* Left Slot 2 (Bottom Left) - Facing RIGHT (Mirrored so he looks right) */}
-        <div className="relative w-full h-[40vh] scale-x-[-1]">
+        <div className="relative w-full h-[44vh] scale-x-[-1]">
           <img 
             key={leftSlotB}
             src={`/legends/${leftSlotB}`} 
             alt="Golden Goal Legend Left Bottom" 
-            className="w-full h-full object-contain opacity-70 animate-cinematic-normal"
+            className="w-full h-full object-contain opacity-80 animate-cinematic-normal"
             style={{
               mixBlendMode: 'screen',
               maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
@@ -322,15 +322,15 @@ function MarketsContent() {
 
       {/* Right Side Rail (Rotating Stack Mirror - 2 Players Alt Alta) - Responsive Width, Z-0 (slides behind main content) */}
       {/* We REMOVE the global scale-x-[-1] here and control image directions individually so they look at each other */}
-      <div className="hidden lg:flex fixed right-0 top-[8vh] w-[15vw] max-w-[220px] min-w-[120px] h-[85vh] z-0 flex-col justify-around items-center gap-4 pointer-events-none select-none">
+      <div className="hidden lg:flex fixed right-0 top-[8vh] w-[18vw] max-w-[280px] min-w-[150px] h-[88vh] z-0 flex-col justify-around items-center gap-4 pointer-events-none select-none">
         
         {/* Right Slot 1 (Top Right) - Facing LEFT (Mirrored individually so he looks left) */}
-        <div className="relative w-full h-[40vh] scale-x-[-1]">
+        <div className="relative w-full h-[44vh] scale-x-[-1]">
           <img 
             key={rightSlotA}
             src={`/legends/${rightSlotA}`} 
             alt="Golden Goal Legend Right Top" 
-            className={`w-full h-full object-contain opacity-70 ${
+            className={`w-full h-full object-contain opacity-80 ${
               legendIndex === 0 && !isRotating 
                 ? 'animate-cinematic-slow' 
                 : 'animate-cinematic-normal'
@@ -344,12 +344,12 @@ function MarketsContent() {
         </div>
 
         {/* Right Slot 2 (Bottom Right) - Facing LEFT (Mirrored individually so he looks left) */}
-        <div className="relative w-full h-[40vh] scale-x-[-1]">
+        <div className="relative w-full h-[44vh] scale-x-[-1]">
           <img 
             key={rightSlotB}
             src={`/legends/${rightSlotB}`} 
             alt="Golden Goal Legend Right Bottom" 
-            className="w-full h-full object-contain opacity-70 animate-cinematic-normal"
+            className="w-full h-full object-contain opacity-80 animate-cinematic-normal"
             style={{
               mixBlendMode: 'screen',
               maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',

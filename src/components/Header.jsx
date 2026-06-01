@@ -7,7 +7,6 @@ import { usePathname } from 'next/navigation';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { isWalletWhitelisted } from '@/lib/whitelist';
-import WorldCupMusicPlayer from './WorldCupMusicPlayer';
 
 const WalletMultiButtonDynamic = dynamic(
     async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
@@ -144,9 +143,8 @@ export default function Header() {
                             <Link href="/profile" className="hover:text-white transition-colors">Profile</Link>
                         </nav>
 
-                        {/* Desktop Music Player & Wallet connection */}
+                        {/* Desktop Wallet connection */}
                         <div className="hidden md:flex items-center gap-4">
-                            <WorldCupMusicPlayer />
                             <WalletMultiButtonDynamic className="!bg-zinc-800 hover:!bg-zinc-700 !transition-colors !rounded-full !h-10 !px-6 !font-semibold !text-sm" />
                         </div>
 
@@ -210,7 +208,6 @@ export default function Header() {
                                 </div>
 
                                 <div className="mt-4 flex flex-col gap-4 w-full">
-                                    <WorldCupMusicPlayer isMobile={true} />
                                     <div className="pb-8 flex justify-center w-full">
                                         <WalletMultiButtonDynamic className="!bg-zinc-800 hover:!bg-zinc-700 !transition-colors !rounded-full !h-12 !w-full !flex !items-center !justify-center !font-bold !text-sm" />
                                     </div>

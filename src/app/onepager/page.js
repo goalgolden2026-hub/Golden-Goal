@@ -97,12 +97,11 @@ export default function OnePagerPage() {
             <div className="absolute inset-0 bg-amber-500/25 blur-md rounded-full group-hover:bg-amber-500/45 transition-all"></div>
             <img src="/logo.jpg" alt="Golden Goal Logo" className="w-11 h-11 rounded-full object-cover border-2 border-amber-500/40 relative z-10" />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col justify-center">
             <div className="flex items-center gap-1.5">
               <span className="font-black text-xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500">GOLDEN GOAL</span>
               <span className="text-[9px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded font-black border border-amber-500/20 select-none">GAMEPAPER</span>
             </div>
-            <span className="text-[8px] text-zinc-500 font-extrabold tracking-widest uppercase">Premium Pitch Deck</span>
           </div>
         </Link>
 

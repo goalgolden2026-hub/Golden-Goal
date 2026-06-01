@@ -240,7 +240,7 @@ function MarketsContent() {
                         {/* Match Info */}
                         <div className="w-full text-center relative z-10">
                             {/* Group Tag */}
-                            <span className="text-[9px] font-black tracking-[0.25em] text-yellow-500/80 uppercase block mb-3.5 select-none">
+                            <span className="text-[11px] font-black tracking-[0.2em] text-yellow-400 uppercase block mb-3 select-none">
                               {getTeamGroup(m.teamA) || 'Tournament Match'}
                             </span>
 

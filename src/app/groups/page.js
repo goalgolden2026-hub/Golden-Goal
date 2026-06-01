@@ -35,6 +35,7 @@ export default function GroupStage() {
   const router = useRouter();
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedGroupFilter, setSelectedGroupFilter] = useState('ALL');
 
   useEffect(() => {
     fetch('/api/markets')
@@ -129,7 +130,12 @@ export default function GroupStage() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header Section */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 flex flex-col items-center">
+          <img 
+            src="/logo.jpg" 
+            alt="Golden Goal Logo" 
+            className="w-16 h-16 rounded-full object-cover border border-yellow-500/30 shadow-[0_0_20px_rgba(245,158,11,0.25)] mb-6 select-none animate-pulse"
+          />
           <h1 className="text-4xl md:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 drop-shadow-[0_0_30px_rgba(245,158,11,0.2)] tracking-tight uppercase mb-4">
             Tournament Group Stage
           </h1>
@@ -138,50 +144,75 @@ export default function GroupStage() {
           </p>
         </div>
 
-        {/* 12-Group Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {Object.keys(GROUPS).map((groupName) => {
-            const standings = calculateStandings(groupName);
-            const groupId = groupName.split(' ')[1];
+        {/* Group Filter Navigation */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-16 max-w-4xl mx-auto px-4">
+          {['ALL', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'].map((letter) => {
+            const isActive = selectedGroupFilter === letter;
             return (
-              <div
-                key={groupName}
-                onClick={() => router.push(`/groups/${groupId}`)}
-                className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/80 hover:border-yellow-500/40 rounded-3xl p-6 transition-all duration-300 shadow-xl cursor-pointer hover:-translate-y-1 select-none flex flex-col justify-between group relative overflow-hidden"
+              <button
+                key={letter}
+                onClick={() => setSelectedGroupFilter(letter)}
+                className={`px-4 py-2 rounded-xl text-xs font-black tracking-wider transition-all duration-300 border ${
+                  isActive
+                    ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-zinc-950 border-yellow-400 shadow-[0_0_15px_rgba(245,158,11,0.25)] scale-105'
+                    : 'bg-zinc-900/40 backdrop-blur-md border-white/5 text-zinc-400 hover:text-white hover:border-zinc-700/60'
+                }`}
               >
-                {/* Visual Glow Bridge on Hover */}
-                <div className="absolute inset-0 bg-gradient-to-b from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                <div>
-                  {/* Group Title */}
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-lg font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-500">
-                      {groupName}
-                    </h3>
-                    <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-500 group-hover:text-yellow-400 transition-colors">
-                      View Details →
-                    </span>
-                  </div>
-
-                  {/* Team List with Flags & Points */}
-                  <div className="flex flex-col gap-3">
-                    {standings.map((stat, idx) => (
-                      <div key={idx} className="flex justify-between items-center py-1 border-b border-white/5 last:border-b-0">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <span className="text-xl shrink-0">{TEAM_FLAGS[stat.team] || '🏳️'}</span>
-                          <span className="text-zinc-200 text-xs font-semibold truncate">{stat.team}</span>
-                        </div>
-                        <div className="flex items-center gap-3 shrink-0">
-                          <span className="text-[10px] text-zinc-500 font-bold">P{stat.played}</span>
-                          <span className="text-xs text-yellow-400 font-extrabold min-w-[14px] text-right">{stat.pts} pts</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+                {letter === 'ALL' ? 'ALL GROUPS' : `GROUP ${letter}`}
+              </button>
             );
           })}
+        </div>
+
+        {/* 12-Group Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {Object.keys(GROUPS)
+            .filter((groupName) => {
+              if (selectedGroupFilter === 'ALL') return true;
+              return groupName === `Group ${selectedGroupFilter}`;
+            })
+            .map((groupName) => {
+              const standings = calculateStandings(groupName);
+              const groupId = groupName.split(' ')[1];
+              return (
+                <div
+                  key={groupName}
+                  onClick={() => router.push(`/groups/${groupId}`)}
+                  className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/80 hover:border-yellow-500/40 rounded-3xl p-6 transition-all duration-300 shadow-xl cursor-pointer hover:-translate-y-1 select-none flex flex-col justify-between group relative overflow-hidden"
+                >
+                  {/* Visual Glow Bridge on Hover */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+
+                  <div>
+                    {/* Group Title */}
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-lg font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-500">
+                        {groupName}
+                      </h3>
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-500 group-hover:text-yellow-400 transition-colors">
+                        View Details →
+                      </span>
+                    </div>
+
+                    {/* Team List with Flags & Points */}
+                    <div className="flex flex-col gap-3">
+                      {standings.map((stat, idx) => (
+                        <div key={idx} className="flex justify-between items-center py-1 border-b border-white/5 last:border-b-0">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="text-xl shrink-0">{TEAM_FLAGS[stat.team] || '🏳️'}</span>
+                            <span className="text-zinc-200 text-xs font-semibold truncate">{stat.team}</span>
+                          </div>
+                          <div className="flex items-center gap-3 shrink-0">
+                            <span className="text-[10px] text-zinc-500 font-bold">P{stat.played}</span>
+                            <span className="text-xs text-yellow-400 font-extrabold min-w-[14px] text-right">{stat.pts} pts</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>

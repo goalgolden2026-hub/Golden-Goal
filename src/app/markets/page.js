@@ -451,7 +451,7 @@ function MarketsContent() {
                     {/* Left Column: Section Title */}
                     <div className="text-center md:text-left">
                         <h2 className="text-3xl font-black text-white">
-                            {isUpcomingMode ? 'Upcoming Match Program' : 'Live & Active Matches'}
+                            {isUpcomingMode ? 'Upcoming Match Program' : 'Active Matches'}
                         </h2>
                     </div>
 

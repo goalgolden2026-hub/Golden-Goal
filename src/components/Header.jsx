@@ -120,6 +120,7 @@ export default function Header() {
                             </div>
 
                             <Link href="/leaderboard" className="hover:text-white transition-colors">Leaderboard</Link>
+                            <Link href="/groups" className="hover:text-white transition-colors">Groups</Link>
                             
                             {/* Rewards Dropdown */}
                             <div className="relative group py-2">
@@ -184,6 +185,7 @@ export default function Header() {
                                     </div>
  
                                     <Link href="/leaderboard" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/5 hover:text-white transition-colors">Leaderboard</Link>
+                                    <Link href="/groups" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/5 hover:text-white transition-colors">Groups</Link>
  
                                     {/* Mobile Rewards Dropdown */}
                                     <div className="flex flex-col">

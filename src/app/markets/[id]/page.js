@@ -17,7 +17,12 @@ const LEFT_LEGENDS = [
   'kante.png',
   'neuer.png',
   'rijkaard.png',
-  'zidane.png'
+  'zidane.png',
+  'ronaldinho.png',
+  'beckham.png',
+  'davids.png',
+  'henry.png',
+  'del_piero.png'
 ];
 const RIGHT_LEGENDS = [
   'messi.png', 
@@ -30,7 +35,12 @@ const RIGHT_LEGENDS = [
   'buffon.png',
   'nakata.png',
   'gullit.png',
-  'basten.png'
+  'basten.png',
+  'pirlo.png',
+  'gattuso.png',
+  'pires.png',
+  'materazzi.png',
+  'kluivert.png'
 ];
 
 export default function MatchDetail() {

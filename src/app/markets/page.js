@@ -52,6 +52,34 @@ function MarketsContent() {
   const searchParams = useSearchParams();
   const filter = searchParams.get('filter') || 'live';
 
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, expired: false });
+
+  useEffect(() => {
+    const targetDate = new Date('2026-06-11T16:00:00Z').getTime();
+
+    const updateTimer = () => {
+      const now = Date.now();
+      const difference = targetDate - now;
+
+      if (difference <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, expired: true });
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      setTimeLeft({ days, hours, minutes, seconds, expired: false });
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   // Staggered index tracking for the 4 slots (Ronaldo/Messi always first, others cycle through the rest of the array)
   // Left side list: ['ronaldo.png', 'pele.png', 'totti.png', 'gerrard.png', 'haaland.png']
   // Right side list: ['messi.png', 'maradona.png', 'lampard.png', 'owen.png', 'mbappe.png']
@@ -419,13 +447,36 @@ function MarketsContent() {
             <>
               {/* Active Markets */}
               <div className="mb-16">
-                <div className="flex justify-between items-center mb-8">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                     <h2 className="text-3xl font-black text-white">
                         {isUpcomingMode ? 'Upcoming Match Program' : 'Live & Active Matches'}
                     </h2>
-                    <span className="text-xs text-zinc-500 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full font-mono font-bold">
-                        {isUpcomingMode ? '3+ Days Out' : 'Next 72 Hours'}
-                    </span>
+                    {isUpcomingMode ? (
+                      <span className="text-xs text-zinc-500 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full font-mono font-bold self-start sm:self-auto">
+                        3+ Days Out
+                      </span>
+                    ) : (
+                      <div className="self-start sm:self-auto">
+                        {!timeLeft.expired ? (
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-[10px] text-zinc-500 font-extrabold tracking-widest uppercase">Opening Kickoff:</span>
+                            <span className="text-xs font-mono font-black text-yellow-400 bg-yellow-500/10 border border-yellow-500/30 px-3.5 py-1.5 rounded-xl shadow-[0_0_15px_rgba(245,158,11,0.15)] flex items-center gap-1 select-none">
+                              <span>{String(timeLeft.days).padStart(2, '0')}d</span>
+                              <span className="text-zinc-600">:</span>
+                              <span>{String(timeLeft.hours).padStart(2, '0')}h</span>
+                              <span className="text-zinc-600">:</span>
+                              <span>{String(timeLeft.minutes).padStart(2, '0')}m</span>
+                              <span className="text-zinc-600">:</span>
+                              <span className="text-amber-500 animate-pulse">{String(timeLeft.seconds).padStart(2, '0')}s</span>
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-[10px] font-extrabold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.25)] animate-pulse">
+                            ⚽ TOURNAMENT UNDERWAY
+                          </span>
+                        )}
+                      </div>
+                    )}
                 </div>
 
                 {displayedGroups.map(renderMatchGroup)}

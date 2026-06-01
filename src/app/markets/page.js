@@ -17,9 +17,9 @@ const LEFT_LEGENDS = [
   'kante.png',
   'neuer.png',
   'rijkaard.png',
-  'zidane_premium.png',
-  'ronaldinho_premium.png',
-  'beckham_premium.png',
+  'zidane.png',
+  'ronaldinho.png',
+  'beckham.png',
   'davids.png',
   'henry.png',
   'del_piero.png'

@@ -224,8 +224,8 @@ function MarketsContent() {
                                             </span>
                                         </div>
                                     ) : (
-                                        <span className={isMexicoSA ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" : "text-zinc-400 text-sm font-semibold"}>
-                                            {isMexicoSA ? 'VS' : 'vs'}
+                                        <span className="text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">
+                                            VS
                                         </span>
                                     )}
                                 </div>

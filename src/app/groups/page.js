@@ -19,7 +19,6 @@ const GROUPS = {
   'Group L': ['England', 'Croatia', 'Ghana', 'Panama']
 };
 
-// Help map DB team names to our predefined group names
 function getTeamGroup(teamName) {
   const normalized = teamName.toLowerCase().trim();
   for (const [groupName, teams] of Object.entries(GROUPS)) {
@@ -36,8 +35,6 @@ export default function GroupStage() {
   const router = useRouter();
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedGroup, setSelectedGroup] = useState(null);
-  const [activeTab, setActiveTab] = useState('standings'); // 'standings' | 'fixtures'
 
   useEffect(() => {
     fetch('/api/markets')
@@ -115,16 +112,6 @@ export default function GroupStage() {
     });
   };
 
-  // Get matches for a group
-  const getGroupMatches = (groupName) => {
-    const groupTeams = GROUPS[groupName];
-    return matches.filter(m => {
-      const gA = getTeamGroup(m.teamA);
-      const gB = getTeamGroup(m.teamB);
-      return gA === groupName && gB === groupName;
-    });
-  };
-
   if (loading) {
     return (
       <div className="flex flex-col flex-1 min-h-screen bg-black items-center justify-center text-zinc-500 font-medium">
@@ -155,13 +142,11 @@ export default function GroupStage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {Object.keys(GROUPS).map((groupName) => {
             const standings = calculateStandings(groupName);
+            const groupId = groupName.split(' ')[1];
             return (
               <div
                 key={groupName}
-                onClick={() => {
-                  setSelectedGroup(groupName);
-                  setActiveTab('standings');
-                }}
+                onClick={() => router.push(`/groups/${groupId}`)}
                 className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/80 hover:border-yellow-500/40 rounded-3xl p-6 transition-all duration-300 shadow-xl cursor-pointer hover:-translate-y-1 select-none flex flex-col justify-between group relative overflow-hidden"
               >
                 {/* Visual Glow Bridge on Hover */}
@@ -199,164 +184,6 @@ export default function GroupStage() {
           })}
         </div>
       </div>
-
-      {/* Interactive Group Detail Modal */}
-      {selectedGroup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-          <div className="bg-zinc-900 border border-zinc-700 rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl relative animate-in fade-in zoom-in-95 duration-300">
-            {/* Modal Header */}
-            <div className="p-6 border-b border-zinc-800 flex justify-between items-center bg-zinc-950/40">
-              <h3 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-500">
-                {selectedGroup} Tournament Hub
-              </h3>
-              <button
-                onClick={() => setSelectedGroup(null)}
-                className="text-zinc-400 hover:text-white transition-colors text-lg"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Modal Tabs */}
-            <div className="flex border-b border-zinc-800 bg-zinc-950/20">
-              <button
-                onClick={() => setActiveTab('standings')}
-                className={`flex-1 py-4 font-bold text-sm border-b-2 transition-all ${
-                  activeTab === 'standings'
-                    ? 'border-yellow-500 text-yellow-400 bg-yellow-500/5'
-                    : 'border-transparent text-zinc-400 hover:text-white'
-                }`}
-              >
-                STANDINGS
-              </button>
-              <button
-                onClick={() => setActiveTab('fixtures')}
-                className={`flex-1 py-4 font-bold text-sm border-b-2 transition-all ${
-                  activeTab === 'fixtures'
-                    ? 'border-yellow-500 text-yellow-400 bg-yellow-500/5'
-                    : 'border-transparent text-zinc-400 hover:text-white'
-                }`}
-              >
-                FIXTURES & RESULTS
-              </button>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-6 max-h-[60vh] overflow-y-auto bg-zinc-900">
-              {activeTab === 'standings' ? (
-                /* Detailed Standings Table */
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs font-semibold">
-                    <thead>
-                      <tr className="border-b border-zinc-800 text-zinc-500 uppercase tracking-widest text-[10px]">
-                        <th className="py-3 px-1 text-center w-8">#</th>
-                        <th className="py-3 px-2">Team</th>
-                        <th className="py-3 px-1 text-center w-12">P</th>
-                        <th className="py-3 px-1 text-center w-10">W</th>
-                        <th className="py-3 px-1 text-center w-10">D</th>
-                        <th className="py-3 px-1 text-center w-10">L</th>
-                        <th className="py-3 px-2 text-center w-16">GF-GA</th>
-                        <th className="py-3 px-1 text-center w-12">GD</th>
-                        <th className="py-3 px-2 text-center w-16 text-yellow-400">PTS</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {calculateStandings(selectedGroup).map((stat, idx) => {
-                        const isQualifying = idx < 2; // Top 2 qualify
-                        return (
-                          <tr key={idx} className="border-b border-zinc-800/50 hover:bg-white/[0.02]">
-                            <td className="py-4 px-1 text-center font-bold text-zinc-400">
-                              <span className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] ${
-                                isQualifying ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-zinc-800 text-zinc-500'
-                              }`}>
-                                {idx + 1}
-                              </span>
-                            </td>
-                            <td className="py-4 px-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-xl shrink-0">{TEAM_FLAGS[stat.team] || '🏳️'}</span>
-                                <span className="text-white truncate">{stat.team}</span>
-                              </div>
-                            </td>
-                            <td className="py-4 px-1 text-center text-zinc-300 font-bold">{stat.played}</td>
-                            <td className="py-4 px-1 text-center text-zinc-400">{stat.won}</td>
-                            <td className="py-4 px-1 text-center text-zinc-400">{stat.drawn}</td>
-                            <td className="py-4 px-1 text-center text-zinc-400">{stat.lost}</td>
-                            <td className="py-4 px-2 text-center text-zinc-400 font-mono">{stat.gf}:{stat.ga}</td>
-                            <td className={`py-4 px-1 text-center font-mono font-bold ${stat.gd > 0 ? 'text-emerald-400' : stat.gd < 0 ? 'text-rose-400' : 'text-zinc-500'}`}>
-                              {stat.gd > 0 ? `+${stat.gd}` : stat.gd}
-                            </td>
-                            <td className="py-4 px-2 text-center text-yellow-400 font-black text-sm">{stat.pts}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                  <div className="flex items-center gap-2 mt-6 text-[10px] text-zinc-500 font-bold uppercase tracking-wider bg-zinc-950/40 border border-zinc-800/80 p-3 rounded-xl">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/20 border border-emerald-500/30"></span>
-                    <span>Top 2 Teams advance to Knockout Stage</span>
-                  </div>
-                </div>
-              ) : (
-                /* Group Fixtures List */
-                <div className="flex flex-col gap-4">
-                  {getGroupMatches(selectedGroup).length === 0 ? (
-                    <div className="text-center py-12 text-zinc-500 font-semibold">No matches scheduled for this group yet.</div>
-                  ) : (
-                    getGroupMatches(selectedGroup).map((match, idx) => {
-                      const isConcluded = match.scoreA !== null && match.scoreB !== null && match.scoreA !== undefined && match.scoreB !== undefined;
-                      return (
-                        <div key={idx} className="bg-zinc-950/30 border border-zinc-800/60 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                          {/* Teams & Scores */}
-                          <div className="flex items-center justify-between sm:justify-start gap-4 flex-1">
-                            {/* Team A */}
-                            <div className="flex items-center gap-2 flex-1 min-w-0 justify-end sm:flex-initial sm:w-[150px]">
-                              <span className="text-white text-xs font-bold truncate text-right">{match.teamA}</span>
-                              <span className="text-xl shrink-0">{TEAM_FLAGS[match.teamA] || '🏳️'}</span>
-                            </div>
-
-                            {/* Score or VS */}
-                            <div className="shrink-0 flex items-center justify-center min-w-[60px]">
-                              {isConcluded ? (
-                                <span className="text-sm font-black text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 px-3 py-1 rounded-lg font-mono">
-                                  {match.scoreA} - {match.scoreB}
-                                </span>
-                              ) : (
-                                <span className="text-[10px] font-black text-amber-500 bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded uppercase tracking-wider animate-pulse">
-                                  VS
-                                </span>
-                              )}
-                            </div>
-
-                            {/* Team B */}
-                            <div className="flex items-center gap-2 flex-1 min-w-0 justify-start sm:flex-initial sm:w-[150px]">
-                              <span className="text-xl shrink-0">{TEAM_FLAGS[match.teamB] || '🏳️'}</span>
-                              <span className="text-white text-xs font-bold truncate">{match.teamB}</span>
-                            </div>
-                          </div>
-
-                          {/* Predict button if upcoming */}
-                          {!isConcluded && (
-                            <button
-                              onClick={() => {
-                                setSelectedGroup(null);
-                                router.push(`/markets/${match.id}`);
-                              }}
-                              className="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-amber-600 text-zinc-950 font-black text-xs px-5 py-2.5 rounded-xl hover:opacity-90 transition-opacity whitespace-nowrap self-stretch flex items-center justify-center"
-                            >
-                              Predict Match
-                            </button>
-                          )}
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

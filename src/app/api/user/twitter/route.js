@@ -17,6 +17,61 @@ export async function POST(request) {
             return NextResponse.json({ success: false, error: "Invalid Tweet URL. Please enter a valid x.com or twitter.com link." }, { status: 400 });
         }
 
+        const tweetIdMatch = tweetUrl.match(/status\/([0-9]+)/);
+        const tweetId = tweetIdMatch ? tweetIdMatch[1] : null;
+
+        if (!tweetId) {
+            return NextResponse.json({ success: false, error: "Could not parse Tweet ID from the URL." }, { status: 400 });
+        }
+
+        // Programmatic Tweet details verification via RapidAPI
+        const rapidApiKey = process.env.RAPIDAPI_KEY;
+        const rapidApiHost = process.env.RAPIDAPI_HOST;
+
+        if (!rapidApiKey || !rapidApiHost) {
+            console.error("RAPIDAPI_KEY or RAPIDAPI_HOST is missing in environment variables.");
+            return NextResponse.json({ success: false, error: "Verification service configuration error." }, { status: 500 });
+        }
+
+        try {
+            const apiRes = await fetch(`https://twitter-api45.p.rapidapi.com/tweet.php?id=${tweetId}`, {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': rapidApiKey,
+                    'X-RapidAPI-Host': rapidApiHost
+                },
+                next: { revalidate: 0 } // Ensure fresh data
+            });
+
+            if (apiRes.status === 200) {
+                const tweetData = await apiRes.json();
+                
+                if (!tweetData || !tweetData.text) {
+                    return NextResponse.json({ success: false, error: "Tweet details could not be retrieved from X. Please verify the link is public." }, { status: 400 });
+                }
+
+                const tweetText = tweetData.text.toLowerCase();
+                
+                // Programmatic verification: Check if it contains '#goldengoal' or '$goldengoal'
+                const hasRequiredTags = tweetText.includes('#goldengoal') || tweetText.includes('$goldengoal');
+                
+                if (!hasRequiredTags) {
+                    return NextResponse.json({ 
+                        success: false, 
+                        error: "Tweet does not contain the required #GoldenGoal or $GoldenGoal tags. Please correct and try again!" 
+                    }, { status: 400 });
+                }
+            } else if (apiRes.status === 429) {
+                return NextResponse.json({ success: false, error: "Verification service busy (Rate Limit). Please try again in a few moments." }, { status: 429 });
+            } else {
+                console.error(`RapidAPI returned error status: ${apiRes.status}`);
+                return NextResponse.json({ success: false, error: "X API verification failed. Please try again later." }, { status: 400 });
+            }
+        } catch (apiErr) {
+            console.error("RapidAPI fetch error:", apiErr);
+            return NextResponse.json({ success: false, error: "Failed to connect to X verification service." }, { status: 500 });
+        }
+
         const sql = await getDb();
 
         // 1. Check if the URL has already been submitted by ANYONE (Spam Protection)

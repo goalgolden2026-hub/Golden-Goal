@@ -243,10 +243,11 @@ function MarketsContent() {
                                 </button>
                             ) : m.isLocked ? (
                                 <button 
-                                    disabled={true}
-                                    className="w-full py-3.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-bold bg-zinc-800/40 border border-zinc-800 text-zinc-500 opacity-60 cursor-not-allowed"
+                                    disabled={false}
+                                    className="w-full py-3.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-bold bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_30px_rgba(255,255,255,0.05)]"
                                 >
-                                    🔒 LOCKED
+                                    <span>View Predictions</span>
+                                    <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                                 </button>
                             ) : (
                                 <button 
@@ -259,11 +260,6 @@ function MarketsContent() {
                             )}
                         </div>
                         
-                        {m.isLocked && !(m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined) && (
-                            <div className="absolute top-0 right-0 bg-red-500/10 text-red-500 text-xs font-bold px-3 py-1 rounded-bl-xl border-b border-l border-red-500/20 z-20">
-                                LOCKED
-                            </div>
-                        )}
                         {(m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined) && (
                             <div className="absolute top-0 right-0 bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-bl-xl border-b border-l border-emerald-500/20 z-20">
                                 ENDED

@@ -282,7 +282,7 @@ export default function MatchDetail() {
                       }
                   } else {
                       if (isSelected) {
-                          btnStyle = "bg-gradient-to-r from-amber-500/20 to-yellow-600/10 border-amber-500/60 text-amber-400 font-extrabold shadow-[0_0_15px_rgba(245,158,11,0.25)] animate-pulse";
+                          btnStyle = "bg-gradient-to-r from-amber-500/20 to-yellow-600/10 border-amber-500/60 text-amber-400 font-extrabold shadow-[0_0_15px_rgba(245,158,11,0.25)] animate-pulse cursor-default disabled:cursor-default";
                           statusIndicator = <span className="text-amber-400 text-base">✓</span>;
                       } else {
                           btnStyle = "bg-zinc-800 hover:bg-zinc-700 border-transparent text-white disabled:opacity-30 disabled:cursor-not-allowed";
@@ -293,7 +293,7 @@ export default function MatchDetail() {
                       <button 
                           key={idx}
                           onClick={() => !isSubMarketResolved && openPredictionModal(type, opt)}
-                          disabled={market.isLocked || isSubMarketResolved || (hasPredictedThisType && !isSelected)}
+                          disabled={market.isLocked || isSubMarketResolved || hasPredictedThisType}
                           className={`flex-1 min-w-[120px] font-medium py-4 px-4 rounded-xl text-sm text-center flex items-center justify-center gap-2 border transition-all duration-300 ${btnStyle}`}
                       >
                           {statusIndicator}

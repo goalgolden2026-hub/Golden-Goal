@@ -24,7 +24,7 @@ Users utilize token locking limits or wallet hold quotas to predict. Core assets
 A provably fair gamified loyalty module. Unlocks daily free boxes and dynamic point multipliers based on user locking tiers.
 
 ### 🛡️ VIP Token Locking
-Locking `$GG` tokens reduces circulating supply while unlocking premium prediction quotas, XP point multipliers, and deep rewards chest discounts.
+Locking `$GoldenGoal` tokens reduces circulating supply while unlocking premium prediction quotas, XP point multipliers, and deep rewards chest discounts.
 
 ### 📊 Dual Leaderboards
 Separate ranking structures rewarding competitive excellence: a **Pro Forecasters** leaderboard for match accuracy, and a **Social Leaderboard** for community advocacy and viral outreach.
@@ -77,13 +77,13 @@ graph TD
 The core locking and early unlock penalty mechanics of Golden Goal are enforced directly on-chain on the Solana blockchain. The smart contracts are written in Anchor (Rust) and are located in the `/program` directory.
 
 ### Core On-Chain Functions
-- `initialize_lock(ctx: Context<InitializeLock>, tier: u8, amount: u64, unlock_date: i64)`: Securely transfers `$GG` tokens from the user's SPL token account to the program's vault token account and registers the lock state (owner, tier, amount, release date).
+- `initialize_lock(ctx: Context<InitializeLock>, tier: u8, amount: u64, unlock_date: i64)`: Securely transfers `$GoldenGoal` tokens from the user's SPL token account to the program's vault token account and registers the lock state (owner, tier, amount, release date).
 - `unlock_tokens(ctx: Context<UnlockTokens>)`: Evaluates the current timestamp against the lock duration. 
   - **Mature Unlock**: If the period has expired, transfers 100% of the locked tokens back to the user.
   - **Early Unlock**: If unlocked early, applies a **10% penalty**. Burn 50% of the penalty tokens directly, and routes the remaining 50% to the platform's community rewards pool.
 
 ### Program & Token Verification
-- **GG SPL Token Mint**: `GGGoalp5m2FqyZUCeaMDjD35tSrKbu5R8KxXGcXGcXG`
+- **GoldenGoal SPL Token Mint**: `GGGoalp5m2FqyZUCeaMDjD35tSrKbu5R8KxXGcXGcXG`
 - **Lock Vault Program ID**: `GGVaultJNYRYZUCeaMDjD35tSrKbu5R8KxXGcXGcXG`
 - **Anchor Security Audits**: Audited by **Sec3** for state rent exemption, math overflows, and CPI authority vulnerabilities. Read the full [Sec3 Security Audit Report](audit/sec3_audit_report.md) for details.
 

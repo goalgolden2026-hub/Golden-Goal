@@ -1,4 +1,4 @@
-# Golden Goal ($GG) Whitepaper
+# Golden Goal ($GoldenGoal) Whitepaper
 *Solana Üzerinde Merkeziyetsiz, Oyunlaştırılmış Spor Tahminleri ve Sosyal Kehanet Merkezi*
 
 **Sürüm:** 1.3.0  
@@ -83,7 +83,7 @@ Uzun vadeli sadakati teşvik etmek, token talebini artırmak ve dolaşımdaki ar
 
 ```mermaid
 graph TD
-    A[Kullanıcı $GG Kilitler] --> B{Kilitleme Kademesi ve Kilit Süresi}
+    A[Kullanıcı $GoldenGoal Kilitler] --> B{Kilitleme Kademesi ve Kilit Süresi}
     B -->|Tier 0: Cüzdanda Tutma| C[Temel Limitler / 1.0x XP / 100 XP Kutu Maliyeti]
     B -->|Tier 1: Soft Lock - 1 Gün| D[+1 Ek Günlük Tahmin / 1.0x XP / 75 XP Kutu Maliyeti]
     B -->|Tier 2: 7 Günlük Kilit| E[+3 Ek Günlük Tahmin / 1.0x XP / 50 XP Kutu Maliyeti]
@@ -92,27 +92,27 @@ graph TD
 ```
 
 *   **Tier 0 (Holder):**
-    *   *Gereksinim:* Cüzdanda en az 10,000 $GG token bulundurmak (Aktif kilit yok).
+    *   *Gereksinim:* Cüzdanda en az 10,000 $GoldenGoal token bulundurmak (Aktif kilit yok).
     *   *Avantajlar:* Temel günlük tahmin limiti, 1.0x standart XP çarpanı.
     *   *Ödül Kutusu Maliyeti:* 100 XP (İndirimsiz).
 *   **Tier 1 (Soft Lock):**
-    *   *Gereksinim:* Minimum 100 $GG token kilitleme.
+    *   *Gereksinim:* Minimum 100 $GoldenGoal token kilitleme.
     *   *Kilit Süresi:* 1 Gün.
     *   *Avantajlar:* Günlük +1 ek tahmin limiti, 1.0x XP çarpanı.
     *   *Ödül Kutusu Maliyeti:* 75 XP (%25 İndirimli).
     *   *Esneklik:* Cezası bulunmayan günlük esnek kilit yapısı.
 *   **Tier 2 (7 Günlük Kilitleme):**
-    *   *Gereksinim:* Minimum 500 $GG token kilitleme.
+    *   *Gereksinim:* Minimum 500 $GoldenGoal token kilitleme.
     *   *Kilit Süresi:* 7 Gün.
     *   *Avantajlar:* Günlük +3 ek tahmin limiti, 1.0x XP çarpanı.
     *   *Ödül Kutusu Maliyeti:* 50 XP (%50 İndirimli).
 *   **Tier 3 (15 Günlük Kilitleme):**
-    *   *Gereksinim:* Minimum 1,000 $GG token kilitleme.
+    *   *Gereksinim:* Minimum 1,000 $GoldenGoal token kilitleme.
     *   *Kilit Süresi:* 15 Gün.
     *   *Avantajlar:* Günlük +5 ek tahmin limiti, **1.1x XP Puan Çarpanı**.
     *   *Ödül Kutusu Maliyeti:* 25 XP (%75 İndirimli).
 *   **Tier 4 (1 Aylık Kilitleme):**
-    *   *Gereksinim:* Minimum 5,000 $GG token kilitleme.
+    *   *Gereksinim:* Minimum 5,000 $GoldenGoal token kilitleme.
     *   *Kilit Süresi:* 30 Gün.
     *   *Avantajlar:* Günlük +10 ek tahmin limiti, **1.25x En Yüksek XP Çarpanı** ve sadakat modülünde **Her Gün 1 Adet Tamamen Ücretsiz Ödül Kutusu** (sonraki açımlar 25 XP).
 
@@ -150,7 +150,7 @@ Sosyal medyada sürekli görünürlük sağlamak amacıyla Golden Goal, viral to
 
 ## 5. Token Faydası (Utility)
 
-Platformun temel taşı olan **Golden Goal ($GG)** tokenı, tüm ekosistem boyunca derin işlevsel faydalara sahiptir:
+Platformun temel taşı olan **Golden Goal ($GoldenGoal)** tokenı, tüm ekosistem boyunca derin işlevsel faydalara sahiptir:
 1.  **Kilitleme (Locking):** Kademeli çarpan seviyelerini, günlük ekstra tahmin limitlerini ve özel platform imtiyazlarını aktifleştirme.
 2.  **Kutu Açma Avantajı:** Kilitleme kademelerine bağlı olarak Ödül Kutusu açımlarında devasa XP indirimleri veya günlük ücretsiz açım hakları.
 3.  **Ekosistem Ödülleri:** Liderlik tablosundaki en başarılı analizcilere haftalık olarak yapılan ödemelerin para birimi olması.
@@ -229,7 +229,7 @@ Liderlik tablosu ödüllerinin bütünlüğünü ve adaletini korumak için back
                                  ▼
   ┌─────────────────────────────────────────────────────────────┐
   │ AŞAMA 5: Tam Merkeziyetsizlik                               │
-  │  ⏳ $GG Tokenı ile DAO Yönetişim Altyapısının Kurulması     │
+  │  ⏳ $GoldenGoal Tokenı ile DAO Yönetişim Altyapısının Kurulması     │
   │  ⏳ Küresel Spor Dallarına Yayılım (Basketbol, Tenis vb.)   │
   │  ⏳ Espor Tahmin Pazarlarının Entegre Edilmesi              │
   └─────────────────────────────────────────────────────────────┘
@@ -239,4 +239,4 @@ Liderlik tablosu ödüllerinin bütünlüğünü ve adaletini korumak için back
 
 ## 9. Feragatname (Disclaimer)
 
-*Golden Goal ($GG), oyunlaştırılmış merkeziyetsiz bir tahmin platformudur. Kripto varlıkları tutmak ve kilitlemek piyasa riskleri barındırır. Platformdaki tahmin pazarlarına katılım tamamen eğlence ve puan biriktirme amaçlıdır; kullanıcılar kendi ülkelerindeki yasal düzenlemelere uymakla yükümlüdür. $GG tokenı bir hizmet ve yönetişim tokenı olup; çekirdek geliştirici ekip üzerinde herhangi bir hisse ortaklığı veya borç hakkı temsil etmez.*
+*Golden Goal ($GoldenGoal), oyunlaştırılmış merkeziyetsiz bir tahmin platformudur. Kripto varlıkları tutmak ve kilitlemek piyasa riskleri barındırır. Platformdaki tahmin pazarlarına katılım tamamen eğlence ve puan biriktirme amaçlıdır; kullanıcılar kendi ülkelerindeki yasal düzenlemelere uymakla yükümlüdür. $GoldenGoal tokenı bir hizmet ve yönetişim tokenı olup; çekirdek geliştirici ekip üzerinde herhangi bir hisse ortaklığı veya borç hakkı temsil etmez.*

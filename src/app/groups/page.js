@@ -134,7 +134,7 @@ export default function GroupStage() {
           <img 
             src="/logo.jpg" 
             alt="Golden Goal Logo" 
-            className="w-16 h-16 rounded-full object-cover border border-yellow-500/30 shadow-[0_0_20px_rgba(245,158,11,0.25)] mb-6 select-none animate-pulse"
+            className="w-20 h-20 rounded-full object-cover border border-yellow-500/30 shadow-[0_0_25px_rgba(245,158,11,0.3)] mb-6 select-none animate-pulse"
           />
           <h1 className="text-4xl md:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 drop-shadow-[0_0_30px_rgba(245,158,11,0.2)] tracking-tight uppercase mb-4">
             Tournament Group Stage
@@ -145,20 +145,20 @@ export default function GroupStage() {
         </div>
 
         {/* Group Filter Navigation */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-16 max-w-4xl mx-auto px-4">
+        <div className="flex items-center justify-start sm:justify-center gap-1.5 md:gap-2 mb-16 max-w-4xl mx-auto px-4 overflow-x-auto no-scrollbar scroll-smooth whitespace-nowrap select-none">
           {['ALL', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'].map((letter) => {
             const isActive = selectedGroupFilter === letter;
             return (
               <button
                 key={letter}
                 onClick={() => setSelectedGroupFilter(letter)}
-                className={`px-4 py-2 rounded-xl text-xs font-black tracking-wider transition-all duration-300 border ${
+                className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-black tracking-wider transition-all duration-300 border shrink-0 ${
                   isActive
                     ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-zinc-950 border-yellow-400 shadow-[0_0_15px_rgba(245,158,11,0.25)] scale-105'
                     : 'bg-zinc-900/40 backdrop-blur-md border-white/5 text-zinc-400 hover:text-white hover:border-zinc-700/60'
                 }`}
               >
-                {letter === 'ALL' ? 'ALL GROUPS' : `GROUP ${letter}`}
+                {letter}
               </button>
             );
           })}

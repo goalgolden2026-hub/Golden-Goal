@@ -3,8 +3,8 @@ import { getDb } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-const SPORTRADAR_API_KEY = process.env.SPORTRADAR_API_KEY || 'Et17n0p8lXDbQIPqyEqWjjaNjWHACZKBLBELV6J0';
-const SPORTRADAR_BASE_URL = 'https://api.sportradar.com/soccer/trial/v4/en';
+const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || 'fb0b6761c9msha29978207b28aa6p17856bjsnca9d44b79409';
+const SPORT_API_HOST = 'sportapi7.p.rapidapi.com';
 
 function normalizeTeamName(name) {
     if (!name) return '';
@@ -16,6 +16,25 @@ function normalizeTeamName(name) {
         .replace(/turkiye/g, 'turkey')
         .replace(/turkiya/g, 'turkey')
         .trim();
+}
+
+function calculateElapsedMinutes(event) {
+    if (!event.time || !event.startTimestamp) return 0;
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    const desc = event.status?.description?.toLowerCase();
+    
+    if (desc === 'ht' || desc === 'halftime') return 45;
+    if (desc === 'ended' || event.status?.type === 'finished') return 90;
+    
+    if (event.lastPeriod === 'period1') {
+        const diff = Math.floor((nowSeconds - event.startTimestamp) / 60);
+        return Math.max(0, Math.min(45, diff));
+    } else if (event.lastPeriod === 'period2') {
+        const start2nd = event.time.currentPeriodStartTimestamp || (event.startTimestamp + 60 * 60);
+        const diff = Math.floor((nowSeconds - start2nd) / 60);
+        return Math.max(45, Math.min(90, 45 + diff));
+    }
+    return 0;
 }
 
 // In-memory cache to respect API rate limits (60 seconds cache)
@@ -44,43 +63,42 @@ export async function GET(request) {
             return NextResponse.json({ success: true, scores: liveCache });
         }
 
-        // 1. Fetch live matches from Sportradar
-        let srLiveEvents = [];
-        try {
-            const liveUrl = `${SPORTRADAR_BASE_URL}/schedules/live/schedules.json?api_key=${SPORTRADAR_API_KEY}`;
-            const response = await fetch(liveUrl);
-            if (response.ok) {
-                const data = await response.json();
-                srLiveEvents = data.schedules || [];
+        // Collect unique match dates (YYYY-MM-DD) from our database markets
+        const uniqueDates = Array.from(new Set(activeMarkets.map(market => {
+            const dateObj = new Date(market.matchDate);
+            return dateObj.toISOString().split('T')[0];
+        })));
+
+        // 1. Fetch football schedules from Sofascore via RapidAPI for those dates
+        let allEvents = [];
+        for (const targetDate of uniqueDates) {
+            try {
+                const response = await fetch(`https://${SPORT_API_HOST}/api/v1/sport/football/scheduled-events/${targetDate}`, {
+                    headers: {
+                        'x-rapidapi-key': RAPIDAPI_KEY,
+                        'x-rapidapi-host': SPORT_API_HOST
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.events) {
+                        allEvents = allEvents.concat(data.events);
+                    }
+                }
+            } catch (e) {
+                console.error(`Failed to fetch Sofascore schedule for ${targetDate}:`, e);
             }
-        } catch (e) {
-            console.error("Failed to fetch live matches from Sportradar:", e);
         }
 
-        // 2. We also fetch today's full schedule to detect finished matches for background auto-resolution
-        let srDailyEvents = [];
-        try {
-            const todayStr = new Date().toISOString().split('T')[0];
-            const dailyUrl = `${SPORTRADAR_BASE_URL}/schedules/${todayStr}/schedules.json?api_key=${SPORTRADAR_API_KEY}`;
-            const response = await fetch(dailyUrl);
-            if (response.ok) {
-                const data = await response.json();
-                srDailyEvents = data.schedules || [];
-            }
-        } catch (e) {
-            console.error("Failed to fetch daily schedule for resolution check:", e);
-        }
-
-        // 3. Match our database markets
+        // 2. Match our database markets
         for (const market of activeMarkets) {
             const dbA = normalizeTeamName(market.teamA);
             const dbB = normalizeTeamName(market.teamB);
 
-            // Check if match is currently live
-            const matchedLiveEvent = srLiveEvents.find(event => {
-                const competitors = event.sport_event?.competitors || [];
-                const home = normalizeTeamName(competitors.find(c => c.qualifier === 'home')?.name || '');
-                const away = normalizeTeamName(competitors.find(c => c.qualifier === 'away')?.name || '');
+            // Find event in allEvents
+            const matchedEvent = allEvents.find(event => {
+                const home = normalizeTeamName(event.homeTeam?.name || '');
+                const away = normalizeTeamName(event.awayTeam?.name || '');
                 
                 const match1 = (home === dbA || home.includes(dbA) || dbA.includes(home)) && 
                                (away === dbB || away.includes(dbB) || dbB.includes(away));
@@ -89,65 +107,51 @@ export async function GET(request) {
                 return match1 || match2;
             });
 
-            if (matchedLiveEvent) {
-                const status = matchedLiveEvent.sport_event_status || {};
-                liveScores[market.id] = {
-                    goalsA: status.home_score ?? 0,
-                    goalsB: status.away_score ?? 0,
-                    elapsed: status.clock?.played ? parseInt(status.clock.played.split(':')[0]) : 0,
-                    status: 'LIVE',
-                    matchStatus: status.match_status || '1st_half'
-                };
-                continue;
-            }
+            if (matchedEvent) {
+                const statusType = matchedEvent.status?.type;
+                const statusDesc = matchedEvent.status?.description;
+                const homeScore = matchedEvent.homeScore?.current ?? 0;
+                const awayScore = matchedEvent.awayScore?.current ?? 0;
 
-            // If not live, check if the match was recently concluded today
-            const matchedDailyEvent = srDailyEvents.find(event => {
-                const competitors = event.sport_event?.competitors || [];
-                const home = normalizeTeamName(competitors.find(c => c.qualifier === 'home')?.name || '');
-                const away = normalizeTeamName(competitors.find(c => c.qualifier === 'away')?.name || '');
+                // Let's identify the home/away order compared to our DB
+                const homeName = normalizeTeamName(matchedEvent.homeTeam?.name || '');
+                const isHomeDbA = homeName === dbA || homeName.includes(dbA) || dbA.includes(homeName);
                 
-                const match1 = (home === dbA || home.includes(dbA) || dbA.includes(home)) && 
-                               (away === dbB || away.includes(dbB) || dbB.includes(away));
-                const match2 = (home === dbB || home.includes(dbB) || dbB.includes(home)) && 
-                               (away === dbA || away.includes(dbA) || dbA.includes(away));
-                return match1 || match2;
-            });
+                // Align scores to match teamA and teamB order in our database
+                const goalsA = isHomeDbA ? homeScore : awayScore;
+                const goalsB = isHomeDbA ? awayScore : homeScore;
 
-            if (matchedDailyEvent) {
-                const status = matchedDailyEvent.sport_event_status || {};
-                
-                if (status.status === 'closed' && status.match_status === 'ended') {
-                    // Match has finished! Trigger background database payout automatically
-                    const homeScore = parseInt(status.home_score);
-                    const awayScore = parseInt(status.away_score);
-
+                if (statusType === 'inprogress') {
+                    // Match is currently live
                     liveScores[market.id] = {
-                        goalsA: homeScore,
-                        goalsB: awayScore,
+                        goalsA,
+                        goalsB,
+                        elapsed: calculateElapsedMinutes(matchedEvent),
+                        status: 'LIVE',
+                        matchStatus: statusDesc || '1st half'
+                    };
+                } else if (statusType === 'finished') {
+                    // Match is concluded
+                    liveScores[market.id] = {
+                        goalsA,
+                        goalsB,
                         elapsed: 90,
                         status: 'FT'
                     };
 
                     // Trigger the auto-resolution background process asynchronously
                     try {
-                        const todayStr = new Date().toISOString().split('T')[0];
+                        const matchDateStr = new Date(market.matchDate).toISOString().split('T')[0];
                         fetch(`${request.nextUrl.origin}/api/admin/sportradar-sync`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ date: todayStr })
+                            body: JSON.stringify({ date: matchDateStr })
                         }).catch(e => console.error("Async background sync failed:", e));
                     } catch (e) {
                         console.error("Failed to dispatch async background resolution:", e);
                     }
-                } else if (status.status === 'postponed' || status.match_status === 'postponed') {
-                    liveScores[market.id] = {
-                        goalsA: null,
-                        goalsB: null,
-                        elapsed: null,
-                        status: 'POSTPONED'
-                    };
                 } else {
+                    // Upcoming or postponed
                     liveScores[market.id] = {
                         goalsA: null,
                         goalsB: null,
@@ -156,18 +160,13 @@ export async function GET(request) {
                     };
                 }
             } else {
-                // Not playing yet or offline
-                const matchTime = new Date(market.matchDate).getTime();
-                const elapsedMinutes = Math.floor((now - matchTime) / 60000);
-
-                if (elapsedMinutes >= 0 && elapsedMinutes < 120) {
-                    liveScores[market.id] = {
-                        goalsA: null,
-                        goalsB: null,
-                        elapsed: null,
-                        status: 'OFFLINE'
-                    };
-                }
+                // Offline fallback
+                liveScores[market.id] = {
+                    goalsA: null,
+                    goalsB: null,
+                    elapsed: null,
+                    status: 'OFFLINE'
+                };
             }
         }
 

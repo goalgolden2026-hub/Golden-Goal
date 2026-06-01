@@ -202,31 +202,38 @@ function MarketsContent() {
                                     </span>
                                 </div>
                             )}
-                            <div className="flex items-center justify-center gap-6 text-xl font-bold">
-                                <div className="flex flex-col items-center gap-1">
-                                    <span className="text-3xl drop-shadow-md">{TEAM_FLAGS[m.teamA] || '🏳️'}</span>
-                                    <span className="text-zinc-100 font-semibold">{m.teamA}</span>
+                            <div className="grid grid-cols-3 items-center w-full text-center mt-2">
+                                {/* Team A */}
+                                <div className="flex flex-col items-center gap-2 justify-center min-w-0">
+                                    <span className="text-3xl md:text-4xl drop-shadow-md shrink-0">{TEAM_FLAGS[m.teamA] || '🏳️'}</span>
+                                    <span className="text-zinc-100 font-semibold text-xs md:text-sm lg:text-base leading-tight break-words w-full px-1">{m.teamA}</span>
                                 </div>
-                                {isLive ? (
-                                    <div className="flex flex-col items-center justify-center px-3 min-w-[80px]">
-                                        <span className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.45)] tracking-tight">
-                                            {scoreInfo.goalsA} - {scoreInfo.goalsB}
+
+                                {/* Center Score/VS */}
+                                <div className="flex flex-col items-center justify-center shrink-0">
+                                    {isLive ? (
+                                        <div className="flex flex-col items-center justify-center">
+                                            <span className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.45)] tracking-tight">
+                                                {scoreInfo.goalsA} - {scoreInfo.goalsB}
+                                            </span>
+                                        </div>
+                                    ) : (m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined) ? (
+                                        <div className="flex flex-col items-center justify-center">
+                                            <span className="text-2xl md:text-3xl font-black text-amber-400 drop-shadow-[0_0_15px_rgba(245,158,11,0.45)] tracking-tight">
+                                                {m.scoreA} - {m.scoreB}
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        <span className={isMexicoSA ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" : "text-zinc-400 text-sm font-semibold"}>
+                                            {isMexicoSA ? 'VS' : 'vs'}
                                         </span>
-                                    </div>
-                                ) : (m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined) ? (
-                                    <div className="flex flex-col items-center justify-center px-3 min-w-[80px]">
-                                        <span className="text-2xl md:text-3xl font-black text-amber-400 drop-shadow-[0_0_15px_rgba(245,158,11,0.45)] tracking-tight">
-                                            {m.scoreA} - {m.scoreB}
-                                        </span>
-                                    </div>
-                                ) : (
-                                    <span className={isMexicoSA ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" : "text-zinc-400 text-sm font-semibold"}>
-                                        {isMexicoSA ? 'VS' : 'vs'}
-                                    </span>
-                                )}
-                                <div className="flex flex-col items-center gap-1">
-                                    <span className="text-3xl drop-shadow-md">{TEAM_FLAGS[m.teamB] || '🏳️'}</span>
-                                    <span className="text-zinc-100 font-semibold">{m.teamB}</span>
+                                    )}
+                                </div>
+
+                                {/* Team B */}
+                                <div className="flex flex-col items-center gap-2 justify-center min-w-0">
+                                    <span className="text-3xl md:text-4xl drop-shadow-md shrink-0">{TEAM_FLAGS[m.teamB] || '🏳️'}</span>
+                                    <span className="text-zinc-100 font-semibold text-xs md:text-sm lg:text-base leading-tight break-words w-full px-1">{m.teamB}</span>
                                 </div>
                             </div>
                         </div>

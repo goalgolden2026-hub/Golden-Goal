@@ -408,31 +408,38 @@ export default function MatchDetail() {
               ) : (
                   <span className={`text-sm font-mono mb-2 block ${market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'text-amber-400 font-bold' : 'text-zinc-300'}`}>{market.dateStr} • {market.timeStr} GMT</span>
               )}
-              <div className="flex items-center justify-center gap-8 text-3xl md:text-5xl font-extrabold mb-4 relative z-10">
-                  <div className="flex flex-col items-center gap-2">
-                      <span className="text-5xl md:text-6xl drop-shadow-lg">{TEAM_FLAGS[market.teamA] || '🏳️'}</span>
-                      <span className="text-zinc-100">{market.teamA}</span>
+              <div className="grid grid-cols-3 items-center w-full text-center text-3xl md:text-5xl font-extrabold mb-4 relative z-10">
+                  {/* Team A */}
+                  <div className="flex flex-col items-center gap-2 justify-center min-w-0">
+                      <span className="text-5xl md:text-6xl drop-shadow-lg shrink-0">{TEAM_FLAGS[market.teamA] || '🏳️'}</span>
+                      <span className="text-zinc-100 text-base md:text-lg lg:text-2xl leading-tight break-words w-full px-1">{market.teamA}</span>
                   </div>
-                  {isLive ? (
-                      <div className="flex flex-col items-center justify-center px-4 min-w-[100px] mt-12">
-                          <span className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.55)] tracking-tight">
-                              {scoreInfo.goalsA} - {scoreInfo.goalsB}
+
+                  {/* Center Score/VS */}
+                  <div className="flex flex-col items-center justify-center shrink-0">
+                      {isLive ? (
+                          <div className="flex flex-col items-center justify-center px-4">
+                              <span className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.55)] tracking-tight">
+                                  {scoreInfo.goalsA} - {scoreInfo.goalsB}
+                              </span>
+                          </div>
+                      ) : isMatchEnded ? (
+                          <div className="flex flex-col items-center justify-center px-4">
+                              <span className="text-4xl md:text-6xl font-black text-amber-400 drop-shadow-[0_0_20px_rgba(245,158,11,0.55)] tracking-tight">
+                                  {market.scoreA} - {market.scoreB}
+                              </span>
+                          </div>
+                      ) : (
+                          <span className={market.teamA === 'Mexico' && market.teamB === 'South Africa' ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20" : "text-zinc-400 text-2xl font-bold"}>
+                              {market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'VS' : 'vs'}
                           </span>
-                      </div>
-                  ) : isMatchEnded ? (
-                      <div className="flex flex-col items-center justify-center px-4 min-w-[100px] mt-12">
-                          <span className="text-4xl md:text-6xl font-black text-amber-400 drop-shadow-[0_0_20px_rgba(245,158,11,0.55)] tracking-tight">
-                              {market.scoreA} - {market.scoreB}
-                          </span>
-                      </div>
-                  ) : (
-                      <span className={market.teamA === 'Mexico' && market.teamB === 'South Africa' ? "text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20 mt-12" : "text-zinc-400 text-2xl font-bold mt-12"}>
-                          {market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'VS' : 'vs'}
-                      </span>
-                  )}
-                  <div className="flex flex-col items-center gap-2">
-                      <span className="text-5xl md:text-6xl drop-shadow-lg">{TEAM_FLAGS[market.teamB] || '🏳️'}</span>
-                      <span className="text-zinc-100">{market.teamB}</span>
+                      )}
+                  </div>
+
+                  {/* Team B */}
+                  <div className="flex flex-col items-center gap-2 justify-center min-w-0">
+                      <span className="text-5xl md:text-6xl drop-shadow-lg shrink-0">{TEAM_FLAGS[market.teamB] || '🏳️'}</span>
+                      <span className="text-zinc-100 text-base md:text-lg lg:text-2xl leading-tight break-words w-full px-1">{market.teamB}</span>
                   </div>
               </div>
               {market.isLocked && !isLive && !isMatchEnded && (

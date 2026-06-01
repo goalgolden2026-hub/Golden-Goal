@@ -119,7 +119,6 @@ export default function Header() {
                                 </div>
                             </div>
 
-                            <Link href="/leaderboard" className="hover:text-white transition-colors">Leaderboard</Link>
                             <Link href="/groups" className="hover:text-white transition-colors">Groups</Link>
                             
                             {/* Rewards Dropdown */}
@@ -139,6 +138,8 @@ export default function Header() {
                                     </div>
                                 </div>
                             </div>
+
+                            <Link href="/leaderboard" className="hover:text-white transition-colors">Leaderboard</Link>
 
 
                             <Link href="/profile" className="hover:text-white transition-colors">Profile</Link>
@@ -184,7 +185,6 @@ export default function Header() {
                                         )}
                                     </div>
  
-                                    <Link href="/leaderboard" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/5 hover:text-white transition-colors">Leaderboard</Link>
                                     <Link href="/groups" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/5 hover:text-white transition-colors">Groups</Link>
  
                                     {/* Mobile Rewards Dropdown */}
@@ -204,6 +204,8 @@ export default function Header() {
                                             </div>
                                         )}
                                     </div>
+
+                                    <Link href="/leaderboard" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/5 hover:text-white transition-colors">Leaderboard</Link>
 
 
                                     <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/5 hover:text-white transition-colors">Profile</Link>

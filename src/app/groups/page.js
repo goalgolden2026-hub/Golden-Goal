@@ -123,14 +123,17 @@ export default function GroupStage() {
   }
 
   return (
-    <div className="flex-1 w-full min-h-screen bg-black text-white py-12 px-4 md:px-8 relative overflow-hidden">
+    <div className="flex-1 w-full min-h-screen bg-black text-white relative overflow-hidden">
       {/* Background Ambience */}
-      <div className="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] rounded-full bg-gradient-to-br from-yellow-600/10 to-transparent blur-[150px] pointer-events-none"></div>
-      <div className="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] rounded-full bg-gradient-to-br from-amber-600/10 to-transparent blur-[150px] pointer-events-none"></div>
+      <div className="absolute top-[20%] left-[-20%] w-[60%] h-[60%] rounded-full bg-gradient-to-br from-yellow-600/10 to-transparent blur-[150px] pointer-events-none"></div>
+      <div className="absolute bottom-[20%] right-[-20%] w-[60%] h-[60%] rounded-full bg-gradient-to-br from-amber-600/10 to-transparent blur-[150px] pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header Section */}
-        <div className="text-center mb-16 flex flex-col items-center">
+      {/* Hero Section with Embedded Stadium Banner */}
+      <section className="relative py-24 px-4 text-center overflow-hidden mb-12">
+        <div className="absolute inset-0 z-0 opacity-20" style={{ backgroundImage: "url('/hero-bg.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}></div>
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/0 via-black/60 to-black"></div>
+        
+        <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
           <img 
             src="/logo.jpg" 
             alt="Golden Goal Logo" 
@@ -139,11 +142,13 @@ export default function GroupStage() {
           <h1 className="text-4xl md:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 drop-shadow-[0_0_30px_rgba(245,158,11,0.2)] tracking-tight uppercase mb-4">
             Tournament Group Stage
           </h1>
-          <p className="text-zinc-400 max-w-2xl mx-auto font-medium text-sm md:text-base">
+          <p className="text-zinc-300 max-w-2xl mx-auto font-medium text-sm md:text-base leading-relaxed">
             Track live tournament standings automatically calculated from match scores. Choose your group and lock in predictions to earn championship points.
           </p>
         </div>
+      </section>
 
+      <div className="max-w-7xl mx-auto px-4 md:px-8 pb-24 relative z-10">
         {/* Group Filter Navigation */}
         <div className="flex items-center justify-start sm:justify-center gap-1.5 md:gap-2 mb-16 max-w-4xl mx-auto px-4 overflow-x-auto no-scrollbar scroll-smooth whitespace-nowrap select-none">
           {['ALL', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'].map((letter) => {

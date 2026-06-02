@@ -23,51 +23,51 @@ export default function LandingPage() {
   const lockingTiers = [
     {
       level: "Tier 0 (Holder)",
-      requirement: "Min 10,000 GG (Circulating)",
-      predictions: "Base Daily Limit",
+      requirement: "Min 250,000 GG (Circulating)",
+      predictions: "3 Predictions / Day",
       xp: "1.0x XP",
       rewardsBox: "100 XP / Rewards Box Open",
-      perk: "Hold tokens in your Solana wallet to unlock basic prediction privileges and open boxes for 100 XP.",
+      perk: "Hold 250K+ tokens in your Solana wallet to unlock basic prediction privileges (3 predictions/day) and open boxes for 100 XP.",
       color: "from-zinc-500 to-zinc-700",
       glow: "rgba(113, 113, 122, 0.15)"
     },
     {
       level: "Tier 1 (Soft)",
-      requirement: "Min 100 GG Locked",
+      requirement: "Min 350,000 GG Locked",
       predictions: "+1 Prediction / Day",
       xp: "1.0x XP",
       rewardsBox: "75 XP / Rewards Box (25% Off)",
-      perk: "Low-barrier lock with 1-day lockup. Unlocks a 25% discount on the daily Rewards Box opening fee.",
+      perk: "Lock 350K+ GG for a 1-day lockup. Unlocks a 25% discount on the daily Rewards Box opening fee.",
       color: "from-emerald-500 to-teal-600",
       glow: "rgba(16, 185, 129, 0.15)"
     },
     {
       level: "Tier 2 (7-Day)",
-      requirement: "Min 500 GG Locked",
+      requirement: "Min 500,000 GG Locked",
       predictions: "+3 Predictions / Day",
       xp: "1.0x XP",
       rewardsBox: "50 XP / Rewards Box (50% Off)",
-      perk: "7-day lockup. Unlocks a 50% discount on the daily Rewards Box opening fee.",
+      perk: "Lock 500K+ GG for a 7-day lockup. Unlocks a 50% discount on the daily Rewards Box opening fee.",
       color: "from-blue-500 to-indigo-600",
       glow: "rgba(59, 130, 246, 0.15)"
     },
     {
       level: "Tier 3 (15-Day)",
-      requirement: "Min 1,000 GG Locked",
+      requirement: "Min 750,000 GG Locked",
       predictions: "+5 Predictions / Day",
       xp: "1.1x XP Booster",
       rewardsBox: "25 XP / Rewards Box (75% Off)",
-      perk: "15-day lockup. Unlocks a 75% discount on the daily Rewards Box opening fee and 1.1x XP.",
+      perk: "Lock 750K+ GG for a 15-day lockup. Unlocks a 75% discount on the daily Rewards Box opening fee and 1.1x XP.",
       color: "from-purple-500 to-violet-600",
       glow: "rgba(139, 92, 246, 0.15)"
     },
     {
       level: "Tier 4 (30-Day)",
-      requirement: "Min 5,000 GG Locked",
+      requirement: "Min 1,000,000 GG Locked",
       predictions: "+10 Predictions / Day",
       xp: "1.25x XP Booster",
       rewardsBox: "1 Free Daily + 25 XP / Next Rewards Box",
-      perk: "30-day lockup. First daily Rewards Box opening is completely free, subsequent openings cost 25 XP.",
+      perk: "Lock 1M+ GG for a 30-day lockup. First daily Rewards Box opening is completely free, subsequent openings cost 25 XP.",
       color: "from-yellow-400 via-amber-500 to-orange-500",
       glow: "rgba(245, 158, 11, 0.25)"
     }

@@ -52,7 +52,7 @@ export default function LockingPage() {
       rewards: [
         { text: "+1 Daily Prediction", type: "primary" }
       ], 
-      min: 1000, 
+      min: 350000, 
       color: "border-blue-500/30", 
       glow: "group-hover:bg-blue-500/20", 
       icon: (
@@ -73,7 +73,7 @@ export default function LockingPage() {
       rewards: [
         { text: "+3 Daily Predictions", type: "primary" }
       ], 
-      min: 1000, 
+      min: 500000, 
       color: "border-green-500/30", 
       glow: "group-hover:bg-green-500/20", 
       icon: (
@@ -94,7 +94,7 @@ export default function LockingPage() {
         { text: "+5 Daily Predictions", type: "primary" },
         { text: "1.1x XP Multiplier", type: "multiplier" }
       ], 
-      min: 1000, 
+      min: 750000, 
       color: "border-amber-500/30", 
       glow: "group-hover:bg-amber-500/20", 
       icon: (
@@ -116,7 +116,7 @@ export default function LockingPage() {
         { text: "1.25x XP Multiplier", type: "multiplier" },
         { text: "+1 Daily Rewards Box", type: "spin" }
       ], 
-      min: 1000, 
+      min: 1000000, 
       color: "border-purple-500/30", 
       glow: "group-hover:bg-purple-500/20", 
       icon: (
@@ -228,7 +228,19 @@ export default function LockingPage() {
       const userBalance = profileData.profile.balance || 0;
       
       if (userBalance < minAmount) {
-        showMessage(`Insufficient balance. You need at least ${minAmount} tokens to lock. You currently have ${userBalance}.`, "error");
+        let warningMsg = "";
+        if (tierId === 1) {
+          warningMsg = `You need to hold at least 350K $GoldenGoal tokens in your wallet to perform a Soft Lock. Your current balance is ${userBalance.toLocaleString()} $GG.`;
+        } else if (tierId === 2) {
+          warningMsg = `You need to hold at least 500K $GoldenGoal tokens in your wallet to lock for 7 days. Your current balance is ${userBalance.toLocaleString()} $GG.`;
+        } else if (tierId === 3) {
+          warningMsg = `You need to hold at least 750K $GoldenGoal tokens in your wallet to lock for 15 days. Your current balance is ${userBalance.toLocaleString()} $GG.`;
+        } else if (tierId === 4) {
+          warningMsg = `You need to hold at least 1M $GoldenGoal tokens in your wallet to lock for 30 days (1 month). Your current balance is ${userBalance.toLocaleString()} $GG.`;
+        } else {
+          warningMsg = `Insufficient balance. You need at least ${minAmount.toLocaleString()} tokens to lock. Your current balance is ${userBalance.toLocaleString()} $GG.`;
+        }
+        showMessage(warningMsg, "error");
         setLoading(false);
         return;
       }

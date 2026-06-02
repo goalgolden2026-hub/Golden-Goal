@@ -53,8 +53,19 @@ export async function POST(request) {
             `;
         }
 
+        // Validate tier min amounts
+        let minAmountRequired = 0;
+        if (tier === 1) minAmountRequired = 350000;
+        else if (tier === 2) minAmountRequired = 500000;
+        else if (tier === 3) minAmountRequired = 750000;
+        else if (tier === 4) minAmountRequired = 1000000;
+
+        if (amount < minAmountRequired) {
+            return NextResponse.json({ success: false, error: `Invalid lock amount. Minimum required for Tier ${tier} is ${minAmountRequired.toLocaleString()} tokens.` }, { status: 400 });
+        }
+
         // 2. Double-check user's mock balance from the database profile
-        let mockBalance = 30000;
+        let mockBalance = 5000000;
 
         // Deduct active locks
         const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
@@ -76,7 +87,7 @@ export async function POST(request) {
         }
 
         if (mockBalance < amount) {
-            return NextResponse.json({ success: false, error: `Insufficient simulated balance. You need at least ${amount} tokens to lock. You currently have ${mockBalance}.` }, { status: 400 });
+            return NextResponse.json({ success: false, error: `Insufficient simulated balance. You need at least ${amount.toLocaleString()} tokens to lock. You currently have ${mockBalance.toLocaleString()}.` }, { status: 400 });
         }
 
         // Check for existing active lock (one active lock per user)

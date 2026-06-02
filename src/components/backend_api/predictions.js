@@ -3,15 +3,37 @@ import { getDb } from '@/lib/db';
 
 // Simulate SPL Token Balance Check (In Production, use Solana web3.js + getAccountInfo)
 async function getTokenBalance(walletAddress) {
-    // Demo implementation: We assume everyone has 30,000 tokens for testing.
-    // In Phase 6, this will be replaced with real on-chain balance fetching.
-    return 30000;
+    try {
+        const sql = await getDb();
+        let mockBalance = 5000000; // Starts with 5,000,000 GG for demo testing
+        
+        // Deduct active locks
+        const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+        if (activeLocksTotalRes.rows[0].total) {
+            mockBalance -= parseInt(activeLocksTotalRes.rows[0].total);
+        }
+        
+        // Apply treasury logs
+        const logsRes = await sql`SELECT amount, type FROM treasury_logs WHERE "walletAddress" = ${walletAddress}`;
+        for (const log of logsRes.rows) {
+            const amt = parseFloat(log.amount);
+            if (log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') {
+                mockBalance -= amt;
+            } else if (log.type === 'SPIN_PAYMENT') {
+                mockBalance += amt;
+            } else if (log.type === 'REFERRAL_REWARD' || log.type === 'SPIN_REWARD_GOLDEN') {
+                mockBalance += amt;
+            }
+        }
+        return mockBalance;
+    } catch (err) {
+        console.error("getTokenBalance error:", err);
+        return 5000000;
+    }
 }
 
 function getTierLimits(balance) {
-    if (balance >= 50000) return { tier: 'Gold', limit: 10 };
-    if (balance >= 25000) return { tier: 'Silver', limit: 5 };
-    if (balance >= 10000) return { tier: 'Bronze', limit: 3 };
+    if (balance >= 250000) return { tier: 'Standard', limit: 3 };
     return { tier: 'None', limit: 0 };
 }
 
@@ -32,7 +54,7 @@ export async function POST(request) {
         const { tier, limit } = getTierLimits(balance);
 
         if (limit === 0) {
-            return NextResponse.json({ success: false, error: "Insufficient Token Balance. You need at least 10,000 Golden Tokens to predict." }, { status: 403 });
+            return NextResponse.json({ success: false, error: "Insufficient Token Balance. You need to hold at least 250K $GoldenGoal tokens in your wallet to make predictions." }, { status: 403 });
         }
 
         // 2. Fetch User from DB (or create if not exists)

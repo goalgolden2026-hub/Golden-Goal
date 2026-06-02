@@ -53,7 +53,7 @@ export async function GET(request) {
         const totalInvited = parseInt(referralStats.rows[0].totalInvited) || 0;
 
         // Dynamic Balance Calculation
-        let mockBalance = 30000;
+        let mockBalance = 5000000;
 
         // Deduct active locks
         const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
@@ -85,7 +85,7 @@ export async function GET(request) {
             else if (lockTier === 4) bonusPredictions = 10;
         }
 
-        const baseLimit = 5;
+        const baseLimit = mockBalance >= 250000 ? 3 : 0;
         // Check if predictionsToday needs to be reset visually (if lastPredictionDate is not today)
         const today = new Date().toISOString().split('T')[0];
         let displayPredictionsToday = user.predictionsToday || 0;

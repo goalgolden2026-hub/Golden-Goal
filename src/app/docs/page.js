@@ -8,7 +8,7 @@ import { AUDIT_METADATA, AUDIT_FINDINGS, THREAT_MATRIX } from '../../components/
 
 export default function DocsPage() {
   const [activeSection, setActiveSection] = useState('introduction');
-  const [lockAmount, setLockAmount] = useState(1000);
+  const [lockAmount, setLockAmount] = useState(500000);
   const [showCode, setShowCode] = useState(false);
   const [codeTab, setCodeTab] = useState('program');
 
@@ -29,7 +29,7 @@ export default function DocsPage() {
 
   // Helper to determine locking rewards dynamically
   const getLockingTierInfo = (amount) => {
-    if (amount >= 5000) {
+    if (amount >= 1000000) {
       return {
         tier: "Tier 4 (1-Month Locked)",
         predictions: "+10 Daily Predictions",
@@ -39,7 +39,7 @@ export default function DocsPage() {
         color: "from-amber-400 to-yellow-600",
         unlockPenalty: "10% Penalty (50% Burned, 50% to Rewards)"
       };
-    } else if (amount >= 1000) {
+    } else if (amount >= 750000) {
       return {
         tier: "Tier 3 (15-Day Locked)",
         predictions: "+5 Daily Predictions",
@@ -49,7 +49,7 @@ export default function DocsPage() {
         color: "from-yellow-500 to-amber-500",
         unlockPenalty: "10% Penalty (50% Burned, 50% to Rewards)"
       };
-    } else if (amount >= 500) {
+    } else if (amount >= 500000) {
       return {
         tier: "Tier 2 (7-Day Locked)",
         predictions: "+3 Daily Predictions",
@@ -59,7 +59,7 @@ export default function DocsPage() {
         color: "from-zinc-300 to-zinc-500",
         unlockPenalty: "10% Penalty (50% Burned, 50% to Rewards)"
       };
-    } else if (amount >= 100) {
+    } else if (amount >= 350000) {
       return {
         tier: "Tier 1 (Soft Lock)",
         predictions: "+1 Daily Prediction",
@@ -72,7 +72,7 @@ export default function DocsPage() {
     } else {
       return {
         tier: "Tier 0 (No Active Lock)",
-        predictions: "Base Daily Prediction Limit",
+        predictions: amount >= 250000 ? "3 Daily Predictions" : "0 Daily Predictions (Needs 250K+)",
         xp: "1.0x XP Multiplier",
         rewardsBox: "100 XP / Box Open",
         period: "No Lock",
@@ -292,18 +292,19 @@ export default function DocsPage() {
                   id="lock-slider"
                   type="range"
                   min="0"
-                  max="10000"
-                  step="100"
+                  max="1500000"
+                  step="50000"
                   value={lockAmount}
                   onChange={(e) => setLockAmount(Number(e.target.value))}
                   className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
                 />
                 <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
                   <span>0 $GG</span>
-                  <span>500 $GG</span>
-                  <span>1,000 $GG</span>
-                  <span>5,000 $GG</span>
-                  <span>10,000 $GG</span>
+                  <span>350K $GG</span>
+                  <span>500K $GG</span>
+                  <span>750K $GG</span>
+                  <span>1M $GG</span>
+                  <span>1.5M $GG</span>
                 </div>
               </div>
 

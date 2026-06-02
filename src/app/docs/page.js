@@ -19,7 +19,7 @@ export default function DocsPage() {
     { id: 'features', label: '4. Platform Features' },
     { id: 'staking', label: '5. Locking System' },
     { id: 'spin-system', label: '6. Rewards Box Module' },
-    { id: 'social-referral', label: '7. Social Hub & Referrals' },
+    { id: 'social-referral', label: '7. Social Growth Hub' },
     { id: 'tokenomics', label: '8. Tokenomics & Fair Launch' },
     { id: 'infrastructure', label: '9. AWS Infrastructure' },
     { id: 'roadmap', label: '10. Roadmap' },
@@ -250,7 +250,7 @@ export default function DocsPage() {
                 <div className="bg-zinc-900 border border-white/5 p-6 rounded-2xl">
                   <h4 className="font-bold text-amber-400 mb-2">Social Leaderboard</h4>
                   <p className="text-zinc-400 text-xs leading-relaxed">
-                    Ranks players based on Twitter marketing tasks, referral points, and community outreach.
+                    Ranks players based on Twitter marketing tasks, social engagement points, and community outreach.
                   </p>
                 </div>
               </div>
@@ -372,10 +372,10 @@ export default function DocsPage() {
             </div>
           </section>
 
-          {/* 7. SOCIAL HUB & REFERRALS */}
+          {/* 7. SOCIAL GROWTH HUB */}
           <section id="social-referral" className="scroll-mt-24 space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
-              <span className="text-amber-500">7.</span> Social Growth & Referral Economy
+              <span className="text-amber-500">7.</span> Social Growth Hub
             </h2>
             
             <div className="space-y-4">
@@ -386,13 +386,6 @@ export default function DocsPage() {
               <div className="p-4 bg-zinc-900/30 border border-white/5 rounded-2xl text-xs text-zinc-400 leading-relaxed">
                 <strong>Anti-Sybil Verification:</strong> The platform logs URLs globally. Multiple entries of the exact same tweet link are detected and blocked. A 60-second execution cooldown is enforced per user profile.
               </div>
-            </div>
-
-            <div className="space-y-4 pt-2">
-              <h3 className="font-bold text-white text-lg">7.2 Referral Milestones</h3>
-              <p className="text-zinc-400 text-sm leading-relaxed">
-                Viral loops are powered by referral codes. Referrals only lock into place when the invited user connects their Solana wallet and registers at least <strong>one transactional operation</strong> (prediction, box open, or lock). 
-              </p>
             </div>
           </section>
 
@@ -477,7 +470,7 @@ export default function DocsPage() {
                 </span>
                 <h4 className="font-bold text-amber-400">Phase 2: Core Rollout (Active)</h4>
                 <p className="text-zinc-400 text-xs mt-1">
-                  Weekly leaderboard payouts ($150 - $5), referral systems, Twitter Farming automation, and direct wallet adapters.
+                  Weekly leaderboard payouts ($150 - $5), Twitter Farming automation, and direct wallet adapters.
                 </p>
               </div>
 

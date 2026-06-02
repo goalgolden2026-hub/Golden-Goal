@@ -44,7 +44,7 @@ export async function GET() {
 11 June	Mexico - South Africa	22:00
 12 June	South Korea - Czechia	05:00
 18 June	Czechia - South Africa	19:00
-20 June	Mexico - South Korea	04:00
+19 June	Mexico - South Korea	04:00
 25 June	South Africa - South Korea	04:00
 25 June	Czechia - Mexico	04:00
 
@@ -66,7 +66,7 @@ Group C
 
 Group D
 13 June	USA - Paraguay	04:00
-14 June	Australia - Turkey	07:00
+13 June	Australia - Turkey	07:00
 19 June	USA - Australia	22:00
 20 June	Turkey - Paraguay	06:00
 26 June	Turkey - USA	05:00
@@ -84,7 +84,7 @@ Group F
 14 June	Netherlands - Japan	23:00
 15 June	Sweden - Tunisia	05:00
 20 June	Netherlands - Sweden	20:00
-21 June	Tunisia - Japan	07:00
+20 June	Tunisia - Japan	07:00
 26 June	Tunisia - Netherlands	02:00
 26 June	Japan - Sweden	02:00
 
@@ -133,8 +133,8 @@ Group L
 18 June	Ghana - Panama	02:00
 23 June	England - Ghana	23:00
 24 June	Panama - Croatia	02:00
-27 June	Panama - England	00:00
-27 June	Croatia - Ghana	00:00`;
+28 June	Panama - England	00:00
+28 June	Croatia - Ghana	00:00`;
 
         const lines = rawMatches.split('\n');
         for (const line of lines) {

@@ -363,9 +363,9 @@ export default function PitchDeckPage() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full pt-4">
             <a href="https://www.goldengoalsol.com" className="bg-zinc-900 hover:bg-zinc-800 border border-white/5 px-3 py-2.5 rounded-xl text-[10px] font-bold text-zinc-300 transition-colors uppercase tracking-wider">Website</a>
-            <a href="https://x.com" className="bg-zinc-900 hover:bg-zinc-800 border border-white/5 px-3 py-2.5 rounded-xl text-[10px] font-bold text-zinc-300 transition-colors uppercase tracking-wider">Twitter (X)</a>
+            <a href="https://x.com/goldengoalsol" target="_blank" rel="noopener noreferrer" className="bg-zinc-900 hover:bg-zinc-800 border border-white/5 px-3 py-2.5 rounded-xl text-[10px] font-bold text-zinc-300 transition-colors uppercase tracking-wider">Twitter (X)</a>
             <Link href="/docs" className="bg-zinc-900 hover:bg-zinc-800 border border-white/5 px-3 py-2.5 rounded-xl text-[10px] font-bold text-zinc-300 transition-colors uppercase tracking-wider">Whitepaper</Link>
-            <a href="mailto:info@goldengoalsol.com" className="bg-amber-500 hover:bg-amber-400 text-black px-3 py-2.5 rounded-xl text-[10px] font-extrabold transition-colors uppercase tracking-wider">Email Us</a>
+            <a href="mailto:goalgolden2026@gmail.com" className="bg-amber-500 hover:bg-amber-400 text-black px-3 py-2.5 rounded-xl text-[10px] font-extrabold transition-colors uppercase tracking-wider">Email Us</a>
           </div>
         </div>
       )

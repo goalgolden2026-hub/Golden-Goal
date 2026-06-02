@@ -135,11 +135,11 @@ export default function Header() {
                                         <Link href="/rewards/locking" className="block px-4 py-2.5 rounded-xl hover:bg-amber-500/10 hover:text-amber-400 transition-all font-semibold text-xs text-left">Locking</Link>
                                         <div className="flex items-center justify-between px-4 py-2.5 rounded-xl text-zinc-500 cursor-not-allowed font-semibold text-xs select-none hover:bg-white/[0.02]">
                                             <span>Reward Box</span>
-                                            <span className="text-[8px] font-black tracking-wider text-red-500 bg-red-500/10 border border-red-500/20 px-1.5 py-0.5 rounded-full uppercase">Coming Soon</span>
+                                            <span className="text-[8px] font-black tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full uppercase animate-pulse">Coming Soon</span>
                                         </div>
                                         <div className="flex items-center justify-between px-4 py-2.5 rounded-xl text-zinc-500 cursor-not-allowed font-semibold text-xs select-none hover:bg-white/[0.02]">
                                             <span>Social Tasks</span>
-                                            <span className="text-[8px] font-black tracking-wider text-blue-500 bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 rounded-full uppercase">Coming Soon</span>
+                                            <span className="text-[8px] font-black tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full uppercase animate-pulse">Coming Soon</span>
                                         </div>
                                     </div>
                                 </div>
@@ -207,11 +207,11 @@ export default function Header() {
                                                 <Link href="/rewards/locking" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-400 transition-colors">Locking</Link>
                                                 <div className="flex justify-between items-center text-zinc-500 cursor-not-allowed text-xs pr-4 py-1 select-none">
                                                     <span>Reward Box</span>
-                                                    <span className="text-[8px] font-black tracking-wider text-red-500 bg-red-500/10 border border-red-500/20 px-1.5 py-0.5 rounded-full uppercase">Coming Soon</span>
+                                                    <span className="text-[8px] font-black tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full uppercase animate-pulse">Coming Soon</span>
                                                 </div>
                                                 <div className="flex justify-between items-center text-zinc-500 cursor-not-allowed text-xs pr-4 py-1 select-none">
                                                     <span>Social Tasks</span>
-                                                    <span className="text-[8px] font-black tracking-wider text-blue-500 bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 rounded-full uppercase">Coming Soon</span>
+                                                    <span className="text-[8px] font-black tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full uppercase animate-pulse">Coming Soon</span>
                                                 </div>
                                             </div>
                                         )}

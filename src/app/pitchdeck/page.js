@@ -329,19 +329,19 @@ export default function PitchDeckPage() {
           <div className="bg-zinc-900/80 border border-emerald-500/30 p-4 rounded-xl space-y-1 relative">
             <span className="absolute top-2 right-2 text-emerald-500 text-xs">✓</span>
             <div className="text-[10px] text-emerald-500 font-bold">PHASE 3</div>
-            <div className="font-bold text-white text-[11px] leading-tight">DeFi & Live Sync</div>
-            <div className="text-[9px] text-zinc-500">Sportradar auto-resolving, 6 sub-markets, Tiers 1-4, Rewards Box.</div>
+            <div className="font-bold text-white text-[11px] leading-tight">Predictor & Locking</div>
+            <div className="text-[9px] text-zinc-500">Football Predictor live analytics, multi-tier locks, dynamic GMT times.</div>
           </div>
           <div className="bg-zinc-900/80 border border-amber-500/30 p-4 rounded-xl space-y-1 relative">
             <span className="absolute top-2 right-2 text-amber-500 text-[9px] animate-pulse">⏳</span>
             <div className="text-[10px] text-amber-500 font-bold">PHASE 4</div>
-            <div className="font-bold text-white text-[11px] leading-tight">Expansion</div>
-            <div className="text-[9px] text-zinc-500">Dedicated mobile apps, bracket contests, NFT custom avatars.</div>
+            <div className="font-bold text-white text-[11px] leading-tight">Reward Box & Social</div>
+            <div className="text-[9px] text-zinc-500">Gamified Reward Box chest, daily XP drops, social engagement hub.</div>
           </div>
           <div className="bg-zinc-900/40 border border-white/5 p-4 rounded-xl space-y-1">
             <div className="text-[10px] text-zinc-500 font-bold">PHASE 5</div>
             <div className="font-bold text-white text-[11px] leading-tight">DAO & Growth</div>
-            <div className="text-[9px] text-zinc-500">DAO governance enabled, global sports, esports markets.</div>
+            <div className="text-[9px] text-zinc-500">DAO governance enabled, global sports forecasting integration.</div>
           </div>
         </div>
       )

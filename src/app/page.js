@@ -23,7 +23,7 @@ export default function LandingPage() {
   const lockingTiers = [
     {
       level: "Tier 0 (Holder)",
-      requirement: "Min 250,000 GG (Circulating)",
+      requirement: "Min 250,000 $GoldenGoal (Circulating)",
       predictions: "3 Predictions / Day",
       xp: "1.0x XP",
       rewardsBox: "100 XP / Rewards Box Open",
@@ -33,41 +33,41 @@ export default function LandingPage() {
     },
     {
       level: "Tier 1 (Soft)",
-      requirement: "Min 350,000 GG Locked",
+      requirement: "Min 350,000 $GoldenGoal Locked",
       predictions: "+1 Prediction / Day",
       xp: "1.0x XP",
       rewardsBox: "75 XP / Rewards Box (25% Off)",
-      perk: "Lock 350K+ GG for a 1-day lockup. Unlocks a 25% discount on the daily Rewards Box opening fee.",
+      perk: "Lock 350K+ $GoldenGoal for a 1-day lockup. Unlocks a 25% discount on the daily Rewards Box opening fee.",
       color: "from-emerald-500 to-teal-600",
       glow: "rgba(16, 185, 129, 0.15)"
     },
     {
       level: "Tier 2 (7-Day)",
-      requirement: "Min 500,000 GG Locked",
+      requirement: "Min 500,000 $GoldenGoal Locked",
       predictions: "+3 Predictions / Day",
       xp: "1.0x XP",
       rewardsBox: "50 XP / Rewards Box (50% Off)",
-      perk: "Lock 500K+ GG for a 7-day lockup. Unlocks a 50% discount on the daily Rewards Box opening fee.",
+      perk: "Lock 500K+ $GoldenGoal for a 7-day lockup. Unlocks a 50% discount on the daily Rewards Box opening fee.",
       color: "from-blue-500 to-indigo-600",
       glow: "rgba(59, 130, 246, 0.15)"
     },
     {
       level: "Tier 3 (15-Day)",
-      requirement: "Min 750,000 GG Locked",
+      requirement: "Min 750,000 $GoldenGoal Locked",
       predictions: "+5 Predictions / Day",
       xp: "1.1x XP Booster",
       rewardsBox: "25 XP / Rewards Box (75% Off)",
-      perk: "Lock 750K+ GG for a 15-day lockup. Unlocks a 75% discount on the daily Rewards Box opening fee and 1.1x XP.",
+      perk: "Lock 750K+ $GoldenGoal for a 15-day lockup. Unlocks a 75% discount on the daily Rewards Box opening fee and 1.1x XP.",
       color: "from-purple-500 to-violet-600",
       glow: "rgba(139, 92, 246, 0.15)"
     },
     {
       level: "Tier 4 (30-Day)",
-      requirement: "Min 1,000,000 GG Locked",
+      requirement: "Min 1,000,000 $GoldenGoal Locked",
       predictions: "+10 Predictions / Day",
       xp: "1.25x XP Booster",
       rewardsBox: "1 Free Daily + 25 XP / Next Rewards Box",
-      perk: "Lock 1M+ GG for a 30-day lockup. First daily Rewards Box opening is completely free, subsequent openings cost 25 XP.",
+      perk: "Lock 1M+ $GoldenGoal for a 30-day lockup. First daily Rewards Box opening is completely free, subsequent openings cost 25 XP.",
       color: "from-yellow-400 via-amber-500 to-orange-500",
       glow: "rgba(245, 158, 11, 0.25)"
     }
@@ -386,7 +386,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">3. Deflationary Locking</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                Lock your $GG tokens to scale your prediction capabilities, boost your XP multiplier, and unlock higher access levels. Drive premium value through long-term loyalty.
+                Lock your $GoldenGoal tokens to scale your prediction capabilities, boost your XP multiplier, and unlock higher access levels. Drive premium value through long-term loyalty.
               </p>
             </div>
 
@@ -447,7 +447,7 @@ export default function LandingPage() {
                 <span className="text-amber-500 font-mono text-xs uppercase tracking-widest font-bold">UTILITY HUB</span>
                 <h3 className="text-3xl sm:text-4xl font-black text-white">Tiered Locking Programs</h3>
                 <p className="text-zinc-400 text-sm leading-relaxed font-medium">
-                  Locking your $GG tokens contracts circulating market supply while unlocking compound benefits across the platform. Click on a tier level below to preview its specific gaming benefits:
+                  Locking your $GoldenGoal tokens contracts circulating market supply while unlocking compound benefits across the platform. Click on a tier level below to preview its specific gaming benefits:
                 </p>
               </div>
 
@@ -613,7 +613,7 @@ export default function LandingPage() {
         <section className="w-full text-center py-20 border-t border-white/5 select-none">
           <h2 className="text-3xl sm:text-5xl font-black text-white mb-6 tracking-tight">DOMINATE THE SCOREBOARD</h2>
           <p className="text-zinc-400 max-w-lg mx-auto text-sm leading-relaxed mb-10 font-medium">
-            Connect your Phantom wallet in seconds, lock your predictions, climb the analyst ranks, and earn weekly $GG rewards risk-free.
+            Connect your Phantom wallet in seconds, lock your predictions, climb the analyst ranks, and earn weekly $GoldenGoal rewards risk-free.
           </p>
           <div className="flex justify-center">
             {showWalletUI ? (

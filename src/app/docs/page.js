@@ -259,7 +259,7 @@ export default function DocsPage() {
             <div className="space-y-4 pt-4">
               <h3 className="font-bold text-zinc-200 text-lg">4.2 Weekly Payout Pool</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                Each matchweek, the top 10 forecasters on our global leaderboard receive direct reward distributions in <strong>Golden Goal ($GG) tokens</strong>. 
+                Each matchweek, the top 10 forecasters on our global leaderboard receive direct reward distributions in <strong>Golden Goal ($GoldenGoal) tokens</strong>. 
               </p>
               <p className="text-zinc-400 text-sm leading-relaxed">
                 The exact prize pool size and token distribution structures are dynamically scaled by the platform treasury in proportion to user volume, sponsorship partnerships, and active match cycle transactions. This gives the ecosystem full flexibility to amplify reward payouts during major sports tournaments like the World Cup. Current matchweek payout scales are displayed transparently inside the application dashboard.
@@ -273,7 +273,7 @@ export default function DocsPage() {
               <span className="text-amber-500">5.</span> Locking System
             </h2>
             <p className="text-zinc-400 text-sm md:text-base leading-relaxed">
-              Locking your $GG tokens reduces circulating market supply while unlocking elite platform advantages. Use the interactive calculator below to explore your loyalty benefits in real-time.
+              Locking your $GoldenGoal tokens reduces circulating market supply while unlocking elite platform advantages. Use the interactive calculator below to explore your loyalty benefits in real-time.
             </p>
 
             {/* INTERACTIVE LOCKING CALCULATOR */}
@@ -286,7 +286,7 @@ export default function DocsPage() {
 
               <div className="space-y-4 mb-6">
                 <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                  Select Locking Amount: <span className="text-amber-400 font-mono text-base font-bold">{lockAmount} $GG</span>
+                  Select Locking Amount: <span className="text-amber-400 font-mono text-base font-bold">{lockAmount} $GoldenGoal</span>
                 </label>
                 <input
                   id="lock-slider"
@@ -299,12 +299,12 @@ export default function DocsPage() {
                   className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
                 />
                 <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
-                  <span>0 $GG</span>
-                  <span>350K $GG</span>
-                  <span>500K $GG</span>
-                  <span>750K $GG</span>
-                  <span>1M $GG</span>
-                  <span>1.5M $GG</span>
+                  <span>0 $GoldenGoal</span>
+                  <span>350K $GoldenGoal</span>
+                  <span>500K $GoldenGoal</span>
+                  <span>750K $GoldenGoal</span>
+                  <span>1M $GoldenGoal</span>
+                  <span>1.5M $GoldenGoal</span>
                 </div>
               </div>
 
@@ -412,7 +412,7 @@ export default function DocsPage() {
               <h4 className="font-bold text-zinc-200">Core Deflation Sinks:</h4>
               <ul className="list-disc list-inside text-zinc-400 text-sm space-y-1">
                 <li>Locking early unlock penalty burns 50% of the penalty.</li>
-                <li>Prediction changes and deletion burn or lock micro $GG tokens.</li>
+                <li>Prediction changes and deletion burn or lock micro $GoldenGoal tokens.</li>
                 <li>Rewards Box utilizes gamified XP Points to reward platform loyalty rather than inflating circulating token supply.</li>
               </ul>
             </div>
@@ -504,7 +504,7 @@ export default function DocsPage() {
                     <span className="text-zinc-600">11.</span> Legal Disclaimers
             </h2>
             <p className="text-zinc-500 text-xs leading-relaxed">
-              Golden Goal ($GG) is an entertainment-based decentralized prediction ecosystem. Participation in predictions is risk-free and carries no direct asset cost. Locking cryptocurrency tokens carries systemic smart contract, blockchain network, and market volatility risks. The $GG token functions purely as a utility token within the application and represents no equity, security share, or debt claim on the development project team.
+              Golden Goal ($GoldenGoal) is an entertainment-based decentralized prediction ecosystem. Participation in predictions is risk-free and carries no direct asset cost. Locking cryptocurrency tokens carries systemic smart contract, blockchain network, and market volatility risks. The $GoldenGoal token functions purely as a utility token within the application and represents no equity, security share, or debt claim on the development project team.
             </p>
           </section>
 
@@ -519,7 +519,7 @@ export default function DocsPage() {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               <div className="p-5 rounded-2xl bg-zinc-900/60 border border-white/5">
-                <h4 className="font-bold text-amber-400 text-sm mb-2">GG Token Mint Address</h4>
+                <h4 className="font-bold text-amber-400 text-sm mb-2">Golden Goal Token Mint Address</h4>
                 <code className="text-xs font-mono text-zinc-300 block bg-black/60 p-2.5 rounded border border-white/5 break-all select-all">
                   GGGoalp5m2FqyZUCeaMDjD35tSrKbu5R8KxXGcXGcXG
                 </code>
@@ -527,7 +527,7 @@ export default function DocsPage() {
               </div>
 
               <div className="p-5 rounded-2xl bg-zinc-900/60 border border-white/5">
-                <h4 className="font-bold text-amber-400 text-sm mb-2">GG Locking Program ID</h4>
+                <h4 className="font-bold text-amber-400 text-sm mb-2">Golden Goal Locking Program ID</h4>
                 <code className="text-xs font-mono text-zinc-300 block bg-black/60 p-2.5 rounded border border-white/5 break-all select-all">
                   GGVaultJNYRYZUCeaMDjD35tSrKbu5R8KxXGcXGcXG
                 </code>

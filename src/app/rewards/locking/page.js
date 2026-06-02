@@ -230,15 +230,15 @@ export default function LockingPage() {
       if (userBalance < minAmount) {
         let warningMsg = "";
         if (tierId === 1) {
-          warningMsg = `You need to hold at least 350K $GoldenGoal tokens in your wallet to perform a Soft Lock. Your current balance is ${userBalance.toLocaleString()} $GG.`;
+          warningMsg = `You need to hold at least 350K $GoldenGoal tokens in your wallet to perform a Soft Lock. Your current balance is ${userBalance.toLocaleString()} $GoldenGoal.`;
         } else if (tierId === 2) {
-          warningMsg = `You need to hold at least 500K $GoldenGoal tokens in your wallet to lock for 7 days. Your current balance is ${userBalance.toLocaleString()} $GG.`;
+          warningMsg = `You need to hold at least 500K $GoldenGoal tokens in your wallet to lock for 7 days. Your current balance is ${userBalance.toLocaleString()} $GoldenGoal.`;
         } else if (tierId === 3) {
-          warningMsg = `You need to hold at least 750K $GoldenGoal tokens in your wallet to lock for 15 days. Your current balance is ${userBalance.toLocaleString()} $GG.`;
+          warningMsg = `You need to hold at least 750K $GoldenGoal tokens in your wallet to lock for 15 days. Your current balance is ${userBalance.toLocaleString()} $GoldenGoal.`;
         } else if (tierId === 4) {
-          warningMsg = `You need to hold at least 1M $GoldenGoal tokens in your wallet to lock for 30 days (1 month). Your current balance is ${userBalance.toLocaleString()} $GG.`;
+          warningMsg = `You need to hold at least 1M $GoldenGoal tokens in your wallet to lock for 30 days (1 month). Your current balance is ${userBalance.toLocaleString()} $GoldenGoal.`;
         } else {
-          warningMsg = `Insufficient balance. You need at least ${minAmount.toLocaleString()} tokens to lock. Your current balance is ${userBalance.toLocaleString()} $GG.`;
+          warningMsg = `Insufficient balance. You need at least ${minAmount.toLocaleString()} tokens to lock. Your current balance is ${userBalance.toLocaleString()} $GoldenGoal.`;
         }
         showMessage(warningMsg, "error");
         setLoading(false);

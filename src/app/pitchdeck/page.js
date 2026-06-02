@@ -89,7 +89,7 @@ export default function PitchDeckPage() {
               <span className="text-3xl">🛡️</span>
               <h4 className="font-bold text-emerald-400 text-sm">0% Capital Risk</h4>
               <p className="text-zinc-400 text-xs leading-relaxed">
-                Users hold or lock $GG. Capital is never lost or spent, creating a completely safe, stress-free prediction environment.
+                Users hold or lock $GoldenGoal. Capital is never lost or spent, creating a completely safe, stress-free prediction environment.
               </p>
             </div>
             <div className="bg-emerald-500/5 border border-emerald-500/10 p-6 rounded-2xl text-center space-y-2">
@@ -238,7 +238,7 @@ export default function PitchDeckPage() {
             <span className="text-2xl">⚙️</span>
             <h4 className="font-bold text-amber-400 text-sm">Ecosystem Sinks</h4>
             <p className="text-zinc-400 text-xs leading-relaxed">
-              $GG is locked within utility contracts to increase limits, while daily Rewards Box openings consume accumulated XP, creating active point-based loops.
+              $GoldenGoal is locked within utility contracts to increase limits, while daily Rewards Box openings consume accumulated XP, creating active point-based loops.
             </p>
           </div>
           <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-2">

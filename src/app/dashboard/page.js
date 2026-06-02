@@ -100,7 +100,7 @@ export default function Dashboard() {
           setModalConfig({
               isOpen: true,
               title: "🗑️ Cancel Prediction?",
-              message: "Are you sure you want to cancel this prediction?\n\nThis will cost 200 Golden Tokens (100 burned, 100 to Treasury).",
+              message: "Are you sure you want to cancel this prediction?\n\nThis will cost 10.000 $GoldenGoal (5.000 burned, 5.000 to Treasury).",
               type: "warning",
               confirmText: "Yes, Cancel",
               cancelText: "No, Keep It",
@@ -210,14 +210,14 @@ export default function Dashboard() {
                                       disabled={managingPredictionId === pred.predictionId}
                                       className="text-xs bg-zinc-800 hover:bg-zinc-700 text-white py-2 px-3 rounded-lg transition-colors border border-transparent hover:border-zinc-600 disabled:opacity-50 flex justify-center items-center gap-1"
                                   >
-                                      ✏️ Change (100 <span className="text-amber-500 font-bold">GT</span>)
+                                      ✏️ Change (5.000 <span className="text-amber-500 font-bold">$GoldenGoal</span>)
                                   </button>
                                   <button 
                                       onClick={() => handleManagePrediction(pred.predictionId, 'CANCEL')}
                                       disabled={managingPredictionId === pred.predictionId}
                                       className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-500 py-2 px-3 rounded-lg transition-colors border border-red-500/20 hover:border-red-500/40 disabled:opacity-50 flex justify-center items-center gap-1"
                                   >
-                                      {managingPredictionId === pred.predictionId ? 'Processing...' : <>🗑️ Cancel (200 <span className="text-amber-500 font-bold">GT</span>)</>}
+                                      {managingPredictionId === pred.predictionId ? 'Processing...' : <>🗑️ Cancel (10.000 <span className="text-amber-500 font-bold">$GoldenGoal</span>)</>}
                                   </button>
                               </div>
                           </div>
@@ -299,8 +299,8 @@ export default function Dashboard() {
                   </div>
 
                   <p className="text-xs text-amber-500/80 mb-2 text-center bg-amber-500/10 p-2 rounded-lg">
-                      Cost: 100 Golden Tokens<br/>
-                      <span className="text-zinc-500">50 permanently burned | 50 to Treasury</span>
+                      Cost: 5.000 $GoldenGoal<br/>
+                      <span className="text-zinc-500">2.500 permanently burned | 2.500 to Treasury</span>
                   </p>
               </div>
           </div>

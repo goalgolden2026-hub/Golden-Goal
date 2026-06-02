@@ -571,9 +571,9 @@ export default function LandingPage() {
                 <span className="bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">LAUNCHING SOON</span>
               </div>
               <div className="sm:w-2/3">
-                <h4 className="font-bold text-white text-base mb-2">Football Predictor & Leaderboards</h4>
+                <h4 className="font-bold text-white text-base mb-2">Football Predictor & Locking Engine</h4>
                 <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-                  Activation of the core Football Predictor analytics board, allowing live forecasts across global football leagues, alongside the launch of Pro & Social Leaderboards.
+                  Activation of the core Football Predictor analytics board, allowing live forecasts across global football leagues, alongside the launch of the multi-tier lockup tiered locking engine.
                 </p>
               </div>
             </div>
@@ -585,9 +585,9 @@ export default function LandingPage() {
                 <span className="bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">UPCOMING</span>
               </div>
               <div className="sm:w-2/3">
-                <h4 className="font-bold text-white text-base mb-2">Rewards Box & Locking Engine</h4>
+                <h4 className="font-bold text-white text-base mb-2">Reward Box & Social Tasks</h4>
                 <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-                  Unlocking the gamified Rewards Box module for daily XP & prediction quota claims, and launching the multi-tier lockup tiered locking programs.
+                  Unlocking the gamified Rewards Box module for daily XP & prediction quota claims, and launching the social hub task engagement modules.
                 </p>
               </div>
             </div>

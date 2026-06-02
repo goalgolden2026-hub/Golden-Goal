@@ -104,6 +104,11 @@ const WHEEL_SLICES = [
 
 export default function RewardBoxPage() {
     const { publicKey, connected } = useWallet();
+    
+    useEffect(() => {
+        window.location.href = '/rewards/locking';
+    }, []);
+
     const [modalConfig, setModalConfig] = useState({
         isOpen: false,
         title: '',

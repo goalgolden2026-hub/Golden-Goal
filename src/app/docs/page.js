@@ -479,9 +479,9 @@ export default function DocsPage() {
                 <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 rounded-full bg-zinc-700 items-center justify-center">
                   <span className="h-2 w-2 rounded-full bg-zinc-950"></span>
                 </span>
-                <h4 className="font-bold text-zinc-400">Phase 3: Gamified DeFi</h4>
+                <h4 className="font-bold text-zinc-400">Phase 3: Football Predictor & Locking Engine</h4>
                 <p className="text-zinc-400 text-xs mt-1">
-                  Multi-tier token locking (1d, 7d, 15d, 30d Tiers), Rewards Box Integration, and automated early unlock penalty splits.
+                  Activation of the core Football Predictor analytics board for global football leagues, and launching the multi-tier lockup tiered locking engine.
                 </p>
               </div>
 
@@ -489,9 +489,9 @@ export default function DocsPage() {
                 <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 rounded-full bg-zinc-700 items-center justify-center">
                   <span className="h-2 w-2 rounded-full bg-zinc-950"></span>
                 </span>
-                <h4 className="font-bold text-zinc-400">Phase 4: Scaling & Expansion</h4>
+                <h4 className="font-bold text-zinc-400">Phase 4: Reward Box & Social Tasks</h4>
                 <p className="text-zinc-400 text-xs mt-1">
-                  Dedicated mobile applications, NFT achievement custom avatars, and seasonal World Cup bracket events.
+                  Unlocking the gamified Rewards Box module for daily XP & prediction quota claims, and launching the social hub task engagement modules.
                 </p>
               </div>
 

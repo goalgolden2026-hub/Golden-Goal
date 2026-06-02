@@ -61,7 +61,7 @@ export async function POST(request) {
         else if (tier === 4) minAmountRequired = 1000000;
 
         if (amount < minAmountRequired) {
-            return NextResponse.json({ success: false, error: `Invalid lock amount. Minimum required for Tier ${tier} is ${minAmountRequired.toLocaleString()} tokens.` }, { status: 400 });
+            return NextResponse.json({ success: false, error: `Invalid lock amount. Minimum required for Tier ${tier} is ${minAmountRequired.toLocaleString('tr-TR')} $GoldenGoal.` }, { status: 400 });
         }
 
         // 2. Double-check user's mock balance from the database profile
@@ -87,7 +87,7 @@ export async function POST(request) {
         }
 
         if (mockBalance < amount) {
-            return NextResponse.json({ success: false, error: `Insufficient simulated balance. You need at least ${amount.toLocaleString()} tokens to lock. You currently have ${mockBalance.toLocaleString()}.` }, { status: 400 });
+            return NextResponse.json({ success: false, error: `Insufficient simulated balance. You need at least ${amount.toLocaleString('tr-TR')} $GoldenGoal to lock. You currently have ${mockBalance.toLocaleString('tr-TR')} $GoldenGoal.` }, { status: 400 });
         }
 
         // Check for existing active lock (one active lock per user)

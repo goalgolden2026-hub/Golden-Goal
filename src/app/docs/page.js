@@ -72,7 +72,7 @@ export default function DocsPage() {
     } else {
       return {
         tier: "Tier 0 (No Active Lock)",
-        predictions: amount >= 250000 ? "3 Daily Predictions" : "0 Daily Predictions (Needs 250K+)",
+        predictions: amount >= 250000 ? "3 Daily Predictions" : "0 Daily Predictions (Needs 250.000+ $GoldenGoal)",
         xp: "1.0x XP Multiplier",
         rewardsBox: "100 XP / Box Open",
         period: "No Lock",
@@ -286,7 +286,7 @@ export default function DocsPage() {
 
               <div className="space-y-4 mb-6">
                 <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                  Select Locking Amount: <span className="text-amber-400 font-mono text-base font-bold">{lockAmount} $GoldenGoal</span>
+                  Select Locking Amount: <span className="text-amber-400 font-mono text-base font-bold">{lockAmount.toLocaleString('tr-TR')} $GoldenGoal</span>
                 </label>
                 <input
                   id="lock-slider"
@@ -300,11 +300,11 @@ export default function DocsPage() {
                 />
                 <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
                   <span>0 $GoldenGoal</span>
-                  <span>350K $GoldenGoal</span>
-                  <span>500K $GoldenGoal</span>
-                  <span>750K $GoldenGoal</span>
-                  <span>1M $GoldenGoal</span>
-                  <span>1.5M $GoldenGoal</span>
+                  <span>350.000 $GoldenGoal</span>
+                  <span>500.000 $GoldenGoal</span>
+                  <span>750.000 $GoldenGoal</span>
+                  <span>1.000.000 $GoldenGoal</span>
+                  <span>1.500.000 $GoldenGoal</span>
                 </div>
               </div>
 

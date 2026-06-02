@@ -55,7 +55,7 @@ export async function POST(request) {
         const { tier, limit } = getTierLimits(balance);
 
         if (limit === 0) {
-            return NextResponse.json({ success: false, error: "Insufficient Token Balance. You need to hold at least 250K $GoldenGoal tokens in your wallet to make predictions." }, { status: 403 });
+            return NextResponse.json({ success: false, error: "Insufficient Token Balance. You need to hold at least 250.000 $GoldenGoal tokens in your wallet to make predictions." }, { status: 403 });
         }
 
         // 2. Fetch User from DB (or create if not exists)

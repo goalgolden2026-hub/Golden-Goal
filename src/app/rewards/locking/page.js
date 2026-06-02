@@ -230,15 +230,15 @@ export default function LockingPage() {
       if (userBalance < minAmount) {
         let warningMsg = "";
         if (tierId === 1) {
-          warningMsg = `You need to hold at least 350K $GoldenGoal tokens in your wallet to perform a Soft Lock. Your current balance is ${userBalance.toLocaleString()} $GoldenGoal.`;
+          warningMsg = `You need to hold at least 350.000 $GoldenGoal tokens in your wallet to perform a Soft Lock. Your current balance is ${userBalance.toLocaleString('tr-TR')} $GoldenGoal.`;
         } else if (tierId === 2) {
-          warningMsg = `You need to hold at least 500K $GoldenGoal tokens in your wallet to lock for 7 days. Your current balance is ${userBalance.toLocaleString()} $GoldenGoal.`;
+          warningMsg = `You need to hold at least 500.000 $GoldenGoal tokens in your wallet to lock for 7 days. Your current balance is ${userBalance.toLocaleString('tr-TR')} $GoldenGoal.`;
         } else if (tierId === 3) {
-          warningMsg = `You need to hold at least 750K $GoldenGoal tokens in your wallet to lock for 15 days. Your current balance is ${userBalance.toLocaleString()} $GoldenGoal.`;
+          warningMsg = `You need to hold at least 750.000 $GoldenGoal tokens in your wallet to lock for 15 days. Your current balance is ${userBalance.toLocaleString('tr-TR')} $GoldenGoal.`;
         } else if (tierId === 4) {
-          warningMsg = `You need to hold at least 1M $GoldenGoal tokens in your wallet to lock for 30 days (1 month). Your current balance is ${userBalance.toLocaleString()} $GoldenGoal.`;
+          warningMsg = `You need to hold at least 1.000.000 $GoldenGoal tokens in your wallet to lock for 30 days (1 month). Your current balance is ${userBalance.toLocaleString('tr-TR')} $GoldenGoal.`;
         } else {
-          warningMsg = `Insufficient balance. You need at least ${minAmount.toLocaleString()} tokens to lock. Your current balance is ${userBalance.toLocaleString()} $GoldenGoal.`;
+          warningMsg = `Insufficient balance. You need at least ${minAmount.toLocaleString('tr-TR')} $GoldenGoal to lock. Your current balance is ${userBalance.toLocaleString('tr-TR')} $GoldenGoal.`;
         }
         showMessage(warningMsg, "error");
         setLoading(false);
@@ -268,7 +268,7 @@ export default function LockingPage() {
       
       const data = await res.json();
       if (data.success) {
-        showMessage(`🎉 Successfully locked ${minAmount} tokens! Rewards active.`, "success");
+        showMessage(`🎉 Successfully locked ${minAmount.toLocaleString('tr-TR')} $GoldenGoal! Rewards active.`, "success");
         setRefresh(prev => prev + 1);
       } else {
         showMessage(data.error || "Lock failed.", "error");
@@ -435,7 +435,7 @@ export default function LockingPage() {
           </div>
           <div>
             <div className="text-zinc-500 text-xs font-bold tracking-wider mb-1 uppercase">Total Value Locked</div>
-            <div className="text-2xl font-bold text-white">{stats.tvl.toLocaleString()} <span className="text-sm text-zinc-500 font-normal">Tokens</span></div>
+            <div className="text-2xl font-bold text-white">{stats.tvl.toLocaleString('tr-TR')} <span className="text-sm text-zinc-500 font-normal">$GoldenGoal</span></div>
           </div>
         </div>
 
@@ -447,7 +447,7 @@ export default function LockingPage() {
           </div>
           <div>
             <div className="text-zinc-500 text-xs font-bold tracking-wider mb-1 uppercase">Active Lockers</div>
-            <div className="text-2xl font-bold text-white">{stats.lockers.toLocaleString()} <span className="text-sm text-zinc-500 font-normal">Wallets</span></div>
+            <div className="text-2xl font-bold text-white">{stats.lockers.toLocaleString('tr-TR')} <span className="text-sm text-zinc-500 font-normal">Wallets</span></div>
           </div>
         </div>
 
@@ -459,7 +459,7 @@ export default function LockingPage() {
           </div>
           <div>
             <div className="text-zinc-500 text-xs font-bold tracking-wider mb-1 uppercase">Your Locked</div>
-            <div className="text-2xl font-bold text-white">{stats.userLocked.toLocaleString()} <span className="text-sm text-zinc-500 font-normal">Tokens</span></div>
+            <div className="text-2xl font-bold text-white">{stats.userLocked.toLocaleString('tr-TR')} <span className="text-sm text-zinc-500 font-normal">$GoldenGoal</span></div>
           </div>
         </div>
       </div>
@@ -474,7 +474,7 @@ export default function LockingPage() {
             <div className="relative z-10">
               <div className="text-4xl mb-4">{t.icon}</div>
               <h3 className="text-2xl font-bold text-white mb-1">{t.name}</h3>
-              <div className="text-zinc-500 text-sm mb-6 pb-6 border-b border-white/5">Min: {t.min} Tokens</div>
+              <div className="text-zinc-500 text-sm mb-6 pb-6 border-b border-white/5">Min: {t.min.toLocaleString('tr-TR')} $GoldenGoal</div>
 
               <ul className="space-y-4 mb-8">
                 <li className="flex justify-between items-center">

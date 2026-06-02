@@ -143,10 +143,16 @@ export default function MatchDetail() {
         if (data.success) {
             const m = data.market;
             const dateObj = new Date(m.matchDate);
+            let tz = 'GMT';
+            try {
+                const parts = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' }).formatToParts(dateObj);
+                tz = parts.find(p => p.type === 'timeZoneName')?.value || 'GMT';
+            } catch (e) {}
             setMarket({
                 ...m,
                 dateStr: dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
                 timeStr: dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }),
+                tz: tz,
                 isLocked: dateObj.getTime() < Date.now()
             });
         }
@@ -417,7 +423,7 @@ export default function MatchDetail() {
                       </span>
                   </div>
               ) : (
-                  <span className={`text-sm font-mono mb-2 block ${market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'text-amber-400 font-bold' : 'text-zinc-300'}`}>{market.dateStr} • {market.timeStr} GMT</span>
+                  <span className={`text-sm font-mono mb-2 block ${market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'text-amber-400 font-bold' : 'text-zinc-300'}`}>{market.dateStr} • {market.timeStr} {market.tz}</span>
               )}
               <div className="grid grid-cols-3 items-center w-full text-center text-3xl md:text-5xl font-extrabold mb-4 relative z-10">
                   {/* Team A */}

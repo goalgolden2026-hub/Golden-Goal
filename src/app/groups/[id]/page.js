@@ -36,7 +36,12 @@ function formatMatchTime(dateStr) {
   const dateObj = new Date(dateStr);
   const formattedDate = dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   const formattedTime = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-  return `${formattedDate} • ${formattedTime} GMT`;
+  let tz = 'GMT';
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' }).formatToParts(dateObj);
+    tz = parts.find(p => p.type === 'timeZoneName')?.value || 'GMT';
+  } catch (e) {}
+  return `${formattedDate} • ${formattedTime} ${tz}`;
 }
 
 export default function GroupDetail() {

@@ -191,9 +191,15 @@ function MarketsContent() {
           group = { date: dateStr, matches: [] };
           groupedMarkets.push(group);
       }
+      let tz = 'GMT';
+      try {
+          const parts = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' }).formatToParts(dateObj);
+          tz = parts.find(p => p.type === 'timeZoneName')?.value || 'GMT';
+      } catch (e) {}
       group.matches.push({
           ...m,
           timeStr: dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }),
+          tz: tz,
           isLocked: dateObj.getTime() < Date.now()
       });
   });
@@ -263,7 +269,7 @@ function MarketsContent() {
                                     </span>
                                 </div>
                             ) : (
-                                <span className={`text-sm font-mono mb-2 block ${isMexicoSA ? 'text-zinc-400 font-medium' : 'text-zinc-500'}`}>{m.timeStr} GMT</span>
+                                <span className={`text-sm font-mono mb-2 block ${isMexicoSA ? 'text-zinc-400 font-medium' : 'text-zinc-500'}`}>{m.timeStr} {m.tz}</span>
                             )}
                             
                             {/* Predictions Placed Badge */}

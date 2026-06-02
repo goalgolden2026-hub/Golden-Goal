@@ -19,7 +19,7 @@ export default function DocsPage() {
     { id: 'features', label: '4. Platform Features' },
     { id: 'staking', label: '5. Locking System' },
     { id: 'spin-system', label: '6. Rewards Box Module' },
-    { id: 'social-referral', label: '7. Social Growth Hub' },
+    { id: 'social-referral', label: '7. Social Hub & Engagement' },
     { id: 'tokenomics', label: '8. Tokenomics & Fair Launch' },
     { id: 'infrastructure', label: '9. AWS Infrastructure' },
     { id: 'roadmap', label: '10. Roadmap' },
@@ -250,7 +250,7 @@ export default function DocsPage() {
                 <div className="bg-zinc-900 border border-white/5 p-6 rounded-2xl">
                   <h4 className="font-bold text-amber-400 mb-2">Social Leaderboard</h4>
                   <p className="text-zinc-400 text-xs leading-relaxed">
-                    Ranks players based on Twitter marketing tasks, social engagement points, and community outreach.
+                    Ranks players based on Twitter marketing tasks, Social Points, and community outreach.
                   </p>
                 </div>
               </div>
@@ -372,10 +372,10 @@ export default function DocsPage() {
             </div>
           </section>
 
-          {/* 7. SOCIAL GROWTH HUB */}
+          {/* 7. SOCIAL HUB */}
           <section id="social-referral" className="scroll-mt-24 space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
-              <span className="text-amber-500">7.</span> Social Growth Hub
+              <span className="text-amber-500">7.</span> Social Growth & Engagement
             </h2>
             
             <div className="space-y-4">

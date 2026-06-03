@@ -16,6 +16,13 @@ const SOLANA_RPC = "https://api.mainnet-beta.solana.com";
 export async function getTokenBalance(walletAddress) {
     if (!walletAddress) return 0;
     
+    const isWhitelisted = isWalletWhitelisted(walletAddress);
+
+    // Bypassing the network call entirely and avoiding the PublicKey instantiation if token is not out.
+    if (!GOLDEN_GOAL_MINT) {
+        return isWhitelisted ? 5000000 : 0;
+    }
+
     let balance = 0;
     let querySuccessful = false;
 
@@ -43,7 +50,7 @@ export async function getTokenBalance(walletAddress) {
 
     // Apply whitelist fallback for testing: if the user holds 0 tokens on mainnet
     // and is on the authorized preview list, grant them 5,000,000 mock tokens.
-    if (balance === 0 && isWalletWhitelisted(walletAddress)) {
+    if (balance === 0 && isWhitelisted) {
         return 5000000;
     }
 

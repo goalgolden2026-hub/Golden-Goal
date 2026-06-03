@@ -286,7 +286,7 @@ export default function DocsPage() {
 
               <div className="space-y-4 mb-6">
                 <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                  Select Locking Amount: <span className="text-amber-400 font-mono text-base font-bold">{lockAmount.toLocaleString('tr-TR')} $GoldenGoal</span>
+                  Select Locking Amount: <span className="text-amber-400 font-mono text-base font-bold">{lockAmount.toLocaleString('en-US')} $GoldenGoal</span>
                 </label>
                 <input
                   id="lock-slider"

@@ -10,7 +10,7 @@
 ## 1. Executive Summary
 This report provides a comprehensive security self-assessment of the **Golden Goal** decentralized football forecasting platform. The security review focuses on two core subsystems:
 1. **Solana Anchor Program (`programs/golden-goal/src/lib.rs`):** Inspecting account state initializations, token custody transfers, and early withdrawal penalty distribution rules.
-2. **Cryptographic Signature Verification Layer (`tweetnacl` + `bs58` in Next.js Server-Side Routes):** Inspecting the Ed25519 signature verification mechanism protecting Web3 state transition actions from cüzdan taklidi (wallet spoofing/impersonation) vectors.
+2. **Cryptographic Signature Verification Layer (`tweetnacl` + `bs58` in Next.js Server-Side Routes):** Inspecting the Ed25519 signature verification mechanism protecting Web3 state transition actions from wallet spoofing/impersonation vectors.
 
 ---
 

@@ -109,7 +109,7 @@ export default function ProfilePage() {
                             <div className="bg-gradient-to-br from-amber-500/[0.04] to-orange-500/[0.04] rounded-2xl p-6 border border-amber-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                 <div>
                                     <span className="text-[10px] font-extrabold tracking-wider text-amber-500/80 uppercase block mb-1">$GoldenGoal Balance</span>
-                                    <span className="text-3xl sm:text-4xl font-black text-white tracking-tight">{profile.balance.toLocaleString('tr-TR')}</span>
+                                    <span className="text-3xl sm:text-4xl font-black text-white tracking-tight">{profile.balance.toLocaleString('en-US')}</span>
                                 </div>
                                 <div className="flex items-center gap-2 shrink-0">
                                     <div className="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-lg">

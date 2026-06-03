@@ -1,63 +1,63 @@
 # Golden Goal Manifesto
 
-*Sürüm: 1.1.0*  
-*Son Güncelleme: 22 Mayıs 2026*  
+*Version: 1.1.0*  
+*Last Updated: May 22, 2026*  
 
-Bu belge, Golden Goal platformunun mimarisini, ekonomisini ve özellik setini yasal uyumluluk ve beceri temelli simülasyon ilkeleri çerçevesinde açıklayan ana referans dokümanıdır.
+This document is the primary reference explaining the architecture, economy, and feature set of the Golden Goal platform within the framework of legal compliance and skill-based prediction principles.
 
-## 1. Temel Mekanikler & Ekonomi
+## 1. Core Mechanics & Economy
 
-### 1.1 Altın Puanlar (XP) ve Token Yapısı
-Platformun temel etkileşim ve beceri ölçeğidir.
-- **Kazanım:** Kullanıcılar ücretsiz bir başlangıç kotası ile başlarlar. Sosyal görevleri tamamlayarak, isabetli tahminler yaparak ve arkadaşlarını platforma davet ederek XP (Deneyim Puanı) kazanırlar.
-- **Kullanım:** Becerilerini test etmek amacıyla tahminlerde bulunmak, günlük Ödül Kutusu (Rewards Box) açmak ve kilitleme (locking) mekanizmasıyla VIP ayrıcalıklar elde etmek.
+### 1.1 Experience Points (XP) and Token Structure
+Platform's primary engagement and skill metric.
+- **Acquisition:** Users start with a free initial quota. They earn XP (Experience Points) by completing social tasks, making accurate predictions, and inviting friends to the platform.
+- **Usage:** Forecasting to test their skills, opening daily Rewards Boxes, and unlocking VIP privileges through the locking mechanism.
 
-### 1.2 Tahmin Sistemi (Prediction System)
-- **Marketler:** Kullanıcılar Maç Sonucu (Ev Sahibi, Beraberlik, Deplasman), Karşılıklı Gol Var/Yok, 2.5 Alt/Üst ve Çifte Şans gibi standart spor analiz pazarlarında tahminler gerçekleştirebilir.
-- **Kısıtlamalar:** Tahminler, ilgili maçın başlama saatine 5 dakika kalana kadar değiştirilebilir veya iptal edilebilir. Tahmin değişikliği 100 Altın Token, tahmin iptali ise 200 Altın Token işlem ücretine tabidir (Bu ücretlerin yarısı yakılır, diğer yarısı ödül havuzuna aktarılır).
+### 1.2 Prediction System
+- **Markets:** Users can make predictions on standard sports analysis markets such as Match Result (Home, Draw, Away), Both Teams to Score (Yes/No), 2.5 Over/Under, and Double Chance.
+- **Restrictions:** Predictions can be modified or cancelled up to 5 minutes before the start of the match. Prediction modifications cost 100 Golden Tokens, and prediction cancellations cost 200 Golden Tokens in transaction fees (half of these fees are burned, and the other half is routed to the reward pool).
 
-## 2. Kilitleme (Locking) Kademeleri & Ayrıcalıklar
+## 2. Locking Tiers & Privileges
 
-Kullanıcılar, Golden Token'larını belirli sürelerle kilitleyerek (Locking) VIP analiz seviyelerine yükselebilir ve günlük tahmin limitlerini artırabilirler.
-- **Tier 1 (Soft Lock):** 75 XP Ödül Kutusu maliyeti, günlük +1 Ek Tahmin Limiti.
-- **Tier 2 (7 Günlük Kilit):** 50 XP Ödül Kutusu maliyeti, günlük +3 Ek Tahmin Limiti.
-- **Tier 3 (15 Günlük Kilit):** 25 XP Ödül Kutusu maliyeti, günlük +5 Ek Tahmin Limiti.
-- **Tier 4 (1 Aylık Kilit):** Her gün ilk Ödül Kutusu açımı TAMAMEN ÜCRETSİZ, sonraki açımlar 25 XP, günlük +10 Ek Tahmin Limiti.
+Users can lock their Golden Tokens for specific durations to advance to VIP analysis tiers and increase their daily prediction limits.
+- **Tier 1 (Soft Lock):** 75 XP Rewards Box cost, +1 daily Extra Prediction Limit.
+- **Tier 2 (7-Day Lock):** 50 XP Rewards Box cost, +3 daily Extra Prediction Limit.
+- **Tier 3 (15-Day Lock):** 25 XP Rewards Box cost, +5 daily Extra Prediction Limit.
+- **Tier 4 (1-Month Lock):** The first Rewards Box opening each day is COMPLETELY FREE, subsequent openings are 25 XP, +10 daily Extra Prediction Limit.
 
-*Not: Herhangi bir kilitleme (locking) işlemi yapmayan kullanıcılar (Tier 0), standart günlük 5 tahmin hakkına sahiptir ve Ödül Kutusu açımları için 100 XP öderler.*
+*Note: Users who do not perform any locking operation (Tier 0) have a standard daily limit of 5 predictions and pay 100 XP to open Rewards Boxes.*
 
-## 3. Sosyal Büyüme & Oyunlaştırma
+## 3. Social Growth & Gamification
 
-### 3.1 Ödül Kutusu (Rewards Box - Sadakat Modülü)
-- Şans faktöründen uzak, tamamen kullanıcı bağlılığı ve XP ödüllendirmesine dayalı, neon/altın temalı görsel efektler ve konfeti animasyonları içeren premium bir sadakat modülüdür.
-- Kutu açım maliyetleri kullanıcının kilitleme (locking) kademesine göre dinamik olarak azalır.
-- **Ödüller:** Ek tahmin limitleri veya doğrudan profil puanına eklenen XP Puanları (+100, +250, +500, +1000 XP) matematiksel oranlara göre dağıtılır.
+### 3.1 Rewards Box (Loyalty Module)
+- A premium loyalty module that is entirely based on user retention and XP rewards, featuring neon/golden visual effects and confetti animations, free from luck/chance factors.
+- Box opening costs decrease dynamically based on the user's locking tier.
+- **Rewards:** Extra prediction limits or XP Points (+100, +250, +500, +1000 XP) directly added to the profile score, distributed based on mathematical probabilities.
 
-### 3.2 Sınırsız Sosyal Görevler (Twitter Farming)
-- Kullanıcılar X (Twitter) platformunda `#GoldenGoal` etiketi ile paylaşımlar yaparak topluluk puanı toplayabilirler.
-- **Ödül:** Geçerli paylaşım başına 25 Sosyal Puan.
-- **Güvenlik Kısıtlamaları:** Spam önlemek amacıyla gönderimler arası 60 saniye bekleme süresi uygulanır. Küresel düzeyde daha önce kullanılan URL'ler sistem tarafından reddedilir.
+### 3.2 Unlimited Social Tasks (Twitter Farming)
+- Users can collect community points by making posts on X (Twitter) with the `#GoldenGoal` tag.
+- **Reward:** 25 Social Points per valid share.
+- **Security Constraints:** To prevent spam, a 60-second cooldown is enforced between submissions. URLs previously used globally are rejected by the system.
 
-### 3.3 Liderlik Tabloları (Leaderboards)
-- **Sosyal Liderlik:** Kullanıcıları tamamen sosyal paylaşımlardan kazandıkları Sosyal Puanlara göre sıralar.
-- **Uzman Analistler Liderlik Tablosu:** Kullanıcıları yaptıkları isabetli tahmin oranlarına ve puanlarına göre sıralar.
-  - Toplam Tahmin (TP), Başarılı Tahmin (WP) ve Başarı Oranı (WR) gibi tamamen analitik verileri sergiler.
-  - Giriş yapmış kullanıcılar için sayfanın en altında kişiselleştirilmiş "Sıralamanız" kartı yer alır.
+### 3.3 Leaderboards
+- **Social Leaderboard:** Ranks users strictly based on Social Points earned from social posts and referrals.
+- **Pro Forecasters Leaderboard:** Ranks users based on their prediction accuracy rates and scores.
+  - Displays purely analytical data such as Total Predictions (TP), Winning Predictions (WP), and Win Rate (WR).
+  - A personalized "Your Rank" card is displayed at the bottom of the page for logged-in users.
 
-## 4. Teknik Mimari & Canlıya Alım
+## 4. Technical Architecture & Deployment
 
-### 4.1 Teknoloji Yığını
-- **Önyüz:** Next.js (App Router), Vanilla CSS, Solana Web3 Cüzdan Bağlantısı.
-- **Arkayüz:** Next.js Sunucusuz (Serverless) API Rotaları.
-- **Veritabanı:** Vercel Postgres SQL (`@vercel/postgres`).
+### 4.1 Technology Stack
+- **Frontend:** Next.js (App Router), Vanilla CSS, Solana Web3 Wallet Connection.
+- **Backend:** Next.js Serverless API Routes.
+- **Database:** Vercel Postgres SQL (`@vercel/postgres`).
 
-### 4.2 Canlıya Alım & Entegrasyon İş Akışı
-- **GitHub Deposu:** [https://github.com/goalgolden2026-hub/Golden-Goal.git](https://github.com/goalgolden2026-hub/Golden-Goal.git)
-- **Vercel Projesi:** GitHub `main` dalına otomatik bağlıdır.
-- **Canlı Adres:** [https://golden-goal-five.vercel.app](https://golden-goal-five.vercel.app)
+### 4.2 Deployment & Integration Workflow
+- **GitHub Repository:** [https://github.com/goalgolden2026-hub/Golden-Goal.git](https://github.com/goalgolden2026-hub/Golden-Goal.git)
+- **Vercel Project:** Automatically linked to the GitHub `main` branch.
+- **Live Address:** [https://golden-goal-five.vercel.app](https://golden-goal-five.vercel.app)
 
-**Çalışma Döngüsü:**
-1. Kod geliştirmeleri yerel olarak `/scratch/golden-goal` dizininde yapılır.
-2. Değişiklikler Git aracılığıyla (`git add .`, `git commit -m "..."`, `git push`) GitHub `main` dalına gönderilir.
-3. Vercel değişikliği anında algılayıp otomatik derleme ve dağıtım sürecini başlatır.
-4. Çevre değişkenleri (örn. `POSTGRES_URL`) Vercel arayüzünde güvenli bir şekilde saklanır ve yerelde `.env.local` dosyasıyla eşleştirilir.
+**Workflow Cycle:**
+1. Code developments are performed locally in the `/scratch/golden-goal` directory.
+2. Changes are sent to the GitHub `main` branch via Git (`git add .`, `git commit -m "..."`, `git push`).
+3. Vercel instantly detects changes and triggers the automatic build and deployment pipeline.
+4. Environment variables (e.g. `POSTGRES_URL`) are securely stored in the Vercel dashboard and mapped locally with the `.env.local` file.

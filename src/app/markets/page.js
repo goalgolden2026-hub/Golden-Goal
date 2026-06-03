@@ -133,11 +133,11 @@ function MarketsContent() {
   }, [isRotating]);
 
   // Dynamic slot resolvers to show 2 players on each side (total 4 stacked legends)
-  const leftSlotA = LEFT_LEGENDS[legendIndex]; // Top Sol Player
-  const leftSlotB = LEFT_LEGENDS[(legendIndex + 2) % LEFT_LEGENDS.length]; // Bottom Sol Player
+  const leftSlotA = LEFT_LEGENDS[legendIndex]; // Top Left Player
+  const leftSlotB = LEFT_LEGENDS[(legendIndex + 2) % LEFT_LEGENDS.length]; // Bottom Left Player
 
-  const rightSlotA = RIGHT_LEGENDS[legendIndex]; // Top Sağ Player
-  const rightSlotB = RIGHT_LEGENDS[(legendIndex + 2) % RIGHT_LEGENDS.length]; // Bottom Sağ Player
+  const rightSlotA = RIGHT_LEGENDS[legendIndex]; // Top Right Player
+  const rightSlotB = RIGHT_LEGENDS[(legendIndex + 2) % RIGHT_LEGENDS.length]; // Bottom Right Player
 
   useEffect(() => {
     fetch('/api/markets')

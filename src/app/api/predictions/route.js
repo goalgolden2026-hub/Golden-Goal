@@ -130,10 +130,57 @@ export async function POST(request) {
             }, { status: 400 });
         }
 
+        // 4.6 Fetch market details and calculate dynamic points reward
+        const marketRes = await sql`SELECT * FROM markets WHERE id = ${marketId}`;
+        if (marketRes.rowCount === 0) {
+            return NextResponse.json({ success: false, error: "Market not found" }, { status: 404 });
+        }
+        const market = marketRes.rows[0];
+
+        let pointsReward = 100;
+        try {
+            const oddsObj = market.odds;
+            if (oddsObj && oddsObj[finalPredictionType]) {
+                const oddsValue = oddsObj[finalPredictionType][prediction];
+                if (oddsValue) {
+                    let xp = 100;
+                    switch (finalPredictionType) {
+                        case 'MAIN':
+                            xp = Math.max(100, oddsValue * 100);
+                            break;
+                        case 'DOUBLE_CHANCE':
+                            xp = Math.max(50, oddsValue * 80);
+                            break;
+                        case 'TOTAL_GOALS':
+                            xp = Math.max(120, oddsValue * 100);
+                            break;
+                        case 'BTTS':
+                            xp = Math.max(120, oddsValue * 100);
+                            break;
+                        case 'FIRST_HALF':
+                            xp = Math.max(120, oddsValue * 100);
+                            break;
+                        case 'FIRST_GOAL':
+                            xp = Math.min(600, Math.max(150, oddsValue * 100));
+                            break;
+                        default:
+                            xp = oddsValue * 100;
+                            break;
+                    }
+                    if (oddsValue > 4.00) {
+                        xp = xp * 1.2;
+                    }
+                    pointsReward = Math.round(xp);
+                }
+            }
+        } catch (oddsErr) {
+            console.error("Failed to calculate dynamic XP reward:", oddsErr);
+        }
+
         // 5. Insert Prediction
         await sql`
-            INSERT INTO predictions ("walletAddress", "marketId", prediction, "predictionType") 
-            VALUES (${walletAddress}, ${marketId}, ${prediction}, ${finalPredictionType})
+            INSERT INTO predictions ("walletAddress", "marketId", prediction, "predictionType", "pointsReward") 
+            VALUES (${walletAddress}, ${marketId}, ${prediction}, ${finalPredictionType}, ${pointsReward})
         `;
 
         // 6. Increment predictionsToday

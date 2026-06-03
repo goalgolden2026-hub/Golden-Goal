@@ -314,7 +314,7 @@ export default function MatchDetail() {
                           className={`flex-1 min-w-[120px] font-medium py-4 px-4 rounded-xl text-sm text-center flex items-center justify-center gap-2 border transition-all duration-300 ${btnStyle}`}
                       >
                           {statusIndicator}
-                          <span>{opt}</span>
+                          <span>{opt} (+{getDynamicXP(type, opt)} XP)</span>
                       </button>
                   );
               })}

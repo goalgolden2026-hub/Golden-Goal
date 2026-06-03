@@ -20,9 +20,8 @@ export async function GET(request) {
                 (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status = 'WON') as "wonPredictions",
                 (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status IN ('WON', 'LOST')) as "resolvedPredictions",
                 (
-                    SELECT COALESCE(SUM(m."pointsReward"), 0) 
+                    SELECT COALESCE(SUM(p."pointsReward"), 0) 
                     FROM predictions p 
-                    JOIN markets m ON p."marketId" = m.id 
                     WHERE p."walletAddress" = u."walletAddress" 
                     AND p.status = 'WON' 
                     AND p."updatedAt" >= NOW() - INTERVAL '7 days'
@@ -60,9 +59,8 @@ export async function GET(request) {
                         (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status = 'WON') as "wonPredictions",
                         (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status IN ('WON', 'LOST')) as "resolvedPredictions",
                         (
-                            SELECT COALESCE(SUM(m."pointsReward"), 0) 
+                            SELECT COALESCE(SUM(p."pointsReward"), 0) 
                             FROM predictions p 
-                            JOIN markets m ON p."marketId" = m.id 
                             WHERE p."walletAddress" = u."walletAddress" 
                             AND p.status = 'WON' 
                             AND p."updatedAt" >= NOW() - INTERVAL '7 days'

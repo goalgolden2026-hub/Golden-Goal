@@ -126,6 +126,12 @@ export async function getDb() {
             await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "scoreA" INTEGER;`;
             await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "scoreB" INTEGER;`;
 
+            // Migration: Add odds JSONB to markets table
+            await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "odds" JSONB;`;
+
+            // Migration: Add pointsReward to predictions table
+            await sql`ALTER TABLE predictions ADD COLUMN IF NOT EXISTS "pointsReward" INTEGER DEFAULT 100;`;
+
             await sql`
                 CREATE TABLE IF NOT EXISTS treasury_logs (
                     id SERIAL PRIMARY KEY,

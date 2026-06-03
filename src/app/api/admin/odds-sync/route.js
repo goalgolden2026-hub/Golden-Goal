@@ -24,6 +24,7 @@ function normalizeName(name) {
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .replace(/[^a-z0-9]/g, "")
+        .replace(/and/g, "")
         .replace(/turkiye/g, "turkey")
         .replace(/turkiya/g, "turkey")
         .replace(/czechia/g, "czechrepublic");

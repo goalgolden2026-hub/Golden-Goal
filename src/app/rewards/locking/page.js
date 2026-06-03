@@ -10,7 +10,7 @@ export default function LockingPage() {
   const [activeLock, setActiveLock] = useState(null);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [refresh, setRefresh] = useState(0);
-  const [stats, setStats] = useState({ tvl: 0, lockers: 0, userLocked: 0 });
+  const [stats, setStats] = useState({ tvl: 0, lockers: 0, userLocked: 0, tierCounts: { 1: 0, 2: 0, 3: 0, 4: 0 } });
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     title: '',
@@ -31,7 +31,8 @@ export default function LockingPage() {
           setStats({
             tvl: data.totalValueLocked,
             lockers: data.activeLockers,
-            userLocked: data.userLocked
+            userLocked: data.userLocked,
+            tierCounts: data.tierCounts || { 1: 0, 2: 0, 3: 0, 4: 0 }
           });
           setActiveLock(data.activeLock);
         }
@@ -473,7 +474,16 @@ export default function LockingPage() {
             
             <div className="relative z-10">
               <div className="text-4xl mb-4">{t.icon}</div>
-              <h3 className="text-2xl font-bold text-white mb-1">{t.name}</h3>
+              <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
+                <h3 className="text-2xl font-bold text-white">{t.name}</h3>
+                <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-extrabold tracking-wide uppercase select-none shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                  </span>
+                  <span>{stats.tierCounts?.[t.id] || 0} Wallets</span>
+                </div>
+              </div>
               <div className="text-zinc-500 text-sm mb-6 pb-6 border-b border-white/5">Min: {t.min.toLocaleString('en-US')} $GoldenGoal</div>
 
               <ul className="space-y-4 mb-8">

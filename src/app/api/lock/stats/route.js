@@ -16,6 +16,18 @@ export async function GET(request) {
         const lockersRes = await sql`SELECT COUNT(DISTINCT "walletAddress") as count FROM locks WHERE status = 'ACTIVE'`;
         const activeLockers = lockersRes.rows[0]?.count || 0;
 
+        // Fetch Active Lockers per Tier (Unique wallets)
+        const tierCountsRes = await sql`
+            SELECT tier, COUNT(DISTINCT "walletAddress") as count 
+            FROM locks 
+            WHERE status = 'ACTIVE' 
+            GROUP BY tier
+        `;
+        const tierCounts = { 1: 0, 2: 0, 3: 0, 4: 0 };
+        tierCountsRes.rows.forEach(row => {
+            tierCounts[row.tier] = Number(row.count);
+        });
+
         // Fetch User Locked (if wallet provided)
         let userLocked = 0;
         let activeLock = null;
@@ -35,7 +47,8 @@ export async function GET(request) {
             totalValueLocked: Number(totalValueLocked),
             activeLockers: Number(activeLockers),
             userLocked: Number(userLocked),
-            activeLock: activeLock
+            activeLock: activeLock,
+            tierCounts: tierCounts
         }, { status: 200 });
 
     } catch (error) {

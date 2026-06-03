@@ -207,11 +207,11 @@ export default function PitchDeckPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 bg-zinc-950/40 font-mono">
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 0 (Holder)</td><td className="p-3">Min 250.000 $GoldenGoal in Wallet</td><td className="p-3">3 Predictions</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">100 XP / Open</td></tr>
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 1 (Soft)</td><td className="p-3">Min 350.000 $GoldenGoal (1-Day Lock)</td><td className="p-3 text-emerald-400">+1 Prediction</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">75 XP (25% Off)</td></tr>
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 2 (7-Day)</td><td className="p-3">Min 500.000 $GoldenGoal (7-Day Lock)</td><td className="p-3 text-emerald-400">+3 Predictions</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">50 XP (50% Off)</td></tr>
-                <tr><td className="p-3 font-sans text-zinc-300">Tier 3 (15-Day)</td><td className="p-3">Min 750.000 $GoldenGoal (15-Day Lock)</td><td className="p-3 text-emerald-400">+5 Predictions</td><td className="p-3 text-blue-400">1.1x XP</td><td className="p-3">25 XP (75% Off)</td></tr>
-                <tr><td className="p-3 font-sans text-amber-400 font-semibold">Tier 4 (30-Day)</td><td className="p-3 font-bold">Min 1.000.000 $GoldenGoal (30-Day Lock)</td><td className="p-3 text-emerald-400 font-bold">+10 Predictions</td><td className="p-3 text-blue-400 font-bold">1.25x XP</td><td className="p-3 text-amber-400 font-bold">1 Free Daily Box (then 25 XP)</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 0 (Holder)</td><td className="p-3">Min 250.000 $GoldenGoal in Wallet</td><td className="p-3">3 Predictions</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">250 XP / Open</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 1 (Soft)</td><td className="p-3">Min 350.000 $GoldenGoal (1-Day Lock)</td><td className="p-3 text-emerald-400">+1 Prediction</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">225 XP</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 2 (7-Day)</td><td className="p-3">Min 500.000 $GoldenGoal (7-Day Lock)</td><td className="p-3 text-emerald-400">+3 Predictions</td><td className="p-3 text-zinc-500">1.0x</td><td className="p-3">200 XP</td></tr>
+                <tr><td className="p-3 font-sans text-zinc-300">Tier 3 (15-Day)</td><td className="p-3">Min 750.000 $GoldenGoal (15-Day Lock)</td><td className="p-3 text-emerald-400">+5 Predictions</td><td className="p-3 text-blue-400">1.1x XP</td><td className="p-3">150 XP</td></tr>
+                <tr><td className="p-3 font-sans text-amber-400 font-semibold">Tier 4 (30-Day)</td><td className="p-3 font-bold">Min 1.000.000 $GoldenGoal (30-Day Lock)</td><td className="p-3 text-emerald-400 font-bold">+10 Predictions</td><td className="p-3 text-blue-400 font-bold">1.25x XP</td><td className="p-3 text-amber-400 font-bold">1 Free Daily Box (then 150 XP)</td></tr>
               </tbody>
             </table>
           </div>

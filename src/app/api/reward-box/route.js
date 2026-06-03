@@ -24,13 +24,13 @@ async function getBoxStatus(sql, walletAddress) {
     let isEligibleForFreeBox = false;
 
     if (activeTier === 0) {
-        boxCost = 100;
+        boxCost = 250;
     } else if (activeTier === 1) {
-        boxCost = 75;
+        boxCost = 225;
     } else if (activeTier === 2) {
-        boxCost = 50;
+        boxCost = 200;
     } else if (activeTier === 3) {
-        boxCost = 25;
+        boxCost = 150;
     } else if (activeTier === 4) {
         // Check free box eligibility
         const today = new Date().toISOString().split('T')[0];
@@ -41,7 +41,7 @@ async function getBoxStatus(sql, walletAddress) {
                 isEligibleForFreeBox = true;
                 boxCost = 0;
             } else {
-                boxCost = 25;
+                boxCost = 150;
             }
         } else {
             isEligibleForFreeBox = true;

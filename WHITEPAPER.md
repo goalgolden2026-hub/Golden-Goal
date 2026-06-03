@@ -84,37 +84,37 @@ To incentivize long-term loyalty, drive token demand, and balance circulating su
 ```mermaid
 graph TD
     A[User Locks $GoldenGoal] --> B{Locking Tier and Duration}
-    B -->|Tier 0: Hold in Wallet| C[Base Limits / 1.0x XP / 100 XP Box Cost]
-    B -->|Tier 1: Soft Lock - 1 Day| D[+1 Extra Daily Prediction / 1.0x XP / 75 XP Box Cost]
-    B -->|Tier 2: 7-Day Lock| E[+3 Extra Daily Predictions / 1.0x XP / 50 XP Box Cost]
-    B -->|Tier 3: 15-Day Lock| F[+5 Extra Daily Predictions / 1.1x XP / 25 XP Box Cost]
-    B -->|Tier 4: 30-Day Lock| G[+10 Extra Daily Predictions / 1.25x XP / 1 Free Box Daily]
+    B -->|Tier 0: Hold in Wallet| C[Base Limits / 1.0x XP / 250 XP Box Cost]
+    B -->|Tier 1: Soft Lock - 1 Day| D[+1 Extra Daily Prediction / 1.0x XP / 225 XP Box Cost]
+    B -->|Tier 2: 7-Day Lock| E[+3 Extra Daily Predictions / 1.0x XP / 200 XP Box Cost]
+    B -->|Tier 3: 15-Day Lock| F[+5 Extra Daily Predictions / 1.1x XP / 150 XP Box Cost]
+    B -->|Tier 4: 30-Day Lock| G[+10 Extra Daily Predictions / 1.25x XP / 1 Free Box Daily (then 150 XP)]
 ```
 
 *   **Tier 0 (Holder):**
     *   *Requirement:* Hold at least 10,000 $GoldenGoal tokens in the wallet (No active lock).
     *   *Benefits:* Base daily prediction limit, 1.0x standard XP multiplier.
-    *   *Rewards Box Cost:* 100 XP (No discount).
+    *   *Rewards Box Cost:* 250 XP.
 *   **Tier 1 (Soft Lock):**
     *   *Requirement:* Lock a minimum of 100 $GoldenGoal tokens.
     *   *Lock Duration:* 1 Day.
     *   *Benefits:* +1 extra daily prediction limit, 1.0x XP multiplier.
-    *   *Rewards Box Cost:* 75 XP (25% Discount).
+    *   *Rewards Box Cost:* 225 XP.
     *   *Flexibility:* A daily flexible lock structure with no early unlock penalties.
 *   **Tier 2 (7-Day Lock):**
     *   *Requirement:* Lock a minimum of 500 $GoldenGoal tokens.
     *   *Lock Duration:* 7 Days.
     *   *Benefits:* +3 extra daily prediction limits, 1.0x XP multiplier.
-    *   *Rewards Box Cost:* 50 XP (50% Discount).
+    *   *Rewards Box Cost:* 200 XP.
 *   **Tier 3 (15-Day Lock):**
     *   *Requirement:* Lock a minimum of 1,000 $GoldenGoal tokens.
     *   *Lock Duration:* 15 Days.
     *   *Benefits:* +5 extra daily prediction limits, **1.1x XP Multiplier**.
-    *   *Rewards Box Cost:* 25 XP (75% Discount).
+    *   *Rewards Box Cost:* 150 XP.
 *   **Tier 4 (1-Month Lock):**
     *   *Requirement:* Lock a minimum of 5,000 $GoldenGoal tokens.
     *   *Lock Duration:* 30 Days.
-    *   *Benefits:* +10 extra daily prediction limits, **1.25x Maximum XP Multiplier**, and **1 Free Rewards Box Daily** in the loyalty module (subsequent openings cost 25 XP).
+    *   *Benefits:* +10 extra daily prediction limits, **1.25x Maximum XP Multiplier**, and **1 Free Rewards Box Daily** in the loyalty module (subsequent openings cost 150 XP).
 
 ---
 

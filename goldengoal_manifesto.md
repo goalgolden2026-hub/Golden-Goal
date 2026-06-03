@@ -19,12 +19,12 @@ Platform's primary engagement and skill metric.
 ## 2. Locking Tiers & Privileges
 
 Users can lock their Golden Tokens for specific durations to advance to VIP analysis tiers and increase their daily prediction limits.
-- **Tier 1 (Soft Lock):** 75 XP Rewards Box cost, +1 daily Extra Prediction Limit.
-- **Tier 2 (7-Day Lock):** 50 XP Rewards Box cost, +3 daily Extra Prediction Limit.
-- **Tier 3 (15-Day Lock):** 25 XP Rewards Box cost, +5 daily Extra Prediction Limit.
-- **Tier 4 (1-Month Lock):** The first Rewards Box opening each day is COMPLETELY FREE, subsequent openings are 25 XP, +10 daily Extra Prediction Limit.
+- **Tier 1 (Soft Lock):** 225 XP Rewards Box cost, +1 daily Extra Prediction Limit.
+- **Tier 2 (7-Day Lock):** 200 XP Rewards Box cost, +3 daily Extra Prediction Limit.
+- **Tier 3 (15-Day Lock):** 150 XP Rewards Box cost, +5 daily Extra Prediction Limit.
+- **Tier 4 (1-Month Lock):** The first Rewards Box opening each day is COMPLETELY FREE, subsequent openings are 150 XP, +10 daily Extra Prediction Limit.
 
-*Note: Users who do not perform any locking operation (Tier 0) have a standard daily limit of 5 predictions and pay 100 XP to open Rewards Boxes.*
+*Note: Users who do not perform any locking operation (Tier 0) have a standard daily limit of 5 predictions and pay 250 XP to open Rewards Boxes.*
 
 ## 3. Social Growth & Gamification
 

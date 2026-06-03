@@ -34,7 +34,7 @@ export default function DocsPage() {
         tier: "Tier 4 (1-Month Locked)",
         predictions: "+10 Daily Predictions",
         xp: "1.25x XP Multiplier",
-        rewardsBox: "1 Free Daily Rewards Box (then 25 XP)",
+        rewardsBox: "1 Free Daily Rewards Box (then 150 XP)",
         period: "30 Days Lock",
         color: "from-amber-400 to-yellow-600",
         unlockPenalty: "10% Penalty (50% Burned, 50% to Rewards)"
@@ -44,7 +44,7 @@ export default function DocsPage() {
         tier: "Tier 3 (15-Day Locked)",
         predictions: "+5 Daily Predictions",
         xp: "1.10x XP Multiplier",
-        rewardsBox: "25 XP / Box (75% Off)",
+        rewardsBox: "150 XP / Box",
         period: "15 Days Lock",
         color: "from-yellow-500 to-amber-500",
         unlockPenalty: "10% Penalty (50% Burned, 50% to Rewards)"
@@ -54,7 +54,7 @@ export default function DocsPage() {
         tier: "Tier 2 (7-Day Locked)",
         predictions: "+3 Daily Predictions",
         xp: "1.0x XP Multiplier",
-        rewardsBox: "50 XP / Box (50% Off)",
+        rewardsBox: "200 XP / Box",
         period: "7 Days Lock",
         color: "from-zinc-300 to-zinc-500",
         unlockPenalty: "10% Penalty (50% Burned, 50% to Rewards)"
@@ -64,7 +64,7 @@ export default function DocsPage() {
         tier: "Tier 1 (Soft Lock)",
         predictions: "+1 Daily Prediction",
         xp: "1.0x XP Multiplier",
-        rewardsBox: "75 XP / Box (25% Off)",
+        rewardsBox: "225 XP / Box",
         period: "1 Day Lock",
         color: "from-amber-700 to-yellow-900",
         unlockPenalty: "Flexible - Zero Penalty"
@@ -74,7 +74,7 @@ export default function DocsPage() {
         tier: "Tier 0 (No Active Lock)",
         predictions: amount >= 250000 ? "3 Daily Predictions" : "0 Daily Predictions (Needs 250.000+ $GoldenGoal)",
         xp: "1.0x XP Multiplier",
-        rewardsBox: "100 XP / Box Open",
+        rewardsBox: "250 XP / Box Open",
         period: "No Lock",
         color: "from-zinc-700 to-zinc-800",
         unlockPenalty: "N/A"
@@ -363,11 +363,11 @@ export default function DocsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5 bg-zinc-950/40 font-mono">
-                  <tr><td className="p-4 text-zinc-400 font-sans">No Active Lock (Tier 0)</td><td className="p-4 text-right text-zinc-300 font-bold">100 XP</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">Soft Lockers (Tier 1)</td><td className="p-4 text-right text-zinc-300 font-bold">75 XP</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">7-Day Locked Lockers (Tier 2)</td><td className="p-4 text-right text-zinc-300 font-bold">50 XP</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">15-Day Locked Lockers (Tier 3)</td><td className="p-4 text-right text-zinc-300 font-bold">25 XP</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans font-semibold">30-Day Locked Lockers (Tier 4)</td><td className="p-4 text-right text-emerald-400 font-bold">1 Free Daily Box (then 25 XP)</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">No Active Lock (Tier 0)</td><td className="p-4 text-right text-zinc-300 font-bold">250 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">Soft Lockers (Tier 1)</td><td className="p-4 text-right text-zinc-300 font-bold">225 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">7-Day Locked Lockers (Tier 2)</td><td className="p-4 text-right text-zinc-300 font-bold">200 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">15-Day Locked Lockers (Tier 3)</td><td className="p-4 text-right text-zinc-300 font-bold">150 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans font-semibold">30-Day Locked Lockers (Tier 4)</td><td className="p-4 text-right text-emerald-400 font-bold">1 Free Daily Box (then 150 XP)</td></tr>
                 </tbody>
               </table>
             </div>

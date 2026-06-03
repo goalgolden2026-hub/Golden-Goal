@@ -14,11 +14,11 @@ Platform's primary engagement and skill metric.
 
 ### 1.2 Prediction System
 - **Markets:** Users can make predictions on standard sports analysis markets such as Match Result (Home, Draw, Away), Both Teams to Score (Yes/No), 2.5 Over/Under, and Double Chance.
-- **Restrictions:** Predictions can be modified or cancelled up to 5 minutes before the start of the match. Prediction modifications cost 100 Golden Tokens, and prediction cancellations cost 200 Golden Tokens in transaction fees (half of these fees are burned, and the other half is routed to the reward pool).
+- **Restrictions:** Predictions can be modified or cancelled up to 5 minutes before the start of the match. Prediction modifications cost 100 Golden Tokens, and prediction cancellations cost 200 Golden Tokens in transaction fees (half of these fees are burned, and the other half is routed to the reward pool/Treasury Wallet: `5imEZhSwMUfx6XpyQCBqsCWxJKfmmF5JCNoxMWvB23cH`).
 
 ## 2. Locking Tiers & Privileges
 
-Users can lock their Golden Tokens for specific durations to advance to VIP analysis tiers and increase their daily prediction limits.
+Users can lock their Golden Tokens for specific durations to advance to VIP analysis tiers and increase their daily prediction limits. All locked tokens are securely stored in the official platform **Stake Wallet** (`Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm`).
 - **Tier 1 (Soft Lock):** 225 XP Rewards Box cost, +1 daily Extra Prediction Limit.
 - **Tier 2 (7-Day Lock):** 200 XP Rewards Box cost, +3 daily Extra Prediction Limit.
 - **Tier 3 (15-Day Lock):** 150 XP Rewards Box cost, +5 daily Extra Prediction Limit.

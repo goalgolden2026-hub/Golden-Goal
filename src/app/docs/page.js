@@ -533,6 +533,22 @@ export default function DocsPage() {
                 </code>
                 <p className="text-zinc-500 text-[10px] mt-2">The Anchor-verified smart contract governing lock vaults, penalty burns, and release times.</p>
               </div>
+
+              <div className="p-5 rounded-2xl bg-zinc-900/60 border border-white/5">
+                <h4 className="font-bold text-amber-400 text-sm mb-2">Platform Stake Wallet / Vault Address</h4>
+                <code className="text-xs font-mono text-zinc-300 block bg-black/60 p-2.5 rounded border border-white/5 break-all select-all">
+                  Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm
+                </code>
+                <p className="text-zinc-500 text-[10px] mt-2">The authorized locking vault wallet for secure custody of locked tokens.</p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-zinc-900/60 border border-white/5">
+                <h4 className="font-bold text-amber-400 text-sm mb-2">Community Treasury Wallet Address</h4>
+                <code className="text-xs font-mono text-zinc-300 block bg-black/60 p-2.5 rounded border border-white/5 break-all select-all">
+                  5imEZhSwMUfx6XpyQCBqsCWxJKfmmF5JCNoxMWvB23cH
+                </code>
+                <p className="text-zinc-500 text-[10px] mt-2">The official community treasury and rewards pool address for leaderboard payouts.</p>
+              </div>
             </div>
 
             {/* Smart Contract Source Code Inspector */}

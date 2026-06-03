@@ -109,7 +109,10 @@ pub struct InitializeLock<'info> {
     #[account(mut)]
     pub user_token_account: Account<'info, TokenAccount>,
 
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = vault_token_account.owner == pubkey!("Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm")
+    )]
     pub vault_token_account: Account<'info, TokenAccount>,
 
     pub token_program: Program<'info, Token>,
@@ -132,7 +135,10 @@ pub struct UnlockTokens<'info> {
     #[account(mut)]
     pub vault_mint: Account<'info, Mint>,
 
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = vault_token_account.owner == pubkey!("Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm")
+    )]
     pub vault_token_account: Account<'info, TokenAccount>,
 
     /// CHECK: Vault PDA authority
@@ -141,7 +147,10 @@ pub struct UnlockTokens<'info> {
     #[account(mut)]
     pub user_token_account: Account<'info, TokenAccount>,
 
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = reward_token_account.owner == pubkey!("5imEZhSwMUfx6XpyQCBqsCWxJKfmmF5JCNoxMWvB23cH")
+    )]
     pub reward_token_account: Account<'info, TokenAccount>,
 
     pub token_program: Program<'info, Token>,

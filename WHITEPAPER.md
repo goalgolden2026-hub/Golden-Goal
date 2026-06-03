@@ -79,7 +79,7 @@ Golden Goal is designed with unique visual elegance and dynamic UI components to
 ---
 
 ### 4.4 Token Locking (Staking) System
-To incentivize long-term loyalty, drive token demand, and balance circulating supply, Golden Goal implements a tiered locking protocol. Based on token balances and locking durations, 5 different Locking Tiers (Tier 0 to Tier 4) are defined:
+To incentivize long-term loyalty, drive token demand, and balance circulating supply, Golden Goal implements a tiered locking protocol. Based on token balances and locking durations, 5 different Locking Tiers (Tier 0 to Tier 4) are defined. When executing a locking transaction, the tokens are held securely in the platform's official **Stake Wallet / Vault Account** (`Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm`).
 
 ```mermaid
 graph TD
@@ -121,7 +121,7 @@ graph TD
 ### 4.5 Unlock Penalty Burn Mechanism
 To protect the long-term token economy and reward sustainability, a **10% penalty fee** is applied to early token withdrawals before the lock duration expires. This fee is divided equally:
 *   **50% is permanently burned (Burn):** Directly reducing the circulating token supply to create deflationary pressure.
-*   **50% is routed to the Reward Pool Wallet:** Re-invested directly into the ecosystem to finance future weekly leaderboard rewards.
+*   **50% is routed to the Reward Pool Wallet (Treasury Wallet: `5imEZhSwMUfx6XpyQCBqsCWxJKfmmF5JCNoxMWvB23cH`):** Re-invested directly into the ecosystem to finance future weekly leaderboard rewards.
 
 ---
 

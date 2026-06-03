@@ -80,6 +80,49 @@ export default function MatchDetail() {
   const rightSlotA = RIGHT_LEGENDS[legendIndex]; // Top Right Player
   const rightSlotB = RIGHT_LEGENDS[(legendIndex + 2) % RIGHT_LEGENDS.length]; // Bottom Right Player
 
+  const getDynamicXP = (type, option) => {
+    if (!market || !market.odds) return 100;
+    try {
+      const oddsObj = market.odds;
+      if (oddsObj && oddsObj[type]) {
+        const oddsValue = oddsObj[type][option];
+        if (oddsValue) {
+          let xp = 100;
+          switch (type) {
+            case 'MAIN':
+              xp = Math.max(100, oddsValue * 100);
+              break;
+            case 'DOUBLE_CHANCE':
+              xp = Math.max(50, oddsValue * 80);
+              break;
+            case 'TOTAL_GOALS':
+              xp = Math.max(120, oddsValue * 100);
+              break;
+            case 'BTTS':
+              xp = Math.max(120, oddsValue * 100);
+              break;
+            case 'FIRST_HALF':
+              xp = Math.max(120, oddsValue * 100);
+              break;
+            case 'FIRST_GOAL':
+              xp = Math.min(600, Math.max(150, oddsValue * 100));
+              break;
+            default:
+              xp = oddsValue * 100;
+              break;
+          }
+          if (oddsValue > 4.00) {
+            xp = xp * 1.2;
+          }
+          return Math.round(xp);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return 100;
+  };
+
   useEffect(() => {
     if (!connected || !publicKey) {
       setUserPredictions([]);

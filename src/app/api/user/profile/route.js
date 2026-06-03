@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import crypto from 'crypto';
 import { isWalletWhitelisted } from '@/lib/whitelist';
+import { getTokenBalance } from '@/lib/solana';
 
 function generateReferralCode() {
     return crypto.randomBytes(3).toString('hex').toUpperCase(); // 6 character code
@@ -53,7 +54,8 @@ export async function GET(request) {
         const totalInvited = parseInt(referralStats.rows[0].totalInvited) || 0;
 
         // Dynamic Balance Calculation
-        let mockBalance = 5000000;
+        const baseBalance = await getTokenBalance(walletAddress);
+        let mockBalance = baseBalance;
 
         // Deduct active locks
         const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;

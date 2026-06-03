@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import nacl from 'tweetnacl';
 import bs58 from 'bs58';
+import { getTokenBalance } from '@/lib/solana';
 
 function verifySignature(walletAddress, message, signatureHex) {
     try {
@@ -65,7 +66,8 @@ export async function POST(request) {
         }
 
         // 2. Double-check user's mock balance from the database profile
-        let mockBalance = 5000000;
+        const baseBalance = await getTokenBalance(walletAddress);
+        let mockBalance = baseBalance;
 
         // Deduct active locks
         const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;

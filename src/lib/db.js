@@ -132,6 +132,11 @@ export async function getDb() {
             // Migration: Add pointsReward to predictions table
             await sql`ALTER TABLE predictions ADD COLUMN IF NOT EXISTS "pointsReward" INTEGER DEFAULT 100;`;
 
+            // Migration: Add performance indexes to predictions and locks tables
+            await sql`CREATE INDEX IF NOT EXISTS idx_predictions_wallet ON predictions("walletAddress");`;
+            await sql`CREATE INDEX IF NOT EXISTS idx_predictions_market ON predictions("marketId");`;
+            await sql`CREATE INDEX IF NOT EXISTS idx_locks_wallet ON locks("walletAddress");`;
+
             await sql`
                 CREATE TABLE IF NOT EXISTS treasury_logs (
                     id SERIAL PRIMARY KEY,

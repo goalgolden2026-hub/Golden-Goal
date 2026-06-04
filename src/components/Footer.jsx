@@ -93,9 +93,25 @@ export default function Footer() {
         <span className="text-zinc-600 text-[10px] uppercase font-mono tracking-widest">
           © 2026 GOLDEN GOAL. ALL RIGHTS RESERVED.
         </span>
-        <span className="text-zinc-600 text-[10px] uppercase font-mono tracking-widest">
-          BUILT ON SOLANA 🚀
-        </span>
+        <div className="flex items-center gap-1.5 select-none group">
+          <span className="text-zinc-600 text-[10px] uppercase font-mono tracking-widest transition-colors group-hover:text-zinc-400">
+            BUILT ON
+          </span>
+          <svg className="w-3.5 h-3 shrink-0" viewBox="0 0 397 311" fill="url(#solana-gradient)">
+            <defs>
+              <linearGradient id="solana-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#9945FF" />
+                <stop offset="100%" stopColor="#14F195" />
+              </linearGradient>
+            </defs>
+            <path d="M64.6 2c-3.3 0-6.4 1.8-8 4.7L3.4 97.4C1.3 101.1 4 105.8 8.3 105.8h324.1c3.3 0 6.4-1.8 8-4.7l53.2-90.7c2.1-3.7-.6-8.4-4.9-8.4H64.6z" />
+            <path d="M332.4 205.2c3.3 0 6.4-1.8 8-4.7l53.2-90.7c2.1-3.7-.6-8.4-4.9-8.4H64.6c-3.3 0-6.4 1.8-8 4.7L3.4 192.1c-2.1 3.7.6 8.4 4.9 8.4h324.1z" />
+            <path d="M64.6 309c-3.3 0-6.4-1.8-8-4.7l-53.2-90.7c-2.1-3.7.6-8.4 4.9-8.4h324.1c3.3 0 6.4 1.8 8 4.7l53.2 90.7c2.1 3.7-.6 8.4-4.9 8.4H64.6z" />
+          </svg>
+          <span className="text-zinc-500 text-[10px] uppercase font-mono tracking-widest transition-colors group-hover:text-[#14F195] font-bold">
+            SOLANA
+          </span>
+        </div>
       </div>
     </footer>
   );

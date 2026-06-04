@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { WalletContextProvider } from "@/components/WalletContextProvider";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import ReferralCapture from "@/components/ReferralCapture";
 import IntroAnimation from "@/components/IntroAnimation";
 import WhitelistGuard from "@/components/WhitelistGuard";
@@ -36,6 +37,7 @@ export default function RootLayout({ children }) {
               {children}
             </WhitelistGuard>
           </main>
+          <Footer />
         </WalletContextProvider>
       </body>
     </html>

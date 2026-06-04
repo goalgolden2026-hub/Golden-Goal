@@ -5,19 +5,31 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { TEAM_FLAGS } from '@/lib/flags';
 import CustomModal from '@/components/CustomModal';
 
-const drawTicket = (canvas, pred, walletAddress) => {
+const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     const ctx = canvas.getContext('2d');
     
     // Clear canvas
     ctx.clearRect(0, 0, 800, 450);
     
-    // Background gradient (Deep dark gold theme)
-    const bgGrad = ctx.createLinearGradient(0, 0, 800, 450);
-    bgGrad.addColorStop(0, '#09090b');
-    bgGrad.addColorStop(0.5, '#18181b');
-    bgGrad.addColorStop(1, '#09090b');
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, 800, 450);
+    if (bgImg && bgImg.complete) {
+        // Draw the background stadium image
+        ctx.drawImage(bgImg, 0, 0, 800, 450);
+        
+        // Draw the dark overlay gradient
+        const overlayGrad = ctx.createLinearGradient(0, 0, 0, 450);
+        overlayGrad.addColorStop(0, 'rgba(10, 10, 10, 0.45)');
+        overlayGrad.addColorStop(1, 'rgba(10, 10, 10, 0.95)');
+        ctx.fillStyle = overlayGrad;
+        ctx.fillRect(0, 0, 800, 450);
+    } else {
+        // Fallback: Background gradient (Deep dark gold theme)
+        const bgGrad = ctx.createLinearGradient(0, 0, 800, 450);
+        bgGrad.addColorStop(0, '#09090b');
+        bgGrad.addColorStop(0.5, '#18181b');
+        bgGrad.addColorStop(1, '#09090b');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, 800, 450);
+    }
 
     // Glowing accent orbs in the background
     const glowGrad = ctx.createRadialGradient(400, 225, 50, 400, 225, 300);
@@ -36,14 +48,14 @@ const drawTicket = (canvas, pred, walletAddress) => {
     ctx.strokeRect(28, 28, 744, 394);
 
     // Header styling
-    ctx.font = 'bold 11px monospace';
+    ctx.font = "bold 11px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
     ctx.letterSpacing = '3px';
     ctx.fillText('GOLDEN GOAL PREDICTION PASS', 45, 60);
 
     // Logo on top right
     ctx.textAlign = 'right';
-    ctx.font = 'black 22px system-ui, -apple-system, sans-serif';
+    ctx.font = "900 22px 'Outfit', 'Inter', sans-serif";
     
     // Title gradient
     const textGrad = ctx.createLinearGradient(550, 0, 755, 0);
@@ -54,41 +66,41 @@ const drawTicket = (canvas, pred, walletAddress) => {
     ctx.textAlign = 'left'; // reset text align
 
     // Left side: Match Fixture info
-    ctx.font = 'bold 11px monospace';
+    ctx.font = "bold 11px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#f59e0b';
     ctx.fillText('MATCH FIXTURE', 45, 130);
 
     // Team A Flag & Name
-    ctx.font = '36px system-ui, -apple-system, sans-serif';
+    ctx.font = "36px 'Inter', sans-serif";
     const flagA = TEAM_FLAGS[pred.teamA] || '🏳️';
     ctx.fillText(flagA, 45, 185);
 
     const nameA = pred.teamA || '';
     ctx.font = nameA.length > 15 
-        ? 'bold 18px system-ui, -apple-system, sans-serif' 
-        : 'bold 24px system-ui, -apple-system, sans-serif';
+        ? "bold 18px 'Outfit', 'Inter', sans-serif" 
+        : "bold 24px 'Outfit', 'Inter', sans-serif";
     ctx.fillStyle = '#ffffff';
     ctx.fillText(nameA, 110, 178);
 
     // VS divider
-    ctx.font = 'black 14px monospace';
+    ctx.font = "black 14px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#3f3f46';
     ctx.fillText('VS', 45, 230);
 
     // Team B Flag & Name
-    ctx.font = '36px system-ui, -apple-system, sans-serif';
+    ctx.font = "36px 'Inter', sans-serif";
     const flagB = TEAM_FLAGS[pred.teamB] || '🏳️';
     ctx.fillText(flagB, 45, 285);
 
     const nameB = pred.teamB || '';
     ctx.font = nameB.length > 15 
-        ? 'bold 18px system-ui, -apple-system, sans-serif' 
-        : 'bold 24px system-ui, -apple-system, sans-serif';
+        ? "bold 18px 'Outfit', 'Inter', sans-serif" 
+        : "bold 24px 'Outfit', 'Inter', sans-serif";
     ctx.fillStyle = '#ffffff';
     ctx.fillText(nameB, 110, 278);
 
     // Match Time stamp
-    ctx.font = '12px monospace';
+    ctx.font = "12px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
     ctx.fillText(new Date(pred.matchDate).toLocaleString(), 45, 335);
 
@@ -101,27 +113,27 @@ const drawTicket = (canvas, pred, walletAddress) => {
     ctx.stroke();
 
     // Right Side: Forecast info
-    ctx.font = 'bold 11px monospace';
+    ctx.font = "bold 11px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#f59e0b';
     ctx.fillText('FORECAST DETAILS', 510, 130);
 
     // Market category title
-    ctx.font = 'bold 13px system-ui, -apple-system, sans-serif';
+    ctx.font = "bold 13px 'Inter', sans-serif";
     ctx.fillStyle = '#a1a1aa';
     ctx.fillText(pred.predictionType?.replace('_', ' ') || 'MAIN WINNER', 510, 165);
 
     // "YOUR PICK" label
-    ctx.font = 'bold 10px monospace';
+    ctx.font = "bold 10px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
     ctx.fillText('YOUR PICK', 510, 205);
 
     // Actual pick value
-    ctx.font = 'bold 22px system-ui, -apple-system, sans-serif';
+    ctx.font = "bold 22px 'Outfit', 'Inter', sans-serif";
     ctx.fillStyle = '#fbbf24';
     ctx.fillText(pred.prediction, 510, 240);
 
     // Potential Reward / Status
-    ctx.font = 'bold 10px monospace';
+    ctx.font = "bold 10px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
     ctx.fillText('TICKET STATUS', 510, 280);
 
@@ -147,7 +159,7 @@ const drawTicket = (canvas, pred, walletAddress) => {
         ctx.fillRect(510, 295, 230, 48);
     }
 
-    ctx.font = 'bold 13px system-ui, -apple-system, sans-serif';
+    ctx.font = "bold 13px 'Inter', sans-serif";
     if (isSettled) {
         ctx.fillStyle = isWin ? '#10b981' : '#ef4444';
         ctx.fillText(isWin ? `🏆 WON (+${pred.pointsReward || 100} PTS)` : '❌ LOST (0 PTS)', 525, 325);
@@ -157,14 +169,14 @@ const drawTicket = (canvas, pred, walletAddress) => {
     }
 
     // Bottom info branding
-    ctx.font = 'bold 11px monospace';
+    ctx.font = "bold 11px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
-    ctx.fillText('WWW.GOLDENGOAL.SOCCER', 45, 395);
+    ctx.fillText('WWW.GOLDENGOALSOL.COM', 45, 395);
 
     if (walletAddress) {
         const masked = `${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}`;
         ctx.textAlign = 'right';
-        ctx.font = 'bold 11px monospace';
+        ctx.font = "bold 11px 'JetBrains Mono', monospace";
         ctx.fillStyle = '#71717a';
         ctx.fillText(`PLAYER: ${masked}`, 755, 395);
         ctx.textAlign = 'left';
@@ -191,12 +203,31 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (shareTicketModal) {
+      // Pre-load the stadium background image
+      const bgImg = new Image();
+      bgImg.src = '/default-stadium-bg.png';
+      
+      const draw = () => {
+        const canvas = document.getElementById('ticket-canvas');
+        if (canvas) {
+          drawTicket(canvas, shareTicketModal, publicKey?.toBase58(), bgImg);
+        }
+      };
+
+      bgImg.onload = draw;
+      
+      if (bgImg.complete) {
+        draw();
+      }
+
+      // Fallback in case loading takes too long or fails
       const timer = setTimeout(() => {
         const canvas = document.getElementById('ticket-canvas');
         if (canvas) {
-          drawTicket(canvas, shareTicketModal, publicKey?.toBase58());
+          drawTicket(canvas, shareTicketModal, publicKey?.toBase58(), bgImg.complete ? bgImg : null);
         }
-      }, 50);
+      }, 200);
+
       return () => clearTimeout(timer);
     }
   }, [shareTicketModal, publicKey]);
@@ -229,7 +260,7 @@ export default function Dashboard() {
           tweetText = `I just placed a prediction on ${pred.teamA} vs ${pred.teamB} at @goldengoalsol! ⚽️ Predict World Cup matches for free! #GoldenGoal #Solana`;
       }
       
-      const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent('https://goldengoal.soccer')}`;
+      const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent('https://goldengoalsol.com')}`;
       window.open(shareUrl, '_blank');
   };
   

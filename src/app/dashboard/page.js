@@ -318,6 +318,32 @@ export default function Dashboard() {
   };
 
   const handleShareOnX = (pred) => {
+      // Copy canvas to clipboard as PNG
+      const canvas = document.getElementById('ticket-canvas');
+      if (canvas) {
+          try {
+              canvas.toBlob((blob) => {
+                  if (blob) {
+                      const item = new ClipboardItem({ "image/png": blob });
+                      navigator.clipboard.write([item]).then(() => {
+                          setModalConfig({
+                              isOpen: true,
+                              title: "📋 Copied to Clipboard!",
+                              message: "Your ticket image has been copied to your clipboard.\n\nSimply press Ctrl+V (or Cmd+V on Mac) in the Twitter post window to attach your ticket image!",
+                              type: "success",
+                              confirmText: "Got It",
+                              onConfirm: null
+                          });
+                      }).catch((err) => {
+                          console.error("Failed to write to clipboard:", err);
+                      });
+                  }
+              }, 'image/png');
+          } catch (clipErr) {
+              console.error("Clipboard writing error:", clipErr);
+          }
+      }
+
       const isSettled = pred.predictionStatus === 'WON' || pred.predictionStatus === 'LOST';
       const isWin = pred.predictionStatus === 'WON';
       

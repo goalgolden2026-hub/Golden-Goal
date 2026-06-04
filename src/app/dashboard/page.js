@@ -5,6 +5,172 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { TEAM_FLAGS } from '@/lib/flags';
 import CustomModal from '@/components/CustomModal';
 
+const drawTicket = (canvas, pred, walletAddress) => {
+    const ctx = canvas.getContext('2d');
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, 800, 450);
+    
+    // Background gradient (Deep dark gold theme)
+    const bgGrad = ctx.createLinearGradient(0, 0, 800, 450);
+    bgGrad.addColorStop(0, '#09090b');
+    bgGrad.addColorStop(0.5, '#18181b');
+    bgGrad.addColorStop(1, '#09090b');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 450);
+
+    // Glowing accent orbs in the background
+    const glowGrad = ctx.createRadialGradient(400, 225, 50, 400, 225, 300);
+    glowGrad.addColorStop(0, 'rgba(245, 158, 11, 0.08)');
+    glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = glowGrad;
+    ctx.fillRect(0, 0, 800, 450);
+
+    // Outer gold border with premium double stroke
+    ctx.strokeStyle = '#d97706';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(20, 20, 760, 410);
+    
+    ctx.strokeStyle = 'rgba(251, 191, 36, 0.2)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(28, 28, 744, 394);
+
+    // Header styling
+    ctx.font = 'bold 11px monospace';
+    ctx.fillStyle = '#71717a';
+    ctx.letterSpacing = '3px';
+    ctx.fillText('GOLDEN GOAL PREDICTION PASS', 45, 60);
+
+    // Logo on top right
+    ctx.textAlign = 'right';
+    ctx.font = 'black 22px system-ui, -apple-system, sans-serif';
+    
+    // Title gradient
+    const textGrad = ctx.createLinearGradient(550, 0, 755, 0);
+    textGrad.addColorStop(0, '#fbbf24');
+    textGrad.addColorStop(1, '#f59e0b');
+    ctx.fillStyle = textGrad;
+    ctx.fillText('⚽ GOLDEN GOAL', 755, 62);
+    ctx.textAlign = 'left'; // reset text align
+
+    // Left side: Match Fixture info
+    ctx.font = 'bold 11px monospace';
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillText('MATCH FIXTURE', 45, 130);
+
+    // Team A Flag & Name
+    ctx.font = '36px system-ui, -apple-system, sans-serif';
+    const flagA = TEAM_FLAGS[pred.teamA] || '🏳️';
+    ctx.fillText(flagA, 45, 185);
+
+    const nameA = pred.teamA || '';
+    ctx.font = nameA.length > 15 
+        ? 'bold 18px system-ui, -apple-system, sans-serif' 
+        : 'bold 24px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(nameA, 110, 178);
+
+    // VS divider
+    ctx.font = 'black 14px monospace';
+    ctx.fillStyle = '#3f3f46';
+    ctx.fillText('VS', 45, 230);
+
+    // Team B Flag & Name
+    ctx.font = '36px system-ui, -apple-system, sans-serif';
+    const flagB = TEAM_FLAGS[pred.teamB] || '🏳️';
+    ctx.fillText(flagB, 45, 285);
+
+    const nameB = pred.teamB || '';
+    ctx.font = nameB.length > 15 
+        ? 'bold 18px system-ui, -apple-system, sans-serif' 
+        : 'bold 24px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(nameB, 110, 278);
+
+    // Match Time stamp
+    ctx.font = '12px monospace';
+    ctx.fillStyle = '#71717a';
+    ctx.fillText(new Date(pred.matchDate).toLocaleString(), 45, 335);
+
+    // Divider line between columns
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(480, 100);
+    ctx.lineTo(480, 350);
+    ctx.stroke();
+
+    // Right Side: Forecast info
+    ctx.font = 'bold 11px monospace';
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillText('FORECAST DETAILS', 510, 130);
+
+    // Market category title
+    ctx.font = 'bold 13px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = '#a1a1aa';
+    ctx.fillText(pred.predictionType?.replace('_', ' ') || 'MAIN WINNER', 510, 165);
+
+    // "YOUR PICK" label
+    ctx.font = 'bold 10px monospace';
+    ctx.fillStyle = '#71717a';
+    ctx.fillText('YOUR PICK', 510, 205);
+
+    // Actual pick value
+    ctx.font = 'bold 22px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillText(pred.prediction, 510, 240);
+
+    // Potential Reward / Status
+    ctx.font = 'bold 10px monospace';
+    ctx.fillStyle = '#71717a';
+    ctx.fillText('TICKET STATUS', 510, 280);
+
+    // Win status / PTS
+    const isSettled = pred.predictionStatus === 'WON' || pred.predictionStatus === 'LOST';
+    const isWin = pred.predictionStatus === 'WON';
+    
+    // Draw status badge
+    ctx.fillStyle = isSettled 
+        ? (isWin ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)') 
+        : 'rgba(245, 158, 11, 0.1)';
+    ctx.strokeStyle = isSettled 
+        ? (isWin ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)') 
+        : 'rgba(245, 158, 11, 0.3)';
+    ctx.lineWidth = 1;
+
+    if (ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(510, 295, 230, 48, 6);
+        ctx.fill();
+        ctx.stroke();
+    } else {
+        ctx.fillRect(510, 295, 230, 48);
+    }
+
+    ctx.font = 'bold 13px system-ui, -apple-system, sans-serif';
+    if (isSettled) {
+        ctx.fillStyle = isWin ? '#10b981' : '#ef4444';
+        ctx.fillText(isWin ? `🏆 WON (+${pred.pointsReward || 100} PTS)` : '❌ LOST (0 PTS)', 525, 325);
+    } else {
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillText(`⌛ PENDING (+${pred.pointsReward || 100} PTS)`, 525, 325);
+    }
+
+    // Bottom info branding
+    ctx.font = 'bold 11px monospace';
+    ctx.fillStyle = '#71717a';
+    ctx.fillText('WWW.GOLDENGOAL.SOCCER', 45, 395);
+
+    if (walletAddress) {
+        const masked = `${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}`;
+        ctx.textAlign = 'right';
+        ctx.font = 'bold 11px monospace';
+        ctx.fillStyle = '#71717a';
+        ctx.fillText(`PLAYER: ${masked}`, 755, 395);
+        ctx.textAlign = 'left';
+    }
+};
+
 export default function Dashboard() {
   const { connected, publicKey } = useWallet();
   const [predictions, setPredictions] = useState([]);
@@ -12,6 +178,7 @@ export default function Dashboard() {
   const [points, setPoints] = useState(0);
   const [managingPredictionId, setManagingPredictionId] = useState(null);
   const [changePredictionModal, setChangePredictionModal] = useState(null); // stores the prediction object being changed
+  const [shareTicketModal, setShareTicketModal] = useState(null); // stores the prediction object being shared
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     title: '',
@@ -21,6 +188,50 @@ export default function Dashboard() {
     confirmText: 'Confirm',
     cancelText: 'Cancel'
   });
+
+  useEffect(() => {
+    if (shareTicketModal) {
+      const timer = setTimeout(() => {
+        const canvas = document.getElementById('ticket-canvas');
+        if (canvas) {
+          drawTicket(canvas, shareTicketModal, publicKey?.toBase58());
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [shareTicketModal, publicKey]);
+
+  const handleDownloadTicket = (pred) => {
+      const canvas = document.getElementById('ticket-canvas');
+      if (canvas) {
+          const url = canvas.toDataURL('image/png');
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `GoldenGoal_Ticket_${pred.teamA}_vs_${pred.teamB}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+      }
+  };
+
+  const handleShareOnX = (pred) => {
+      const isSettled = pred.predictionStatus === 'WON' || pred.predictionStatus === 'LOST';
+      const isWin = pred.predictionStatus === 'WON';
+      
+      let tweetText = "";
+      if (isSettled) {
+          if (isWin) {
+              tweetText = `I predicted ${pred.teamA} vs ${pred.teamB} correctly and won +${pred.pointsReward || 100} PTS on @goldengoalsol! 🏆 Check out my ticket! #GoldenGoal #Solana`;
+          } else {
+              tweetText = `My forecast for ${pred.teamA} vs ${pred.teamB} on @goldengoalsol. We analyze and go again! ⚽️ Join the prediction economy! #GoldenGoal #Solana`;
+          }
+      } else {
+          tweetText = `I just placed a prediction on ${pred.teamA} vs ${pred.teamB} at @goldengoalsol! ⚽️ Predict World Cup matches for free! #GoldenGoal #Solana`;
+      }
+      
+      const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent('https://goldengoal.soccer')}`;
+      window.open(shareUrl, '_blank');
+  };
   
   useEffect(() => {
     if (connected && publicKey) {
@@ -206,6 +417,12 @@ export default function Dashboard() {
                               </div>
                               <div className="flex flex-col gap-2 border-l border-zinc-800 pl-4 w-full md:w-auto">
                                   <button 
+                                      onClick={() => setShareTicketModal(pred)}
+                                      className="text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 py-2 px-3 rounded-lg transition-colors border border-amber-500/20 hover:border-amber-500/40 flex justify-center items-center gap-1 font-bold animate-pulse"
+                                  >
+                                      🎫 Share Ticket
+                                  </button>
+                                  <button 
                                       onClick={() => setChangePredictionModal(pred)}
                                       disabled={managingPredictionId === pred.predictionId}
                                       className="text-xs bg-zinc-800 hover:bg-zinc-700 text-white py-2 px-3 rounded-lg transition-colors border border-transparent hover:border-zinc-600 disabled:opacity-50 flex justify-center items-center gap-1"
@@ -251,6 +468,12 @@ export default function Dashboard() {
                                       <div className={`px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 ${isWin ? 'bg-amber-500/20 text-amber-500 border border-amber-500/30' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
                                           {isWin ? `+${pred.pointsReward || 100} PTS` : '0 PTS'}
                                       </div>
+                                      <button 
+                                          onClick={() => setShareTicketModal(pred)}
+                                          className="text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 py-2 px-3 rounded-lg transition-colors border border-zinc-700 flex justify-center items-center gap-1 font-bold"
+                                      >
+                                          🎫 Share Ticket
+                                      </button>
                                   </div>
                               </div>
                           );
@@ -302,6 +525,51 @@ export default function Dashboard() {
                       Cost: 10.000 $GoldenGoal<br/>
                       <span className="text-zinc-500">5.000 permanently burned | 5.000 to Treasury</span>
                   </p>
+              </div>
+          </div>
+      )}
+
+      {/* Share Ticket Modal */}
+      {shareTicketModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+              <div className="bg-zinc-900 border border-zinc-700 rounded-3xl w-full max-w-2xl p-6 relative shadow-2xl flex flex-col items-center">
+                  <button 
+                    onClick={() => setShareTicketModal(null)}
+                    className="absolute top-4 right-4 text-zinc-500 hover:text-white text-lg font-bold"
+                  >
+                      ✕
+                  </button>
+                  <h3 className="text-xl font-bold mb-1 text-white">Prediction Ticket</h3>
+                  <p className="text-zinc-500 text-xs mb-4 text-center">Save your custom ticket image to share it directly on X (Twitter).</p>
+                  
+                  {/* Canvas Container */}
+                  <div className="w-full aspect-[16/9] relative bg-zinc-950 rounded-2xl border border-zinc-800 overflow-hidden shadow-inner flex items-center justify-center">
+                      <canvas 
+                        id="ticket-canvas" 
+                        width="800" 
+                        height="450" 
+                        className="w-full h-auto block rounded-2xl"
+                      />
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-col sm:flex-row gap-3 w-full mt-6">
+                      <button
+                        onClick={() => handleDownloadTicket(shareTicketModal)}
+                        className="flex-1 py-3 px-4 rounded-xl font-bold bg-amber-500 hover:bg-amber-600 text-black transition-colors flex items-center justify-center gap-2"
+                      >
+                        📥 Download Ticket
+                      </button>
+                      <button
+                        onClick={() => handleShareOnX(shareTicketModal)}
+                        className="flex-1 py-3 px-4 rounded-xl font-bold bg-white text-black hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2"
+                      >
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                        Share on X
+                      </button>
+                  </div>
               </div>
           </div>
       )}

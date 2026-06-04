@@ -157,34 +157,51 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     
     ctx.letterSpacing = 'normal'; // reset
 
-    // Left card box (Forecast info, X=200 to X=720, Y=520, height=170)
+    // 1. Calculate dynamic widths for Forecast and Ticket Status card boxes
+    ctx.font = "bold 24px 'JetBrains Mono', monospace";
+    const forecastLabelWidth = ctx.measureText('Forecast: ').width;
+
+    const forecastVal = formatPredictionType(pred.predictionType);
+    const forecastValSize = forecastVal.length > 20 ? '22px' : '26px';
+    ctx.font = `bold ${forecastValSize} 'Outfit', 'Inter', sans-serif`;
+    const forecastValWidth = ctx.measureText(forecastVal).width;
+    
+    // Total width required inside the card is padding + label + value + right padding
+    const leftCardRequired = (240 + forecastLabelWidth + forecastValWidth + 40) - 200;
+    const leftCardWidth = Math.max(520, leftCardRequired);
+    
+    const gap = 80;
+    const rightCardWidth = 1200 - leftCardWidth - gap;
+    const rightCardX = 200 + leftCardWidth + gap;
+    const rightCardCenter = rightCardX + rightCardWidth / 2;
+
+    // Left card box (Forecast info, X=200, Y=520, H=170, W=leftCardWidth)
     ctx.fillStyle = 'rgba(255, 255, 255, 0.01)';
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
     ctx.lineWidth = 2;
     ctx.beginPath();
     if (ctx.roundRect) {
-        ctx.roundRect(200, 520, 520, 170, 16);
+        ctx.roundRect(200, 520, leftCardWidth, 170, 16);
         ctx.fill();
         ctx.stroke();
     } else {
-        ctx.fillRect(200, 520, 520, 170);
+        ctx.fillRect(200, 520, leftCardWidth, 170);
     }
     
-    // Draw Forecast Info (Left Column: Symmetrical Inline Label & Value Rows, all enlarged)
+    // Draw Forecast Info (Left Column: Symmetrical Inline Label & Value Rows)
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     
-    // Row 1: Forecast Label & Value (Label: 24px, Value: 26px)
+    // Row 1: Forecast Label & Value
     ctx.font = "bold 24px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
     ctx.fillText('Forecast: ', 240, 570);
-    const forecastLabelWidth = ctx.measureText('Forecast: ').width;
     
-    ctx.font = "bold 26px 'Outfit', 'Inter', sans-serif";
+    ctx.font = `bold ${forecastValSize} 'Outfit', 'Inter', sans-serif`;
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(formatPredictionType(pred.predictionType), 240 + forecastLabelWidth, 570);
+    ctx.fillText(forecastVal, 240 + forecastLabelWidth, 570);
 
-    // Row 2: Pick Label & Value (Label: 24px, Value: 32px)
+    // Row 2: Pick Label & Value
     ctx.font = "bold 24px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
     ctx.fillText('Pick: ', 240, 640);
@@ -194,7 +211,7 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.fillStyle = '#fbbf24';
     ctx.fillText(formatPredictionValue(pred.prediction), 240 + pickLabelWidth, 640);
 
-    // Right card box (Ticket Status, X=880 to X=1400, Y=520, height=170)
+    // Right card box (Ticket Status, X=rightCardX, Y=520, W=rightCardWidth, H=170)
     const isSettled = pred.predictionStatus === 'WON' || pred.predictionStatus === 'LOST';
     const isWin = pred.predictionStatus === 'WON';
 
@@ -207,28 +224,28 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.lineWidth = 2;
     ctx.beginPath();
     if (ctx.roundRect) {
-        ctx.roundRect(880, 520, 520, 170, 16);
+        ctx.roundRect(rightCardX, 520, rightCardWidth, 170, 16);
         ctx.fill();
         ctx.stroke();
     } else {
-        ctx.fillRect(880, 520, 520, 170);
+        ctx.fillRect(rightCardX, 520, rightCardWidth, 170);
     }
 
-    // Centered Ticket Status details (Enlarged status to 38px, subtext to 20px)
+    // Centered Ticket Status details inside the right card
     ctx.textAlign = 'center';
     ctx.font = "900 38px 'Outfit', 'Inter', sans-serif";
     if (isSettled) {
         ctx.fillStyle = isWin ? '#10b981' : '#ef4444';
-        ctx.fillText(isWin ? '🏆 WON' : '❌ LOST', 1140, 580);
+        ctx.fillText(isWin ? '🏆 WON' : '❌ LOST', rightCardCenter, 580);
         ctx.font = "bold 20px 'JetBrains Mono', monospace";
         ctx.fillStyle = '#71717a';
-        ctx.fillText(isWin ? `+${pred.pointsReward || 100} PTS AWARDED` : '0 PTS REWARDED', 1140, 635);
+        ctx.fillText(isWin ? `+${pred.pointsReward || 100} PTS AWARDED` : '0 PTS REWARDED', rightCardCenter, 635);
     } else {
         ctx.fillStyle = '#fbbf24';
-        ctx.fillText('⌛ PENDING', 1140, 580);
+        ctx.fillText('⌛ PENDING', rightCardCenter, 580);
         ctx.font = "bold 20px 'JetBrains Mono', monospace";
         ctx.fillStyle = '#71717a';
-        ctx.fillText(`+${pred.pointsReward || 100} PTS PENDING`, 1140, 635);
+        ctx.fillText(`+${pred.pointsReward || 100} PTS PENDING`, rightCardCenter, 635);
     }
 
     // Divider line 3 (above footer branding)

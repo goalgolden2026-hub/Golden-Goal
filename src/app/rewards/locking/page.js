@@ -506,7 +506,7 @@ export default function LockingPage() {
                       key={idx} 
                       className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-xs font-bold transition-all duration-300 hover:translate-x-1 ${
                         reward.type === 'multiplier' 
-                          ? 'bg-amber-500/10 border-amber-500/20 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.05)]' 
+                          ? 'bg-amber-500/10 border-amber-500/20 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.05)] animate-pulse' 
                           : reward.type === 'spin'
                           ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.05)] animate-pulse'
                           : 'bg-white/5 border-white/5 text-zinc-300 hover:bg-white/10'

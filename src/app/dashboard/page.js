@@ -104,19 +104,6 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     const nameA = pred.teamA || '';
     const nameB = pred.teamB || '';
 
-    // Team A Card (Left Card, X=200 to X=720)
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    if (ctx.roundRect) {
-        ctx.roundRect(200, 210, 520, 170, 16);
-        ctx.fill();
-        ctx.stroke();
-    } else {
-        ctx.fillRect(200, 210, 520, 170);
-    }
-    
     // Draw Team A Flag (Centered, enlarged to 64px, and fillStyle set to opaque white)
     ctx.textAlign = 'center';
     ctx.fillStyle = '#ffffff';
@@ -134,19 +121,6 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.fillStyle = '#52525b';
     ctx.fillText('VS', 800, 295);
 
-    // Team B Card (Right Card, X=880 to X=1400)
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    if (ctx.roundRect) {
-        ctx.roundRect(880, 210, 520, 170, 16);
-        ctx.fill();
-        ctx.stroke();
-    } else {
-        ctx.fillRect(880, 210, 520, 170);
-    }
-    
     // Draw Team B Flag (Centered, enlarged to 64px, and fillStyle set to opaque white)
     ctx.fillStyle = '#ffffff';
     ctx.font = "64px 'Inter', sans-serif";
@@ -200,23 +174,23 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     
-    // Row 1: Forecast Label & Value (Label: 18px, Value: 24px)
-    ctx.font = "bold 18px 'JetBrains Mono', monospace";
+    // Row 1: Forecast Label & Value (Label: 24px, Value: 26px)
+    ctx.font = "bold 24px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
     ctx.fillText('Forecast: ', 240, 570);
     const forecastLabelWidth = ctx.measureText('Forecast: ').width;
     
-    ctx.font = "bold 24px 'Outfit', 'Inter', sans-serif";
+    ctx.font = "bold 26px 'Outfit', 'Inter', sans-serif";
     ctx.fillStyle = '#ffffff';
     ctx.fillText(formatPredictionType(pred.predictionType), 240 + forecastLabelWidth, 570);
 
-    // Row 2: Pick Label & Value (Label: 18px, Value: 28px)
-    ctx.font = "bold 18px 'JetBrains Mono', monospace";
+    // Row 2: Pick Label & Value (Label: 24px, Value: 32px)
+    ctx.font = "bold 24px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
     ctx.fillText('Pick: ', 240, 640);
     const pickLabelWidth = ctx.measureText('Pick: ').width;
     
-    ctx.font = "900 28px 'Outfit', 'Inter', sans-serif";
+    ctx.font = "900 32px 'Outfit', 'Inter', sans-serif";
     ctx.fillStyle = '#fbbf24';
     ctx.fillText(formatPredictionValue(pred.prediction), 240 + pickLabelWidth, 640);
 
@@ -269,7 +243,7 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.textAlign = 'left';
     ctx.font = "bold 18px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#52525b';
-    ctx.fillText('WWW.GOLDENGOALSOL.COM', 200, 790);
+    ctx.fillText('www.goldengoalsol.com', 200, 790);
 
     if (walletAddress) {
         const masked = `${walletAddress.substring(0, 8)}...${walletAddress.substring(walletAddress.length - 6)}`;

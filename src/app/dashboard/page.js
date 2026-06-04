@@ -75,10 +75,10 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.lineWidth = 2;
     ctx.strokeRect(52, 52, 1496, 796);
 
-    // 1. Header Area
+    // 1. Header Area (Enlarged to 18px)
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = "bold 15px 'JetBrains Mono', monospace";
+    ctx.font = "bold 18px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
     ctx.letterSpacing = '8px';
     ctx.fillText('GOLDEN GOAL PREDICTION PASS', 800, 105);
@@ -92,8 +92,8 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.lineTo(1400, 145);
     ctx.stroke();
 
-    // 2. Matchup Section Title
-    ctx.font = "bold 13px 'JetBrains Mono', monospace";
+    // 2. Matchup Section Title (Enlarged to 16px)
+    ctx.font = "bold 16px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#d97706';
     ctx.letterSpacing = '4px';
     ctx.fillText('MATCH FIXTURE', 800, 180);
@@ -117,19 +117,20 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
         ctx.fillRect(200, 210, 520, 170);
     }
     
-    // Draw Team A Flag (Centered inside Team A Card)
+    // Draw Team A Flag (Centered, enlarged to 64px, and fillStyle set to opaque white)
     ctx.textAlign = 'center';
-    ctx.font = "54px 'Inter', sans-serif";
+    ctx.fillStyle = '#ffffff';
+    ctx.font = "64px 'Inter', sans-serif";
     ctx.fillText(flagA, 460, 265);
     
-    // Draw Team A Name (Centered inside Team A Card)
-    const nameAFontSize = nameA.length > 12 ? '24px' : '30px';
+    // Draw Team A Name (Centered, enlarged to 36px/28px)
+    const nameAFontSize = nameA.length > 12 ? '28px' : '36px';
     ctx.font = `900 ${nameAFontSize} 'Outfit', 'Inter', sans-serif`;
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(nameA.toUpperCase(), 460, 330);
+    ctx.fillText(nameA.toUpperCase(), 460, 335);
 
-    // VS center indicator (Centered at X=800, Y=295)
-    ctx.font = "italic 900 28px 'JetBrains Mono', monospace";
+    // VS center indicator (Centered at X=800, Y=295, enlarged to 32px)
+    ctx.font = "italic 900 32px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#52525b';
     ctx.fillText('VS', 800, 295);
 
@@ -146,18 +147,19 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
         ctx.fillRect(880, 210, 520, 170);
     }
     
-    // Draw Team B Flag (Centered inside Team B Card)
-    ctx.font = "54px 'Inter', sans-serif";
+    // Draw Team B Flag (Centered, enlarged to 64px, and fillStyle set to opaque white)
+    ctx.fillStyle = '#ffffff';
+    ctx.font = "64px 'Inter', sans-serif";
     ctx.fillText(flagB, 1140, 265);
     
-    // Draw Team B Name (Centered inside Team B Card)
-    const nameBFontSize = nameB.length > 12 ? '24px' : '30px';
+    // Draw Team B Name (Centered, enlarged to 36px/28px)
+    const nameBFontSize = nameB.length > 12 ? '28px' : '36px';
     ctx.font = `900 ${nameBFontSize} 'Outfit', 'Inter', sans-serif`;
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(nameB.toUpperCase(), 1140, 330);
+    ctx.fillText(nameB.toUpperCase(), 1140, 335);
 
-    // Match Date (Centered below matchup, Y=415)
-    ctx.font = "bold 15px 'JetBrains Mono', monospace";
+    // Match Date (Centered below matchup, Y=415, enlarged to 18px)
+    ctx.font = "bold 18px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
     ctx.fillText(new Date(pred.matchDate).toLocaleString(), 800, 415);
 
@@ -168,8 +170,8 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.lineTo(1400, 450);
     ctx.stroke();
 
-    // 3. Forecast Details & Ticket Status headers
-    ctx.font = "bold 13px 'JetBrains Mono', monospace";
+    // 3. Forecast Details & Ticket Status headers (Enlarged to 16px)
+    ctx.font = "bold 16px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#d97706';
     ctx.letterSpacing = '4px';
     
@@ -194,29 +196,29 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
         ctx.fillRect(200, 520, 520, 170);
     }
     
-    // Draw Forecast Info (Left Column: Symmetrical Inline Label & Value Rows)
+    // Draw Forecast Info (Left Column: Symmetrical Inline Label & Value Rows, all enlarged)
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     
-    // Row 1: Forecast Label & Value
-    ctx.font = "bold 16px 'JetBrains Mono', monospace";
+    // Row 1: Forecast Label & Value (Label: 18px, Value: 24px)
+    ctx.font = "bold 18px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
-    ctx.fillText('Forecast: ', 240, 575);
+    ctx.fillText('Forecast: ', 240, 570);
     const forecastLabelWidth = ctx.measureText('Forecast: ').width;
     
-    ctx.font = "bold 20px 'Outfit', 'Inter', sans-serif";
+    ctx.font = "bold 24px 'Outfit', 'Inter', sans-serif";
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(formatPredictionType(pred.predictionType), 240 + forecastLabelWidth, 575);
+    ctx.fillText(formatPredictionType(pred.predictionType), 240 + forecastLabelWidth, 570);
 
-    // Row 2: Pick Label & Value
-    ctx.font = "bold 16px 'JetBrains Mono', monospace";
+    // Row 2: Pick Label & Value (Label: 18px, Value: 28px)
+    ctx.font = "bold 18px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
-    ctx.fillText('Pick: ', 240, 635);
+    ctx.fillText('Pick: ', 240, 640);
     const pickLabelWidth = ctx.measureText('Pick: ').width;
     
-    ctx.font = "900 24px 'Outfit', 'Inter', sans-serif";
+    ctx.font = "900 28px 'Outfit', 'Inter', sans-serif";
     ctx.fillStyle = '#fbbf24';
-    ctx.fillText(formatPredictionValue(pred.prediction), 240 + pickLabelWidth, 635);
+    ctx.fillText(formatPredictionValue(pred.prediction), 240 + pickLabelWidth, 640);
 
     // Right card box (Ticket Status, X=880 to X=1400, Y=520, height=170)
     const isSettled = pred.predictionStatus === 'WON' || pred.predictionStatus === 'LOST';
@@ -238,19 +240,19 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
         ctx.fillRect(880, 520, 520, 170);
     }
 
-    // Centered Ticket Status details
+    // Centered Ticket Status details (Enlarged status to 38px, subtext to 20px)
     ctx.textAlign = 'center';
-    ctx.font = "900 32px 'Outfit', 'Inter', sans-serif";
+    ctx.font = "900 38px 'Outfit', 'Inter', sans-serif";
     if (isSettled) {
         ctx.fillStyle = isWin ? '#10b981' : '#ef4444';
-        ctx.fillText(isWin ? '🏆 WON' : '❌ LOST', 1140, 585);
-        ctx.font = "bold 18px 'JetBrains Mono', monospace";
+        ctx.fillText(isWin ? '🏆 WON' : '❌ LOST', 1140, 580);
+        ctx.font = "bold 20px 'JetBrains Mono', monospace";
         ctx.fillStyle = '#71717a';
         ctx.fillText(isWin ? `+${pred.pointsReward || 100} PTS AWARDED` : '0 PTS REWARDED', 1140, 635);
     } else {
         ctx.fillStyle = '#fbbf24';
-        ctx.fillText('⌛ PENDING', 1140, 585);
-        ctx.font = "bold 18px 'JetBrains Mono', monospace";
+        ctx.fillText('⌛ PENDING', 1140, 580);
+        ctx.font = "bold 20px 'JetBrains Mono', monospace";
         ctx.fillStyle = '#71717a';
         ctx.fillText(`+${pred.pointsReward || 100} PTS PENDING`, 1140, 635);
     }
@@ -263,16 +265,16 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.lineTo(1400, 730);
     ctx.stroke();
 
-    // 4. Footer Branding
+    // 4. Footer Branding (Enlarged to 18px)
     ctx.textAlign = 'left';
-    ctx.font = "bold 16px 'JetBrains Mono', monospace";
+    ctx.font = "bold 18px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#52525b';
     ctx.fillText('WWW.GOLDENGOALSOL.COM', 200, 790);
 
     if (walletAddress) {
         const masked = `${walletAddress.substring(0, 8)}...${walletAddress.substring(walletAddress.length - 6)}`;
         ctx.textAlign = 'right';
-        ctx.font = "bold 16px 'JetBrains Mono', monospace";
+        ctx.font = "bold 18px 'JetBrains Mono', monospace";
         ctx.fillStyle = '#52525b';
         ctx.fillText(`PLAYER: ${masked}`, 1400, 790);
         ctx.textAlign = 'left';

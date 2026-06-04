@@ -501,14 +501,14 @@ function MarketsContent() {
                             {!timeLeft.expired ? (
                               <div className="flex items-center gap-2.5">
                                 <span className="text-[10px] text-zinc-500 font-extrabold tracking-widest uppercase">Opening Kickoff:</span>
-                                <span className="text-xs font-mono font-black text-yellow-400 bg-yellow-500/10 border border-yellow-500/30 px-3.5 py-1.5 rounded-xl shadow-[0_0_15px_rgba(245,158,11,0.15)] flex items-center gap-1 select-none">
+                                <span className="text-xs font-mono font-black text-yellow-400 bg-yellow-500/10 border border-yellow-500/30 px-3.5 py-1.5 rounded-xl shadow-[0_0_15px_rgba(245,158,11,0.15)] flex items-center gap-1 select-none animate-pulse">
                                   <span>{String(timeLeft.days).padStart(2, '0')}d</span>
                                   <span className="text-zinc-600">:</span>
                                   <span>{String(timeLeft.hours).padStart(2, '0')}h</span>
                                   <span className="text-zinc-600">:</span>
                                   <span>{String(timeLeft.minutes).padStart(2, '0')}m</span>
                                   <span className="text-zinc-600">:</span>
-                                  <span className="text-amber-500 animate-pulse">{String(timeLeft.seconds).padStart(2, '0')}s</span>
+                                  <span className="text-amber-500">{String(timeLeft.seconds).padStart(2, '0')}s</span>
                                 </span>
                               </div>
                             ) : (

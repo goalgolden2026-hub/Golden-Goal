@@ -21,9 +21,30 @@ export async function POST(request) {
 
         const sql = await getDb();
         
-        // 1. Check Token Balance
-        const balance = await getTokenBalance(walletAddress);
-        const { tier, limit } = getTierLimits(balance);
+        // 1. Check Token Balance (including active locks and treasury log adjustments to represent total holdings)
+        const baseBalance = await getTokenBalance(walletAddress);
+        let mockBalance = baseBalance;
+
+        // Add active locks (since they are real on-chain transfers and have left the user's wallet)
+        const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+        if (activeLocksTotalRes.rows[0].total) {
+            mockBalance += parseInt(activeLocksTotalRes.rows[0].total);
+        }
+
+        // Apply treasury logs
+        const logsRes = await sql`SELECT amount, type FROM treasury_logs WHERE "walletAddress" = ${walletAddress}`;
+        for (const log of logsRes.rows) {
+            const amt = parseFloat(log.amount);
+            if (log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') {
+                mockBalance -= amt; // Deductions logged as positive
+            } else if (log.type === 'SPIN_PAYMENT') {
+                mockBalance += amt; // Already negative
+            } else if (log.type === 'REFERRAL_REWARD' || log.type === 'SPIN_REWARD_GOLDEN') {
+                mockBalance += amt; // Additions
+            }
+        }
+
+        const { tier, limit } = getTierLimits(mockBalance);
 
         if (limit === 0) {
             return NextResponse.json({ success: false, error: "Insufficient Token Balance. You need to hold at least 250.000 $GoldenGoal tokens in your wallet to make predictions." }, { status: 403 });

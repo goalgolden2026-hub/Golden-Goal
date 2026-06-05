@@ -15,8 +15,28 @@ export async function PUT(request) {
 
         const sql = await getDb();
         
-        // 1. Check Token Balance
-        const balance = await getTokenBalance(walletAddress);
+        // 1. Check Token Balance (including active locks and treasury log adjustments to represent total holdings)
+        const baseBalance = await getTokenBalance(walletAddress);
+        let mockBalance = baseBalance;
+
+        // Add active locks (since they are real on-chain transfers and have left the user's wallet)
+        const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
+        if (activeLocksTotalRes.rows[0].total) {
+            mockBalance += parseInt(activeLocksTotalRes.rows[0].total);
+        }
+
+        // Apply treasury logs
+        const logsRes = await sql`SELECT amount, type FROM treasury_logs WHERE "walletAddress" = ${walletAddress}`;
+        for (const log of logsRes.rows) {
+            const amt = parseFloat(log.amount);
+            if (log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') {
+                mockBalance -= amt; // Deductions logged as positive
+            } else if (log.type === 'SPIN_PAYMENT') {
+                mockBalance += amt; // Already negative
+            } else if (log.type === 'REFERRAL_REWARD' || log.type === 'SPIN_REWARD_GOLDEN') {
+                mockBalance += amt; // Additions
+            }
+        }
 
         // 2. Fetch Prediction and Market Data (including odds for recalculation)
         const predictionRes = await sql`
@@ -45,7 +65,7 @@ export async function PUT(request) {
         }
 
         if (action === 'CHANGE') {
-            if (balance < 10000) {
+            if (mockBalance < 10000) {
                 return NextResponse.json({ success: false, error: "Insufficient Token Balance (10,000 $GoldenGoal required)" }, { status: 403 });
             }
             if (!newPrediction) {
@@ -110,7 +130,7 @@ export async function PUT(request) {
             return NextResponse.json({ success: true, message: "Prediction updated successfully. 10,000 $GoldenGoal deducted." });
 
         } else if (action === 'CANCEL') {
-            if (balance < 20000) {
+            if (mockBalance < 20000) {
                 return NextResponse.json({ success: false, error: "Insufficient Token Balance (20.000 $GoldenGoal required)" }, { status: 403 });
             }
 

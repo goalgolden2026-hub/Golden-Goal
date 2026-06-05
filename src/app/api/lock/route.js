@@ -153,32 +153,6 @@ export async function POST(request) {
             return NextResponse.json({ success: false, error: `Invalid lock amount. Minimum required for Tier ${tier} is ${minAmountRequired.toLocaleString('en-US')} $GoldenGoal.` }, { status: 400 });
         }
 
-        // 2. Double-check user's mock balance from the database profile
-        const baseBalance = await getTokenBalance(walletAddress);
-        let mockBalance = baseBalance;
-
-        // Deduct active locks
-        const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
-        if (activeLocksTotalRes.rows[0].total) {
-            mockBalance -= parseInt(activeLocksTotalRes.rows[0].total);
-        }
-
-        // Apply treasury logs
-        const logsRes = await sql`SELECT amount, type FROM treasury_logs WHERE "walletAddress" = ${walletAddress}`;
-        for (const log of logsRes.rows) {
-            const amt = parseFloat(log.amount);
-            if (log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') {
-                mockBalance -= amt; // Deductions logged as positive
-            } else if (log.type === 'SPIN_PAYMENT') {
-                mockBalance += amt; // Already negative
-            } else if (log.type === 'REFERRAL_REWARD' || log.type === 'SPIN_REWARD_GOLDEN') {
-                mockBalance += amt; // Additions
-            }
-        }
-
-        if (mockBalance < amount) {
-            return NextResponse.json({ success: false, error: `Insufficient simulated balance. You need at least ${amount.toLocaleString('en-US')} $GoldenGoal to lock. You currently have ${mockBalance.toLocaleString('en-US')} $GoldenGoal.` }, { status: 400 });
-        }
 
         // Check for existing active lock (one active lock per user)
         const activeLockRes = await sql`SELECT * FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;

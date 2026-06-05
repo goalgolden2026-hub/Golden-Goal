@@ -57,10 +57,10 @@ export async function GET(request) {
         const baseBalance = await getTokenBalance(walletAddress);
         let mockBalance = baseBalance;
 
-        // Deduct active locks
+        // Add active locks (since they are real on-chain transfers and have left the user's wallet)
         const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
         if (activeLocksTotalRes.rows[0].total) {
-            mockBalance -= parseInt(activeLocksTotalRes.rows[0].total);
+            mockBalance += parseInt(activeLocksTotalRes.rows[0].total);
         }
 
         // Apply treasury logs

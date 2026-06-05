@@ -588,7 +588,7 @@ export default function Dashboard() {
                                       onClick={() => setShareTicketModal(pred)}
                                       className="text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 py-2 px-3 rounded-lg transition-colors border border-amber-500/20 hover:border-amber-500/40 flex justify-center items-center gap-1 font-bold animate-pulse"
                                   >
-                                      🎫 Share Ticket
+                                      🎫 Share Prediction
                                   </button>
                                   <button 
                                       onClick={() => setChangePredictionModal(pred)}
@@ -640,7 +640,7 @@ export default function Dashboard() {
                                           onClick={() => setShareTicketModal(pred)}
                                           className="text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 py-2 px-3 rounded-lg transition-colors border border-zinc-700 flex justify-center items-center gap-1 font-bold"
                                       >
-                                          🎫 Share Ticket
+                                          🎫 Share Prediction
                                       </button>
                                   </div>
                               </div>

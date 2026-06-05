@@ -17,7 +17,7 @@ export default function LockingPage() {
   const [activeLock, setActiveLock] = useState(null);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [refresh, setRefresh] = useState(0);
-  const [stats, setStats] = useState({ tvl: 0, lockers: 0, userLocked: 0, tierCounts: { 1: 0, 2: 0, 3: 0, 4: 0 }, stakeWallet: "Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm" });
+  const [stats, setStats] = useState({ tvl: 0, lockers: 0, userLocked: 0, tierCounts: { 1: 0, 2: 0, 3: 0, 4: 0 }, stakeWallet: "Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm", stakeAtaExists: false });
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     title: '',
@@ -40,7 +40,8 @@ export default function LockingPage() {
             lockers: data.activeLockers,
             userLocked: data.userLocked,
             tierCounts: data.tierCounts || { 1: 0, 2: 0, 3: 0, 4: 0 },
-            stakeWallet: data.stakeWallet || "Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm"
+            stakeWallet: data.stakeWallet || "Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm",
+            stakeAtaExists: !!data.stakeAtaExists
           });
           setActiveLock(data.activeLock);
         }
@@ -268,8 +269,15 @@ export default function LockingPage() {
       const transaction = new Transaction();
       
       // Check if destination ATA exists, if not add instruction to create it
-      const destAccountInfo = await connection.getAccountInfo(destinationATA);
-      if (!destAccountInfo) {
+      let destAccountExists = stats.stakeAtaExists;
+      try {
+        const destAccountInfo = await connection.getAccountInfo(destinationATA);
+        destAccountExists = !!destAccountInfo;
+      } catch (err) {
+        console.warn("Could not check destination ATA existence client-side, using backend state:", err);
+      }
+      
+      if (!destAccountExists) {
         transaction.add(
           createAssociatedTokenAccountInstruction(
             publicKey, // payer

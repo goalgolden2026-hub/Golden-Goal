@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
-import { Keypair } from '@solana/web3.js';
+import { Keypair, Connection, PublicKey } from '@solana/web3.js';
 import bs58 from 'bs58';
+
+const GOLDEN_GOAL_MINT = process.env.GOLDEN_GOAL_MINT || process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT;
+const SOLANA_RPC = "https://api.mainnet-beta.solana.com";
 
 export async function GET(request) {
     try {
@@ -63,6 +66,25 @@ export async function GET(request) {
             }
         }
 
+        // Check if Stake Wallet Associated Token Account exists on-chain (wrapped in safe try-catch to avoid RPC 403 errors blocking page load)
+        let stakeAtaExists = false;
+        if (GOLDEN_GOAL_MINT) {
+            try {
+                const { getAssociatedTokenAddress, TOKEN_2022_PROGRAM_ID } = require('@solana/spl-token');
+                const connection = new Connection(SOLANA_RPC, 'confirmed');
+                const mintPubKey = new PublicKey(GOLDEN_GOAL_MINT);
+                const stakeWalletPubKey = new PublicKey(stakeWallet);
+                const expectedATA = await getAssociatedTokenAddress(mintPubKey, stakeWalletPubKey, false, TOKEN_2022_PROGRAM_ID);
+                const destAccountInfo = await connection.getAccountInfo(expectedATA);
+                stakeAtaExists = !!destAccountInfo;
+            } catch (e) {
+                console.warn("Failed to check if Stake ATA exists on-chain (using fallback=true):", e.message);
+                stakeAtaExists = true; // Default to true so we don't crash or attempt duplicate creation
+            }
+        } else {
+            stakeAtaExists = true;
+        }
+
         return NextResponse.json({ 
             success: true, 
             totalValueLocked: Number(totalValueLocked),
@@ -70,7 +92,8 @@ export async function GET(request) {
             userLocked: Number(userLocked),
             activeLock: activeLock,
             tierCounts: tierCounts,
-            stakeWallet: stakeWallet
+            stakeWallet: stakeWallet,
+            stakeAtaExists: stakeAtaExists
         }, { status: 200 });
 
     } catch (error) {

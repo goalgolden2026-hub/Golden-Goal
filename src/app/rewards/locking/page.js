@@ -312,7 +312,11 @@ export default function LockingPage() {
       
       showMessage("Confirming transaction on-chain...", "info");
       try {
-        await connection.confirmTransaction(txSignature, "confirmed");
+        // Enforce a strict 5-second timeout on client-side confirmation to prevent websocket hangs
+        await Promise.race([
+          connection.confirmTransaction(txSignature, "confirmed"),
+          new Promise((_, reject) => setTimeout(() => reject(new Error("Client confirmation timeout")), 5000))
+        ]);
       } catch (confirmErr) {
         console.warn("Client-side confirmTransaction failed or timed out, proceeding to backend registration:", confirmErr.message);
         // Add a 2-second buffer to allow network RPC nodes to sync

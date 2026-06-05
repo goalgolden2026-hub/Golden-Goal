@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { Keypair } from '@solana/web3.js';
+import bs58 from 'bs58';
 
 export async function GET(request) {
     try {
@@ -42,13 +44,33 @@ export async function GET(request) {
             }
         }
 
+        // Derive Stake Wallet from PAYOUT_DISTRIBUTOR_KEY env variable
+        const secretKeyStr = process.env.PAYOUT_DISTRIBUTOR_KEY;
+        let stakeWallet = "Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm"; // Default fallback
+        if (secretKeyStr) {
+            try {
+                let secretKey;
+                if (secretKeyStr.trim().startsWith('[')) {
+                    secretKey = new Uint8Array(JSON.parse(secretKeyStr));
+                } else {
+                    const decodeFn = typeof bs58.decode === 'function' ? bs58.decode : bs58.default.decode;
+                    secretKey = decodeFn(secretKeyStr.trim());
+                }
+                const kp = Keypair.fromSecretKey(secretKey);
+                stakeWallet = kp.publicKey.toBase58();
+            } catch (e) {
+                console.error("Failed to parse PAYOUT_DISTRIBUTOR_KEY in stats route:", e.message);
+            }
+        }
+
         return NextResponse.json({ 
             success: true, 
             totalValueLocked: Number(totalValueLocked),
             activeLockers: Number(activeLockers),
             userLocked: Number(userLocked),
             activeLock: activeLock,
-            tierCounts: tierCounts
+            tierCounts: tierCounts,
+            stakeWallet: stakeWallet
         }, { status: 200 });
 
     } catch (error) {

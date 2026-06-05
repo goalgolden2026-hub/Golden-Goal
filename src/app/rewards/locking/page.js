@@ -17,7 +17,7 @@ export default function LockingPage() {
   const [activeLock, setActiveLock] = useState(null);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [refresh, setRefresh] = useState(0);
-  const [stats, setStats] = useState({ tvl: 0, lockers: 0, userLocked: 0, tierCounts: { 1: 0, 2: 0, 3: 0, 4: 0 } });
+  const [stats, setStats] = useState({ tvl: 0, lockers: 0, userLocked: 0, tierCounts: { 1: 0, 2: 0, 3: 0, 4: 0 }, stakeWallet: "Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm" });
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     title: '',
@@ -39,7 +39,8 @@ export default function LockingPage() {
             tvl: data.totalValueLocked,
             lockers: data.activeLockers,
             userLocked: data.userLocked,
-            tierCounts: data.tierCounts || { 1: 0, 2: 0, 3: 0, 4: 0 }
+            tierCounts: data.tierCounts || { 1: 0, 2: 0, 3: 0, 4: 0 },
+            stakeWallet: data.stakeWallet || "Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm"
           });
           setActiveLock(data.activeLock);
         }
@@ -258,7 +259,7 @@ export default function LockingPage() {
       
       const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
       const mintPubKey = new PublicKey(process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT);
-      const stakeWalletPubKey = new PublicKey("Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm");
+      const stakeWalletPubKey = new PublicKey(stats.stakeWallet || "Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm");
       
       // Derive source and destination ATAs
       const sourceATA = await getAssociatedTokenAddress(mintPubKey, publicKey, false, TOKEN_2022_PROGRAM_ID);

@@ -311,7 +311,13 @@ export default function LockingPage() {
       const txSignature = await sendTransaction(transaction, connection);
       
       showMessage("Confirming transaction on-chain...", "info");
-      await connection.confirmTransaction(txSignature, "confirmed");
+      try {
+        await connection.confirmTransaction(txSignature, "confirmed");
+      } catch (confirmErr) {
+        console.warn("Client-side confirmTransaction failed or timed out, proceeding to backend registration:", confirmErr.message);
+        // Add a 2-second buffer to allow network RPC nodes to sync
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
 
       // 3. Submit lock request to backend API with txSignature
       showMessage("Registering lock on platform...", "info");

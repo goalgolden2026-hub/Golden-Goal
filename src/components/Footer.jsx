@@ -56,7 +56,12 @@ export default function Footer() {
           <span className="text-zinc-400 text-xs font-black tracking-widest uppercase">Verified Contracts & Vaults</span>
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1">
-              <span className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider">Stake Wallet</span>
+              <span className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5">
+                <svg className="w-3 h-3 text-zinc-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Stake Wallet
+              </span>
               <a 
                 href="https://solscan.io/account/Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm" 
                 target="_blank" 
@@ -71,7 +76,12 @@ export default function Footer() {
             </div>
 
             <div className="flex flex-col gap-1">
-              <span className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider">Treasury Wallet</span>
+              <span className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5">
+                <svg className="w-3 h-3 text-zinc-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                </svg>
+                Treasury Wallet
+              </span>
               <a 
                 href="https://solscan.io/account/5imEZhSwMUfx6XpyQCBqsCWxJKfmmF5JCNoxMWvB23cH" 
                 target="_blank" 
@@ -86,7 +96,12 @@ export default function Footer() {
             </div>
 
             <div className="flex flex-col gap-1">
-              <span className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider">Donation Wallet</span>
+              <span className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5">
+                <svg className="w-3 h-3 text-zinc-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                Donation Wallet
+              </span>
               <a 
                 href="https://solscan.io/account/5d8SFzxmfymtcKC8hTqrCDpu3Wtbtit8PNrPCLTsr2XF" 
                 target="_blank" 

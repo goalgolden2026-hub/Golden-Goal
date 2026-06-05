@@ -374,12 +374,12 @@ export default function Dashboard() {
       let tweetText = "";
       if (isSettled) {
           if (isWin) {
-              tweetText = `I predicted ${pred.teamA} vs ${pred.teamB} correctly and won +${pred.pointsReward || 100} PTS on @goldengoalsol! 🏆 Check out my ticket! #GoldenGoal #Solana`;
+              tweetText = `🏆 I predicted ${pred.teamA.toUpperCase()} vs ${pred.teamB.toUpperCase()} correctly and won +${pred.pointsReward || 100} PTS on @goldengoalsol!\n\nCheck out my ticket! 👇\n\n#GoldenGoal #Solana`;
           } else {
-              tweetText = `My forecast for ${pred.teamA} vs ${pred.teamB} on @goldengoalsol. We analyze and go again! ⚽️ Join the prediction economy! #GoldenGoal #Solana`;
+              tweetText = `⚽️ My forecast for ${pred.teamA.toUpperCase()} vs ${pred.teamB.toUpperCase()} on @goldengoalsol.\n\nWe analyze and go again! Join the prediction economy! 🏆\n\n#GoldenGoal #Solana`;
           }
       } else {
-          tweetText = `I just placed a prediction on ${pred.teamA} vs ${pred.teamB} at @goldengoalsol! ⚽️ Predict World Cup matches for free! #GoldenGoal #Solana`;
+          tweetText = `⚽️ I just placed a prediction on ${pred.teamA.toUpperCase()} vs ${pred.teamB.toUpperCase()} at @goldengoalsol!\n\nPredict World Cup matches for free! 🏆\n\n#GoldenGoal #Solana`;
       }
       
       const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent('https://goldengoalsol.com')}`;

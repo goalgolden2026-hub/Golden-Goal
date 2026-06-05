@@ -2,9 +2,8 @@ import { NextResponse } from 'next/server';
 import { Connection } from '@solana/web3.js';
 
 const SOLANA_RPCS = [
-    "https://api.mainnet-beta.solana.com",
-    "https://solana-api.projectserum.com",
-    "https://rpc.ankr.com/solana"
+    "https://solana.publicnode.com",
+    "https://api.mainnet-beta.solana.com"
 ];
 
 export async function GET() {

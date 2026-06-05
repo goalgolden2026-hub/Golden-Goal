@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
 const SOLANA_RPCS = [
-    "https://api.mainnet-beta.solana.com",
-    "https://rpc.ankr.com/solana"
+    "https://solana.publicnode.com",
+    "https://api.mainnet-beta.solana.com"
 ];
 
 export async function POST(request) {

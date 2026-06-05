@@ -5,7 +5,7 @@ import { isWalletWhitelisted } from './whitelist';
 const GOLDEN_GOAL_MINT = process.env.GOLDEN_GOAL_MINT || process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT;
 
 const SOLANA_RPCS = [
-    "https://rpc.ankr.com/solana",
+    "https://solana.publicnode.com",
     "https://api.mainnet-beta.solana.com"
 ];
 

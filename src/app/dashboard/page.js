@@ -368,18 +368,33 @@ export default function Dashboard() {
           }
       }
 
+      const getTeamHashtag = (name) => {
+          if (!name) return "";
+          return "#" + name
+              .split(/[\s-]+/)
+              .map(word => {
+                  const cleanWord = word.replace(/[^\p{L}\p{N}]/gu, '');
+                  if (!cleanWord) return "";
+                  return cleanWord.charAt(0).toUpperCase() + cleanWord.slice(1);
+              })
+              .join("");
+      };
+
+      const hashtagA = getTeamHashtag(pred.teamA);
+      const hashtagB = getTeamHashtag(pred.teamB);
+
       const isSettled = pred.predictionStatus === 'WON' || pred.predictionStatus === 'LOST';
       const isWin = pred.predictionStatus === 'WON';
       
       let tweetText = "";
       if (isSettled) {
           if (isWin) {
-              tweetText = `🏆 I predicted ${pred.teamA.toUpperCase()} vs ${pred.teamB.toUpperCase()} correctly and won +${pred.pointsReward || 100} PTS on @goldengoalsol!\n\nCheck out my ticket! 👇\n\n#GoldenGoal #Solana`;
+              tweetText = `🏆 I predicted ${hashtagA} vs ${hashtagB} correctly and won +${pred.pointsReward || 100} PTS on @goldengoalsol! ⚽️\n\nCheck out my ticket! 👇\n\n#GoldenGoal #Solana`;
           } else {
-              tweetText = `⚽️ My forecast for ${pred.teamA.toUpperCase()} vs ${pred.teamB.toUpperCase()} on @goldengoalsol.\n\nWe analyze and go again! Join the prediction economy! 🏆\n\n#GoldenGoal #Solana`;
+              tweetText = `My forecast for ${hashtagA} vs ${hashtagB} on @goldengoalsol! ⚽️\n\nWe analyze and go again! Join the prediction economy! 🏆\n\n#GoldenGoal #Solana`;
           }
       } else {
-          tweetText = `⚽️ I just placed a prediction on ${pred.teamA.toUpperCase()} vs ${pred.teamB.toUpperCase()} at @goldengoalsol!\n\nPredict World Cup matches for free! 🏆\n\n#GoldenGoal #Solana`;
+          tweetText = `I just placed a prediction on ${hashtagA} vs ${hashtagB} at @goldengoalsol! ⚽️\n\nPredict World Cup matches for free! 🏆\n\n#GoldenGoal #Solana`;
       }
       
       const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent('https://goldengoalsol.com')}`;

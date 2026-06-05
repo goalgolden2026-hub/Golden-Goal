@@ -265,6 +265,26 @@ export default function DocsPage() {
                 The exact prize pool size and token distribution structures are dynamically scaled by the platform treasury in proportion to user volume, sponsorship partnerships, and active match cycle transactions. This gives the ecosystem full flexibility to amplify reward payouts during major sports tournaments like the World Cup. Current matchweek payout scales are displayed transparently inside the application dashboard.
               </p>
             </div>
+
+            <div className="space-y-4 pt-4">
+              <h3 className="font-bold text-zinc-200 text-lg">4.3 Dynamic Odds-Based Rewards</h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Instead of distributing static prediction rewards (e.g. +100 PTS per win), Golden Goal incorporates a <strong>Dynamic Odds Multiplier System</strong>. 
+              </p>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Points rewarded for successful forecasts are directly calculated from the real-time sports oracle odds at the exact millisecond the prediction is locked. This ensures a provably fair competitive leaderboard where analysts are rewarded proportionally to the difficulty and precision of their football insights.
+              </p>
+            </div>
+
+            <div className="space-y-4 pt-4">
+              <h3 className="font-bold text-zinc-200 text-lg">4.4 Season-Based Weekly Tournaments</h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Golden Goal structures competitive prediction play into weekly tournament seasons to drive recurring user retention.
+              </p>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                The platform features a calendar-based navigation matrix mapping the tournament (e.g., FIFA World Cup 2026 starting June 11) into 5 distinct weekly brackets. Ranks and points reset each week to offer fresh competition cycles, while an all-time leaderboard tracks the historical cumulative records of the ecosystem's top analysts.
+              </p>
+            </div>
           </section>
 
           {/* 5. LOCKING SYSTEM (WITH INTERACTIVE CALCULATOR) */}
@@ -388,6 +408,18 @@ export default function DocsPage() {
                 <strong>Anti-Sybil Verification:</strong> The platform logs URLs globally. Multiple entries of the exact same tweet link are detected and blocked. A 60-second execution cooldown is enforced per user profile.
               </div>
             </div>
+
+            <div className="space-y-4 pt-4">
+              <h3 className="font-bold text-white text-lg">7.2 Social Sharing & Verification Pipeline</h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                To maximize organic virality, Golden Goal implements a custom client-side sharing mechanism:
+              </p>
+              <ul className="list-disc list-inside text-zinc-400 text-sm space-y-1.5 pl-2">
+                <li><strong>HTML5 Canvas Card Generator:</strong> Renders a high-fidelity, letter-spaced "Prediction Ticket" share card containing match data, predictions, and dynamic rewards directly on the client browser.</li>
+                <li><strong>Promise-Based Clipboard Copier:</strong> Wraps asynchronous canvas image blob generation inside a browser Promise constructor during the initial user gesture tick, bypassing browser focus restrictions and copying the image directly to the system clipboard.</li>
+                <li><strong>Dynamic Hashtag & Handle Formatter:</strong> Converts team names into clean CamelCase hashtags (e.g. `#SouthAfrica`) and formats the tweet content with optimal whitespace and correct handle tags (`@goldengoalsol`) for maximum social visibility.</li>
+              </ul>
+            </div>
           </section>
 
           {/* 8. TOKENOMICS & FAIR LAUNCH */}
@@ -501,11 +533,17 @@ export default function DocsPage() {
           {/* 11. DISCLAIMER */}
           <section id="disclaimer" className="scroll-mt-24 space-y-4 border-t border-white/5 pt-8">
             <h2 className="text-xl font-bold text-zinc-400 flex items-center gap-2">
-                    <span className="text-zinc-600">11.</span> Legal Disclaimers
+                    <span className="text-zinc-600">11.</span> Legal Notice & Compliance Shield
             </h2>
-            <p className="text-zinc-500 text-xs leading-relaxed">
-              Golden Goal ($GoldenGoal) is an entertainment-based decentralized prediction ecosystem. Participation in predictions is risk-free and carries no direct asset cost. Locking cryptocurrency tokens carries systemic smart contract, blockchain network, and market volatility risks. The $GoldenGoal token functions purely as a utility token within the application and represents no equity, security share, or debt claim on the development project team.
-            </p>
+            <div className="bg-zinc-950/40 border border-yellow-500/10 p-5 rounded-2xl space-y-3">
+              <h4 className="text-xs font-black tracking-widest text-amber-500 font-mono uppercase">⚖️ Compliance Shield & 0% Capital Risk Policy</h4>
+              <p className="text-zinc-400 text-xs leading-relaxed">
+                <strong>NO PURCHASE NECESSARY.</strong> Void where prohibited by law. Standard daily prediction quotas are allocated free of charge. Participation in prediction fixtures carries zero financial risk or direct asset cost. Locking cryptocurrency tokens carries systemic smart contract, blockchain network, and market volatility risks.
+              </p>
+              <p className="text-zinc-400 text-xs leading-relaxed">
+                Platform operations are designed strictly to simulate a football analytical index. Leaderboards, rankings, and payouts are decided 100% based on predictive foresight, football acumen, and data modeling—completely free of capital hazard or chance elements. The $GoldenGoal token functions purely as a utility token within the application and represents no equity, security share, or debt claim on the development project team.
+              </p>
+            </div>
           </section>
 
           {/* 12. ON-CHAIN VERIFICATION & SECURITY */}

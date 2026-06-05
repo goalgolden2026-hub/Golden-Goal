@@ -252,13 +252,13 @@ export default function PitchDeckPage() {
       )
     },
     {
-      title: "Viral Social Loop",
+      title: "Viral Social Loop & Sharing Engine",
       subtitle: "Turning every participant into an organic marketer.",
       type: "viral",
       content: (
-        <div className="space-y-6 w-full max-w-2xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-center gap-6 bg-zinc-900 border border-white/5 p-5 rounded-2xl">
-            <div className="sm:w-1/2 space-y-2">
+        <div className="space-y-6 w-full max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-2">
               <h4 className="font-bold text-white text-sm flex items-center gap-2">
                 <span>📈</span> Twitter Farming Hub
               </h4>
@@ -266,15 +266,23 @@ export default function PitchDeckPage() {
                 Users share custom referral links or tweet about Golden Goal on X using the hashtag <strong>#GoldenGoal</strong>. They paste their tweet URL to claim 25 Social Points instantly.
               </p>
             </div>
-            <div className="sm:w-1/2 space-y-2 bg-black/40 border border-white/5 p-4 rounded-xl">
-              <h5 className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Sybil Prevention Engine</h5>
-              <p className="text-zinc-400 text-[10px] leading-relaxed">
-                The database logs all submitted URLs globally, completely blocking duplicates. A strict 60-second rate-limiting cooldown per user stops bot farming.
+            <div className="bg-zinc-900 border border-white/5 p-5 rounded-2xl space-y-2">
+              <h4 className="font-bold text-white text-sm flex items-center gap-2">
+                <span>🎨</span> Prediction Share Engine
+              </h4>
+              <p className="text-zinc-400 text-xs leading-relaxed">
+                Generates high-fidelity visual prediction cards on client canvas. Uses Promise-wrapped clipboard APIs for instant copying and pasting directly in X compose fields.
               </p>
             </div>
           </div>
+          <div className="bg-black/40 border border-white/5 p-4 rounded-xl space-y-1">
+            <h5 className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Anti-Sybil Verification & Cooldowns</h5>
+            <p className="text-zinc-400 text-[10px] leading-relaxed">
+              Logs all submitted URLs globally to block duplicate claims. A strict 60-second rate-limiting cooldown per user stops bot farming and maintains ecosystem integrity.
+            </p>
+          </div>
           <div className="text-center text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">
-            TWITTER FARMING GROWS THE TELEGRAM AND ACTIVE WALLET SIGN-UPS ORGANICALLY
+            PREDICTION CARD SHARING AND TWITTER FARMING DRIVE ORGANIC FAN ACQUISITION
           </div>
         </div>
       )
@@ -330,7 +338,7 @@ export default function PitchDeckPage() {
             <span className="absolute top-2 right-2 text-emerald-500 text-xs">✓</span>
             <div className="text-[10px] text-emerald-500 font-bold">PHASE 3</div>
             <div className="font-bold text-white text-[11px] leading-tight">Predictor & Locking</div>
-            <div className="text-[9px] text-zinc-500">Football Predictor live analytics, multi-tier locks, dynamic GMT times.</div>
+            <div className="text-[9px] text-zinc-500">Live analytics, locking contracts, weekly tournament brackets, dynamic odds-based PTS rewards.</div>
           </div>
           <div className="bg-zinc-900/80 border border-amber-500/30 p-4 rounded-xl space-y-1 relative">
             <span className="absolute top-2 right-2 text-amber-500 text-[9px] animate-pulse">⏳</span>

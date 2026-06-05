@@ -112,7 +112,7 @@ export async function POST(request) {
                     const expectedRawAmount = (amount * 1000000).toString(); // decimals = 6
                     const isCorrectDest = destination === expectedDestATA2022.toBase58() || destination === expectedDestATALegacy.toBase58();
 
-                    if (isCorrectDest && transferAmount === expectedRawAmount) {
+                    if (isCorrectDest && BigInt(transferAmount) >= BigInt(expectedRawAmount)) {
                         // Check if the transaction was signed by the wallet owner
                         if (tx.transaction.message.accountKeys.some(k => k.pubkey.toBase58() === walletAddress && k.signer)) {
                             verified = true;
@@ -200,10 +200,10 @@ export async function POST(request) {
             unlockDate = date.toISOString();
         }
 
-        // Record the lock (simulated signature is stored as a proof/transaction record if needed, but not on-chain)
+        // Record the lock (store the on-chain txSignature to prevent replay attacks)
         await sql`
-            INSERT INTO locks ("walletAddress", tier, amount, "unlockDate", status)
-            VALUES (${walletAddress}, ${tier}, ${amount}, ${unlockDate}, 'ACTIVE')
+            INSERT INTO locks ("walletAddress", tier, amount, "unlockDate", status, "txSignature")
+            VALUES (${walletAddress}, ${tier}, ${amount}, ${unlockDate}, 'ACTIVE', ${txSignature})
         `;
 
         return NextResponse.json({ success: true, message: "Simulated lock successful", unlockDate }, { status: 201 });

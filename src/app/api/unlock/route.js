@@ -224,16 +224,60 @@ export async function POST(request) {
 
             txSig = await connection.sendTransaction(transaction, [distributorKeypair]);
             
-            // Confirm transaction
-            const latestBlockhash = await connection.getLatestBlockhash();
-            await connection.confirmTransaction({
-                signature: txSig,
-                blockhash: latestBlockhash.blockhash,
-                lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
-            }, 'confirmed');
+            // Confirm transaction with fallback polling
+            let isConfirmed = false;
+            try {
+                const latestBlockhash = await connection.getLatestBlockhash();
+                await connection.confirmTransaction({
+                    signature: txSig,
+                    blockhash: latestBlockhash.blockhash,
+                    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
+                }, 'confirmed');
+                isConfirmed = true;
+            } catch (confirmErr) {
+                console.warn("confirmTransaction failed or timed out. Checking signature status as fallback:", confirmErr.message);
+                
+                // Polling fallback to check if signature was actually confirmed/finalized
+                for (let attempt = 0; attempt < 6; attempt++) {
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    try {
+                        const statusRes = await connection.getSignatureStatus(txSig);
+                        const status = statusRes?.value;
+                        if (status) {
+                            if (status.err) {
+                                throw new Error(`Transaction failed on-chain: ${JSON.stringify(status.err)}`);
+                            }
+                            if (status.confirmations > 0 || status.confirmationStatus === 'confirmed' || status.confirmationStatus === 'finalized') {
+                                isConfirmed = true;
+                                break;
+                            }
+                        }
+                    } catch (statusErr) {
+                        console.error("Error fetching signature status during fallback:", statusErr.message);
+                    }
+                }
+            }
+
+            if (!isConfirmed) {
+                // Final sanity check using getParsedTransaction
+                try {
+                    const txCheck = await connection.getParsedTransaction(txSig, {
+                        maxSupportedTransactionVersion: 0
+                    });
+                    if (txCheck) {
+                        isConfirmed = true;
+                    }
+                } catch (parseErr) {
+                    console.error("Error doing final parsed check:", parseErr.message);
+                }
+            }
+
+            if (!isConfirmed) {
+                throw new Error("Transaction signature could not be confirmed on-chain. Please check Solana Explorer.");
+            }
         } catch (txErr) {
             console.error("Refund transaction error:", txErr);
-            return NextResponse.json({ success: false, error: `Automated on-chain refund transaction failed: ${txErr.message}` }, { status: 500 });
+            return NextResponse.json({ success: false, error: `Automated on-chain refund transaction failed/unconfirmed: ${txErr.message}` }, { status: 500 });
         }
 
         // 5. Deactivate lock in database

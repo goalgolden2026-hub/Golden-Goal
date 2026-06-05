@@ -2,7 +2,7 @@ import { Connection, PublicKey } from '@solana/web3.js';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { isWalletWhitelisted } from './whitelist';
 
-const GOLDEN_GOAL_MINT = process.env.GOLDEN_GOAL_MINT;
+const GOLDEN_GOAL_MINT = process.env.GOLDEN_GOAL_MINT || process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT;
 const SOLANA_RPC = "https://api.mainnet-beta.solana.com";
 
 /**

@@ -83,7 +83,7 @@ The core locking and early unlock penalty mechanics of Golden Goal are enforced 
   - **Early Unlock**: If unlocked early, applies a **10% penalty**. Burn 50% of the penalty tokens directly, and routes the remaining 50% to the platform's community rewards pool.
 
 ### Program & Token Verification
-- **GoldenGoal SPL Token Mint**: `GGGoalp5m2FqyZUCeaMDjD35tSrKbu5R8KxXGcXGcXG`
+- **GoldenGoal SPL Token Mint**: Configured dynamically via environment variables (defined in `.env.local`)
 - **Lock Vault Program ID**: `GGVaultJNYRYZUCeaMDjD35tSrKbu5R8KxXGcXGcXG`
 - **Stake Wallet (Vault Account)**: `Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm`
 - **Treasury Wallet (Rewards Pool)**: `5imEZhSwMUfx6XpyQCBqsCWxJKfmmF5JCNoxMWvB23cH`
@@ -125,6 +125,8 @@ To prevent single-point-of-failure vulnerabilities and counter ecosystem central
    ```env
    POSTGRES_URL="your-postgresql-connection-string"
    NEXT_PUBLIC_ADMIN_WALLET="your-admin-wallet-address"
+   GOLDEN_GOAL_MINT="your-token-mint-address"
+   NEXT_PUBLIC_GOLDEN_GOAL_MINT="your-token-mint-address"
    ```
 
 4. **Run the development server:**

@@ -559,7 +559,7 @@ export default function DocsPage() {
               <div className="p-5 rounded-2xl bg-zinc-900/60 border border-white/5">
                 <h4 className="font-bold text-amber-400 text-sm mb-2">Golden Goal Token Mint Address</h4>
                 <code className="text-xs font-mono text-zinc-300 block bg-black/60 p-2.5 rounded border border-white/5 break-all select-all">
-                  GGGoalp5m2FqyZUCeaMDjD35tSrKbu5R8KxXGcXGcXG
+                  {process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT || "TBD (Closed Beta)"}
                 </code>
                 <p className="text-zinc-500 text-[10px] mt-2">The official SPL token contract governing circulating requirements and platform tiers.</p>
               </div>

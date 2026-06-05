@@ -189,6 +189,21 @@ export default function Leaderboard() {
         )}
       </div>
 
+      {/* Legend / Info Box */}
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-zinc-500 bg-zinc-950/30 py-3 px-6 rounded-2xl border border-zinc-800/40 w-full">
+        <span className="flex items-center gap-1.5">
+          <span className="font-bold text-zinc-400 uppercase tracking-wider">TP:</span> Total Predictions
+        </span>
+        <span className="w-1.5 h-1.5 rounded-full bg-zinc-800/60 hidden sm:inline" />
+        <span className="flex items-center gap-1.5">
+          <span className="font-bold text-zinc-400 uppercase tracking-wider">WP:</span> Won Predictions
+        </span>
+        <span className="w-1.5 h-1.5 rounded-full bg-zinc-800/60 hidden sm:inline" />
+        <span className="flex items-center gap-1.5">
+          <span className="font-bold text-zinc-400 uppercase tracking-wider">WR:</span> Win Rate (%)
+        </span>
+      </div>
+
       {/* My Rank Card */}
       {connected && userStats && (
         <div className="mt-6 relative">

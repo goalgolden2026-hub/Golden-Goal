@@ -3,7 +3,25 @@ import { getAssociatedTokenAddress, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } fr
 import { isWalletWhitelisted } from './whitelist';
 
 const GOLDEN_GOAL_MINT = process.env.GOLDEN_GOAL_MINT || process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT;
-const SOLANA_RPC = "https://api.mainnet-beta.solana.com";
+
+const SOLANA_RPCS = [
+    "https://rpc.ankr.com/solana",
+    "https://api.mainnet-beta.solana.com"
+];
+
+export async function getSolanaConnection() {
+    for (const rpcUrl of SOLANA_RPCS) {
+        try {
+            const connection = new Connection(rpcUrl, 'confirmed');
+            // Quick test connection
+            await connection.getLatestBlockhash('confirmed');
+            return connection;
+        } catch (e) {
+            console.error(`Failed to connect to RPC: ${rpcUrl}, trying next...`, e.message);
+        }
+    }
+    throw new Error("All Solana RPC endpoints are currently unreachable.");
+}
 
 /**
  * Fetches the real on-chain token balance of $GoldenGoal for a given wallet address.
@@ -23,7 +41,7 @@ export async function getTokenBalance(walletAddress) {
     let balance = 0;
 
     try {
-        const connection = new Connection(SOLANA_RPC, 'confirmed');
+        const connection = await getSolanaConnection();
         const userPubKey = new PublicKey(walletAddress);
         const mintPubKey = new PublicKey(GOLDEN_GOAL_MINT);
         

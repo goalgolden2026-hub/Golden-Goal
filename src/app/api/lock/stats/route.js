@@ -3,6 +3,8 @@ import { getDb } from '@/lib/db';
 import { Keypair, Connection, PublicKey } from '@solana/web3.js';
 import bs58 from 'bs58';
 
+import { getSolanaConnection } from '@/lib/solana';
+
 const GOLDEN_GOAL_MINT = process.env.GOLDEN_GOAL_MINT || process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT;
 const SOLANA_RPC = "https://api.mainnet-beta.solana.com";
 
@@ -71,7 +73,7 @@ export async function GET(request) {
         if (GOLDEN_GOAL_MINT) {
             try {
                 const { getAssociatedTokenAddress, TOKEN_2022_PROGRAM_ID } = require('@solana/spl-token');
-                const connection = new Connection(SOLANA_RPC, 'confirmed');
+                const connection = await getSolanaConnection();
                 const mintPubKey = new PublicKey(GOLDEN_GOAL_MINT);
                 const stakeWalletPubKey = new PublicKey(stakeWallet);
                 const expectedATA = await getAssociatedTokenAddress(mintPubKey, stakeWalletPubKey, false, TOKEN_2022_PROGRAM_ID);

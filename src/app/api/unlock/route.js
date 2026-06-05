@@ -12,6 +12,8 @@ import {
   TOKEN_PROGRAM_ID 
 } from '@solana/spl-token';
 
+import { getSolanaConnection } from '@/lib/solana';
+
 const GOLDEN_GOAL_MINT = process.env.GOLDEN_GOAL_MINT || process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT;
 const SOLANA_RPC = "https://api.mainnet-beta.solana.com";
 
@@ -104,7 +106,7 @@ export async function POST(request) {
         }
 
         const distributorKeypair = Keypair.fromSecretKey(secretKey);
-        const connection = new Connection(SOLANA_RPC, 'confirmed');
+        const connection = await getSolanaConnection();
         const mintPubKey = new PublicKey(GOLDEN_GOAL_MINT);
         const userPubKey = new PublicKey(walletAddress);
         const treasuryPubKey = new PublicKey("5imEZhSwMUfx6XpyQCBqsCWxJKfmmF5JCNoxMWvB23cH");

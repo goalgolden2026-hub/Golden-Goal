@@ -2,10 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { Connection, PublicKey, Transaction } from '@solana/web3.js';
+import { 
+  getAssociatedTokenAddress, 
+  createTransferInstruction, 
+  TOKEN_2022_PROGRAM_ID, 
+  createAssociatedTokenAccountInstruction 
+} from '@solana/spl-token';
 import CustomModal from '@/components/CustomModal';
 
 export default function LockingPage() {
-  const { publicKey, connected, signMessage } = useWallet();
+  const { publicKey, connected, signMessage, sendTransaction } = useWallet();
   const [loading, setLoading] = useState(false);
   const [activeLock, setActiveLock] = useState(null);
   const [message, setMessage] = useState({ text: '', type: '' });
@@ -246,15 +253,59 @@ export default function LockingPage() {
         return;
       }
 
-      // 2. Request wallet message signature
+      // 2. Build and send Solana transfer transaction
+      showMessage("Preparing transaction...", "info");
+      
+      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const mintPubKey = new PublicKey(process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT);
+      const stakeWalletPubKey = new PublicKey("Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm");
+      
+      // Derive source and destination ATAs
+      const sourceATA = await getAssociatedTokenAddress(mintPubKey, publicKey, false, TOKEN_2022_PROGRAM_ID);
+      const destinationATA = await getAssociatedTokenAddress(mintPubKey, stakeWalletPubKey, false, TOKEN_2022_PROGRAM_ID);
+      
+      const transaction = new Transaction();
+      
+      // Check if destination ATA exists, if not add instruction to create it
+      const destAccountInfo = await connection.getAccountInfo(destinationATA);
+      if (!destAccountInfo) {
+        transaction.add(
+          createAssociatedTokenAccountInstruction(
+            publicKey, // payer
+            destinationATA,
+            stakeWalletPubKey,
+            mintPubKey,
+            TOKEN_2022_PROGRAM_ID
+          )
+        );
+      }
+      
+      // Add transfer instruction
+      // decimals = 6, rawAmount = minAmount * 1,000,000
+      const rawAmount = BigInt(minAmount) * 1000000n;
+      transaction.add(
+        createTransferInstruction(
+          sourceATA,
+          destinationATA,
+          publicKey,
+          rawAmount,
+          [],
+          TOKEN_2022_PROGRAM_ID
+        )
+      );
+      
+      const { blockhash } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = publicKey;
+      
       showMessage("Awaiting signature in wallet...", "info");
-      const msgText = `Authenticate Golden Goal Lock Transaction:\nWallet: ${publicKey.toString()}\nAmount: ${minAmount}\nTier: ${tierId}\nTimestamp: ${Date.now()}`;
-      const encodedMessage = new TextEncoder().encode(msgText);
-      const signatureBytes = await signMessage(encodedMessage);
-      const signatureHex = Array.from(signatureBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+      const txSignature = await sendTransaction(transaction, connection);
+      
+      showMessage("Confirming transaction on-chain...", "info");
+      await connection.confirmTransaction(txSignature, "confirmed");
 
-      // 3. Submit lock request to backend API
-      showMessage("Submitting lock request...", "info");
+      // 3. Submit lock request to backend API with txSignature
+      showMessage("Registering lock on platform...", "info");
       const res = await fetch('/api/lock', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -262,8 +313,7 @@ export default function LockingPage() {
           walletAddress: publicKey.toString(),
           tier: tierId,
           amount: minAmount,
-          message: msgText,
-          signature: signatureHex
+          txSignature: txSignature
         })
       });
       

@@ -19,10 +19,15 @@ import '@solana/wallet-adapter-react-ui/styles.css';
 
 export const WalletContextProvider = ({ children }) => {
     // Can be set to 'devnet', 'testnet', or 'mainnet-beta'
-    const network = WalletAdapterNetwork.Devnet;
+    const network = WalletAdapterNetwork.Mainnet;
 
-    // You can also provide a custom RPC endpoint
-    const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+    // Use our server-side RPC proxy to bypass browser-origin rate-limiting (403)
+    const endpoint = useMemo(() => {
+        if (typeof window !== "undefined") {
+            return `${window.location.origin}/api/solana/rpc`;
+        }
+        return "https://api.mainnet-beta.solana.com";
+    }, []);
 
     const wallets = useMemo(
         () => [

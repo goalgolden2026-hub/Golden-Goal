@@ -258,7 +258,7 @@ export default function LockingPage() {
       // 2. Build and send Solana transfer transaction
       showMessage("Preparing transaction...", "info");
       
-      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const connection = new Connection("/api/solana/rpc", "confirmed");
       const mintPubKey = new PublicKey(process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT);
       const stakeWalletPubKey = new PublicKey(stats.stakeWallet || "Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm");
       

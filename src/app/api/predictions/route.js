@@ -1,17 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { isWalletWhitelisted } from '@/lib/whitelist';
+import { getTokenBalance } from '@/lib/solana';
 
-// Simulate SPL Token Balance Check (In Production, use Solana web3.js + getAccountInfo)
-async function getTokenBalance(walletAddress) {
-    // Demo implementation: We assume everyone has 30,000 tokens for testing.
-    // In Phase 6, this will be replaced with real on-chain balance fetching.
-    return 30000;
-}
 
 function getTierLimits(balance) {
-    if (balance >= 50000) return { tier: 'Gold', limit: 10 };
-    if (balance >= 25000) return { tier: 'Silver', limit: 5 };
-    if (balance >= 10000) return { tier: 'Bronze', limit: 3 };
+    if (balance >= 250000) return { tier: 'Standard', limit: 3 };
     return { tier: 'None', limit: 0 };
 }
 
@@ -32,7 +26,7 @@ export async function POST(request) {
         const { tier, limit } = getTierLimits(balance);
 
         if (limit === 0) {
-            return NextResponse.json({ success: false, error: "Insufficient Token Balance. You need at least 10,000 Golden Tokens to predict." }, { status: 403 });
+            return NextResponse.json({ success: false, error: "Insufficient Token Balance. You need to hold at least 250.000 $GoldenGoal tokens in your wallet to make predictions." }, { status: 403 });
         }
 
         // 2. Fetch User from DB (or create if not exists)
@@ -82,6 +76,10 @@ export async function POST(request) {
         }
 
         // 4. Check Daily Limit
+        if (isWalletWhitelisted(walletAddress)) {
+            finalLimit = Math.max(finalLimit, 20);
+        }
+
         if (user.predictionsToday >= finalLimit) {
             return NextResponse.json({ success: false, error: `Daily limit reached (${finalLimit} predictions). Come back tomorrow!` }, { status: 429 });
         }
@@ -103,10 +101,57 @@ export async function POST(request) {
             }, { status: 400 });
         }
 
+        // 4.6 Fetch market details and calculate dynamic points reward
+        const marketRes = await sql`SELECT * FROM markets WHERE id = ${marketId}`;
+        if (marketRes.rowCount === 0) {
+            return NextResponse.json({ success: false, error: "Market not found" }, { status: 404 });
+        }
+        const market = marketRes.rows[0];
+
+        let pointsReward = 100;
+        try {
+            const oddsObj = market.odds;
+            if (oddsObj && oddsObj[finalPredictionType]) {
+                const oddsValue = oddsObj[finalPredictionType][prediction];
+                if (oddsValue) {
+                    let xp = 100;
+                    switch (finalPredictionType) {
+                        case 'MAIN':
+                            xp = Math.max(100, oddsValue * 100);
+                            break;
+                        case 'DOUBLE_CHANCE':
+                            xp = Math.max(50, oddsValue * 80);
+                            break;
+                        case 'TOTAL_GOALS':
+                            xp = Math.max(120, oddsValue * 100);
+                            break;
+                        case 'BTTS':
+                            xp = Math.max(120, oddsValue * 100);
+                            break;
+                        case 'FIRST_HALF':
+                            xp = Math.max(120, oddsValue * 100);
+                            break;
+                        case 'FIRST_GOAL':
+                            xp = Math.min(600, Math.max(150, oddsValue * 100));
+                            break;
+                        default:
+                            xp = oddsValue * 100;
+                            break;
+                    }
+                    if (oddsValue > 4.00) {
+                        xp = xp * 1.2;
+                    }
+                    pointsReward = Math.round(xp);
+                }
+            }
+        } catch (oddsErr) {
+            console.error("Failed to calculate dynamic XP reward:", oddsErr);
+        }
+
         // 5. Insert Prediction
         await sql`
-            INSERT INTO predictions ("walletAddress", "marketId", prediction, "predictionType") 
-            VALUES (${walletAddress}, ${marketId}, ${prediction}, ${finalPredictionType})
+            INSERT INTO predictions ("walletAddress", "marketId", prediction, "predictionType", "pointsReward") 
+            VALUES (${walletAddress}, ${marketId}, ${prediction}, ${finalPredictionType}, ${pointsReward})
         `;
 
         // 6. Increment predictionsToday

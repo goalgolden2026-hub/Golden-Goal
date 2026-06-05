@@ -9,10 +9,20 @@ export default function AdminDashboard() {
   const [markets, setMarkets] = useState([]);
   
   const [isResolving, setIsResolving] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   
   // Resolve Modal State
   const [resolveModalOpen, setResolveModalOpen] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState(null);
+  const [resolvedInfo, setResolvedInfo] = useState({});
+  const [scoreA, setScoreA] = useState('');
+  const [scoreB, setScoreB] = useState('');
+  const [isSavingScore, setIsSavingScore] = useState(false);
+  const [syncDate, setSyncDate] = useState('2026-06-11'); // Default to World Cup start date
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncLogs, setSyncLogs] = useState('');
+
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     title: '',
@@ -27,6 +37,28 @@ export default function AdminDashboard() {
     fetchMarkets();
   }, []);
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (!connected || !publicKey) {
+        setIsAuthorized(false);
+        setCheckingAuth(false);
+        return;
+      }
+      try {
+        setCheckingAuth(true);
+        const res = await fetch(`/api/admin/check?wallet=${publicKey.toBase58()}`);
+        const data = await res.json();
+        setIsAuthorized(data.success && data.authorized);
+      } catch (err) {
+        console.error("Auth check failed", err);
+        setIsAuthorized(false);
+      } finally {
+        setCheckingAuth(false);
+      }
+    };
+    checkAuth();
+  }, [connected, publicKey]);
+
   const fetchMarkets = async () => {
     try {
         const res = await fetch('/api/markets');
@@ -39,9 +71,76 @@ export default function AdminDashboard() {
     }
   };
 
-  const openResolveModal = (match) => {
+  const openResolveModal = async (match) => {
       setSelectedMatch(match);
+      setScoreA(match.scoreA !== null && match.scoreA !== undefined ? String(match.scoreA) : '');
+      setScoreB(match.scoreB !== null && match.scoreB !== undefined ? String(match.scoreB) : '');
       setResolveModalOpen(true);
+      setResolvedInfo({});
+      try {
+          const res = await fetch(`/api/admin/resolved-predictions?marketId=${match.id}`);
+          const data = await res.json();
+          if (data.success && data.resolved) {
+              setResolvedInfo(data.resolved);
+          }
+      } catch (err) {
+          console.error("Failed to fetch resolved predictions", err);
+      }
+  };
+
+  const handleSaveScore = async () => {
+      if (!selectedMatch) return;
+      setIsSavingScore(true);
+      try {
+          const res = await fetch('/api/admin/resolve', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  marketId: selectedMatch.id,
+                  scoreA: scoreA !== '' ? parseInt(scoreA) : null,
+                  scoreB: scoreB !== '' ? parseInt(scoreB) : null
+              })
+          });
+          const data = await res.json();
+          if (data.success) {
+              setModalConfig({
+                  isOpen: true,
+                  title: "⚽ Score Saved!",
+                  message: "Match final score has been successfully updated in the database.",
+                  type: "success",
+                  confirmText: "Great",
+                  onConfirm: null
+              });
+              fetchMarkets(); // Refresh matches score on the main admin list
+              // Update selectedMatch with new scores in-place so modal inputs stay in sync
+              setSelectedMatch(prev => ({
+                  ...prev,
+                  scoreA: scoreA !== '' ? parseInt(scoreA) : null,
+                  scoreB: scoreB !== '' ? parseInt(scoreB) : null
+              }));
+          } else {
+              setModalConfig({
+                  isOpen: true,
+                  title: "⚠️ Save Error",
+                  message: data.error || "Failed to update match score.",
+                  type: "danger",
+                  confirmText: "Close",
+                  onConfirm: null
+              });
+          }
+      } catch (err) {
+          console.error(err);
+          setModalConfig({
+              isOpen: true,
+              title: "⚠️ Server Error",
+              message: "Failed to connect to resolution flow server.",
+              type: "danger",
+              confirmText: "Close",
+              onConfirm: null
+          });
+      } finally {
+          setIsSavingScore(false);
+      }
   };
 
   const handleResolve = async (predictionType, winningPrediction) => {
@@ -51,11 +150,28 @@ export default function AdminDashboard() {
               const res = await fetch('/api/admin/resolve', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ marketId: selectedMatch.id, predictionType, winningPrediction })
+                  body: JSON.stringify({ 
+                      marketId: selectedMatch.id, 
+                      predictionType, 
+                      winningPrediction,
+                      scoreA: scoreA !== '' ? parseInt(scoreA) : null,
+                      scoreB: scoreB !== '' ? parseInt(scoreB) : null
+                  })
               });
               const data = await res.json();
               
               if (data.success) {
+                  setResolvedInfo(prev => ({
+                      ...prev,
+                      [predictionType]: winningPrediction
+                  }));
+                  fetchMarkets(); // Refresh progress badges
+                  // Update selectedMatch in place
+                  setSelectedMatch(prev => ({
+                      ...prev,
+                      scoreA: scoreA !== '' ? parseInt(scoreA) : null,
+                      scoreB: scoreB !== '' ? parseInt(scoreB) : null
+                  }));
                   setModalConfig({
                       isOpen: true,
                       title: "🎉 Market Resolved!",
@@ -100,18 +216,55 @@ export default function AdminDashboard() {
       });
   };
 
-  const adminWalletsString = process.env.NEXT_PUBLIC_ADMIN_WALLET || "";
-  const hardcodedAdmins = [
-    "2iF2q7hjEqEe8o6PTdJnYRYZUCeaMDjD35tSrKbu5R8K", // Owner / primary administrator
-    "HMsWAhRC9wom6JVBpuo2gjAGp7Sb59FEyMraLpC4YXGc", // Newly authorized administrator
-    "5taHGRqDNFGRMGUZRCgdF5bGikwqZ7smxsH5YF5WPyc7", // Newly requested authorized admin
-    "62dBE6cVZmG728DkbZssDjrJm6Dn1as9Me2dMCh6HMPN"  // Newly requested authorized admin 2
-  ];
-  const authorizedWallets = [
-    ...hardcodedAdmins,
-    ...adminWalletsString.split(',').map(w => w.trim()).filter(Boolean)
-  ];
-  
+  const handleSportradarSync = async () => {
+      if (!syncDate) return;
+      setIsSyncing(true);
+      setSyncLogs('Starting Sportradar Soccer v4 Sync...\nConnecting to Sportradar servers...');
+      try {
+          const res = await fetch('/api/admin/sportradar-sync', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ date: syncDate })
+          });
+          const data = await res.json();
+          if (data.success) {
+              setSyncLogs(prev => prev + `\n\n🟢 SUCCESS:\n${data.message}`);
+              fetchMarkets(); // Refresh match lists
+              setModalConfig({
+                  isOpen: true,
+                  title: "🟢 Sync Completed!",
+                  message: data.message,
+                  type: "success",
+                  confirmText: "Awesome",
+                  onConfirm: null
+              });
+          } else {
+              setSyncLogs(prev => prev + `\n\n🔴 ERROR:\n${data.error}`);
+              setModalConfig({
+                  isOpen: true,
+                  title: "⚠️ Sync Failed",
+                  message: data.error || "Failed to sync daily schedule.",
+                  type: "danger",
+                  confirmText: "Close",
+                  onConfirm: null
+              });
+          }
+      } catch (err) {
+          console.error("Sync error:", err);
+          setSyncLogs(prev => prev + `\n\n🔴 Network/Server error:\n${err.message}`);
+          setModalConfig({
+              isOpen: true,
+              title: "⚠️ Server Error",
+              message: "Failed to connect to automated sync server.",
+              type: "danger",
+              confirmText: "Close",
+              onConfirm: null
+          });
+      } finally {
+          setIsSyncing(false);
+      }
+  };
+
   if (!connected) {
       return (
           <div className="flex-1 flex flex-col items-center justify-center p-4">
@@ -122,7 +275,17 @@ export default function AdminDashboard() {
       );
   }
 
-  if (publicKey && !authorizedWallets.includes(publicKey.toBase58())) {
+  if (checkingAuth) {
+      return (
+          <div className="flex-1 flex flex-col items-center justify-center p-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500 mb-4"></div>
+              <h2 className="text-xl font-bold">Verifying Credentials...</h2>
+              <p className="text-zinc-500">Checking secure server authorizations.</p>
+          </div>
+      );
+  }
+
+  if (!isAuthorized) {
       return (
           <div className="flex-1 flex flex-col items-center justify-center p-4">
               <span className="text-6xl mb-4">⛔</span>
@@ -132,23 +295,35 @@ export default function AdminDashboard() {
       );
   }
 
-  const renderResolveSection = (title, type, options) => (
-      <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 mb-4">
-          <p className="text-zinc-400 text-sm mb-2 font-bold">{title}</p>
-          <div className="flex flex-wrap gap-2">
-              {options.map(opt => (
-                  <button
-                      key={opt}
-                      onClick={() => handleResolve(type, opt)}
-                      disabled={isResolving}
-                      className="flex-1 bg-zinc-800 hover:bg-green-600/50 hover:text-white hover:border-green-500/50 text-zinc-300 border border-zinc-700 py-2 px-3 rounded-lg text-sm font-medium transition-all"
-                  >
-                      {opt} Won
-                  </button>
-              ))}
+  const renderResolveSection = (title, type, options) => {
+      const selectedOpt = resolvedInfo[type];
+      
+      return (
+          <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 mb-4">
+              <p className="text-zinc-400 text-sm mb-2 font-bold">{title}</p>
+              <div className="flex flex-wrap gap-2">
+                  {options.map(opt => {
+                      const isSelected = selectedOpt === opt;
+                      return (
+                          <button
+                              key={opt}
+                              onClick={() => handleResolve(type, opt)}
+                              disabled={isResolving}
+                              className={`flex-1 py-2.5 px-3 rounded-xl text-sm font-bold border transition-all duration-300 ${
+                                  isSelected 
+                                    ? 'bg-gradient-to-r from-amber-500/20 to-yellow-600/10 border-amber-500/60 text-amber-400 font-extrabold shadow-[0_0_15px_rgba(245,158,11,0.25)]'
+                                    : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-300 disabled:opacity-50'
+                              }`}
+                          >
+                              {isSelected && <span className="mr-1.5 text-amber-400 font-bold">✓</span>}
+                              {opt} Won
+                          </button>
+                      );
+                  })}
+              </div>
           </div>
-      </div>
-  );
+      );
+  };
 
   return (
     <div className="flex-1 p-8 max-w-7xl mx-auto w-full">
@@ -157,26 +332,117 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Active Markets List */}
-          <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-2 space-y-4">
               <h2 className="text-xl font-bold mb-4">Manage World Cup Matches</h2>
-              {markets.map(m => (
-                  <div key={m.id} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                      <div className="flex-1">
-                          <h3 className="text-xl font-bold mb-1">{m.teamA} vs {m.teamB}</h3>
-                          <p className="text-xs text-zinc-500">Date: {new Date(m.matchDate).toLocaleString()}</p>
+              {markets.map(m => {
+                  let resolvedList = m.resolvedMarkets ? m.resolvedMarkets.split(',').filter(Boolean) : [];
+                  if (m.resolvedOutcomes) {
+                      try {
+                          const outcomesKeys = Object.keys(JSON.parse(m.resolvedOutcomes));
+                          const combined = new Set([...resolvedList, ...outcomesKeys]);
+                          resolvedList = Array.from(combined);
+                      } catch (e) {
+                          // Keep resolvedList as is
+                      }
+                  }
+                  const isFullyResolved = resolvedList.length >= 6;
+                  
+                  return (
+                      <div 
+                          key={m.id} 
+                          className={`bg-zinc-900 border rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-center gap-4 transition-all duration-300 ${
+                              isFullyResolved 
+                                ? 'border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.05)] hover:border-emerald-500/30' 
+                                : 'border-zinc-800 hover:border-zinc-700'
+                          }`}
+                      >
+                          <div className="flex-1 text-left">
+                              <div className="flex flex-wrap items-center gap-3 mb-1.5">
+                                  <h3 className="text-xl font-bold text-white leading-none">{m.teamA} vs {m.teamB}</h3>
+                                  {isFullyResolved ? (
+                                      <span className="text-[10px] font-extrabold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.15)] flex items-center gap-1 shrink-0">
+                                          ✓ FULLY RESOLVED
+                                      </span>
+                                  ) : resolvedList.length > 0 ? (
+                                      <span className="text-[10px] font-extrabold tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-0.5 rounded-full shrink-0">
+                                          {resolvedList.length}/6 RESOLVED
+                                      </span>
+                                  ) : null}
+                              </div>
+                              <p className="text-xs text-zinc-500">Date: {new Date(m.matchDate).toLocaleString()}</p>
+                          </div>
+                          
+                          <div className="flex gap-2 w-full sm:w-auto">
+                              <button 
+                                onClick={() => openResolveModal(m)} 
+                                className={`flex-1 sm:flex-none py-2.5 px-6 rounded-xl text-sm font-bold border transition-colors ${
+                                    isFullyResolved
+                                      ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                                      : 'bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border-blue-500/30'
+                                }`}
+                              >
+                                  {isFullyResolved ? 'Edit Resolution' : 'Resolve Sub-Markets'}
+                              </button>
+                          </div>
                       </div>
-                      
-                      <div className="flex gap-2 w-full sm:w-auto">
-                          <button 
-                            onClick={() => openResolveModal(m)} 
-                            className="flex-1 sm:flex-none bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 py-2 px-6 rounded-xl text-sm font-bold transition-colors"
-                          >
-                              Resolve Sub-Markets
-                          </button>
-                      </div>
-                  </div>
-              ))}
+                  );
+              })}
               {markets.length === 0 && <p className="text-zinc-500">No matches found.</p>}
+          </div>
+
+          {/* Sportradar Automation Panel */}
+          <div className="lg:col-span-1 space-y-6">
+              <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
+                  
+                  <div className="flex items-center gap-2 mb-6">
+                      <span className="text-2xl animate-pulse">⚡</span>
+                      <h2 className="text-xl font-bold text-white">Sportradar Sync</h2>
+                  </div>
+
+                  <p className="text-xs text-zinc-400 mb-6 leading-relaxed">
+                      Automatically fetch match scores, resolve all 6 prediction sub-markets, and distribute points to winning lockers using the Sportradar v4 Soccer API.
+                  </p>
+
+                  <div className="space-y-4 mb-6">
+                      <div>
+                          <label className="block text-xs font-bold text-zinc-400 uppercase mb-2">Select Target Date</label>
+                          <input 
+                              type="date"
+                              value={syncDate}
+                              onChange={(e) => setSyncDate(e.target.value)}
+                              className="w-full h-11 px-4 rounded-xl bg-zinc-900 border border-zinc-800 text-sm text-zinc-100 font-bold focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20"
+                          />
+                      </div>
+
+                      <button
+                          onClick={handleSportradarSync}
+                          disabled={isSyncing}
+                          className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-zinc-950 font-black text-sm transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.15)] disabled:opacity-50 flex items-center justify-center gap-2"
+                      >
+                          {isSyncing ? (
+                              <>
+                                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-zinc-950 animate-pulse"></div>
+                                  Syncing Fixtures...
+                              </>
+                          ) : (
+                              <>
+                                  <span>🔄</span>
+                                  Run Auto-Resolver
+                              </>
+                          )}
+                      </button>
+                  </div>
+
+                  {syncLogs && (
+                      <div>
+                          <label className="block text-xs font-bold text-zinc-500 uppercase mb-2">Automation Activity Log</label>
+                          <pre className="w-full p-4 rounded-xl bg-zinc-950 border border-zinc-800 text-[10px] font-mono text-zinc-400 overflow-x-auto whitespace-pre-wrap max-h-48 leading-normal custom-scrollbar">
+                              {syncLogs}
+                          </pre>
+                      </div>
+                  )}
+              </div>
           </div>
 
       </div>
@@ -194,6 +460,46 @@ export default function AdminDashboard() {
                   <h3 className="text-2xl font-bold mb-6">Resolve Markets: {selectedMatch.teamA} vs {selectedMatch.teamB}</h3>
                   
                   <div className="max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                      {/* Match Score Input Section */}
+                      <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <div>
+                              <p className="text-white font-bold text-sm mb-1">Set Match Score</p>
+                              <p className="text-zinc-500 text-xs">Enter the final score to display on cards</p>
+                          </div>
+                          <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-2">
+                                  <span className="text-xs font-bold text-zinc-400">{selectedMatch.teamA}</span>
+                                  <input 
+                                      type="number"
+                                      placeholder="0"
+                                      min="0"
+                                      value={scoreA}
+                                      onChange={(e) => setScoreA(e.target.value)}
+                                      className="w-12 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-center font-bold text-white focus:outline-none focus:border-amber-500 text-sm"
+                                  />
+                              </div>
+                              <span className="text-zinc-600 font-bold">-</span>
+                              <div className="flex items-center gap-2">
+                                  <input 
+                                      type="number"
+                                      placeholder="0"
+                                      min="0"
+                                      value={scoreB}
+                                      onChange={(e) => setScoreB(e.target.value)}
+                                      className="w-12 h-10 rounded-lg bg-zinc-900 border border-zinc-800 text-center font-bold text-white focus:outline-none focus:border-amber-500 text-sm"
+                                  />
+                                  <span className="text-xs font-bold text-zinc-400">{selectedMatch.teamB}</span>
+                              </div>
+                              <button
+                                  onClick={handleSaveScore}
+                                  disabled={isSavingScore}
+                                  className="ml-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold text-xs rounded-lg transition-colors disabled:opacity-50"
+                              >
+                                  {isSavingScore ? 'Saving...' : 'Save Score'}
+                              </button>
+                          </div>
+                      </div>
+
                       {renderResolveSection("Match Result", "MAIN", [selectedMatch.teamA, "Draw", selectedMatch.teamB])}
                       {renderResolveSection("Total Goals", "TOTAL_GOALS", ["Under 2.5", "Over 2.5"])}
                       {renderResolveSection("Both Teams to Score", "BTTS", ["Yes", "No"])}

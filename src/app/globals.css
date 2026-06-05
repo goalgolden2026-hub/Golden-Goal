@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700;800&family=Outfit:wght@400;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -15,4 +16,36 @@
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+@keyframes cinematicUnblur {
+  0% {
+    filter: blur(25px);
+    opacity: 0;
+    transform: scale(0.93) translateY(12px);
+  }
+  100% {
+    filter: blur(0px);
+    opacity: 0.70; /* Boosted opacity from 0.16 to 0.70 for clear, premium visibility */
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-cinematic-slow {
+  animation: cinematicUnblur 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-cinematic-normal {
+  animation: cinematicUnblur 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }

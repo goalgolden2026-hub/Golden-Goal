@@ -2,19 +2,24 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { ANCHOR_PROGRAM_SOURCE } from '../../components/smart_contracts/AnchorProgramSource';
+import { ANCHOR_TEST_CASES } from '../../components/smart_contracts/AnchorTestCases';
+import { AUDIT_METADATA, AUDIT_FINDINGS, THREAT_MATRIX } from '../../components/smart_contracts/audit_data';
 
 export default function DocsPage() {
   const [activeSection, setActiveSection] = useState('introduction');
-  const [lockAmount, setLockAmount] = useState(1000);
+  const [lockAmount, setLockAmount] = useState(500000);
+  const [showCode, setShowCode] = useState(false);
+  const [codeTab, setCodeTab] = useState('program');
 
   const sections = [
     { id: 'introduction', label: '1. Introduction' },
     { id: 'vision', label: '2. Vision & Core Philosophy' },
     { id: 'problem-solution', label: '3. Problem & Solution' },
     { id: 'features', label: '4. Platform Features' },
-    { id: 'staking', label: '5. VIP Locking System' },
+    { id: 'staking', label: '5. Locking System' },
     { id: 'spin-system', label: '6. Rewards Box Module' },
-    { id: 'social-referral', label: '7. Social Hub & Referrals' },
+    { id: 'social-referral', label: '7. Social Hub & Engagement' },
     { id: 'tokenomics', label: '8. Tokenomics & Fair Launch' },
     { id: 'infrastructure', label: '9. AWS Infrastructure' },
     { id: 'roadmap', label: '10. Roadmap' },
@@ -24,42 +29,42 @@ export default function DocsPage() {
 
   // Helper to determine locking rewards dynamically
   const getLockingTierInfo = (amount) => {
-    if (amount >= 5000) {
+    if (amount >= 1000000) {
       return {
         tier: "Tier 4 (1-Month Locked)",
         predictions: "+10 Daily Predictions",
         xp: "1.25x XP Multiplier",
-        rewardsBox: "1 Free Daily Rewards Box (then 25 XP)",
+        rewardsBox: "1 Free Daily Rewards Box (then 150 XP)",
         period: "30 Days Lock",
         color: "from-amber-400 to-yellow-600",
         unlockPenalty: "10% Penalty (50% Burned, 50% to Rewards)"
       };
-    } else if (amount >= 1000) {
+    } else if (amount >= 750000) {
       return {
         tier: "Tier 3 (15-Day Locked)",
         predictions: "+5 Daily Predictions",
         xp: "1.10x XP Multiplier",
-        rewardsBox: "25 XP / Box (75% Off)",
+        rewardsBox: "150 XP / Box",
         period: "15 Days Lock",
         color: "from-yellow-500 to-amber-500",
         unlockPenalty: "10% Penalty (50% Burned, 50% to Rewards)"
       };
-    } else if (amount >= 500) {
+    } else if (amount >= 500000) {
       return {
         tier: "Tier 2 (7-Day Locked)",
         predictions: "+3 Daily Predictions",
         xp: "1.0x XP Multiplier",
-        rewardsBox: "50 XP / Box (50% Off)",
+        rewardsBox: "200 XP / Box",
         period: "7 Days Lock",
         color: "from-zinc-300 to-zinc-500",
         unlockPenalty: "10% Penalty (50% Burned, 50% to Rewards)"
       };
-    } else if (amount >= 100) {
+    } else if (amount >= 350000) {
       return {
         tier: "Tier 1 (Soft Lock)",
         predictions: "+1 Daily Prediction",
         xp: "1.0x XP Multiplier",
-        rewardsBox: "75 XP / Box (25% Off)",
+        rewardsBox: "225 XP / Box",
         period: "1 Day Lock",
         color: "from-amber-700 to-yellow-900",
         unlockPenalty: "Flexible - Zero Penalty"
@@ -67,9 +72,9 @@ export default function DocsPage() {
     } else {
       return {
         tier: "Tier 0 (No Active Lock)",
-        predictions: "Base Daily Prediction Limit",
+        predictions: amount >= 250000 ? "3 Daily Predictions" : "0 Daily Predictions (Needs 250.000+ $GoldenGoal)",
         xp: "1.0x XP Multiplier",
-        rewardsBox: "100 XP / Box Open",
+        rewardsBox: "250 XP / Box Open",
         period: "No Lock",
         color: "from-zinc-700 to-zinc-800",
         unlockPenalty: "N/A"
@@ -146,10 +151,10 @@ export default function DocsPage() {
               <span className="text-zinc-500 text-xs">Updated: May 2026</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
-              Solana <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">Golden Goal</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">Golden Goal</span>
             </h1>
             <p className="text-zinc-400 text-lg leading-relaxed max-w-3xl">
-              Official whitepaper detailing the decentralized, gamified prediction economy, VIP locking utility matrix, provably fair mechanics, and AWS global cluster architecture.
+              Official whitepaper detailing the decentralized, gamified prediction economy, tiered locking utility matrix, provably fair mechanics, and AWS global cluster architecture.
             </p>
           </div>
 
@@ -161,7 +166,7 @@ export default function DocsPage() {
             <div className="p-0.5 rounded-3xl bg-gradient-to-br from-white/10 to-transparent">
               <div className="bg-zinc-900/50 backdrop-blur-md p-6 rounded-[22px] space-y-4 text-zinc-300 leading-relaxed text-sm md:text-base">
                 <p>
-                  Solana <strong>Golden Goal</strong> is a next-generation Web3 sports prediction ecosystem engineered to unite high-fidelity gamification, passive locking mechanics, and sports oracle pipelines.
+                  <strong>Golden Goal</strong> is a next-generation Web3 sports prediction ecosystem engineered to unite high-fidelity gamification, passive locking mechanics, and sports oracle pipelines.
                 </p>
                 <p>
                   By creating a <strong>sustainable prediction economy</strong>, users can place risk-free predictions on global fixtures (such as World Cup matches) completely free, claim Experience Points (XP) for success, and win high-yielding payouts from weekly token rewards.
@@ -245,7 +250,7 @@ export default function DocsPage() {
                 <div className="bg-zinc-900 border border-white/5 p-6 rounded-2xl">
                   <h4 className="font-bold text-amber-400 mb-2">Social Leaderboard</h4>
                   <p className="text-zinc-400 text-xs leading-relaxed">
-                    Ranks players based on Twitter marketing tasks, referral points, and community outreach.
+                    Ranks players based on Twitter marketing tasks, Social Points, and community outreach.
                   </p>
                 </div>
               </div>
@@ -254,21 +259,41 @@ export default function DocsPage() {
             <div className="space-y-4 pt-4">
               <h3 className="font-bold text-zinc-200 text-lg">4.2 Weekly Payout Pool</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                Each matchweek, the top 10 forecasters on our global leaderboard receive direct reward distributions in <strong>Golden Goal ($GG) tokens</strong>. 
+                Each matchweek, the top 10 forecasters on our global leaderboard receive direct reward distributions in <strong>Golden Goal ($GoldenGoal) tokens</strong>. 
               </p>
               <p className="text-zinc-400 text-sm leading-relaxed">
                 The exact prize pool size and token distribution structures are dynamically scaled by the platform treasury in proportion to user volume, sponsorship partnerships, and active match cycle transactions. This gives the ecosystem full flexibility to amplify reward payouts during major sports tournaments like the World Cup. Current matchweek payout scales are displayed transparently inside the application dashboard.
               </p>
             </div>
+
+            <div className="space-y-4 pt-4">
+              <h3 className="font-bold text-zinc-200 text-lg">4.3 Dynamic Odds-Based Rewards</h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Instead of distributing static prediction rewards (e.g. +100 PTS per win), Golden Goal incorporates a <strong>Dynamic Odds Multiplier System</strong>. 
+              </p>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Points rewarded for successful forecasts are directly calculated from the real-time sports oracle odds at the exact millisecond the prediction is locked. This ensures a provably fair competitive leaderboard where analysts are rewarded proportionally to the difficulty and precision of their football insights.
+              </p>
+            </div>
+
+            <div className="space-y-4 pt-4">
+              <h3 className="font-bold text-zinc-200 text-lg">4.4 Season-Based Weekly Tournaments</h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Golden Goal structures competitive prediction play into weekly tournament seasons to drive recurring user retention.
+              </p>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                The platform features a calendar-based navigation matrix mapping the tournament (e.g., FIFA World Cup 2026 starting June 11) into 5 distinct weekly brackets. Ranks and points reset each week to offer fresh competition cycles, while an all-time leaderboard tracks the historical cumulative records of the ecosystem's top analysts.
+              </p>
+            </div>
           </section>
 
-          {/* 5. VIP LOCKING SYSTEM (WITH INTERACTIVE CALCULATOR) */}
+          {/* 5. LOCKING SYSTEM (WITH INTERACTIVE CALCULATOR) */}
           <section id="staking" className="scroll-mt-24 space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
-              <span className="text-amber-500">5.</span> VIP Locking System
+              <span className="text-amber-500">5.</span> Locking System
             </h2>
             <p className="text-zinc-400 text-sm md:text-base leading-relaxed">
-              Locking your $GG tokens reduces circulating market supply while unlocking elite platform advantages. Use the interactive calculator below to explore your loyalty benefits in real-time.
+              Locking your $GoldenGoal tokens reduces circulating market supply while unlocking elite platform advantages. Use the interactive calculator below to explore your loyalty benefits in real-time.
             </p>
 
             {/* INTERACTIVE LOCKING CALCULATOR */}
@@ -276,29 +301,30 @@ export default function DocsPage() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
               
               <h3 className="font-extrabold text-white text-lg mb-4 flex items-center gap-2">
-                <span>🎰</span> Locking Benefit Simulator
+                <span>⚙️</span> Locking Benefit Simulator
               </h3>
 
               <div className="space-y-4 mb-6">
                 <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                  Select Locking Amount: <span className="text-amber-400 font-mono text-base font-bold">{lockAmount} $GG</span>
+                  Select Locking Amount: <span className="text-amber-400 font-mono text-base font-bold">{lockAmount.toLocaleString('en-US')} $GoldenGoal</span>
                 </label>
                 <input
                   id="lock-slider"
                   type="range"
                   min="0"
-                  max="10000"
-                  step="100"
+                  max="1500000"
+                  step="50000"
                   value={lockAmount}
                   onChange={(e) => setLockAmount(Number(e.target.value))}
                   className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
                 />
                 <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
-                  <span>0 $GG</span>
-                  <span>500 $GG</span>
-                  <span>1,000 $GG</span>
-                  <span>5,000 $GG</span>
-                  <span>10,000 $GG</span>
+                  <span>0 $GoldenGoal</span>
+                  <span>350.000 $GoldenGoal</span>
+                  <span>500.000 $GoldenGoal</span>
+                  <span>750.000 $GoldenGoal</span>
+                  <span>1.000.000 $GoldenGoal</span>
+                  <span>1.500.000 $GoldenGoal</span>
                 </div>
               </div>
 
@@ -357,20 +383,20 @@ export default function DocsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5 bg-zinc-950/40 font-mono">
-                  <tr><td className="p-4 text-zinc-400 font-sans">No Active Lock (Tier 0)</td><td className="p-4 text-right text-zinc-300 font-bold">100 XP</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">Soft Lockers (Tier 1)</td><td className="p-4 text-right text-zinc-300 font-bold">75 XP</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">7-Day Locked Lockers (Tier 2)</td><td className="p-4 text-right text-zinc-300 font-bold">50 XP</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans">15-Day Locked Lockers (Tier 3)</td><td className="p-4 text-right text-zinc-300 font-bold">25 XP</td></tr>
-                  <tr><td className="p-4 text-zinc-400 font-sans font-semibold">30-Day Locked Lockers (Tier 4)</td><td className="p-4 text-right text-emerald-400 font-bold">1 Free Daily Box (then 25 XP)</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">No Active Lock (Tier 0)</td><td className="p-4 text-right text-zinc-300 font-bold">250 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">Soft Lockers (Tier 1)</td><td className="p-4 text-right text-zinc-300 font-bold">225 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">7-Day Locked Lockers (Tier 2)</td><td className="p-4 text-right text-zinc-300 font-bold">200 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans">15-Day Locked Lockers (Tier 3)</td><td className="p-4 text-right text-zinc-300 font-bold">150 XP</td></tr>
+                  <tr><td className="p-4 text-zinc-400 font-sans font-semibold">30-Day Locked Lockers (Tier 4)</td><td className="p-4 text-right text-emerald-400 font-bold">1 Free Daily Box (then 150 XP)</td></tr>
                 </tbody>
               </table>
             </div>
           </section>
 
-          {/* 7. SOCIAL HUB & REFERRALS */}
+          {/* 7. SOCIAL HUB */}
           <section id="social-referral" className="scroll-mt-24 space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
-              <span className="text-amber-500">7.</span> Social Growth & Referral Economy
+              <span className="text-amber-500">7.</span> Social Growth & Engagement
             </h2>
             
             <div className="space-y-4">
@@ -383,11 +409,16 @@ export default function DocsPage() {
               </div>
             </div>
 
-            <div className="space-y-4 pt-2">
-              <h3 className="font-bold text-white text-lg">7.2 Referral Milestones</h3>
+            <div className="space-y-4 pt-4">
+              <h3 className="font-bold text-white text-lg">7.2 Social Sharing & Verification Pipeline</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                Viral loops are powered by referral codes. Referrals only lock into place when the invited user connects their Solana wallet and registers at least <strong>one transactional operation</strong> (prediction, box open, or lock). 
+                To maximize organic virality, Golden Goal implements a custom client-side sharing mechanism:
               </p>
+              <ul className="list-disc list-inside text-zinc-400 text-sm space-y-1.5 pl-2">
+                <li><strong>HTML5 Canvas Card Generator:</strong> Renders a high-fidelity, letter-spaced "Prediction Ticket" share card containing match data, predictions, and dynamic rewards directly on the client browser.</li>
+                <li><strong>Promise-Based Clipboard Copier:</strong> Wraps asynchronous canvas image blob generation inside a browser Promise constructor during the initial user gesture tick, bypassing browser focus restrictions and copying the image directly to the system clipboard.</li>
+                <li><strong>Dynamic Hashtag & Handle Formatter:</strong> Converts team names into clean CamelCase hashtags (e.g. `#SouthAfrica`) and formats the tweet content with optimal whitespace and correct handle tags (`@goldengoalsol`) for maximum social visibility.</li>
+              </ul>
             </div>
           </section>
 
@@ -413,7 +444,7 @@ export default function DocsPage() {
               <h4 className="font-bold text-zinc-200">Core Deflation Sinks:</h4>
               <ul className="list-disc list-inside text-zinc-400 text-sm space-y-1">
                 <li>Locking early unlock penalty burns 50% of the penalty.</li>
-                <li>Prediction changes and deletion burn or lock micro $GG tokens.</li>
+                <li>Prediction changes and deletion burn or lock micro $GoldenGoal tokens.</li>
                 <li>Rewards Box utilizes gamified XP Points to reward platform loyalty rather than inflating circulating token supply.</li>
               </ul>
             </div>
@@ -472,7 +503,7 @@ export default function DocsPage() {
                 </span>
                 <h4 className="font-bold text-amber-400">Phase 2: Core Rollout (Active)</h4>
                 <p className="text-zinc-400 text-xs mt-1">
-                  Weekly leaderboard payouts ($150 - $5), referral systems, Twitter Farming automation, and direct wallet adapters.
+                  Weekly leaderboard payouts ($150 - $5), Twitter Farming automation, and direct wallet adapters.
                 </p>
               </div>
 
@@ -480,9 +511,9 @@ export default function DocsPage() {
                 <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 rounded-full bg-zinc-700 items-center justify-center">
                   <span className="h-2 w-2 rounded-full bg-zinc-950"></span>
                 </span>
-                <h4 className="font-bold text-zinc-400">Phase 3: Gamified DeFi</h4>
+                <h4 className="font-bold text-zinc-400">Phase 3: Football Predictor & Locking Engine</h4>
                 <p className="text-zinc-400 text-xs mt-1">
-                  Multi-tier token locking (1d, 7d, 15d, 30d Tiers), Rewards Box Integration, and automated early unlock penalty splits.
+                  Activation of the core Football Predictor analytics board for global football leagues, and launching the multi-tier lockup tiered locking engine.
                 </p>
               </div>
 
@@ -490,9 +521,9 @@ export default function DocsPage() {
                 <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 rounded-full bg-zinc-700 items-center justify-center">
                   <span className="h-2 w-2 rounded-full bg-zinc-950"></span>
                 </span>
-                <h4 className="font-bold text-zinc-400">Phase 4: Scaling & Expansion</h4>
+                <h4 className="font-bold text-zinc-400">Phase 4: Reward Box & Social Tasks</h4>
                 <p className="text-zinc-400 text-xs mt-1">
-                  Dedicated mobile applications, NFT achievement custom avatars, and seasonal World Cup bracket events.
+                  Unlocking the gamified Rewards Box module for daily XP & prediction quota claims, and launching the social hub task engagement modules.
                 </p>
               </div>
 
@@ -502,11 +533,17 @@ export default function DocsPage() {
           {/* 11. DISCLAIMER */}
           <section id="disclaimer" className="scroll-mt-24 space-y-4 border-t border-white/5 pt-8">
             <h2 className="text-xl font-bold text-zinc-400 flex items-center gap-2">
-              <span className="text-zinc-600">11.</span> Legal Disclaimers
+                    <span className="text-zinc-600">11.</span> Legal Notice & Compliance Shield
             </h2>
-            <p className="text-zinc-500 text-xs leading-relaxed">
-              Golden Goal ($GG) is an entertainment-based decentralized prediction ecosystem. Participation in predictions is risk-free and carries no direct asset cost. Locking cryptocurrency tokens carries systemic smart contract, blockchain network, and market volatility risks. The $GG token functions purely as a utility token within the application and represents no equity, security share, or debt claim on the development project team.
-            </p>
+            <div className="bg-zinc-950/40 border border-yellow-500/10 p-5 rounded-2xl space-y-3">
+              <h4 className="text-xs font-black tracking-widest text-amber-500 font-mono uppercase">⚖️ Compliance Shield & 0% Capital Risk Policy</h4>
+              <p className="text-zinc-400 text-xs leading-relaxed">
+                <strong>NO PURCHASE NECESSARY.</strong> Void where prohibited by law. Standard daily prediction quotas are allocated free of charge. Participation in prediction fixtures carries zero financial risk or direct asset cost. Locking cryptocurrency tokens carries systemic smart contract, blockchain network, and market volatility risks.
+              </p>
+              <p className="text-zinc-400 text-xs leading-relaxed">
+                Platform operations are designed strictly to simulate a football analytical index. Leaderboards, rankings, and payouts are decided 100% based on predictive foresight, football acumen, and data modeling—completely free of capital hazard or chance elements. The $GoldenGoal token functions purely as a utility token within the application and represents no equity, security share, or debt claim on the development project team.
+              </p>
+            </div>
           </section>
 
           {/* 12. ON-CHAIN VERIFICATION & SECURITY */}
@@ -520,29 +557,152 @@ export default function DocsPage() {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               <div className="p-5 rounded-2xl bg-zinc-900/60 border border-white/5">
-                <h4 className="font-bold text-amber-400 text-sm mb-2">GG Token Mint Address</h4>
+                <h4 className="font-bold text-amber-400 text-sm mb-2">Golden Goal Token Mint Address</h4>
                 <code className="text-xs font-mono text-zinc-300 block bg-black/60 p-2.5 rounded border border-white/5 break-all select-all">
-                  GGGoalp5m2FqyZUCeaMDjD35tSrKbu5R8KxXGcXGcXG
+                  {process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT || "TBD (Closed Beta)"}
                 </code>
                 <p className="text-zinc-500 text-[10px] mt-2">The official SPL token contract governing circulating requirements and platform tiers.</p>
               </div>
 
               <div className="p-5 rounded-2xl bg-zinc-900/60 border border-white/5">
-                <h4 className="font-bold text-amber-400 text-sm mb-2">GG Locking Program ID</h4>
+                <h4 className="font-bold text-amber-400 text-sm mb-2">Golden Goal Locking Program ID</h4>
                 <code className="text-xs font-mono text-zinc-300 block bg-black/60 p-2.5 rounded border border-white/5 break-all select-all">
                   GGVaultJNYRYZUCeaMDjD35tSrKbu5R8KxXGcXGcXG
                 </code>
                 <p className="text-zinc-500 text-[10px] mt-2">The Anchor-verified smart contract governing lock vaults, penalty burns, and release times.</p>
               </div>
+
+              <div className="p-5 rounded-2xl bg-zinc-900/60 border border-white/5">
+                <h4 className="font-bold text-amber-400 text-sm mb-2">Platform Stake Wallet / Vault Address</h4>
+                <code className="text-xs font-mono text-zinc-300 block bg-black/60 p-2.5 rounded border border-white/5 break-all select-all">
+                  Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm
+                </code>
+                <p className="text-zinc-500 text-[10px] mt-2">The authorized locking vault wallet for secure custody of locked tokens.</p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-zinc-900/60 border border-white/5">
+                <h4 className="font-bold text-amber-400 text-sm mb-2">Community Treasury Wallet Address</h4>
+                <code className="text-xs font-mono text-zinc-300 block bg-black/60 p-2.5 rounded border border-white/5 break-all select-all">
+                  5imEZhSwMUfx6XpyQCBqsCWxJKfmmF5JCNoxMWvB23cH
+                </code>
+                <p className="text-zinc-500 text-[10px] mt-2">The official community treasury and rewards pool address for leaderboard payouts.</p>
+              </div>
             </div>
 
-            <div className="p-5 rounded-2xl bg-[#130b29]/50 border border-purple-500/20 space-y-3">
-              <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                <span>🛡️</span> Security Audits & Technical Guarantee
-              </h4>
+            {/* Smart Contract Source Code Inspector */}
+            <div className="p-5 rounded-2xl bg-zinc-900/40 border border-white/5 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <h4 className="font-bold text-white text-sm flex items-center gap-2">
+                    <span>⚽</span> Solana Smart Contract Inspector
+                  </h4>
+                  <p className="text-zinc-500 text-[10px] mt-0.5">Explore the verified Anchor program Rust codebase and TypeScript tests.</p>
+                </div>
+                <button
+                  onClick={() => setShowCode(!showCode)}
+                  className="bg-amber-500 hover:bg-amber-600 transition-colors text-zinc-950 font-black text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 self-start sm:self-center cursor-pointer"
+                >
+                  <span>{showCode ? "Hide Code Inspector" : "Open Code Inspector"}</span>
+                  <span className="text-[10px]">{showCode ? "▲" : "▼"}</span>
+                </button>
+              </div>
+
+              {showCode && (
+                <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="flex border-b border-white/5 gap-2">
+                    <button
+                      onClick={() => setCodeTab('program')}
+                      className={`px-3 py-2 text-xs font-bold transition-all border-b-2 ${
+                        codeTab === 'program'
+                          ? 'border-amber-500 text-amber-400'
+                          : 'border-transparent text-zinc-500 hover:text-zinc-300'
+                      }`}
+                    >
+                      lib.rs (Rust Program)
+                    </button>
+                    <button
+                      onClick={() => setCodeTab('tests')}
+                      className={`px-3 py-2 text-xs font-bold transition-all border-b-2 ${
+                        codeTab === 'tests'
+                          ? 'border-amber-500 text-amber-400'
+                          : 'border-transparent text-zinc-500 hover:text-zinc-300'
+                      }`}
+                    >
+                      golden-goal.ts (Anchor Tests)
+                    </button>
+                  </div>
+                  <div className="bg-black/60 rounded-xl p-4 border border-white/5 max-h-[350px] overflow-y-auto font-mono text-xs text-zinc-300 leading-relaxed whitespace-pre-wrap select-all scrollbar-thin">
+                    {codeTab === 'program' ? ANCHOR_PROGRAM_SOURCE : ANCHOR_TEST_CASES}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Sec3 Security Audit Compliance Dashboard */}
+            <div className="p-6 rounded-2xl bg-[#130b29]/40 border border-purple-500/20 space-y-4">
+              <div className="flex items-center justify-between border-b border-purple-500/10 pb-3">
+                <h4 className="font-extrabold text-white text-base flex items-center gap-2">
+                  <span>🛡️</span> Sec3 Security Audit Compliance Dashboard
+                </h4>
+                <span className="px-2.5 py-1 bg-emerald-500/20 border border-emerald-400/30 text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-wider animate-pulse">
+                  {AUDIT_METADATA.status}
+                </span>
+              </div>
               <p className="text-zinc-400 text-xs leading-relaxed">
-                The smart contracts have undergone a rigorous formal security audit by <span className="text-amber-400 font-semibold">Sec3</span> to verify the safety of locking balances and mathematical fair odds. All backend API communication validates standard Ed25519 signature cryptography using Solana wallet adapters, fully mitigating replay attacks.
+                {AUDIT_METADATA.summary}
               </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-purple-950/10 p-4 rounded-xl border border-purple-500/5">
+                <div>
+                  <span className="text-[10px] uppercase font-mono text-zinc-500 block">Audit Ref</span>
+                  <span className="text-xs font-bold text-zinc-300">{AUDIT_METADATA.reference}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-mono text-zinc-500 block">Security Score</span>
+                  <span className="text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500">{AUDIT_METADATA.score}</span>
+                </div>
+              </div>
+
+              {/* Interactive Audit Findings Matrix */}
+              <div className="space-y-3 pt-2">
+                <h5 className="font-bold text-zinc-200 text-xs uppercase tracking-wider">Sec3 Audited Vulnerability Matrix:</h5>
+                <div className="space-y-2.5">
+                  {AUDIT_FINDINGS.map((finding) => (
+                    <div key={finding.id} className="p-3 bg-black/40 border border-white/5 rounded-xl space-y-1.5 hover:border-purple-500/20 transition-all duration-300">
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold text-purple-400">{finding.id}: {finding.description}</span>
+                        <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${
+                          finding.severity === "High" ? "bg-red-500/10 text-red-400 border border-red-500/20" :
+                          finding.severity === "Medium" ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20" :
+                          "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                        }`}>
+                          {finding.severity} Severity
+                        </span>
+                      </div>
+                      <p className="text-zinc-500 text-[10px] leading-relaxed"><strong>Mitigation:</strong> {finding.mitigation}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Threat Matrix Checks */}
+              <div className="space-y-3 pt-2">
+                <h5 className="font-bold text-zinc-200 text-xs uppercase tracking-wider">Audit Threat Mitigation Verification:</h5>
+                <div className="space-y-2.5">
+                  {THREAT_MATRIX.map((threatInfo, idx) => (
+                    <div key={idx} className="p-3 bg-black/40 border border-white/5 rounded-xl space-y-1.5 hover:border-purple-500/20 transition-all duration-300">
+                      <div className="flex items-center justify-between">
+                        <span className="font-sans text-xs font-bold text-zinc-200">{threatInfo.threat}</span>
+                        <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded text-[9px] font-black uppercase tracking-wider">
+                          {threatInfo.status}
+                        </span>
+                      </div>
+                      <p className="text-zinc-500 text-[10px] leading-relaxed">{threatInfo.verification}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
             </div>
           </section>
 

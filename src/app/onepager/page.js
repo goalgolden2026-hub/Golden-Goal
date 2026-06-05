@@ -1,330 +1,214 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+const SLIDES = [
+  { id: 1, title: "Cover Page", src: "/Page1.png" },
+  { id: 2, title: "Executive Summary", src: "/Page2.png" },
+  { id: 3, title: "Ecosystem Game Loop", src: "/page3.png" },
+  { id: 4, title: "Match Engine & Dashboard", src: "/page4.png" },
+  { id: 5, title: "Staking Tiers", src: "/Page5.png" },
+  { id: 6, title: "Leaderboard Rankings", src: "/Page6.png" },
+  { id: 7, title: "Tokenomics & Safety", src: "/Page7.png" }
+];
+
 export default function OnePagerPage() {
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const nextSlide = () => {
+    setActiveSlide(prev => (prev + 1) % SLIDES.length);
+  };
+
+  const prevSlide = () => {
+    setActiveSlide(prev => (prev - 1 + SLIDES.length) % SLIDES.length);
+  };
+
+  // Keyboard arrow keys navigation support
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handlePrint = () => {
     window.print();
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col items-center relative overflow-x-hidden print:bg-white print:text-zinc-900 print:min-h-0">
+    <div className="min-h-screen bg-black text-zinc-100 flex flex-col items-center justify-between relative overflow-hidden font-sans print:bg-white print:text-black">
       
-      {/* Dynamic Background Blur - Hidden in Print */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90%] h-[500px] rounded-full bg-gradient-to-tr from-amber-500/10 via-yellow-600/5 to-transparent blur-[120px] pointer-events-none -z-10 print:hidden"></div>
+      {/* Background Cinematic Spotlight & Gradients */}
+      <div className="absolute top-[-10%] left-[20%] w-[900px] h-[900px] rounded-full bg-gradient-to-br from-yellow-500/10 via-amber-500/5 to-transparent blur-[250px] pointer-events-none -z-10 print:hidden"></div>
+      <div className="absolute bottom-[-10%] right-[20%] w-[900px] h-[900px] rounded-full bg-gradient-to-bl from-purple-500/5 via-fuchsia-500/3 to-transparent blur-[250px] pointer-events-none -z-10 print:hidden"></div>
 
-      {/* Floating Action Button Bar - Hidden in Print */}
-      <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 print:hidden">
-        <button
-          onClick={handlePrint}
-          className="px-5 py-3 bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 text-zinc-950 font-black rounded-full shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2 border border-yellow-400/30 text-xs tracking-wider uppercase"
-        >
-          <svg className="w-4 h-4 text-zinc-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-          </svg>
-          <span>Print / PDF</span>
-        </button>
+      {/* Styled A4 print layouts for high-fidelity borderless PDF exporting */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
         
-        <Link
-          href="/"
-          className="px-4 py-3 bg-zinc-900/90 border border-white/10 hover:border-yellow-500/30 hover:bg-yellow-500/[0.04] text-zinc-300 hover:text-white font-bold rounded-full shadow-lg backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-300 text-xs flex items-center gap-1.5"
-        >
-          <span>Home Page</span>
-        </Link>
-      </div>
-
-      {/* One-Pager Container - Sized to exactly A4 in print */}
-      <div className="w-full max-w-4xl mx-auto px-4 py-12 md:py-16 flex flex-col justify-between print:p-0 print:max-w-none print:w-full print:mx-0">
+        body {
+          font-family: 'Outfit', sans-serif;
+        }
         
-        {/* Style injection for extreme print precision */}
-        <style>{`
-          @media print {
-            body {
-              background-color: #ffffff !important;
-              color: #09090b !important;
-              -webkit-print-color-adjust: exact !important;
-              print-color-adjust: exact !important;
-            }
-            .print-bg-card {
-              background-color: #f4f4f5 !important;
-              border: 1px solid #e4e4e7 !important;
-              box-shadow: none !important;
-              backdrop-filter: none !important;
-            }
-            .print-border-gold {
-              border-color: #d97706 !important;
-            }
-            .print-text-dark {
-              color: #18181b !important;
-            }
-            .print-text-gold {
-              color: #b45309 !important;
-            }
-            .print-text-muted {
-              color: #71717a !important;
-            }
-            @page {
-              size: A4 portrait;
-              margin: 12mm 12mm 12mm 12mm;
-            }
-            .print-pb-0 {
-              padding-bottom: 0px !important;
-            }
+        @media print {
+          body, html {
+            background: #ffffff !important;
+            color: #000000 !important;
+            height: auto !important;
+            overflow: visible !important;
           }
-        `}</style>
+          .print-slide-container {
+            display: block !important;
+            page-break-after: always !important;
+            height: auto !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            opacity: 1 !important;
+            transform: none !important;
+          }
+          .print-slide-container:last-child {
+            page-break-after: avoid !important;
+          }
+          .print-hidden {
+            display: none !important;
+          }
+          .print-img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            margin: 0 auto !important;
+            border: none !important;
+            box-shadow: none !important;
+          }
+          @page {
+            size: A4 portrait;
+            margin: 10mm;
+          }
+        }
+      `}} />
 
-        {/* HEADER SECTION */}
-        <div className="flex flex-col md:flex-row items-center justify-between border-b border-white/10 pb-6 mb-8 print:border-zinc-200 print:pb-4 print:mb-6">
-          <div className="flex items-center gap-4 text-center md:text-left flex-col md:flex-row mb-4 md:mb-0">
-            <div className="relative">
-              <div className="absolute inset-0 bg-yellow-500/10 blur-xl rounded-full print:hidden"></div>
-              <img 
-                src="/logo.jpg" 
-                alt="Golden Goal Logo" 
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border border-yellow-500/30 shadow-[0_0_20px_rgba(245,158,11,0.15)] print:shadow-none print:border-zinc-300"
-              />
-            </div>
-            <div className="space-y-1">
-              <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 print:text-zinc-950 print:bg-none">
-                GOLDEN GOAL
-              </h1>
-              <p className="text-xs sm:text-sm text-white font-bold uppercase tracking-widest print:text-zinc-500">
-                Solana's Premier Risk-Free Football Prediction Market
-              </p>
-            </div>
+      {/* Floating Action Header Bar - Hidden in Print */}
+      <header className="w-full max-w-6xl mx-auto px-6 py-4 flex items-center justify-between z-40 print:hidden shrink-0">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="relative">
+            <div className="absolute inset-0 bg-amber-500/25 blur-md rounded-full group-hover:bg-amber-500/45 transition-all"></div>
+            <img src="/logo.jpg" alt="Golden Goal Logo" className="w-11 h-11 rounded-full object-cover border-2 border-amber-500/40 relative z-10" />
           </div>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 font-mono text-[9px] font-bold select-none">
-            <span className="bg-gradient-to-r from-[#9945FF]/15 to-[#14F195]/15 text-white border border-[#9945FF]/30 px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse flex items-center gap-1.5 shadow-[0_0_15px_rgba(153,69,255,0.2)] print:bg-zinc-100 print:text-zinc-700 print:border-zinc-300 print:shadow-none print:animate-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#9945FF] to-[#14F195] shadow-[0_0_8px_rgba(20,241,149,0.8)]"></span>
-              Solana Ecosystem
-            </span>
-            <span className="inline-flex items-center gap-1.5 text-[9px] font-black text-emerald-300 bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-400/50 font-mono shadow-[0_0_18px_rgba(52,211,153,0.45)] animate-pulse print:bg-emerald-50 print:text-emerald-700 print:border-emerald-300 print:shadow-none print:animate-none">
-              <span className="relative flex h-2 w-2 print:hidden">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-100"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
-              </span>
-              COMPLIANCE VERIFIED
-            </span>
-          </div>
-        </div>
-
-        {/* HERO SECTION / THE HOOK */}
-        <div className="bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-3xl p-6 mb-8 print-bg-card print:p-5 print:mb-5">
-          <h2 className="text-lg font-black tracking-wider text-amber-400 uppercase mb-3 print:text-amber-800">
-            📌 Vision & Project Summary
-          </h2>
-          <p className="text-sm text-zinc-300 leading-relaxed print:text-zinc-800">
-            Golden Goal is a pioneering <strong className="text-white print:text-zinc-900">Skill-Based Prediction Market</strong> simulator built on Solana, designed to <strong className="text-white print:text-zinc-900">entirely eliminate the financial loss risks</strong> associated with traditional sports betting platforms. Instead of losing or risking capital to make predictions, players hold or lock (<code className="text-amber-400">Lock</code>) their tokens in their wallets. This seamlessly merges fan passion, analytical skill, and Web3 gamification into a completely risk-free ecosystem.
-          </p>
-        </div>
-
-        {/* PROBLEM & SOLUTION SECTION */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 print:gap-5 print:mb-5">
-          {/* PROBLEM CARD */}
-          <div className="bg-red-500/[0.02] border border-red-500/10 rounded-2xl p-5 space-y-3 print:bg-zinc-50 print:border-zinc-200">
-            <div className="flex items-center gap-2 text-red-400 print:text-zinc-800">
-              <span className="text-xl">💸</span>
-              <h3 className="font-extrabold text-sm uppercase tracking-wider">Critical Industry Problems</h3>
-            </div>
-            <ul className="space-y-2 text-xs text-zinc-400 leading-relaxed print:text-zinc-700 list-disc list-inside">
-              <li><strong className="text-zinc-300 print:text-zinc-900">High Financial Risk:</strong> Traditional sports forecasting platforms force casual fans to constantly risk capital just to participate, creating high stress.</li>
-              <li><strong className="text-zinc-300 print:text-zinc-900">Passive Fan Tokens:</strong> Existing sports fan tokens lack concrete platform utility sinks or deflationary mechanisms, driving high sell pressure.</li>
-              <li><strong className="text-zinc-300 print:text-zinc-900">Isolated Action:</strong> Legacy platforms lack viral SocialFi integrations, leaderboard competitions, and communal feedback loops, leaving players isolated.</li>
-            </ul>
-          </div>
-
-          {/* SOLUTION CARD */}
-          <div className="bg-emerald-500/[0.02] border border-emerald-500/10 rounded-2xl p-5 space-y-3 print:bg-zinc-50 print:border-zinc-200">
-            <div className="flex items-center gap-2 text-emerald-400 print:text-zinc-800">
-              <span className="text-xl">🛡️</span>
-              <h3 className="font-extrabold text-sm uppercase tracking-wider">Golden Goal Solutions</h3>
-            </div>
-            <ul className="space-y-2 text-xs text-zinc-400 leading-relaxed print:text-zinc-700 list-disc list-inside">
-              <li><strong className="text-zinc-300 print:text-zinc-900">Zero Capital Loss (0% Risk):</strong> Players make predictions completely free of charge. Locked tokens are never spent or lost, ensuring a safe fan experience.</li>
-              <li><strong className="text-zinc-300 print:text-zinc-900">Deep Token Utility ($GG):</strong> Ecosystem utility locks directly grant premium VIP multipliers, extra daily prediction quotas, and daily Rewards Box openings.</li>
-              <li><strong className="text-zinc-300 print:text-zinc-900">Data-Driven Leaderboards:</strong> Features a dual leaderboard system (Pro & Social) to reward top analytical minds and community champions weekly.</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* CORE PLATFORM FEATURES */}
-        <div className="bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-3xl p-6 mb-8 print-bg-card print:p-5 print:mb-5">
-          <h2 className="text-lg font-black tracking-wider text-amber-400 uppercase mb-4 print:text-amber-800">
-            ⚡ Core Ecosystem Pillars
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div className="space-y-1.5 text-center sm:text-left">
-              <div className="text-xl">🎯</div>
-              <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">1. Football Predictor</h4>
-              <p className="text-[11px] text-zinc-400 leading-relaxed print:text-zinc-700">
-                A skill-based prediction market where users forecast global league matches, leveraging their football acumen and analytical skills.
-              </p>
-            </div>
-            <div className="space-y-1.5 text-center sm:text-left border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-5 print:border-zinc-200">
-              <div className="text-xl">🔒</div>
-              <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">2. Multi-Tier Locking</h4>
-              <p className="text-[11px] text-zinc-400 leading-relaxed print:text-zinc-700">
-                A robust utility locker offering lockup options from 1 to 30 days. Increasing locked amounts directly unlocks premium platform perks.
-              </p>
-            </div>
-            <div className="space-y-1.5 text-center sm:text-left border-t sm:border-t-0 sm:border-l border-white/5 pt-4 sm:pt-0 sm:pl-5 print:border-zinc-200">
-              <div className="text-xl">🎁</div>
-              <h4 className="font-bold text-zinc-200 text-xs uppercase tracking-wider print:text-zinc-900">3. Rewards Box Module</h4>
-              <p className="text-[11px] text-zinc-400 leading-relaxed print:text-zinc-700">
-                A provably fair daily drops engine that offers extra prediction quotas and booster XP, completely free or heavily discounted for VIP lockers.
-              </p>
+          <div className="flex flex-col justify-center">
+            <div className="flex items-center gap-1.5">
+              <span className="font-black text-xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500">GOLDEN GOAL</span>
+              <span className="text-[9px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded font-black border border-amber-500/20 select-none">GAMEPAPER</span>
             </div>
           </div>
-        </div>
+        </Link>
 
-        {/* STAKING/LOCKING TIERS TABLE */}
-        <div className="bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-3xl p-6 mb-8 print-bg-card print:p-5 print:mb-5">
-          <h2 className="text-lg font-black tracking-wider text-amber-400 uppercase mb-4 print:text-amber-800">
-            📈 VIP Token Locking Tiers
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="border-b border-white/10 text-zinc-400 font-bold print:border-zinc-200 print:text-zinc-800">
-                  <th className="py-2.5 px-3">Level (Tier)</th>
-                  <th className="py-2.5 px-3">Requirement</th>
-                  <th className="py-2.5 px-3">Daily Prediction Limit</th>
-                  <th className="py-2.5 px-3">XP Multiplier</th>
-                  <th className="py-2.5 px-3">Rewards Box Cost</th>
-                </tr>
-              </thead>
-              <tbody className="text-zinc-300 divide-y divide-white/5 print:text-zinc-800 print:divide-zinc-200">
-                <tr>
-                  <td className="py-2 px-3 font-semibold print:text-zinc-950">Tier 0 (Holder)</td>
-                  <td className="py-2 px-3">Min 10,000 GG in Wallet</td>
-                  <td className="py-2 px-3">Base Limit</td>
-                  <td className="py-2 px-3">1.0x</td>
-                  <td className="py-2 px-3">100 XP</td>
-                </tr>
-                <tr className="bg-emerald-500/5 print:bg-zinc-100/50">
-                  <td className="py-2 px-3 font-semibold text-emerald-400 print:text-emerald-800">Tier 1 (Soft Lock)</td>
-                  <td className="py-2 px-3 font-medium">100 GG (1-Day Lock)</td>
-                  <td className="py-2 px-3">+1 Prediction / Day</td>
-                  <td className="py-2 px-3">1.0x</td>
-                  <td className="py-2 px-3">75 XP (25% Off)</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-3 font-semibold text-blue-400 print:text-blue-800">Tier 2 (Weekly)</td>
-                  <td className="py-2 px-3 font-medium">500 GG (7-Day Lock)</td>
-                  <td className="py-2 px-3">+3 Predictions / Day</td>
-                  <td className="py-2 px-3">1.0x</td>
-                  <td className="py-2 px-3">50 XP (50% Off)</td>
-                </tr>
-                <tr className="bg-purple-500/5 print:bg-zinc-100/50">
-                  <td className="py-2 px-3 font-semibold text-purple-400 print:text-purple-800">Tier 3 (Fortnight)</td>
-                  <td className="py-2 px-3 font-medium">1,000 GG (15-Day Lock)</td>
-                  <td className="py-2 px-3">+5 Predictions / Day</td>
-                  <td className="py-2 px-3">1.1x Booster</td>
-                  <td className="py-2 px-3">25 XP (75% Off)</td>
-                </tr>
-                <tr className="bg-yellow-500/5 print:bg-yellow-50/50">
-                  <td className="py-2 px-3 font-semibold text-yellow-400 print:text-amber-800">Tier 4 (Monthly)</td>
-                  <td className="py-2 px-3 font-medium">5,000 GG (30-Day Lock)</td>
-                  <td className="py-2 px-3 font-black">+10 Predictions / Day</td>
-                  <td className="py-2 px-3 font-black">1.25x Booster ⚡</td>
-                  <td className="py-2 px-3 font-black text-yellow-400 print:text-amber-800">1 Free Daily 🎁</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* ROADMAP & TECH STACK IN TWO COLUMNS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 print:gap-5 print:mb-0">
-          {/* TECHNOLOGY STACK */}
-          <div className="bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-3xl p-5 print-bg-card">
-            <h3 className="text-sm font-black tracking-wider text-amber-400 uppercase mb-3 print:text-amber-800">
-              🛠️ Robust Infrastructure & Security
-            </h3>
-            <ul className="space-y-2 text-xs text-zinc-400 print:text-zinc-700 leading-relaxed">
-              <li className="flex items-start gap-2">
-                <span className="text-yellow-500">✔</span>
-                <span><strong className="text-zinc-200 print:text-zinc-900">Solana Speed & Low Cost:</strong> Utilizes Solana's low gas fees and sub-second execution speeds for absolute efficiency.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-yellow-500">✔</span>
-                <span><strong className="text-zinc-200 print:text-zinc-900">Cryptographic Signatures (`tweetnacl`):</strong> Uses Ed25519 signatures to verify lock/unlock requests, securely preventing any wallet impersonation or bot requests on server APIs.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-yellow-500">✔</span>
-                <span><strong className="text-zinc-200 print:text-zinc-900">AWS Cloud Synergy:</strong> Combines robust Next.js server-side routing with AWS global clusters to ensure fast loads and reliable, low-latency API handling.</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* ROADMAP PLAN */}
-          <div className="bg-white/[0.02] border border-white/5 backdrop-blur-md rounded-3xl p-5 print-bg-card">
-            <h3 className="text-sm font-black tracking-wider text-amber-400 uppercase mb-3 print:text-amber-800">
-              📅 Growth Roadmap
-            </h3>
-            <div className="space-y-3 text-[11px] text-zinc-400 print:text-zinc-700 font-medium">
-              <div className="flex items-center justify-between border-b border-white/5 pb-1 print:border-zinc-200">
-                <span>Phase 2: Platform Launch & Whitelist Beta</span>
-                <span className="text-[9px] bg-yellow-500/10 text-yellow-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-yellow-50 print:text-yellow-800">Active Beta</span>
-              </div>
-              <div className="flex items-center justify-between border-b border-white/5 pb-1 print:border-zinc-200">
-                <span>Phase 3: Football Predictor & Leaderboards</span>
-                <span className="text-[9px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-blue-50 print:text-blue-800">Coming Soon</span>
-              </div>
-              <div className="flex items-center justify-between border-b border-white/5 pb-1 print:border-zinc-200">
-                <span>Phase 4: Rewards Box & Multi-Tier Locking</span>
-                <span className="text-[9px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-purple-50 print:text-purple-800">In Development</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Phase 5: Mobile Apps & DAO Governance</span>
-                <span className="text-[9px] bg-zinc-500/10 text-zinc-400 px-2 py-0.5 rounded-full font-bold uppercase print:bg-zinc-100 print:text-zinc-600">Planned</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* PREMIUM LEGAL COMPLIANCE SHIELD CARD */}
-        <div className="w-full mt-8 p-5 rounded-2xl bg-zinc-950/60 border border-yellow-500/10 hover:border-yellow-500/30 backdrop-blur-xl shadow-[0_0_35px_rgba(245,158,11,0.02)] transition-all duration-300 select-none text-left flex items-start gap-4 group print-bg-card">
-          <div className="p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 flex items-center justify-center shrink-0 group-hover:bg-yellow-500/20 group-hover:scale-105 transition-all duration-300 print:bg-yellow-500/[0.05] print:border-zinc-300">
-            <svg className="w-6 h-6 text-amber-400 print:text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handlePrint}
+            className="px-4.5 py-2 bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 text-black font-black rounded-xl shadow-[0_0_20px_rgba(245,158,11,0.25)] hover:scale-[1.03] active:scale-[0.98] transition-all text-[11px] tracking-wider uppercase flex items-center gap-2 border border-yellow-400/20 cursor-pointer"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
             </svg>
-          </div>
-          <div className="space-y-1.5 flex-1">
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <span className="text-xs font-black tracking-widest text-amber-400 font-mono uppercase print:text-amber-800">⚖️ Legal Notice & Compliance Shield</span>
-              <span className="inline-flex items-center gap-1.5 text-[9px] font-black text-emerald-300 bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-400/50 font-mono shadow-[0_0_18px_rgba(52,211,153,0.45)] animate-pulse print:bg-emerald-50 print:text-emerald-700 print:border-emerald-300 print:shadow-none">
-                <span className="relative flex h-2 w-2 print:hidden">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-100"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
-                </span>
-                COMPLIANCE VERIFIED
-              </span>
-            </div>
-            <p className="text-[11px] font-medium leading-relaxed text-zinc-400 print:text-zinc-700">
-              <strong className="text-zinc-200 print:text-zinc-900">NO PURCHASE NECESSARY.</strong> Void where prohibited by law. Standard daily prediction quotas are allocated free of charge. Platform operations strictly simulate a football analytical index. Leaderboards are decided 100% based on predictive foresight, football acumen, and data modelling—completely free of capital hazard or chance elements.
-            </p>
-          </div>
-        </div>
-
-        {/* FOOTER & CTA */}
-        <div className="mt-8 border-t border-white/10 pt-4 flex flex-col sm:flex-row items-center justify-between text-[10px] text-zinc-500 print:border-zinc-200 print:text-zinc-600 print:pt-3 print:pb-0">
-          <div className="mb-2 sm:mb-0 text-center sm:text-left print:text-left">
-            <span>© 2026 Golden Goal. All Rights Reserved.</span>
-            <span className="mx-2 hidden sm:inline">•</span>
-            <span className="text-zinc-400 print:text-zinc-700">Not by Chance, but by Skill & Analysis.</span>
-          </div>
+            <span>PDF / Print</span>
+          </button>
           
-          <div className="flex items-center gap-4 text-zinc-400 print:text-zinc-800 font-bold font-mono">
-            <span>X.com: @GoldenGoal</span>
-            <span>•</span>
-            <span>Telegram: t.me/GoldenGoalSol</span>
+          <Link
+            href="/"
+            className="px-3.5 py-2 bg-zinc-950/60 border border-zinc-800/80 hover:border-amber-500/40 text-zinc-400 hover:text-white font-bold rounded-xl text-[11px] transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Back to App
+          </Link>
+        </div>
+      </header>
+
+      {/* Main Slides Content Section */}
+      <main className="w-full max-w-6xl mx-auto px-6 py-2 flex-1 flex items-center justify-center relative z-20 print:block print:max-w-none print:px-0">
+        
+        {SLIDES.map((slide, idx) => (
+          <div
+            key={slide.id}
+            className={`w-full transition-all duration-500 flex flex-col items-center justify-center print-slide-container ${
+              activeSlide === idx 
+                ? 'block opacity-100 scale-100' 
+                : 'hidden opacity-0 scale-95 print:block'
+            }`}
+          >
+            {/* Slide Frame container with significantly increased max-w for larger image scaling */}
+            <div className="relative border border-zinc-800 bg-zinc-950/65 backdrop-blur-md p-2 rounded-2xl shadow-[0_0_50px_rgba(245,158,11,0.12)] hover:shadow-[0_0_60px_rgba(245,158,11,0.22)] transition-all duration-300 print:p-0 print:border-none print:bg-transparent print:shadow-none max-w-5xl w-full">
+              
+              {/* Header Slogan Inside Frame */}
+              <div className="flex justify-between items-center px-4 py-2 border-b border-zinc-900 print:hidden text-[10px] font-bold text-zinc-500 font-mono tracking-wider uppercase">
+                <span>Page {slide.id}: {slide.title}</span>
+                <span className="text-amber-500">GOLDEN GOAL</span>
+              </div>
+
+              {/* Responsive containment of full-page images */}
+              <div className="w-full relative flex items-center justify-center p-1 md:p-3 overflow-hidden select-none print:p-0">
+                <img 
+                  src={slide.src} 
+                  alt={slide.title} 
+                  className="max-h-[75vh] sm:max-h-[80vh] w-auto h-auto object-contain rounded-lg border border-zinc-900 shadow-inner hover:scale-[1.01] transition-transform duration-500 print:rounded-none print:border-none print:max-h-none print:w-full print:h-auto print-img" 
+                />
+              </div>
+
+            </div>
           </div>
+        ))}
+
+      </main>
+
+      {/* Slide Navigation Foot Controller - Hidden in Print */}
+      <footer className="w-full max-w-6xl mx-auto px-6 py-4 flex items-center justify-between z-40 print:hidden shrink-0">
+        
+        {/* Left/Right Buttons */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={prevSlide}
+            className="w-9 h-9 bg-zinc-950/60 border border-zinc-800 hover:border-amber-500/40 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer text-sm font-bold text-zinc-400 hover:text-white"
+            aria-label="Previous Slide"
+          >
+            ←
+          </button>
+          <button
+            onClick={nextSlide}
+            className="w-9 h-9 bg-zinc-950/60 border border-zinc-800 hover:border-amber-500/40 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer text-sm font-bold text-zinc-400 hover:text-white"
+            aria-label="Next Slide"
+          >
+            →
+          </button>
         </div>
 
+        {/* Dynamic Slide indicators */}
+        <div className="flex gap-2">
+          {SLIDES.map((slide, idx) => (
+            <button
+              key={slide.id}
+              onClick={() => setActiveSlide(idx)}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                activeSlide === idx 
+                  ? 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)] scale-110 w-5.5' 
+                  : 'bg-zinc-800 hover:bg-zinc-700'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Keyboard Help Tip - English only */}
+        <span className="text-[9px] font-mono font-bold text-zinc-600 hidden sm:inline select-none uppercase tracking-wider">
+          💡 Keyboard: Use Left / Right arrow keys to navigate slides!
+        </span>
+      </footer>
+
+      {/* Printed legal disclaimer footer - printed at the bottom of every PDF page */}
+      <div className="hidden print:block w-full text-center text-[7px] text-zinc-400 mt-6 pt-4 border-t border-zinc-200">
+        <span>© 2026 Golden Goal. Not by Chance, but by Skill & Analysis. Built on Solana Blockchain. All Rights Reserved.</span>
       </div>
+
     </div>
   );
 }

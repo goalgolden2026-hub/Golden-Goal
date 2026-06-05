@@ -104,6 +104,11 @@ const WHEEL_SLICES = [
 
 export default function RewardBoxPage() {
     const { publicKey, connected } = useWallet();
+    
+    useEffect(() => {
+        window.location.href = '/rewards/locking';
+    }, []);
+
     const [modalConfig, setModalConfig] = useState({
         isOpen: false,
         title: '',
@@ -362,7 +367,7 @@ export default function RewardBoxPage() {
                 <div className="text-xs text-zinc-400 text-center flex flex-col gap-2 max-w-sm mx-auto select-none">
                     <div className="flex items-center justify-center gap-1.5 bg-zinc-900/60 border border-white/5 rounded-full px-4 py-1.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
                         <span className="text-zinc-500">Your Balance:</span>
-                        <span className="text-yellow-400 font-bold">{status?.points !== undefined ? status.points.toLocaleString() : 0} XP</span>
+                        <span className="text-yellow-400 font-bold">{status?.points !== undefined ? status.points.toLocaleString('en-US') : 0} XP</span>
                     </div>
                     {!status?.isEligibleForFreeBox && (
                         <p className="mt-1">

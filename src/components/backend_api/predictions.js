@@ -1,17 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { getTokenBalance } from '@/lib/solana';
 
-// Simulate SPL Token Balance Check (In Production, use Solana web3.js + getAccountInfo)
-async function getTokenBalance(walletAddress) {
-    // Demo implementation: We assume everyone has 30,000 tokens for testing.
-    // In Phase 6, this will be replaced with real on-chain balance fetching.
-    return 30000;
-}
 
 function getTierLimits(balance) {
-    if (balance >= 50000) return { tier: 'Gold', limit: 10 };
-    if (balance >= 25000) return { tier: 'Silver', limit: 5 };
-    if (balance >= 10000) return { tier: 'Bronze', limit: 3 };
+    if (balance >= 250000) return { tier: 'Standard', limit: 3 };
     return { tier: 'None', limit: 0 };
 }
 
@@ -32,7 +25,7 @@ export async function POST(request) {
         const { tier, limit } = getTierLimits(balance);
 
         if (limit === 0) {
-            return NextResponse.json({ success: false, error: "Insufficient Token Balance. You need at least 10,000 Golden Tokens to predict." }, { status: 403 });
+            return NextResponse.json({ success: false, error: "Insufficient Token Balance. You need to hold at least 250.000 $GoldenGoal tokens in your wallet to make predictions." }, { status: 403 });
         }
 
         // 2. Fetch User from DB (or create if not exists)

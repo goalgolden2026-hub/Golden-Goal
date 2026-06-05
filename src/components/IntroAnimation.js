@@ -3,74 +3,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 
-const BallImage = ({ size = 130, style = {} }) => {
-  const ref = useRef(null);
-  useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    canvas.width = canvas.height = size;
-    const ctx = canvas.getContext('2d');
-    const img = new window.Image();
-    img.onload = () => {
-      ctx.clearRect(0, 0, size, size);
-      ctx.drawImage(img, 0, 0, size, size);
-
-      const d = ctx.getImageData(0, 0, size, size);
-      const data = d.data;
-      const w = size, h = size;
-      const visited = new Uint8Array(w * h);
-
-      // Flood-fill from corners: remove white/light background
-      const isWhiteBg = (idx) => {
-        const r = data[idx], g = data[idx+1], b = data[idx+2];
-        const max = Math.max(r, g, b), min = Math.min(r, g, b);
-        const sat = max > 0 ? (max - min) / max : 0;
-        const lum = 0.299*r + 0.587*g + 0.114*b;
-        return lum > 155 && sat < 0.32;
-      };
-
-      const queue = [];
-      const seed = (x, y) => {
-        const i = y * w + x;
-        if (!visited[i]) { visited[i] = 1; queue.push(i); }
-      };
-
-      // 4 corners + all edges
-      for (let x = 0; x < w; x++) { seed(x, 0); seed(x, h-1); }
-      for (let y = 0; y < h; y++) { seed(0, y); seed(w-1, y); }
-
-      while (queue.length) {
-        const i = queue.pop();
-        if (!isWhiteBg(i * 4)) continue;
-        data[i * 4 + 3] = 0;
-        const x = i % w, y = Math.floor(i / w);
-        if (x > 0   && !visited[i-1])   { visited[i-1] = 1;   queue.push(i-1); }
-        if (x < w-1 && !visited[i+1])   { visited[i+1] = 1;   queue.push(i+1); }
-        if (y > 0   && !visited[i-w])   { visited[i-w] = 1;   queue.push(i-w); }
-        if (y < h-1 && !visited[i+w])   { visited[i+w] = 1;   queue.push(i+w); }
-      }
-
-      ctx.putImageData(d, 0, 0);
-
-      // Additional filter for isolated white bottom line untouched by flood-fill
-      const d2 = ctx.getImageData(0, 0, size, size);
-      const px = d2.data;
-      for (let i = 0; i < px.length; i += 4) {
-        if (px[i+3] === 0) continue;
-        const row = Math.floor((i / 4) / size);
-        if (row < size * 0.78) continue; // alt %22
-        const r = px[i], g = px[i+1], b = px[i+2];
-        const max = Math.max(r,g,b), min = Math.min(r,g,b);
-        const sat = max > 0 ? (max-min)/max : 0;
-        const lum = 0.299*r + 0.587*g + 0.114*b;
-        if (lum > 110 && sat < 0.45) px[i+3] = 0;
-        else if (lum > 90 && sat < 0.25) px[i+3] = Math.round(((110-lum)/20)*255);
-      }
-      ctx.putImageData(d2, 0, 0);
-    };
-    img.src = `/golden-ball.png?v=${Date.now()}`;
-  }, [size]);
-  return <canvas ref={ref} width={size} height={size} style={{ display:'block', ...style }} />;
+const BallImage = ({ size = 90, style = {} }) => {
+  return (
+    <img 
+      src="/golden-ball.png" 
+      alt="Premium 3D Golden Ball" 
+      width={size} 
+      height={size} 
+      style={{ display: 'block', objectFit: 'contain', ...style }} 
+    />
+  );
 };
 
 export default function IntroAnimation() {
@@ -192,7 +134,7 @@ export default function IntroAnimation() {
         onClick={handleShoot}
       >
         <div ref={ballWrapRef} className={isIdle?'ball-idle':''} style={{display:'inline-block'}}>
-          <BallImage size={130}/>
+          <BallImage size={90}/>
         </div>
 
         {isIdle && (
@@ -215,7 +157,7 @@ export default function IntroAnimation() {
           <h1 style={{fontFamily:"'Impact','Arial Black',sans-serif",fontSize:'clamp(72px,13vw,158px)',fontWeight:900,fontStyle:'italic',lineHeight:1,
             background:'linear-gradient(180deg,#FFF 0%,#FFD700 38%,#FF8C00 100%)',
             WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',
-            filter:'drop-shadow(0 0 45px rgba(255,215,0,.95))'}}>GOOOL!</h1>
+            filter:'drop-shadow(0 0 45px rgba(255,215,0,.95))'}}>GOOOOALLLL!</h1>
           <p style={{color:'#fff',fontWeight:700,fontSize:'clamp(16px,2.8vw,30px)',letterSpacing:'.42em',textTransform:'uppercase',marginTop:18,
             textShadow:'0 0 24px rgba(255,215,0,.9)',opacity:.96}}>✦ GOLDEN GOAL ✦</p>
         </div>

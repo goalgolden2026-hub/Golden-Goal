@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import crypto from 'crypto';
+import { isWalletWhitelisted } from '@/lib/whitelist';
+import { getTokenBalance } from '@/lib/solana';
 
 function generateReferralCode() {
     return crypto.randomBytes(3).toString('hex').toUpperCase(); // 6 character code
@@ -52,7 +54,8 @@ export async function GET(request) {
         const totalInvited = parseInt(referralStats.rows[0].totalInvited) || 0;
 
         // Dynamic Balance Calculation
-        let mockBalance = 30000;
+        const baseBalance = await getTokenBalance(walletAddress);
+        let mockBalance = baseBalance;
 
         // Deduct active locks
         const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
@@ -84,7 +87,7 @@ export async function GET(request) {
             else if (lockTier === 4) bonusPredictions = 10;
         }
 
-        const baseLimit = 5;
+        const baseLimit = mockBalance >= 250000 ? 3 : 0;
         // Check if predictionsToday needs to be reset visually (if lastPredictionDate is not today)
         const today = new Date().toISOString().split('T')[0];
         let displayPredictionsToday = user.predictionsToday || 0;
@@ -95,7 +98,10 @@ export async function GET(request) {
             displaySpinBonus = 0; // they expired
         }
 
-        const maxPredictions = baseLimit + bonusPredictions + displaySpinBonus;
+        let maxPredictions = baseLimit + bonusPredictions + displaySpinBonus;
+        if (isWalletWhitelisted(walletAddress)) {
+            maxPredictions = Math.max(maxPredictions, 20);
+        }
 
         return NextResponse.json({ 
             success: true, 

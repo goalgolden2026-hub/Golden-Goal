@@ -1,11 +1,6 @@
 export const WHITELISTED_WALLETS: string[] = [
   // Burhan Selection Wallet & Team Whitelist Addresses
   "2iF2q7hjEqEe8o6PTdJnYRYZUCeaMDjD35tSrKbu5R8K", // User's wallet address
-  "HMsWAhRC9wom6JVBpuo2gjAGp7Sb59FEyMraLpC4YXGc", // New authorized admin wallet
-  "5taHGRqDNFGRMGUZRCgdF5bGikwqZ7smxsH5YF5WPyc7", // Newly requested authorized admin wallet
-  "62dBE6cVZmG728DkbZssDjrJm6Dn1as9Me2dMCh6HMPN", // Newly requested authorized admin wallet 2
-  "BurhanSelectionWalletPlaceHolder1111111",
-  "GoalGoldenAdminWalletPlaceHolder222222",
 ];
 
 /**

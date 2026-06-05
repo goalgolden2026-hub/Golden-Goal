@@ -2,6 +2,12 @@ import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import nacl from 'tweetnacl';
 import bs58 from 'bs58';
+import { Connection, PublicKey } from '@solana/web3.js';
+import { getAssociatedTokenAddress, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { getTokenBalance } from '@/lib/solana';
+
+const GOLDEN_GOAL_MINT = process.env.GOLDEN_GOAL_MINT || process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT;
+const SOLANA_RPC = "https://api.mainnet-beta.solana.com";
 
 function verifySignature(walletAddress, message, signatureHex) {
     try {
@@ -20,22 +26,86 @@ function verifySignature(walletAddress, message, signatureHex) {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { walletAddress, tier, amount, message, signature } = body;
+        const { walletAddress, tier, amount, txSignature } = body;
 
-        // 1. Perform Cryptographic Signature Verification
-        if (!message || !signature) {
-            return NextResponse.json({ success: false, error: "Cryptographic authentication required. Please sign the transaction." }, { status: 401 });
+        // 1. Perform On-Chain Transaction Verification
+        if (!txSignature) {
+            return NextResponse.json({ success: false, error: "Transaction signature required." }, { status: 400 });
         }
 
-        // Check if message format matches lock request
-        if (!message.includes("Authenticate Golden Goal Lock Transaction") || !message.includes(walletAddress)) {
-            return NextResponse.json({ success: false, error: "Invalid signature message payload." }, { status: 400 });
+        if (!walletAddress || !tier || !amount) {
+            return NextResponse.json({ success: false, error: "Missing required fields (walletAddress, tier, amount)" }, { status: 400 });
         }
 
-        // Verify signature
-        const isVerified = verifySignature(walletAddress, message, signature);
-        if (!isVerified) {
-            return NextResponse.json({ success: false, error: "Signature verification failed. Impersonation blocked." }, { status: 401 });
+        if (!GOLDEN_GOAL_MINT) {
+            return NextResponse.json({ success: false, error: "Platform token configuration missing (GOLDEN_GOAL_MINT)." }, { status: 500 });
+        }
+
+        // Verify transaction on-chain
+        const connection = new Connection(SOLANA_RPC, 'confirmed');
+        let tx = null;
+        for (let i = 0; i < 5; i++) {
+            try {
+                tx = await connection.getParsedTransaction(txSignature, {
+                    maxSupportedTransactionVersion: 0
+                });
+                if (tx) break;
+            } catch (txErr) {
+                console.warn("Attempt to fetch transaction failed:", txErr.message);
+            }
+            await new Promise(resolve => setTimeout(resolve, 1500));
+        }
+
+        if (!tx) {
+            return NextResponse.json({ success: false, error: "Transaction not found on-chain. Please ensure it is confirmed." }, { status: 400 });
+        }
+
+        // Verify transaction details:
+        // We check instructions for a transfer of the correct amount of GOLDEN_GOAL_MINT to Stake Wallet
+        let verified = false;
+        const instructions = tx.transaction.message.instructions;
+        const allInstructions = [...instructions];
+        
+        if (tx.meta && tx.meta.innerInstructions) {
+            for (const inner of tx.meta.innerInstructions) {
+                allInstructions.push(...inner.instructions);
+            }
+        }
+
+        const mintPubKey = new PublicKey(GOLDEN_GOAL_MINT);
+        const stakeWalletPubKey = new PublicKey("Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm");
+        
+        // Derive expected destination Associated Token Accounts
+        const expectedDestATA2022 = await getAssociatedTokenAddress(mintPubKey, stakeWalletPubKey, false, TOKEN_2022_PROGRAM_ID);
+        const expectedDestATALegacy = await getAssociatedTokenAddress(mintPubKey, stakeWalletPubKey, false, TOKEN_PROGRAM_ID);
+
+        for (const inst of allInstructions) {
+            const isToken2022 = inst.programId.toString() === TOKEN_2022_PROGRAM_ID.toString();
+            const isLegacy = inst.programId.toString() === TOKEN_PROGRAM_ID.toString();
+
+            if (isToken2022 || isLegacy) {
+                const parsed = inst.parsed;
+                if (parsed && (parsed.type === 'transfer' || parsed.type === 'transferChecked')) {
+                    const info = parsed.info;
+                    const transferAmount = info.amount || info.tokenAmount?.amount;
+                    const destination = info.destination;
+                    
+                    const expectedRawAmount = (amount * 1000000).toString(); // decimals = 6
+                    const isCorrectDest = destination === expectedDestATA2022.toBase58() || destination === expectedDestATALegacy.toBase58();
+
+                    if (isCorrectDest && transferAmount === expectedRawAmount) {
+                        // Check if the transaction was signed by the wallet owner
+                        if (tx.transaction.message.accountKeys.some(k => k.pubkey.toBase58() === walletAddress && k.signer)) {
+                            verified = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!verified) {
+            return NextResponse.json({ success: false, error: "On-chain transaction verification failed. Incorrect transfer amount, destination, or signature." }, { status: 400 });
         }
 
         if (!walletAddress || !tier || !amount) {
@@ -53,8 +123,20 @@ export async function POST(request) {
             `;
         }
 
+        // Validate tier min amounts
+        let minAmountRequired = 0;
+        if (tier === 1) minAmountRequired = 350000;
+        else if (tier === 2) minAmountRequired = 500000;
+        else if (tier === 3) minAmountRequired = 750000;
+        else if (tier === 4) minAmountRequired = 1000000;
+
+        if (amount < minAmountRequired) {
+            return NextResponse.json({ success: false, error: `Invalid lock amount. Minimum required for Tier ${tier} is ${minAmountRequired.toLocaleString('en-US')} $GoldenGoal.` }, { status: 400 });
+        }
+
         // 2. Double-check user's mock balance from the database profile
-        let mockBalance = 30000;
+        const baseBalance = await getTokenBalance(walletAddress);
+        let mockBalance = baseBalance;
 
         // Deduct active locks
         const activeLocksTotalRes = await sql`SELECT SUM(amount) as total FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE'`;
@@ -76,7 +158,7 @@ export async function POST(request) {
         }
 
         if (mockBalance < amount) {
-            return NextResponse.json({ success: false, error: `Insufficient simulated balance. You need at least ${amount} tokens to lock. You currently have ${mockBalance}.` }, { status: 400 });
+            return NextResponse.json({ success: false, error: `Insufficient simulated balance. You need at least ${amount.toLocaleString('en-US')} $GoldenGoal to lock. You currently have ${mockBalance.toLocaleString('en-US')} $GoldenGoal.` }, { status: 400 });
         }
 
         // Check for existing active lock (one active lock per user)

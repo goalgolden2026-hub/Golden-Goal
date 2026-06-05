@@ -40,3 +40,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env*.local
+
+# database
+golden.db
+
+# local helper scripts
+/scripts/
+
+
+

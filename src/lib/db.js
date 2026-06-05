@@ -115,6 +115,27 @@ export async function getDb() {
 
             // Migration: Add txSignature to locks table
             await sql`ALTER TABLE locks ADD COLUMN IF NOT EXISTS "txSignature" TEXT UNIQUE;`;
+            
+            // Migration: Add resolvedMarkets to markets table
+            await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "resolvedMarkets" TEXT;`;
+            
+            // Migration: Add resolvedOutcomes to markets table
+            await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "resolvedOutcomes" TEXT;`;
+            
+            // Migration: Add scoreA and scoreB to markets table
+            await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "scoreA" INTEGER;`;
+            await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "scoreB" INTEGER;`;
+
+            // Migration: Add odds JSONB to markets table
+            await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "odds" JSONB;`;
+
+            // Migration: Add pointsReward to predictions table
+            await sql`ALTER TABLE predictions ADD COLUMN IF NOT EXISTS "pointsReward" INTEGER DEFAULT 100;`;
+
+            // Migration: Add performance indexes to predictions and locks tables
+            await sql`CREATE INDEX IF NOT EXISTS idx_predictions_wallet ON predictions("walletAddress");`;
+            await sql`CREATE INDEX IF NOT EXISTS idx_predictions_market ON predictions("marketId");`;
+            await sql`CREATE INDEX IF NOT EXISTS idx_locks_wallet ON locks("walletAddress");`;
 
             await sql`
                 CREATE TABLE IF NOT EXISTS treasury_logs (
@@ -160,20 +181,121 @@ export async function getDb() {
             // Seed initial World Cup markets if none exist
             const { rows } = await sql`SELECT COUNT(*) as count FROM markets;`;
             if (parseInt(rows[0].count) === 0) {
-                await sql`
-                    INSERT INTO markets ("teamA", "teamB", "matchDate", "pointsReward")
-                    VALUES 
-                    ('Turkey', 'Australia', '2026-06-11 16:00:00', 100),
-                    ('Brazil', 'Serbia', '2026-06-11 19:00:00', 100),
-                    ('USA', 'Wales', '2026-06-12 16:00:00', 100),
-                    ('Argentina', 'Saudi Arabia', '2026-06-12 19:00:00', 100),
-                    ('France', 'Denmark', '2026-06-13 16:00:00', 100),
-                    ('England', 'Iran', '2026-06-13 19:00:00', 100),
-                    ('Spain', 'Croatia', '2026-06-14 16:00:00', 100),
-                    ('Germany', 'Japan', '2026-06-14 19:00:00', 100),
-                    ('Portugal', 'Ghana', '2026-06-15 16:00:00', 100),
-                    ('Netherlands', 'Senegal', '2026-06-15 19:00:00', 100)
-                `;
+                const rawMatches = `Group A
+11 June	Mexico - South Africa	22:00
+12 June	South Korea - Czechia	05:00
+18 June	Czechia - South Africa	19:00
+19 June	Mexico - South Korea	04:00
+25 June	South Africa - South Korea	04:00
+25 June	Czechia - Mexico	04:00
+
+Group B
+12 June	Canada - Bosnia and Herzegovina	22:00
+13 June	Qatar - Switzerland	22:00
+18 June	Switzerland - Bosnia and Herzegovina	22:00
+19 June	Canada - Qatar	01:00
+24 June	Switzerland - Canada	22:00
+24 June	Bosnia and Herzegovina - Qatar	22:00
+
+Group C
+14 June	Brazil - Morocco	01:00
+14 June	Haiti - Scotland	04:00
+20 June	Scotland - Morocco	01:00
+20 June	Brazil - Haiti	03:30
+25 June	Morocco - Haiti	01:00
+25 June	Scotland - Brazil	01:00
+
+Group D
+13 June	USA - Paraguay	04:00
+13 June	Australia - Turkey	07:00
+19 June	USA - Australia	22:00
+20 June	Turkey - Paraguay	06:00
+26 June	Turkey - USA	05:00
+26 June	Paraguay - Australia	05:00
+
+Group E
+14 June	Germany - Curacao	20:00
+15 June	Ivory Coast - Ecuador	02:00
+20 June	Germany - Ivory Coast	23:00
+21 June	Ecuador - Curacao	03:00
+25 June	Curacao - Ivory Coast	23:00
+25 June	Ecuador - Germany	23:00
+
+Group F
+14 June	Netherlands - Japan	23:00
+15 June	Sweden - Tunisia	05:00
+20 June	Netherlands - Sweden	20:00
+20 June	Tunisia - Japan	07:00
+26 June	Tunisia - Netherlands	02:00
+26 June	Japan - Sweden	02:00
+
+Group G
+15 June	Belgium - Egypt	22:00
+16 June	Iran - New Zealand	04:00
+21 June	Belgium - Iran	22:00
+22 June	New Zealand - Egypt	04:00
+27 June	New Zealand - Belgium	06:00
+27 June	Egypt - Iran	06:00
+
+Group H
+15 June	Spain - Cape Verde	19:00
+16 June	Saudi Arabia - Uruguay	01:00
+21 June	Spain - Saudi Arabia	19:00
+22 June	Uruguay - Cape Verde	01:00
+27 June	Cape Verde - Saudi Arabia	03:00
+27 June	Uruguay - Spain	03:00
+
+Group I
+16 June	France - Senegal	22:00
+17 June	Iraq - Norway	01:00
+23 June	France - Iraq	00:00
+23 June	Norway - Senegal	03:00
+26 June	Norway - France	22:00
+26 June	Senegal - Iraq	22:00
+
+Group J
+17 June	Argentina - Algeria	04:00
+17 June	Austria - Jordan	07:00
+22 June	Argentina - Austria	20:00
+23 June	Jordan - Algeria	06:00
+28 June	Algeria - Austria	05:00
+28 June	Jordan - Argentina	05:00
+
+Group K
+17 June	Portugal - DR Congo	20:00
+18 June	Uzbekistan - Colombia	05:00
+23 June	Portugal - Uzbekistan	20:00
+24 June	Colombia - DR Congo	05:00
+28 June	Colombia - Portugal	02:30
+28 June	DR Congo - Uzbekistan	02:30
+
+Group L
+17 June	England - Croatia	23:00
+18 June	Ghana - Panama	02:00
+23 June	England - Ghana	23:00
+24 June	Panama - Croatia	02:00
+28 June	Panama - England	00:00
+28 June	Croatia - Ghana	00:00`;
+
+                const lines = rawMatches.split('\n');
+                for (const line of lines) {
+                    if (!line.trim() || line.startsWith('Group')) continue;
+                    let parts = line.split('\t');
+                    if (parts.length < 3) {
+                        parts = line.split(/\s{2,}|\t/);
+                    }
+                    if (parts.length >= 3) {
+                        let datePart = parts[0];
+                        let teamsPart = parts[1];
+                        let timePart = parts[2];
+                        const [day] = datePart.split(' ');
+                        const month = '06'; 
+                        const paddedDay = day.padStart(2, '0');
+                        const [teamA, teamB] = teamsPart.split(' - ');
+                        const matchDate = `2026-${month}-${paddedDay} ${timePart}:00+03`;
+                        await sql`INSERT INTO markets ("teamA", "teamB", "matchDate", "pointsReward") VALUES (${teamA}, ${teamB}, ${matchDate}, 100)`;
+                    }
+                }
             }
             
             isInitialized = true;

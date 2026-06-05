@@ -23,51 +23,51 @@ export default function LandingPage() {
   const lockingTiers = [
     {
       level: "Tier 0 (Holder)",
-      requirement: "Min 10,000 GG (Circulating)",
-      predictions: "Base Daily Limit",
+      requirement: "Min 250.000 $GoldenGoal (Circulating)",
+      predictions: "3 Predictions / Day",
       xp: "1.0x XP",
       rewardsBox: "100 XP / Rewards Box Open",
-      perk: "Hold tokens in your Solana wallet to unlock basic prediction privileges and open boxes for 100 XP.",
+      perk: "Hold 250.000+ tokens in your Solana wallet to unlock basic prediction privileges (3 predictions/day) and open boxes for 100 XP.",
       color: "from-zinc-500 to-zinc-700",
       glow: "rgba(113, 113, 122, 0.15)"
     },
     {
       level: "Tier 1 (Soft)",
-      requirement: "Min 100 GG Locked",
+      requirement: "Min 350.000 $GoldenGoal Locked",
       predictions: "+1 Prediction / Day",
       xp: "1.0x XP",
       rewardsBox: "75 XP / Rewards Box (25% Off)",
-      perk: "Low-barrier lock with 1-day lockup. Unlocks a 25% discount on the daily Rewards Box opening fee.",
+      perk: "Lock 350.000+ $GoldenGoal for a 1-day lockup. Unlocks a 25% discount on the daily Rewards Box opening fee.",
       color: "from-emerald-500 to-teal-600",
       glow: "rgba(16, 185, 129, 0.15)"
     },
     {
       level: "Tier 2 (7-Day)",
-      requirement: "Min 500 GG Locked",
+      requirement: "Min 500.000 $GoldenGoal Locked",
       predictions: "+3 Predictions / Day",
       xp: "1.0x XP",
       rewardsBox: "50 XP / Rewards Box (50% Off)",
-      perk: "7-day lockup. Unlocks a 50% discount on the daily Rewards Box opening fee.",
+      perk: "Lock 500.000+ $GoldenGoal for a 7-day lockup. Unlocks a 50% discount on the daily Rewards Box opening fee.",
       color: "from-blue-500 to-indigo-600",
       glow: "rgba(59, 130, 246, 0.15)"
     },
     {
       level: "Tier 3 (15-Day)",
-      requirement: "Min 1,000 GG Locked",
+      requirement: "Min 750.000 $GoldenGoal Locked",
       predictions: "+5 Predictions / Day",
       xp: "1.1x XP Booster",
       rewardsBox: "25 XP / Rewards Box (75% Off)",
-      perk: "15-day lockup. Unlocks a 75% discount on the daily Rewards Box opening fee and 1.1x XP.",
+      perk: "Lock 750.000+ $GoldenGoal for a 15-day lockup. Unlocks a 75% discount on the daily Rewards Box opening fee and 1.1x XP.",
       color: "from-purple-500 to-violet-600",
       glow: "rgba(139, 92, 246, 0.15)"
     },
     {
       level: "Tier 4 (30-Day)",
-      requirement: "Min 5,000 GG Locked",
+      requirement: "Min 1.000.000 $GoldenGoal Locked",
       predictions: "+10 Predictions / Day",
       xp: "1.25x XP Booster",
       rewardsBox: "1 Free Daily + 25 XP / Next Rewards Box",
-      perk: "30-day lockup. First daily Rewards Box opening is completely free, subsequent openings cost 25 XP.",
+      perk: "Lock 1.000.000+ $GoldenGoal for a 30-day lockup. First daily Rewards Box opening is completely free, subsequent openings cost 25 XP.",
       color: "from-yellow-400 via-amber-500 to-orange-500",
       glow: "rgba(245, 158, 11, 0.25)"
     }
@@ -226,12 +226,14 @@ export default function LandingPage() {
               <div className="text-3xl font-black text-white tracking-tight">0%</div>
               <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">Capital Loss Risk</div>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl group-hover/stat:scale-110 transition-transform duration-300">
-              🛡️
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center group-hover/stat:scale-110 transition-transform duration-300">
+              <svg className="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
             </div>
           </div>
 
-          {/* Stat 2: VIP Locking */}
+          {/* Stat 2: Tiered Locking */}
           <div className="relative overflow-hidden bg-zinc-900/30 hover:bg-zinc-900/50 border border-white/5 hover:border-amber-500/20 backdrop-blur-md rounded-3xl p-6 flex items-center justify-between transition-all duration-300 hover:scale-[1.02] shadow-[0_4px_30px_rgba(0,0,0,0.2)] group/stat">
             <div className="space-y-1 text-left">
               <div className="text-[10px] font-black text-amber-400 font-mono tracking-widest uppercase flex items-center gap-1.5">
@@ -239,10 +241,12 @@ export default function LandingPage() {
                 Multi-Tiered
               </div>
               <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500 tracking-tight">Tiers 0-4</div>
-              <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">VIP Locking Programs</div>
+              <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">Tiered Locking Programs</div>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl group-hover/stat:scale-110 transition-transform duration-300">
-              📈
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center group-hover/stat:scale-110 transition-transform duration-300">
+              <svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
             </div>
           </div>
 
@@ -256,8 +260,10 @@ export default function LandingPage() {
               <div className="text-3xl font-black text-white tracking-tight">Daily Drops</div>
               <div className="text-[10px] text-zinc-400 font-extrabold uppercase tracking-widest font-mono">Rewards Box Engine</div>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-2xl group-hover/stat:scale-110 transition-transform duration-300">
-              🎁
+            <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center group-hover/stat:scale-110 transition-transform duration-300">
+              <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
             </div>
           </div>
         </div>
@@ -292,7 +298,11 @@ export default function LandingPage() {
               <div className="lg:col-span-7 col-span-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {/* Pillar 1 */}
                 <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
-                  <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🧠</div>
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 .364l-.707 .707M21 12h-1M4 12H3m.337-6.929l.707 .707M12 21v-1m4.243-1.757l-.707-.707M7.757 19.243l-.707-.707M19 12a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
                   <h4 className="text-base font-bold text-white mb-2">Football Knowledge</h4>
                   <p className="text-zinc-400 text-xs leading-relaxed font-medium">
                     Test your in-depth understanding of league standings, tactical matching, team rosters, and historical head-to-head dynamics.
@@ -301,7 +311,11 @@ export default function LandingPage() {
 
                 {/* Pillar 2 */}
                 <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
-                  <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">📈</div>
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
                   <h4 className="text-base font-bold text-white mb-2">Prediction Accuracy</h4>
                   <p className="text-zinc-400 text-xs leading-relaxed font-medium">
                     Your foresight is graded mathematically. Build long-term win streaks across diverse match outcome types to scale your reputation.
@@ -310,7 +324,11 @@ export default function LandingPage() {
 
                 {/* Pillar 3 */}
                 <div className="bg-white/[0.02] border border-white/5 hover:border-yellow-500/20 p-6 rounded-2xl transition-all duration-300 group">
-                  <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🏆</div>
+                  <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                    </svg>
+                  </div>
                   <h4 className="text-base font-bold text-white mb-2">Leaderboard Dominance</h4>
                   <p className="text-zinc-400 text-xs leading-relaxed font-medium">
                     Outperform the global community. Dual ladders reward analytical brilliance and active community engagement with top ranks.
@@ -333,8 +351,10 @@ export default function LandingPage() {
             {/* Feature 1 */}
             <div className="bg-zinc-900/50 border border-white/5 hover:border-amber-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl group-hover:bg-amber-500/10 transition-all"></div>
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 text-2xl animate-pulse">
-                ⚽
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6 text-2xl">
+                <svg className="w-6 h-6 text-amber-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">1. Football Predictor</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
@@ -346,7 +366,9 @@ export default function LandingPage() {
             <div className="bg-zinc-900/50 border border-white/5 hover:border-red-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl group-hover:bg-red-500/10 transition-all"></div>
               <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-6 text-2xl">
-                🎁
+                <svg className="w-6 h-6 text-red-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">2. Rewards Box Module</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
@@ -358,19 +380,24 @@ export default function LandingPage() {
             <div className="bg-zinc-900/50 border border-white/5 hover:border-emerald-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-all"></div>
               <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-2xl">
-                🛡️
+                <svg className="w-6 h-6 text-emerald-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">3. Deflationary Locking</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                Lock your $GG tokens to scale your prediction capabilities, boost your XP multiplier, and unlock VIP access levels. Drive premium value through long-term loyalty.
+                Lock your $GoldenGoal tokens to scale your prediction capabilities, boost your XP multiplier, and unlock higher access levels. Drive premium value through long-term loyalty.
               </p>
             </div>
 
             {/* Feature 4 */}
+            {/* Feature 4 */}
             <div className="bg-zinc-900/50 border border-white/5 hover:border-blue-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl group-hover:bg-blue-500/10 transition-all"></div>
               <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-6 text-2xl">
-                📊
+                <svg className="w-6 h-6 text-blue-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 8v8m-4-5v5m-4-2v2M2 4h20a2 2 0 012 2v12a2 2 0 01-2 2H2a2 2 0 01-2-2V6a2 2 0 012-2z" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">4. Dual Leaderboards</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
@@ -382,7 +409,9 @@ export default function LandingPage() {
             <div className="bg-zinc-900/50 border border-white/5 hover:border-cyan-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-3xl group-hover:bg-cyan-500/10 transition-all"></div>
               <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6 text-2xl">
-                🌾
+                <svg className="w-6 h-6 text-cyan-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">5. Twitter Farming Hub</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
@@ -394,7 +423,9 @@ export default function LandingPage() {
             <div className="bg-zinc-900/50 border border-white/5 hover:border-purple-500/25 p-8 rounded-3xl backdrop-blur-sm relative overflow-hidden group transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-3xl group-hover:bg-purple-500/10 transition-all"></div>
               <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6 text-2xl">
-                ☁️
+                <svg className="w-6 h-6 text-purple-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                </svg>
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">6. AWS Cloud Shield</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
@@ -414,9 +445,9 @@ export default function LandingPage() {
             <div className="space-y-6">
               <div className="space-y-2">
                 <span className="text-amber-500 font-mono text-xs uppercase tracking-widest font-bold">UTILITY HUB</span>
-                <h3 className="text-3xl sm:text-4xl font-black text-white">VIP Locking Programs</h3>
+                <h3 className="text-3xl sm:text-4xl font-black text-white">Tiered Locking Programs</h3>
                 <p className="text-zinc-400 text-sm leading-relaxed font-medium">
-                  Locking your $GG tokens contracts circulating market supply while unlocking compound benefits across the platform. Click on a tier level below to preview its specific gaming benefits:
+                  Locking your $GoldenGoal tokens contracts circulating market supply while unlocking compound benefits across the platform. Click on a tier level below to preview its specific gaming benefits:
                 </p>
               </div>
 
@@ -540,9 +571,9 @@ export default function LandingPage() {
                 <span className="bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">LAUNCHING SOON</span>
               </div>
               <div className="sm:w-2/3">
-                <h4 className="font-bold text-white text-base mb-2">Football Predictor & Leaderboards</h4>
+                <h4 className="font-bold text-white text-base mb-2">Football Predictor & Locking Engine</h4>
                 <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-                  Activation of the core Football Predictor analytics board, allowing live forecasts across global football leagues, alongside the launch of Pro & Social Leaderboards.
+                  Activation of the core Football Predictor analytics board, allowing live forecasts across global football leagues, alongside the launch of the multi-tier lockup tiered locking engine.
                 </p>
               </div>
             </div>
@@ -554,9 +585,9 @@ export default function LandingPage() {
                 <span className="bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">UPCOMING</span>
               </div>
               <div className="sm:w-2/3">
-                <h4 className="font-bold text-white text-base mb-2">Rewards Box & Locking Engine</h4>
+                <h4 className="font-bold text-white text-base mb-2">Reward Box & Social Tasks</h4>
                 <p className="text-zinc-400 text-xs leading-relaxed font-medium">
-                  Unlocking the gamified Rewards Box module for daily XP & prediction quota claims, and launching the multi-tier lockup VIP Locking programs.
+                  Unlocking the gamified Rewards Box module for daily XP & prediction quota claims, and launching the social hub task engagement modules.
                 </p>
               </div>
             </div>
@@ -582,7 +613,7 @@ export default function LandingPage() {
         <section className="w-full text-center py-20 border-t border-white/5 select-none">
           <h2 className="text-3xl sm:text-5xl font-black text-white mb-6 tracking-tight">DOMINATE THE SCOREBOARD</h2>
           <p className="text-zinc-400 max-w-lg mx-auto text-sm leading-relaxed mb-10 font-medium">
-            Connect your Phantom wallet in seconds, lock your predictions, climb the analyst ranks, and earn weekly $GG rewards risk-free.
+            Connect your Phantom wallet in seconds, lock your predictions, climb the analyst ranks, and earn weekly $GoldenGoal rewards risk-free.
           </p>
           <div className="flex justify-center">
             {showWalletUI ? (

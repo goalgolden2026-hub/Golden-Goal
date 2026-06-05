@@ -8,10 +8,30 @@ export default function Leaderboard() {
   const [leaders, setLeaders] = useState([]);
   const [userStats, setUserStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('ALL'); // 'ALL' or 1, 2, 3, 4, 5
+  const [unlockedWeeks, setUnlockedWeeks] = useState([]);
 
   useEffect(() => {
-    const walletParam = connected && publicKey ? `?walletAddress=${publicKey.toBase58()}` : '';
-    fetch(`/api/leaderboard${walletParam}`)
+    const WEEK_1_START = new Date("2026-06-11T00:00:00+03:00");
+    const now = new Date();
+    const active = [];
+    for (let w = 1; w <= 5; w++) {
+      const weekStart = new Date(WEEK_1_START.getTime() + (w - 1) * 7 * 24 * 60 * 60 * 1000);
+      if (now >= weekStart) {
+        active.push(w);
+      }
+    }
+    setUnlockedWeeks(active);
+  }, []);
+
+  useEffect(() => {
+    const walletParam = connected && publicKey ? `&walletAddress=${publicKey.toBase58()}` : '';
+    const url = activeTab === 'ALL' 
+        ? `/api/leaderboard?${walletParam.replace('&', '')}`
+        : `/api/leaderboard?week=${activeTab}${walletParam}`;
+        
+    setLoading(true);
+    fetch(url)
       .then(res => res.json())
       .then(data => {
           if (data.success) {
@@ -24,7 +44,7 @@ export default function Leaderboard() {
           console.error(err);
           setLoading(false);
       });
-  }, [connected, publicKey]);
+  }, [connected, publicKey, activeTab]);
 
   const shortenWallet = (address) => `${address.slice(0, 4)}...${address.slice(-4)}`;
 
@@ -48,7 +68,7 @@ export default function Leaderboard() {
           <span className="font-mono text-lg text-zinc-300 ml-2">{shortenWallet(leader.walletAddress)}</span>
         </div>
         <span className="inline-flex items-center justify-center px-4 py-1 rounded-xl bg-amber-500/10 text-amber-500 font-bold text-lg border border-amber-500/20">
-          {leader.points} pts
+          {activeTab === 'ALL' ? leader.points : leader.weeklyPoints} pts
         </span>
       </div>
 
@@ -74,12 +94,22 @@ export default function Leaderboard() {
       <div className="flex justify-between items-center md:contents">
         <div className="md:col-span-2 text-left md:text-right">
           <span className="text-xs text-zinc-500 md:hidden mr-2">Weekly:</span>
-          <span className="text-blue-400 font-bold text-lg">{leader.weeklyPoints}</span>
+          {activeTab !== 'ALL' ? (
+            <span className="inline-flex items-center justify-center min-w-[80px] px-4 h-12 rounded-2xl bg-amber-500/10 text-amber-500 font-bold text-xl border border-amber-500/20">
+              {leader.weeklyPoints}
+            </span>
+          ) : (
+            <span className="text-blue-400 font-bold text-lg">{leader.weeklyPoints}</span>
+          )}
         </div>
         <div className="hidden md:block col-span-2 text-right">
-          <span className="inline-flex items-center justify-center min-w-[80px] px-4 h-12 rounded-2xl bg-amber-500/10 text-amber-500 font-bold text-xl border border-amber-500/20">
-            {leader.points}
-          </span>
+          {activeTab === 'ALL' ? (
+            <span className="inline-flex items-center justify-center min-w-[80px] px-4 h-12 rounded-2xl bg-amber-500/10 text-amber-500 font-bold text-xl border border-amber-500/20">
+              {leader.points}
+            </span>
+          ) : (
+            <span className="text-blue-400 font-bold text-lg">{leader.points}</span>
+          )}
         </div>
       </div>
     </div>
@@ -87,19 +117,62 @@ export default function Leaderboard() {
 
   return (
     <div className="flex-1 p-4 md:p-8 max-w-5xl mx-auto w-full">
-      <div className="text-center mb-12">
+      <div className="text-center mb-8">
         <h1 className="text-5xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">Top Forecasters</h1>
         <p className="text-zinc-400">The most accurate predictors on Golden Goal, ranked by successful predictions.</p>
       </div>
 
+      {/* Week Navigation Filters */}
+      <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+        <button
+          onClick={() => setActiveTab('ALL')}
+          className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all border ${
+            activeTab === 'ALL'
+              ? 'bg-amber-500 text-black border-amber-500 shadow-lg shadow-amber-500/20'
+              : 'bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 border-zinc-800/80 hover:border-zinc-700'
+          }`}
+        >
+          🏆 ALL
+        </button>
+        {[1, 2, 3, 4, 5].map((w) => {
+          const isUnlocked = unlockedWeeks.includes(w);
+          if (isUnlocked) {
+            return (
+              <button
+                key={w}
+                onClick={() => setActiveTab(w)}
+                className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all border ${
+                  activeTab === w
+                    ? 'bg-amber-500 text-black border-amber-500 shadow-lg shadow-amber-500/20'
+                    : 'bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 border-zinc-800/80 hover:border-zinc-700'
+                }`}
+              >
+                Week {w}
+              </button>
+            );
+          } else {
+            return (
+              <button
+                key={w}
+                disabled
+                className="px-5 py-2.5 rounded-xl font-bold text-sm bg-zinc-950/40 text-zinc-600 border border-zinc-900/50 cursor-not-allowed flex items-center gap-1.5 opacity-60"
+                title="This week's competition hasn't started yet"
+              >
+                🔒 Week {w}
+              </button>
+            );
+          }
+        })}
+      </div>
+
       <div className="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl">
         {/* Header */}
-        <div className="hidden md:grid grid-cols-12 gap-4 p-6 border-b border-zinc-800 text-sm font-bold text-zinc-500 uppercase tracking-wider">
-          <div className="col-span-1 text-center">Rank</div>
-          <div className="col-span-3">Wallet</div>
-          <div className="col-span-4 text-center">Stats</div>
-          <div className="col-span-2 text-right">Weekly Pts</div>
-          <div className="col-span-2 text-right">Total Pts</div>
+        <div className="hidden md:grid grid-cols-12 gap-4 p-6 border-b border-zinc-800 text-sm font-bold uppercase tracking-wider">
+          <div className="col-span-1 text-center text-zinc-500">Rank</div>
+          <div className="col-span-3 text-zinc-500">Wallet</div>
+          <div className="col-span-4 text-center text-zinc-500">Stats</div>
+          <div className={`col-span-2 text-right transition-colors ${activeTab !== 'ALL' ? 'text-amber-500 font-extrabold' : 'text-zinc-500'}`}>Weekly Pts</div>
+          <div className={`col-span-2 text-right transition-colors ${activeTab === 'ALL' ? 'text-amber-500 font-extrabold' : 'text-zinc-500'}`}>Total Pts</div>
         </div>
 
         {loading ? (
@@ -110,10 +183,25 @@ export default function Leaderboard() {
               <LeaderRow key={leader.walletAddress} leader={leader} index={index} />
             ))}
             {leaders.length === 0 && (
-              <div className="p-12 text-center text-zinc-600">No predictions have been resolved yet.</div>
+              <div className="p-12 text-center text-zinc-600">No predictions have been resolved for this period yet.</div>
             )}
           </div>
         )}
+      </div>
+
+      {/* Legend / Info Box */}
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-zinc-500 bg-zinc-950/30 py-3 px-6 rounded-2xl border border-zinc-800/40 w-full">
+        <span className="flex items-center gap-1.5">
+          <span className="font-bold text-zinc-400 uppercase tracking-wider">TP:</span> Total Predictions
+        </span>
+        <span className="w-1.5 h-1.5 rounded-full bg-zinc-800/60 hidden sm:inline" />
+        <span className="flex items-center gap-1.5">
+          <span className="font-bold text-zinc-400 uppercase tracking-wider">WP:</span> Won Predictions
+        </span>
+        <span className="w-1.5 h-1.5 rounded-full bg-zinc-800/60 hidden sm:inline" />
+        <span className="flex items-center gap-1.5">
+          <span className="font-bold text-zinc-400 uppercase tracking-wider">WR:</span> Win Rate (%)
+        </span>
       </div>
 
       {/* My Rank Card */}
@@ -149,11 +237,11 @@ export default function Leaderboard() {
               <div className="flex items-center gap-4 md:justify-end">
                 <div className="text-center">
                   <p className="text-xs text-zinc-500 mb-1">Weekly</p>
-                  <p className="text-blue-400 font-black text-xl">{userStats.weeklyPoints}</p>
+                  <p className={`${activeTab !== 'ALL' ? 'text-amber-400 text-3xl' : 'text-blue-400 text-xl'} font-black`}>{userStats.weeklyPoints}</p>
                 </div>
                 <div className="text-center">
                   <p className="text-xs text-zinc-500 mb-1">Total</p>
-                  <p className="text-amber-400 font-black text-3xl">{userStats.points}</p>
+                  <p className={`${activeTab === 'ALL' ? 'text-amber-400 text-3xl' : 'text-blue-400 text-xl'} font-black`}>{userStats.points}</p>
                 </div>
               </div>
             </div>

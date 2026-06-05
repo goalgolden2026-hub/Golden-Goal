@@ -4,14 +4,27 @@ import { getDb } from '@/lib/db';
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { marketId, betType, predictionType, winningPrediction } = body;
+        const { marketId, betType, predictionType, winningPrediction, scoreA, scoreB } = body;
         const finalPredictionType = predictionType || betType;
+        const hasScores = scoreA !== undefined && scoreB !== undefined && scoreA !== null && scoreB !== null;
 
-        if (!marketId || !finalPredictionType || !winningPrediction) {
-            return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
+        if (!marketId) {
+            return NextResponse.json({ success: false, error: "Missing marketId" }, { status: 400 });
         }
 
         const sql = await getDb();
+
+        if (!finalPredictionType || !winningPrediction) {
+            if (hasScores) {
+                await sql`
+                    UPDATE markets 
+                    SET "scoreA" = ${parseInt(scoreA)}, "scoreB" = ${parseInt(scoreB)}
+                    WHERE id = ${marketId}
+                `;
+                return NextResponse.json({ success: true, message: "Match score updated successfully!" });
+            }
+            return NextResponse.json({ success: false, error: "Missing required fields for resolution" }, { status: 400 });
+        }
 
         // 1. Get Market Info
         const marketRes = await sql`SELECT * FROM markets WHERE id = ${marketId}`;
@@ -19,6 +32,36 @@ export async function POST(request) {
             return NextResponse.json({ success: false, error: "Market not found" }, { status: 404 });
         }
         const market = marketRes.rows[0];
+
+        // Parse existing outcomes or start fresh
+        let outcomes = {};
+        if (market.resolvedOutcomes) {
+            try {
+                outcomes = JSON.parse(market.resolvedOutcomes);
+            } catch (e) {
+                console.error("Error parsing resolvedOutcomes JSON:", e);
+            }
+        }
+
+        // Fetch distinct WON predictions as a fallback/merge for database healing & backward compatibility
+        const wonPredictionsRes = await sql`
+            SELECT DISTINCT "predictionType", prediction 
+            FROM predictions 
+            WHERE "marketId" = ${marketId} AND status = 'WON'
+        `;
+        wonPredictionsRes.rows.forEach(r => {
+            if (outcomes[r.predictionType] === undefined) {
+                outcomes[r.predictionType] = r.prediction;
+            }
+        });
+
+        // Add the new resolution
+        outcomes[finalPredictionType] = winningPrediction;
+        const newOutcomesStr = JSON.stringify(outcomes);
+
+        // Keep resolvedMarkets perfectly in sync with the keys of resolvedOutcomes
+        const resolvedKeys = Object.keys(outcomes);
+        const newResolvedStr = resolvedKeys.join(',');
 
         // 2. Fetch all PENDING predictions for this market and predictionType
         const betsRes = await sql`
@@ -28,7 +71,21 @@ export async function POST(request) {
         
         const bets = betsRes.rows;
         if (bets.length === 0) {
-             return NextResponse.json({ success: true, message: `No pending predictions found for ${finalPredictionType}.`, winnersCount: 0 });
+             // Save even if there are no pending user predictions to keep track of selection state
+             if (hasScores) {
+                 await sql`
+                     UPDATE markets 
+                     SET "resolvedMarkets" = ${newResolvedStr}, "resolvedOutcomes" = ${newOutcomesStr}, "scoreA" = ${parseInt(scoreA)}, "scoreB" = ${parseInt(scoreB)}
+                     WHERE id = ${marketId}
+                 `;
+             } else {
+                 await sql`
+                     UPDATE markets 
+                     SET "resolvedMarkets" = ${newResolvedStr}, "resolvedOutcomes" = ${newOutcomesStr} 
+                     WHERE id = ${marketId}
+                 `;
+             }
+             return NextResponse.json({ success: true, message: `No pending predictions found for ${finalPredictionType}. Resolution saved.`, winnersCount: 0 });
         }
 
         const pointsReward = market.pointsReward || 100;
@@ -56,6 +113,21 @@ export async function POST(request) {
                 // Loss
                 await sql`UPDATE predictions SET status = 'LOST' WHERE id = ${bet.id}`;
             }
+        }
+
+        // 4. Update the resolvedMarkets list and resolvedOutcomes in the markets table
+        if (hasScores) {
+            await sql`
+                UPDATE markets 
+                SET "resolvedMarkets" = ${newResolvedStr}, "resolvedOutcomes" = ${newOutcomesStr}, "scoreA" = ${parseInt(scoreA)}, "scoreB" = ${parseInt(scoreB)}
+                WHERE id = ${marketId}
+            `;
+        } else {
+            await sql`
+                UPDATE markets 
+                SET "resolvedMarkets" = ${newResolvedStr}, "resolvedOutcomes" = ${newOutcomesStr} 
+                WHERE id = ${marketId}
+            `;
         }
 
         return NextResponse.json({ 

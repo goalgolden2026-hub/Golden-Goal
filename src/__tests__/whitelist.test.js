@@ -24,6 +24,5 @@ describe('Solana Private Preview Whitelist Tests', () => {
 
   test('whitelist array should contain the core admin preview wallets', () => {
     expect(WHITELISTED_WALLETS).toContain('2iF2q7hjEqEe8o6PTdJnYRYZUCeaMDjD35tSrKbu5R8K');
-    expect(WHITELISTED_WALLETS).toContain('HMsWAhRC9wom6JVBpuo2gjAGp7Sb59FEyMraLpC4YXGc');
   });
 });

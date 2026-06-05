@@ -1,6 +1,5 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { getAssociatedTokenAddress, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { isWalletWhitelisted } from './whitelist';
 
 const GOLDEN_GOAL_MINT = process.env.GOLDEN_GOAL_MINT || process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT;
 

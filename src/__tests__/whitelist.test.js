@@ -17,9 +17,9 @@ describe('Solana Private Preview Whitelist Tests', () => {
     expect(isWalletWhitelisted('')).toBe(false);
   });
 
-  test('should return false for non-whitelisted standard wallets', () => {
+  test('should return true for any standard wallet when whitelist is deactivated', () => {
     const standardWallet = 'SolanaWalletAddress1111111111111111111111111';
-    expect(isWalletWhitelisted(standardWallet)).toBe(false);
+    expect(isWalletWhitelisted(standardWallet)).toBe(true);
   });
 
   test('whitelist array should contain the core admin preview wallets', () => {

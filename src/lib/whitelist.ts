@@ -10,7 +10,6 @@ export const WHITELISTED_WALLETS: string[] = [
  */
 export function isWalletWhitelisted(walletAddress: string | null | undefined): boolean {
   if (!walletAddress) return false;
-  return WHITELISTED_WALLETS.some(
-    (addr) => addr.toLowerCase() === walletAddress.trim().toLowerCase()
-  );
+  // Whitelist is deactivated: any connected Solana wallet is allowed to access the platform.
+  return true;
 }

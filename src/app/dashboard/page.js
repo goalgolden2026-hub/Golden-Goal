@@ -31,6 +31,11 @@ const formatPredictionValue = (val) => {
     return val.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
 };
 
+const spaceOutText = (text) => {
+    if (!text) return '';
+    return text.toUpperCase().split('').join(' ');
+};
+
 const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     const ctx = canvas.getContext('2d');
     
@@ -75,14 +80,12 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.lineWidth = 2;
     ctx.strokeRect(52, 52, 1496, 796);
 
-    // 1. Header Area (Enlarged to 18px)
+    // 1. Header Area (Enlarged to 18px, spaced out)
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = "bold 18px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#71717a';
-    ctx.letterSpacing = '8px';
-    ctx.fillText('GOLDEN GOAL PREDICTION PASS', 800, 105);
-    ctx.letterSpacing = 'normal'; // reset
+    ctx.fillText(spaceOutText('GOLDEN GOAL PREDICTION PASS'), 800, 105);
 
     // Divider line 1 (below header)
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
@@ -92,12 +95,10 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.lineTo(1400, 145);
     ctx.stroke();
 
-    // 2. Matchup Section Title (Enlarged to 16px)
+    // 2. Matchup Section Title (Enlarged to 16px, spaced out)
     ctx.font = "bold 16px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#d97706';
-    ctx.letterSpacing = '4px';
-    ctx.fillText('MATCH FIXTURE', 800, 180);
-    ctx.letterSpacing = 'normal'; // reset
+    ctx.fillText(spaceOutText('MATCH FIXTURE'), 800, 180);
 
     const flagA = TEAM_FLAGS[pred.teamA] || '🏳️';
     const flagB = TEAM_FLAGS[pred.teamB] || '🏳️';
@@ -110,27 +111,27 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.font = "64px 'Inter', sans-serif";
     ctx.fillText(flagA, 460, 265);
     
-    // Draw Team A Name (Centered, enlarged to 36px/28px)
+    // Draw Team A Name (Centered, enlarged to 36px/28px, spaced out)
     const nameAFontSize = nameA.length > 12 ? '28px' : '36px';
     ctx.font = `900 ${nameAFontSize} 'Outfit', 'Inter', sans-serif`;
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(nameA.toUpperCase(), 460, 335);
+    ctx.fillText(spaceOutText(nameA), 460, 335);
 
-    // VS center indicator (Centered at X=800, Y=295, enlarged to 32px)
+    // VS center indicator (Centered at X=800, Y=295, enlarged to 32px, spaced out)
     ctx.font = "italic 900 32px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#52525b';
-    ctx.fillText('VS', 800, 295);
+    ctx.fillText(spaceOutText('VS'), 800, 295);
 
     // Draw Team B Flag (Centered, enlarged to 64px, and fillStyle set to opaque white)
     ctx.fillStyle = '#ffffff';
     ctx.font = "64px 'Inter', sans-serif";
     ctx.fillText(flagB, 1140, 265);
     
-    // Draw Team B Name (Centered, enlarged to 36px/28px)
+    // Draw Team B Name (Centered, enlarged to 36px/28px, spaced out)
     const nameBFontSize = nameB.length > 12 ? '28px' : '36px';
     ctx.font = `900 ${nameBFontSize} 'Outfit', 'Inter', sans-serif`;
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(nameB.toUpperCase(), 1140, 335);
+    ctx.fillText(spaceOutText(nameB), 1140, 335);
 
     // Match Date (Centered below matchup, Y=415, enlarged to 18px)
     ctx.font = "bold 18px 'JetBrains Mono', monospace";
@@ -144,18 +145,15 @@ const drawTicket = (canvas, pred, walletAddress, bgImg) => {
     ctx.lineTo(1400, 450);
     ctx.stroke();
 
-    // 3. Forecast Details & Ticket Status headers (Enlarged to 16px)
+    // 3. Forecast Details & Ticket Status headers (Enlarged to 16px, spaced out)
     ctx.font = "bold 16px 'JetBrains Mono', monospace";
     ctx.fillStyle = '#d97706';
-    ctx.letterSpacing = '4px';
     
     ctx.textAlign = 'left';
-    ctx.fillText('FORECAST DETAILS', 200, 490);
+    ctx.fillText(spaceOutText('FORECAST DETAILS'), 200, 490);
     
     ctx.textAlign = 'right';
-    ctx.fillText('TICKET STATUS', 1400, 490);
-    
-    ctx.letterSpacing = 'normal'; // reset
+    ctx.fillText(spaceOutText('TICKET STATUS'), 1400, 490);
 
     // 1. Calculate dynamic widths for Forecast and Ticket Status card boxes
     ctx.font = "bold 24px 'JetBrains Mono', monospace";
@@ -307,6 +305,13 @@ export default function Dashboard() {
       
       if (bgImg.complete) {
         draw();
+      }
+
+      // Re-draw once web fonts are fully loaded to prevent browser default font overrides
+      if (typeof document !== 'undefined' && document.fonts) {
+          document.fonts.ready.then(() => {
+              draw();
+          });
       }
 
       // Fallback in case loading takes too long or fails

@@ -137,10 +137,7 @@ export default function Header() {
                                             <span>Reward Box</span>
                                             <span className="text-[8px] font-black tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full uppercase animate-pulse">Coming Soon</span>
                                         </div>
-                                        <div className="flex items-center justify-between px-4 py-2.5 rounded-xl text-zinc-500 cursor-not-allowed font-semibold text-xs select-none hover:bg-white/[0.02]">
-                                            <span>Social Tasks</span>
-                                            <span className="text-[8px] font-black tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full uppercase animate-pulse">Coming Soon</span>
-                                        </div>
+                                        <Link href="/rewards/social-tasks" className="block px-4 py-2.5 rounded-xl hover:bg-amber-500/10 hover:text-amber-400 transition-all font-semibold text-xs text-left">Social Tasks</Link>
                                     </div>
                                 </div>
                             </div>
@@ -209,10 +206,7 @@ export default function Header() {
                                                     <span>Reward Box</span>
                                                     <span className="text-[8px] font-black tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full uppercase animate-pulse">Coming Soon</span>
                                                 </div>
-                                                <div className="flex justify-between items-center text-zinc-500 cursor-not-allowed text-xs pr-4 py-1 select-none">
-                                                    <span>Social Tasks</span>
-                                                    <span className="text-[8px] font-black tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full uppercase animate-pulse">Coming Soon</span>
-                                                </div>
+                                                <Link href="/rewards/social-tasks" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-400 transition-colors">Social Tasks</Link>
                                             </div>
                                         )}
                                     </div>

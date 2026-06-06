@@ -12,9 +12,7 @@ const WalletMultiButtonDynamic = dynamic(
 export default function SocialTasksPage() {
     const { publicKey, connected } = useWallet();
     
-    useEffect(() => {
-        window.location.href = '/rewards/locking';
-    }, []);
+
 
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);

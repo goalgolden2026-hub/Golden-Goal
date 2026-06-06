@@ -225,3 +225,27 @@ export async function POST(request) {
     }
 }
 
+export async function GET(request) {
+    try {
+        const sql = await getDb();
+        const { rows } = await sql`
+            SELECT 
+                p.id, 
+                p."walletAddress", 
+                p.prediction, 
+                p."predictionType", 
+                p.timestamp,
+                m."teamA", 
+                m."teamB"
+            FROM predictions p
+            JOIN markets m ON p."marketId" = m.id
+            ORDER BY p.timestamp DESC
+            LIMIT 10
+        `;
+        return NextResponse.json({ success: true, predictions: rows });
+    } catch (error) {
+        console.error("GET /api/predictions error:", error);
+        return NextResponse.json({ success: false, error: "Failed to fetch latest predictions" }, { status: 500 });
+    }
+}
+

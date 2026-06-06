@@ -77,6 +77,7 @@ function MarketsContent() {
   const [scores, setScores] = useState({});
   const [loading, setLoading] = useState(true);
   const [userPredictions, setUserPredictions] = useState([]);
+  const [latestPredictions, setLatestPredictions] = useState([]);
   const searchParams = useSearchParams();
   const filter = searchParams.get('filter') || 'live';
 
@@ -179,6 +180,22 @@ function MarketsContent() {
     };
     fetchScores();
     const interval = setInterval(fetchScores, 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const fetchLatest = () => {
+        fetch('/api/predictions')
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+                setLatestPredictions(data.predictions || []);
+            }
+          })
+          .catch(err => console.error("Failed to load latest predictions:", err));
+    };
+    fetchLatest();
+    const interval = setInterval(fetchLatest, 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -357,6 +374,30 @@ function MarketsContent() {
       </div>
   );
 
+  const formatWallet = (wallet) => {
+    if (!wallet) return 'Anonymous';
+    return `${wallet.slice(0, 4)}...${wallet.slice(-4)}`;
+  };
+
+  const formatType = (type) => {
+    switch (type) {
+      case 'MAIN': return 'Winner';
+      case 'TOTAL_GOALS': return 'Total Goals';
+      case 'BTTS': return 'Both Teams to Score';
+      case 'FIRST_GOAL': return 'First Goal';
+      case 'DOUBLE_CHANCE': return 'Double Chance';
+      case 'FIRST_HALF': return 'First Half Winner';
+      default: return type;
+    }
+  };
+
+  const displayPredictions = latestPredictions.length > 0 ? latestPredictions : [
+    { id: 'd1', walletAddress: 'At1KeuyXZiMFN2Tos8gsGjgyG9uMHSHLLweTbwzbsCsQ', teamA: 'Mexico', teamB: 'South Africa', predictionType: 'MAIN', prediction: 'Mexico' },
+    { id: 'd2', walletAddress: '2iF2q7hjEqEe8o6PTdJnYRYZUCeaMDjD35tSrKbu5R8K', teamA: 'Germany', teamB: 'Curacao', predictionType: 'TOTAL_GOALS', prediction: 'Over 2.5' },
+    { id: 'd3', walletAddress: 'At1KeuyXZiMFN2Tos8gsGjgyG9uMHSHLLweTbwzbsCsQ', teamA: 'Canada', teamB: 'Switzerland', predictionType: 'BTTS', prediction: 'Yes' },
+    { id: 'd4', walletAddress: '2iF2q7hjEqEe8o6PTdJnYRYZUCeaMDjD35tSrKbu5R8K', teamA: 'Brazil', teamB: 'Morocco', predictionType: 'FIRST_HALF', prediction: 'Brazil' },
+  ];
+
   return (
     <div className="flex flex-col flex-1 relative min-h-screen overflow-x-hidden bg-black">
       
@@ -493,6 +534,28 @@ function MarketsContent() {
                 <p className="text-[11px] font-medium leading-relaxed text-zinc-400">
                   <strong className="text-zinc-200">NO PURCHASE NECESSARY.</strong> Void where prohibited by law. Standard daily prediction quotas are allocated free of charge. Platform operations strictly simulate a football analytical index. Leaderboards are decided 100% based on predictive foresight, football acumen, and data modelling—completely free of capital hazard or chance elements.
                 </p>
+              </div>
+            </div>
+            
+            {/* LATEST PREDICTIONS TICKER */}
+            <div className="w-full max-w-2xl mx-auto mt-8 overflow-hidden rounded-xl bg-zinc-950/45 border border-zinc-800/80 backdrop-blur-md py-3.5 relative select-none">
+              {/* Left & Right fading shadows */}
+              <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none"></div>
+              <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none"></div>
+              
+              <div className="overflow-hidden w-full flex">
+                <div className="animate-marquee flex gap-16 items-center whitespace-nowrap">
+                  {[...displayPredictions, ...displayPredictions].map((pred, i) => (
+                    <div key={pred.id + '-' + i} className="flex items-center gap-3 text-xs text-zinc-300 font-medium font-mono">
+                      <span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)] animate-pulse inline-block shrink-0"></span>
+                      <span className="text-zinc-500">{formatWallet(pred.walletAddress)}</span>
+                      <span>predicted</span>
+                      <span className="text-white font-bold">{TEAM_FLAGS[pred.teamA] || '🏳️'} {pred.teamA} vs {pred.teamB} {TEAM_FLAGS[pred.teamB] || '🏳️'}</span>
+                      <span className="text-zinc-500">Pick:</span>
+                      <span className="text-amber-400 font-extrabold">{formatType(pred.predictionType)} → {pred.prediction}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
         </div>

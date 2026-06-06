@@ -159,6 +159,14 @@ export async function getDb() {
             `;
 
             await sql`
+                CREATE TABLE IF NOT EXISTS live_scores_cache (
+                    key TEXT PRIMARY KEY,
+                    data JSONB,
+                    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            `;
+
+            await sql`
                 CREATE TABLE IF NOT EXISTS social_tasks (
                     id SERIAL PRIMARY KEY,
                     "walletAddress" TEXT NOT NULL,

@@ -37,14 +37,28 @@ function calculateElapsedMinutes(event) {
     return 0;
 }
 
-// In-memory cache to respect API rate limits (60 seconds cache)
-let liveCache = null;
-let lastCacheTime = 0;
-const CACHE_TTL = 60 * 1000;
-
 export async function GET(request) {
     try {
         const sql = await getDb();
+        const now = Date.now();
+
+        // 1. Check Database Cache (highly reliable across multiple serverless functions)
+        const cacheRes = await sql`
+            SELECT data, "updatedAt" 
+            FROM live_scores_cache 
+            WHERE key = 'global_live_scores'
+        `;
+        
+        if (cacheRes.rowCount > 0) {
+            const cache = cacheRes.rows[0];
+            const cacheAgeMs = now - new Date(cache.updatedAt).getTime();
+            // Cache TTL = 60 seconds
+            if (cacheAgeMs < 60000) {
+                return NextResponse.json({ success: true, scores: cache.data }, { status: 200 });
+            }
+        }
+
+        // Cache is missing or expired -> Fetch fresh data
         const { rows: activeMarkets } = await sql`
             SELECT id, "teamA", "teamB", "matchDate", status 
             FROM markets 
@@ -55,42 +69,60 @@ export async function GET(request) {
             return NextResponse.json({ success: true, scores: {} });
         }
 
-        const now = Date.now();
         const liveScores = {};
 
-        // Serve from cache if valid
-        if (liveCache && (now - lastCacheTime < CACHE_TTL)) {
-            return NextResponse.json({ success: true, scores: liveCache });
-        }
+        // 2. Identify dates to query. IMPORTANT: Only query dates that are close to now (within 24 hours)
+        // This prevents query calls for upcoming World Cup matches scheduled weeks away.
+        const activeMatchDatesToQuery = activeMarkets.filter(market => {
+            const matchTime = new Date(market.matchDate).getTime();
+            const diffMs = Math.abs(now - matchTime);
+            // Match window: 24 hours before or after kickoff
+            return diffMs < 24 * 60 * 60 * 1000;
+        });
 
-        // Collect unique match dates (YYYY-MM-DD) from our database markets
-        const uniqueDates = Array.from(new Set(activeMarkets.map(market => {
+        const uniqueDates = Array.from(new Set(activeMatchDatesToQuery.map(market => {
             const dateObj = new Date(market.matchDate);
             return dateObj.toISOString().split('T')[0];
         })));
 
-        // 1. Fetch football schedules from Sofascore via RapidAPI for those dates
+        let fetchSuccess = true;
         let allEvents = [];
-        for (const targetDate of uniqueDates) {
-            try {
-                const response = await fetch(`https://${SPORT_API_HOST}/api/v1/sport/football/scheduled-events/${targetDate}`, {
-                    headers: {
-                        'x-rapidapi-key': RAPIDAPI_KEY,
-                        'x-rapidapi-host': SPORT_API_HOST
+
+        // 3. Query Sofascore scheduled events ONLY for near-term matches (if any exist)
+        if (uniqueDates.length > 0) {
+            for (const targetDate of uniqueDates) {
+                try {
+                    const response = await fetch(`https://${SPORT_API_HOST}/api/v1/sport/football/scheduled-events/${targetDate}`, {
+                        headers: {
+                            'x-rapidapi-key': RAPIDAPI_KEY,
+                            'x-rapidapi-host': SPORT_API_HOST
+                        }
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.events) {
+                            allEvents = allEvents.concat(data.events);
+                        }
+                    } else {
+                        const errBody = await response.json().catch(() => ({}));
+                        console.error(`RapidAPI call for date ${targetDate} returned status ${response.status}:`, errBody);
+                        // If quota is exceeded, fail gracefully to use old database cache
+                        fetchSuccess = false;
                     }
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.events) {
-                        allEvents = allEvents.concat(data.events);
-                    }
+                } catch (e) {
+                    console.error(`Failed to fetch Sofascore schedule for ${targetDate}:`, e);
+                    fetchSuccess = false;
                 }
-            } catch (e) {
-                console.error(`Failed to fetch Sofascore schedule for ${targetDate}:`, e);
             }
         }
 
-        // 2. Match our database markets
+        // 4. If fetch failed (e.g., quota exceeded) and we have an old database cache, serve the old cache to keep the site online
+        if (!fetchSuccess && cacheRes.rowCount > 0) {
+            console.warn("Using expired live-scores database cache due to API sync failure (likely quota exceeded).");
+            return NextResponse.json({ success: true, scores: cacheRes.rows[0].data }, { status: 200 });
+        }
+
+        // 5. Match our database markets
         for (const market of activeMarkets) {
             const dbA = normalizeTeamName(market.teamA);
             const dbB = normalizeTeamName(market.teamB);
@@ -113,16 +145,13 @@ export async function GET(request) {
                 const homeScore = matchedEvent.homeScore?.current ?? 0;
                 const awayScore = matchedEvent.awayScore?.current ?? 0;
 
-                // Let's identify the home/away order compared to our DB
                 const homeName = normalizeTeamName(matchedEvent.homeTeam?.name || '');
                 const isHomeDbA = homeName === dbA || homeName.includes(dbA) || dbA.includes(homeName);
                 
-                // Align scores to match teamA and teamB order in our database
                 const goalsA = isHomeDbA ? homeScore : awayScore;
                 const goalsB = isHomeDbA ? awayScore : homeScore;
 
                 if (statusType === 'inprogress') {
-                    // Match is currently live
                     liveScores[market.id] = {
                         goalsA,
                         goalsB,
@@ -131,7 +160,6 @@ export async function GET(request) {
                         matchStatus: statusDesc || '1st half'
                     };
                 } else if (statusType === 'finished') {
-                    // Match is concluded
                     liveScores[market.id] = {
                         goalsA,
                         goalsB,
@@ -151,7 +179,6 @@ export async function GET(request) {
                         console.error("Failed to dispatch async background resolution:", e);
                     }
                 } else {
-                    // Upcoming or postponed
                     liveScores[market.id] = {
                         goalsA: null,
                         goalsB: null,
@@ -160,19 +187,28 @@ export async function GET(request) {
                     };
                 }
             } else {
-                // Offline fallback
+                // If it is not within 24 hours of kickoff, it is statically UPCOMING
+                // If it IS close but not found in the feed, return OFFLINE fallback
+                const matchTime = new Date(market.matchDate).getTime();
+                const diffMs = Math.abs(now - matchTime);
+                const isNearTerm = diffMs < 24 * 60 * 60 * 1000;
+
                 liveScores[market.id] = {
                     goalsA: null,
                     goalsB: null,
                     elapsed: null,
-                    status: 'OFFLINE'
+                    status: isNearTerm ? 'OFFLINE' : 'UPCOMING'
                 };
             }
         }
 
-        // Cache update
-        liveCache = liveScores;
-        lastCacheTime = now;
+        // 6. Update Database Cache
+        await sql`
+            INSERT INTO live_scores_cache (key, data, "updatedAt") 
+            VALUES ('global_live_scores', ${JSON.stringify(liveScores)}, CURRENT_TIMESTAMP)
+            ON CONFLICT (key) 
+            DO UPDATE SET data = EXCLUDED.data, "updatedAt" = CURRENT_TIMESTAMP
+        `;
 
         return NextResponse.json({ success: true, scores: liveScores }, { status: 200 });
     } catch (error) {

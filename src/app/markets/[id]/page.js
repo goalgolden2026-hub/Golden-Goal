@@ -48,6 +48,7 @@ export default function MatchDetail() {
   const router = useRouter();
   const { connected, publicKey } = useWallet();
   const [market, setMarket] = useState(null);
+  const [predictionStats, setPredictionStats] = useState({});
   const [scoreInfo, setScoreInfo] = useState(null);
   const isLive = scoreInfo && scoreInfo.status === 'LIVE';
   const isMatchEnded = market && market.scoreA !== null && market.scoreB !== null && market.scoreA !== undefined && market.scoreB !== undefined;
@@ -198,6 +199,7 @@ export default function MatchDetail() {
                 tz: tz,
                 isLocked: dateObj.getTime() < Date.now()
             });
+            setPredictionStats(data.predictionStats || {});
         }
         setLoading(false);
       })
@@ -281,6 +283,16 @@ export default function MatchDetail() {
                     }
                 })
                 .catch(err => console.error("Error refreshing predictions:", err));
+
+            // Refetch market and prediction stats to update the counts
+            fetch(`/api/markets/${params.id}`)
+                .then(res => res.json())
+                .then(d => {
+                    if (d.success) {
+                        setPredictionStats(d.predictionStats || {});
+                    }
+                })
+                .catch(err => console.error("Error refreshing market stats:", err));
         } else {
             setModalConfig({
                 isOpen: true,
@@ -349,15 +361,24 @@ export default function MatchDetail() {
                       }
                   }
 
+                  const count = predictionStats[type]?.[opt] || 0;
+
                   return (
                       <button 
                           key={idx}
                           onClick={() => !isSubMarketResolved && openPredictionModal(type, opt)}
                           disabled={market.isLocked || isSubMarketResolved || hasPredictedThisType}
-                          className={`flex-1 min-w-[120px] font-medium py-4 px-4 rounded-xl text-sm text-center flex items-center justify-center gap-2 border transition-all duration-300 ${btnStyle}`}
+                          className={`flex-1 min-w-[120px] font-medium py-3 px-4 rounded-xl text-sm text-center flex flex-col items-center justify-center gap-1 border transition-all duration-300 ${btnStyle}`}
                       >
-                          {statusIndicator}
-                          <span>{opt} (+{getDynamicXP(type, opt)} XP)</span>
+                          <div className="flex items-center gap-1.5 justify-center">
+                              {statusIndicator}
+                              <span className="font-bold">{opt}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-[10px] opacity-75 font-mono">
+                              <span>+{getDynamicXP(type, opt)} XP</span>
+                              <span>•</span>
+                              <span>{count} {count === 1 ? 'pick' : 'picks'}</span>
+                          </div>
                       </button>
                   );
               })}

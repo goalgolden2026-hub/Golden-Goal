@@ -73,7 +73,7 @@ export async function GET(request) {
                     AND p."updatedAt" >= ${queryWeekStart}::timestamp
                     AND p."updatedAt" <= ${queryWeekEnd}::timestamp
                 ) DESC, u.points DESC
-                LIMIT 50
+                LIMIT 10
             `;
             leaderboard = rows;
         } else {
@@ -97,7 +97,7 @@ export async function GET(request) {
                         ) as "weeklyPoints"
                     FROM users u
                     ORDER BY u.points DESC
-                    LIMIT 50
+                    LIMIT 10
                 `;
                 leaderboard = rows;
             } else {
@@ -112,7 +112,7 @@ export async function GET(request) {
                         0 as "weeklyPoints"
                     FROM users u
                     ORDER BY u.points DESC
-                    LIMIT 50
+                    LIMIT 10
                 `;
                 leaderboard = rows;
             }
@@ -136,9 +136,9 @@ export async function GET(request) {
 
         let userStats = null;
         if (walletAddress) {
-            const userInTop50 = leaderboardWithStats.findIndex(u => u.walletAddress === walletAddress);
-            if (userInTop50 !== -1) {
-                userStats = { ...leaderboardWithStats[userInTop50], rank: userInTop50 + 1 };
+            const userInTop10 = leaderboardWithStats.findIndex(u => u.walletAddress === walletAddress);
+            if (userInTop10 !== -1) {
+                userStats = { ...leaderboardWithStats[userInTop10], rank: userInTop10 + 1 };
             } else {
                 let userRow;
                 if (week) {

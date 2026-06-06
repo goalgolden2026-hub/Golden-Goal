@@ -43,6 +43,7 @@ export async function GET(request) {
         const now = Date.now();
 
         // 1. Check Database Cache (highly reliable across multiple serverless functions)
+        const CACHE_TTL = process.env.CACHE_TTL ? parseInt(process.env.CACHE_TTL) : 120000; // Default 120 seconds (2 mins) to safeguard free tiers
         const cacheRes = await sql`
             SELECT data, "updatedAt" 
             FROM live_scores_cache 
@@ -52,8 +53,7 @@ export async function GET(request) {
         if (cacheRes.rowCount > 0) {
             const cache = cacheRes.rows[0];
             const cacheAgeMs = now - new Date(cache.updatedAt).getTime();
-            // Cache TTL = 60 seconds
-            if (cacheAgeMs < 60000) {
+            if (cacheAgeMs < CACHE_TTL) {
                 return NextResponse.json({ success: true, scores: cache.data }, { status: 200 });
             }
         }

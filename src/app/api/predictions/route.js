@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
-import { isWalletWhitelisted } from '@/lib/whitelist';
+import { isAdminWallet } from '@/lib/whitelist';
 import { getTokenBalance } from '@/lib/solana';
 
 
@@ -97,7 +97,7 @@ export async function POST(request) {
         }
 
         // 4. Check Daily Limit
-        if (isWalletWhitelisted(walletAddress)) {
+        if (isAdminWallet(walletAddress)) {
             finalLimit = Math.max(finalLimit, 20);
         }
 

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import crypto from 'crypto';
-import { isWalletWhitelisted } from '@/lib/whitelist';
+import { isAdminWallet } from '@/lib/whitelist';
 import { getTokenBalance } from '@/lib/solana';
 
 function generateReferralCode() {
@@ -99,7 +99,7 @@ export async function GET(request) {
         }
 
         let maxPredictions = baseLimit + bonusPredictions + displaySpinBonus;
-        if (isWalletWhitelisted(walletAddress)) {
+        if (isAdminWallet(walletAddress)) {
             maxPredictions = Math.max(maxPredictions, 20);
         }
 

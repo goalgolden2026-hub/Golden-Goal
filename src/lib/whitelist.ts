@@ -13,3 +13,13 @@ export function isWalletWhitelisted(walletAddress: string | null | undefined): b
   // Whitelist is deactivated: any connected Solana wallet is allowed to access the platform.
   return true;
 }
+
+/**
+ * Checks if a given wallet address belongs to the admin/team whitelist (gets limit overrides).
+ */
+export function isAdminWallet(walletAddress: string | null | undefined): boolean {
+  if (!walletAddress) return false;
+  return WHITELISTED_WALLETS.some(
+    (addr) => addr.toLowerCase() === walletAddress.trim().toLowerCase()
+  );
+}

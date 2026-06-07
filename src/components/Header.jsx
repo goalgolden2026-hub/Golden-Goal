@@ -37,7 +37,8 @@ export default function Header() {
     const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/60 backdrop-blur-xl">
+        <>
+            <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/60 backdrop-blur-xl">
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                 
                 {/* Brand Logo */}
@@ -163,69 +164,71 @@ export default function Header() {
                             <span className={`block w-4.5 h-0.5 bg-zinc-300 rounded-full my-1 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
                             <span className={`block w-4.5 h-0.5 bg-zinc-300 rounded-full transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-1' : ''}`}></span>
                         </button>
-
-                        {/* Mobile Menu Drawer (Slide Down Overlay) - Solid background & high z-index fixes visual bleed-through */}
-                        {isMobileMenuOpen && (
-                            <div className="fixed inset-0 top-16 bg-zinc-950 md:hidden z-50 animate-in fade-in slide-in-from-top duration-300 flex flex-col justify-between p-6 overflow-y-auto">
-                                <div className="flex flex-col gap-5 text-base font-semibold text-zinc-300">
-                                    <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="py-2.5 border-b border-white/5 hover:text-white transition-colors">Home</Link>
-                                    
-                                    {/* Mobile Prediction Dropdown */}
-                                    <div className="flex flex-col">
-                                        <button 
-                                            onClick={() => setMobilePredictionOpen(!mobilePredictionOpen)}
-                                            className="flex justify-between items-center py-2.5 border-b border-white/5 hover:text-white transition-colors w-full text-left"
-                                        >
-                                            <span>Prediction</span>
-                                            <span className={`text-xs text-zinc-500 transform transition-transform ${mobilePredictionOpen ? 'rotate-180' : ''}`}>▼</span>
-                                        </button>
-                                        {mobilePredictionOpen && (
-                                            <div className="flex flex-col gap-3.5 pl-5 pr-4 py-4 text-sm bg-zinc-900/30 rounded-2xl mt-2.5 border border-zinc-800/50">
-                                                <Link href="/markets?filter=live" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-emerald-400 transition-colors font-medium">Live Match</Link>
-                                                <Link href="/markets?filter=upcoming" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-blue-400 transition-colors font-medium">Upcoming Match</Link>
-                                                <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-purple-400 transition-colors font-medium">Dashboard</Link>
-                                            </div>
-                                        )}
-                                    </div>
- 
-                                    <Link href="/groups" onClick={() => setIsMobileMenuOpen(false)} className="py-2.5 border-b border-white/5 hover:text-white transition-colors">Groups</Link>
- 
-                                    {/* Mobile Rewards Dropdown */}
-                                    <div className="flex flex-col">
-                                        <button 
-                                            onClick={() => setMobileRewardsOpen(!mobileRewardsOpen)}
-                                            className="flex justify-between items-center py-2.5 border-b border-white/5 hover:text-white transition-colors w-full text-left"
-                                        >
-                                            <span>Rewards</span>
-                                            <span className={`text-xs text-zinc-500 transform transition-transform ${mobileRewardsOpen ? 'rotate-180' : ''}`}>▼</span>
-                                        </button>
-                                        {mobileRewardsOpen && (
-                                            <div className="flex flex-col gap-3.5 pl-5 pr-4 py-4 text-sm bg-zinc-900/30 rounded-2xl mt-2.5 border border-zinc-800/50">
-                                                <Link href="/rewards/locking" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-400 transition-colors font-medium">Locking</Link>
-                                                <div className="flex justify-between items-center text-zinc-500 cursor-not-allowed text-xs py-0.5 select-none font-medium">
-                                                    <span>Reward Box</span>
-                                                    <span className="text-[8px] font-black tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full uppercase animate-pulse">Coming Soon</span>
-                                                </div>
-                                                <Link href="/rewards/social-tasks" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-400 transition-colors font-medium">Social Tasks</Link>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <Link href="/leaderboard" onClick={() => setIsMobileMenuOpen(false)} className="py-2.5 border-b border-white/5 hover:text-white transition-colors">Leaderboard</Link>
-
-                                    <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="py-2.5 border-b border-white/5 hover:text-white transition-colors">Profile</Link>
-                                </div>
-
-                                <div className="mt-8 flex flex-col gap-4 w-full pb-6">
-                                    <div className="flex justify-center w-full">
-                                        <WalletMultiButtonDynamic className="!bg-zinc-900 !border !border-white/10 hover:!bg-zinc-800 hover:!border-amber-500/20 !transition-all !rounded-full !h-12 !w-full !flex !items-center !justify-center !font-bold !text-sm" />
-                                    </div>
-                                </div>
-                            </div>
-                        )}
                     </>
                 )}
             </div>
         </header>
-    );
+
+        {/* Mobile Menu Drawer (Slide Down Overlay) - Rendered as sibling to header to escape containing block filter constraints */}
+        {!isLandingPage && isMobileMenuOpen && (
+            <div className="fixed inset-0 top-16 bg-zinc-950 md:hidden z-[999] animate-in fade-in slide-in-from-top duration-300 flex flex-col justify-between p-6 overflow-y-auto">
+                <div className="flex flex-col gap-5 text-base font-semibold text-zinc-300">
+                    <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="py-2.5 border-b border-white/5 hover:text-white transition-colors">Home</Link>
+                    
+                    {/* Mobile Prediction Dropdown */}
+                    <div className="flex flex-col">
+                        <button 
+                            onClick={() => setMobilePredictionOpen(!mobilePredictionOpen)}
+                            className="flex justify-between items-center py-2.5 border-b border-white/5 hover:text-white transition-colors w-full text-left"
+                        >
+                            <span>Prediction</span>
+                            <span className={`text-xs text-zinc-500 transform transition-transform ${mobilePredictionOpen ? 'rotate-180' : ''}`}>▼</span>
+                        </button>
+                        {mobilePredictionOpen && (
+                            <div className="flex flex-col gap-3.5 pl-5 pr-4 py-4 text-sm bg-zinc-900/30 rounded-2xl mt-2.5 border border-zinc-800/50">
+                                <Link href="/markets?filter=live" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-emerald-400 transition-colors font-medium">Live Match</Link>
+                                <Link href="/markets?filter=upcoming" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-blue-400 transition-colors font-medium">Upcoming Match</Link>
+                                <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-purple-400 transition-colors font-medium">Dashboard</Link>
+                            </div>
+                        )}
+                    </div>
+
+                    <Link href="/groups" onClick={() => setIsMobileMenuOpen(false)} className="py-2.5 border-b border-white/5 hover:text-white transition-colors">Groups</Link>
+
+                    {/* Mobile Rewards Dropdown */}
+                    <div className="flex flex-col">
+                        <button 
+                            onClick={() => setMobileRewardsOpen(!mobileRewardsOpen)}
+                            className="flex justify-between items-center py-2.5 border-b border-white/5 hover:text-white transition-colors w-full text-left"
+                        >
+                            <span>Rewards</span>
+                            <span className={`text-xs text-zinc-500 transform transition-transform ${mobileRewardsOpen ? 'rotate-180' : ''}`}>▼</span>
+                        </button>
+                        {mobileRewardsOpen && (
+                            <div className="flex flex-col gap-3.5 pl-5 pr-4 py-4 text-sm bg-zinc-900/30 rounded-2xl mt-2.5 border border-zinc-800/50">
+                                <Link href="/rewards/locking" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-400 transition-colors font-medium">Locking</Link>
+                                <div className="flex justify-between items-center text-zinc-500 cursor-not-allowed text-xs py-0.5 select-none font-medium">
+                                    <span>Reward Box</span>
+                                    <span className="text-[8px] font-black tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full uppercase animate-pulse">Coming Soon</span>
+                                </div>
+                                <Link href="/rewards/social-tasks" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-400 transition-colors font-medium">Social Tasks</Link>
+                            </div>
+                        )}
+                    </div>
+
+                    <Link href="/leaderboard" onClick={() => setIsMobileMenuOpen(false)} className="py-2.5 border-b border-white/5 hover:text-white transition-colors">Leaderboard</Link>
+
+                    <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} className="py-2.5 border-b border-white/5 hover:text-white transition-colors">Profile</Link>
+                </div>
+
+                <div className="mt-8 flex flex-col gap-4 w-full pb-6">
+                    <div className="flex justify-center w-full">
+                        <WalletMultiButtonDynamic className="!bg-zinc-900 !border !border-white/10 hover:!bg-zinc-800 hover:!border-amber-500/20 !transition-all !rounded-full !h-12 !w-full !flex !items-center !justify-center !font-bold !text-sm" />
+                    </div>
+                </div>
+            </div>
+        )}
+    </>
+);
 }
+

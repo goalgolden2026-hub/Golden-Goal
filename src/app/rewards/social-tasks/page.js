@@ -23,6 +23,7 @@ export default function SocialTasksPage() {
     const [tweetMessage, setTweetMessage] = useState('');
     const [cooldown, setCooldown] = useState(0);
     const [socialLeaderboard, setSocialLeaderboard] = useState([]);
+    const [raffleData, setRaffleData] = useState(null);
 
     useEffect(() => {
         if (connected && publicKey) {
@@ -57,6 +58,13 @@ export default function SocialTasksPage() {
             const lbData = await lbRes.json();
             if (lbData.success) {
                 setSocialLeaderboard(lbData.leaderboard);
+            }
+
+            // Fetch raffle data
+            const rfRes = await fetch('/api/social-tasks/raffle');
+            const rfData = await rfRes.json();
+            if (rfData.success) {
+                setRaffleData(rfData);
             }
         } catch (error) {
             console.error("Error fetching profile:", error);
@@ -131,6 +139,63 @@ export default function SocialTasksPage() {
                         Spread the word about Golden Goal, earn Social Points, climb the leaderboard, and unlock exclusive rewards.
                     </p>
                 </div>
+
+                {/* Community Goal Raffle Card */}
+                {raffleData && (
+                    <div className="bg-gradient-to-br from-amber-500/[0.04] to-yellow-600/[0.02] border border-amber-500/20 rounded-3xl p-6 md:p-8 mb-10 relative overflow-hidden group hover:border-amber-500/30 transition-all duration-300">
+                        {/* Decorative background glow */}
+                        <div className="absolute -top-[120px] -right-[120px] w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/15 transition-all duration-500"></div>
+                        
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                            <div className="space-y-3 flex-1">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xl md:text-2xl animate-bounce">🚨</span>
+                                    <h2 className="text-xl md:text-2xl font-black text-white tracking-tight">
+                                        Community Goal: <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.2)]">1,000 Tweets Raffle</span>
+                                    </h2>
+                                </div>
+                                <p className="text-xs md:text-sm text-zinc-400 max-w-xl leading-relaxed">
+                                    Every time the counter hits 0, a random wallet that submitted a tweet will be selected to win a massive prize of <strong className="text-white">1,000,000 points</strong>! Every participant gets an equal chance, regardless of total tweets.
+                                </p>
+                            </div>
+
+                            {/* Counter display */}
+                            <div className="flex flex-col items-center justify-center bg-black/60 rounded-2xl p-5 border border-zinc-800/80 min-w-[180px] shrink-0 text-center relative overflow-hidden group-hover:border-amber-500/10 transition-all duration-300">
+                                <span className="text-[10px] font-extrabold tracking-[0.2em] text-zinc-500 uppercase block mb-1">TWEETS REMAINING</span>
+                                <span className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500 drop-shadow-[0_0_20px_rgba(245,158,11,0.35)] font-mono animate-pulse">
+                                    {raffleData.remaining}
+                                </span>
+                                <div className="w-full bg-zinc-900 rounded-full h-1.5 overflow-hidden p-[1px] border border-white/5 mt-3">
+                                    <div 
+                                        className="bg-gradient-to-r from-amber-500 to-yellow-500 h-1 rounded-full transition-all duration-700 shadow-[0_0_8px_rgba(245,158,11,0.4)]" 
+                                        style={{ width: `${Math.max(0, ((1000 - raffleData.remaining) / 1000) * 100)}%` }}
+                                    ></div>
+                                </div>
+                                <span className="text-[9px] text-zinc-500 mt-2 font-mono uppercase tracking-wider">{raffleData.total} tweets submitted in total</span>
+                            </div>
+                        </div>
+
+                        {/* Winners list (if any) */}
+                        {raffleData.winners && raffleData.winners.length > 0 && (
+                            <div className="border-t border-zinc-800/80 mt-6 pt-5 flex flex-col gap-2 relative z-10">
+                                <span className="text-[10px] font-extrabold tracking-widest text-zinc-500 uppercase">🏆 Last Raffle Winners</span>
+                                <div className="flex flex-wrap gap-3 mt-1">
+                                    {raffleData.winners.slice(0, 3).map((w, idx) => (
+                                        <div key={idx} className="bg-white/5 border border-white/5 hover:border-amber-500/20 px-3 py-1.5 rounded-xl flex items-center gap-2 transition-all">
+                                            <span className="text-xs">🎉</span>
+                                            <span className="font-mono text-xs text-zinc-300">
+                                                {w.walletAddress.slice(0, 4)}...{w.walletAddress.slice(-4)}
+                                            </span>
+                                            <span className="text-[10px] font-extrabold bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-md leading-none">
+                                                Round #{w.raffleNumber}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Score Ribbon / Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">

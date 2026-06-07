@@ -112,6 +112,44 @@ export async function POST(request) {
             VALUES (${walletAddress}, 'TWITTER_SHARE', ${tweetUrl})
         `;
 
+        // 5. Check Community Goal Raffle (Trigger raffle every 1000 tweets)
+        try {
+            const countRes = await sql`SELECT COUNT(*) as total FROM social_tasks`;
+            const currentTotal = parseInt(countRes.rows[0].total) || 0;
+            
+            if (currentTotal > 0 && currentTotal % 1000 === 0) {
+                const raffleNumber = currentTotal / 1000;
+                
+                // Select a random unique participant wallet
+                const winnerRes = await sql`
+                    SELECT DISTINCT "walletAddress" 
+                    FROM social_tasks 
+                    ORDER BY RANDOM() 
+                    LIMIT 1
+                `;
+                
+                if (winnerRes.rowCount > 0) {
+                    const winnerWallet = winnerRes.rows[0].walletAddress;
+                    const prizeAmount = 1000000; // 1,000,000 points
+                    
+                    await sql`
+                        INSERT INTO social_raffle_winners ("walletAddress", "raffleNumber", "prizeAmount", status)
+                        VALUES (${winnerWallet}, ${raffleNumber}, ${prizeAmount}, 'PENDING')
+                        ON CONFLICT ("raffleNumber") DO NOTHING
+                    `;
+                    
+                    // Award winner points directly in user account
+                    await sql`
+                        UPDATE users 
+                        SET points = points + ${prizeAmount}
+                        WHERE "walletAddress" = ${winnerWallet}
+                    `;
+                }
+            }
+        } catch (raffleErr) {
+            console.error("Auto-raffle trigger error:", raffleErr);
+        }
+
         return NextResponse.json({ success: true, message: "Task completed! 25 Social Points awarded." }, { status: 200 });
     } catch (error) {
         console.error("POST /api/user/twitter error:", error);

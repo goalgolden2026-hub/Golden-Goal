@@ -167,6 +167,17 @@ export async function getDb() {
             `;
 
             await sql`
+                CREATE TABLE IF NOT EXISTS social_raffle_winners (
+                    id SERIAL PRIMARY KEY,
+                    "walletAddress" TEXT NOT NULL,
+                    "raffleNumber" INTEGER UNIQUE,
+                    "prizeAmount" INTEGER DEFAULT 0,
+                    status TEXT DEFAULT 'PENDING',
+                    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            `;
+
+            await sql`
                 CREATE TABLE IF NOT EXISTS social_tasks (
                     id SERIAL PRIMARY KEY,
                     "walletAddress" TEXT NOT NULL,

@@ -175,7 +175,7 @@ export default function SocialTasksPage() {
                                         Need a quick tweet idea? Click below to generate a beautiful tweet automatically!
                                     </div>
                                     <a 
-                                        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("Forecasting matches, climbing leaderboards, and earning XP on @goldengoalsol! ⚽🔥\n\nJoin the competitive football prediction ecosystem on Solana. 🏆\n\n🌐 Web: goldengoalsol.com\n💎 CA: GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump\n\n#Solana #GoldenGoal")}`} 
+                                        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("Huge milestone for Golden Goal ! ⚽🏆  \n\nWe're currently ranked #3 in the Meta category on Dexscreener. 🚀\n\nThis is just the beginning of our journey toward becoming the leading World Cup prediction ecosystem on #Solana.\n\nA big thank you to our community for the incredible support. Together we're building something special.\n\nCA:\nGU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump\n\n⚽ Predict.\n📈 Earn XP.\n🏆 Climb the Leaderboard.\n\n#GoldenGoal #Dexscreener #WorldCup")}`} 
                                         target="_blank" 
                                         rel="noopener noreferrer"
                                         className="shrink-0 bg-blue-500 hover:bg-blue-600 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-colors flex items-center gap-1.5"

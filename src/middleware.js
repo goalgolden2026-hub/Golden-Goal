@@ -13,7 +13,9 @@ export function middleware(request) {
     const connectedWalletCookie = request.cookies.get('connected_wallet');
     const walletAddress = connectedWalletCookie?.value;
 
-    if (!isWalletWhitelisted(walletAddress)) {
+    // Only redirect if a wallet is connected but it is not whitelisted.
+    // This avoids redirect loops when cookies are delayed/missing on mobile/client-side navigation.
+    if (walletAddress && !isWalletWhitelisted(walletAddress)) {
       // Securely redirect to the landing page
       const url = request.nextUrl.clone();
       url.pathname = '/';

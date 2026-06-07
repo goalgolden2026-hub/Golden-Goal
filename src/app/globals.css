@@ -64,3 +64,32 @@ body {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* Global Solana Wallet Adapter Button Overrides - Golden Goal Aesthetic */
+.wallet-adapter-button {
+  background-color: #18181b !important; /* zinc-900 */
+  color: #f4f4f5 !important; /* zinc-100 */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 9999px !important;
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.wallet-adapter-button:hover {
+  background-color: #27272a !important; /* zinc-800 */
+  border-color: rgba(245, 158, 11, 0.4) !important; /* amber-500/40 */
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.15), 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+.wallet-adapter-button-trigger {
+  background-color: #18181b !important;
+}
+
+.wallet-adapter-button-trigger:hover {
+  background-color: #27272a !important;
+}
+

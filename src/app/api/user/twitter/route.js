@@ -146,6 +146,9 @@ export async function POST(request) {
                     `;
                 }
             }
+            
+            // Invalidate the social tasks cache to force update on the next GET request
+            await sql`DELETE FROM live_scores_cache WHERE key = 'social_raffle_stats'`;
         } catch (raffleErr) {
             console.error("Auto-raffle trigger error:", raffleErr);
         }

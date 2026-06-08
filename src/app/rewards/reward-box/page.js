@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import Link from 'next/link';
 import CustomModal from '@/components/CustomModal';
 import dynamic from 'next/dynamic';
 import confetti from 'canvas-confetti';
@@ -399,6 +400,14 @@ export default function RewardBoxPage() {
                         <div className="flex items-center gap-1.5">
                             <span className="text-zinc-500 text-xs">My SP:</span>
                             <span className="text-blue-400 font-bold text-xs">{status?.socialPoints !== undefined ? status.socialPoints.toLocaleString('en-US') : 0} SP</span>
+                            {(!status?.socialPoints || status.socialPoints < 100) && (
+                                <Link 
+                                    href="/rewards/social-tasks" 
+                                    className="text-[9px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-full hover:bg-blue-500/20 hover:text-blue-300 transition-all ml-1 animate-pulse font-bold"
+                                >
+                                    Earn SP 🐦
+                                </Link>
+                            )}
                         </div>
                     </div>
 
@@ -416,9 +425,17 @@ export default function RewardBoxPage() {
                                 )
                             ) : (
                                 status?.socialPoints < currentCost ? (
-                                    <span className="text-red-500 font-bold block">
-                                        ⚠️ Insufficient Social Points. {currentCost} SP required.
-                                    </span>
+                                    <div className="space-y-3 mt-1.5">
+                                        <span className="text-red-500 font-bold block">
+                                            ⚠️ Insufficient Social Points. {currentCost} SP required.
+                                        </span>
+                                        <div className="bg-blue-500/5 border border-blue-500/10 p-3.5 rounded-2xl text-[11px] text-zinc-300 leading-relaxed max-w-sm mx-auto text-left flex items-start gap-2.5 shadow-[0_4px_15px_rgba(59,130,246,0.02)]">
+                                            <span className="text-base leading-none">🐦</span>
+                                            <div>
+                                                Low on SP? Head over to the <Link href="/rewards/social-tasks" className="text-blue-400 font-bold hover:underline">Social Tasks</Link> page, share a tweet about Golden Goal, and earn <strong className="text-white">25 SP</strong> instantly!
+                                            </div>
+                                        </div>
+                                    </div>
                                 ) : (
                                     <span>
                                         Cost: <span className="text-blue-400 font-bold">{currentCost} Social Points</span>.

@@ -134,10 +134,7 @@ export default function Header() {
                                     <div className="bg-zinc-950/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 shadow-[0_10px_35px_rgba(0,0,0,0.6)] hover:border-amber-500/30 relative">
                                         <div className="absolute top-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
                                         <Link href="/rewards/locking" className="block px-4 py-2.5 rounded-xl hover:bg-amber-500/10 hover:text-amber-400 transition-all font-semibold text-xs text-left">Locking</Link>
-                                        <div className="flex items-center justify-between px-4 py-2.5 rounded-xl text-zinc-500 cursor-not-allowed font-semibold text-xs select-none hover:bg-white/[0.02]">
-                                            <span>Reward Box</span>
-                                            <span className="text-[8px] font-black tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full uppercase animate-pulse">Coming Soon</span>
-                                        </div>
+                                        <Link href="/rewards/reward-box" className="block px-4 py-2.5 rounded-xl hover:bg-amber-500/10 hover:text-amber-400 transition-all font-semibold text-xs text-left">Reward Box</Link>
                                         <Link href="/rewards/social-tasks" className="block px-4 py-2.5 rounded-xl hover:bg-amber-500/10 hover:text-amber-400 transition-all font-semibold text-xs text-left">Social Tasks</Link>
                                     </div>
                                 </div>
@@ -207,10 +204,7 @@ export default function Header() {
                         {mobileRewardsOpen && (
                             <div className="flex flex-col gap-3.5 pl-5 pr-4 py-4 text-sm bg-zinc-900/30 rounded-2xl mt-2.5 border border-zinc-800/50">
                                 <Link href="/rewards/locking" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-400 transition-colors font-medium">Locking</Link>
-                                <div className="flex justify-between items-center text-zinc-500 cursor-not-allowed text-xs py-0.5 select-none font-medium">
-                                    <span>Reward Box</span>
-                                    <span className="text-[8px] font-black tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full uppercase animate-pulse">Coming Soon</span>
-                                </div>
+                                <Link href="/rewards/reward-box" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-400 transition-colors font-medium">Reward Box</Link>
                                 <Link href="/rewards/social-tasks" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-400 transition-colors font-medium">Social Tasks</Link>
                             </div>
                         )}

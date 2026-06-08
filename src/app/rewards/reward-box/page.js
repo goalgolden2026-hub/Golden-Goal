@@ -240,6 +240,8 @@ export default function RewardBoxPage() {
         return <div className="flex-1 flex items-center justify-center text-zinc-500">Loading...</div>;
     }
 
+    const currentCost = status?.isEligibleForFreeBox ? 0 : (paymentMethod === 'XP' ? (status?.boxCost || 0) : (status?.socialBoxCost || 100));
+
     return (
         <div className="flex-1 w-full relative overflow-hidden bg-[#0a0514]">
             {/* Background Confetti/Particles */}
@@ -361,17 +363,17 @@ export default function RewardBoxPage() {
 
                 <button
                     onClick={handleSpin}
-                    disabled={isSpinning || (!status?.isEligibleForFreeBox && (paymentMethod === 'XP' ? status?.points < status?.boxCost : status?.socialPoints < status?.boxCost))}
+                    disabled={isSpinning || (!status?.isEligibleForFreeBox && (paymentMethod === 'XP' ? status?.points < currentCost : status?.socialPoints < currentCost))}
                     className={`w-full py-5 rounded-full font-black text-xl uppercase tracking-widest transition-all shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex items-center justify-center gap-3 ${
                         isSpinning 
                         ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
                         : status?.isEligibleForFreeBox
                             ? 'bg-gradient-to-b from-green-400 via-emerald-500 to-green-700 text-white shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-105 hover:brightness-110 cursor-pointer'
                             : paymentMethod === 'XP'
-                                ? (status?.points >= status?.boxCost)
+                                ? (status?.points >= currentCost)
                                     ? 'bg-gradient-to-b from-yellow-300 via-amber-500 to-orange-600 text-white shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:scale-105 hover:brightness-110 cursor-pointer'
                                     : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
-                                : (status?.socialPoints >= status?.boxCost)
+                                : (status?.socialPoints >= currentCost)
                                     ? 'bg-gradient-to-b from-blue-400 via-indigo-500 to-purple-600 text-white shadow-[0_0_30px_rgba(59,130,246,0.4)] hover:scale-105 hover:brightness-110 cursor-pointer'
                                     : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
                     }`}
@@ -383,7 +385,7 @@ export default function RewardBoxPage() {
                             </span>
                         </div>
                     )}
-                    {isSpinning ? 'OPENING...' : status?.isEligibleForFreeBox ? 'OPEN REWARDS BOX' : `OPEN FOR ${status?.boxCost || 0} ${paymentMethod}`}
+                    {isSpinning ? 'OPENING...' : status?.isEligibleForFreeBox ? 'OPEN REWARDS BOX' : `OPEN FOR ${currentCost} ${paymentMethod}`}
                 </button>
 
                 <div className="text-xs text-zinc-400 text-center flex flex-col gap-2.5 max-w-sm mx-auto select-none w-full">
@@ -403,23 +405,23 @@ export default function RewardBoxPage() {
                     {!status?.isEligibleForFreeBox && (
                         <p className="mt-1">
                             {paymentMethod === 'XP' ? (
-                                status?.points < status?.boxCost ? (
+                                status?.points < currentCost ? (
                                     <span className="text-red-500 font-bold block">
-                                        ⚠️ Insufficient XP Points. {status.boxCost} XP required.
+                                        ⚠️ Insufficient XP Points. {currentCost} XP required.
                                     </span>
                                 ) : (
                                     <span>
-                                        Cost: <span className="text-amber-400 font-bold">{status?.boxCost} XP Points</span>.
+                                        Cost: <span className="text-amber-400 font-bold">{currentCost} XP Points</span>.
                                     </span>
                                 )
                             ) : (
-                                status?.socialPoints < status?.boxCost ? (
+                                status?.socialPoints < currentCost ? (
                                     <span className="text-red-500 font-bold block">
-                                        ⚠️ Insufficient Social Points. {status.boxCost} SP required.
+                                        ⚠️ Insufficient Social Points. {currentCost} SP required.
                                     </span>
                                 ) : (
                                     <span>
-                                        Cost: <span className="text-blue-400 font-bold">{status?.boxCost} Social Points</span>.
+                                        Cost: <span className="text-blue-400 font-bold">{currentCost} Social Points</span>.
                                     </span>
                                 )
                             )}

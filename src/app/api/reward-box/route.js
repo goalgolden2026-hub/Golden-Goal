@@ -86,6 +86,7 @@ export async function GET(request) {
             success: true, 
             isEligibleForFreeBox: status.isEligibleForFreeBox,
             boxCost: status.boxCost,
+            socialBoxCost: status.isEligibleForFreeBox ? 0 : 100, // Flat price of 100 SP for social method
             requiresMinBalance: status.requiresMinBalance,
             activeTier: status.activeTier,
             points: points,
@@ -153,21 +154,22 @@ export async function POST(request) {
             }
 
             if (paymentMethod === 'SP') {
-                if (socialPoints < status.boxCost) {
-                    return NextResponse.json({ success: false, error: `Insufficient Social Points. ${status.boxCost} SP points are required to open the Rewards Box.` }, { status: 400 });
+                const spCost = 100; // Flat price of 100 SP
+                if (socialPoints < spCost) {
+                    return NextResponse.json({ success: false, error: `Insufficient Social Points. ${spCost} SP points are required to open the Rewards Box.` }, { status: 400 });
                 }
 
                 // Deduct Box Cost from user's socialPoints directly and update lastFreeBoxDate!
                 await sql`
                     UPDATE users 
-                    SET "socialPoints" = COALESCE("socialPoints", 0) - ${status.boxCost}, "lastFreeBoxDate" = CURRENT_DATE
+                    SET "socialPoints" = COALESCE("socialPoints", 0) - ${spCost}, "lastFreeBoxDate" = CURRENT_DATE
                     WHERE "walletAddress" = ${walletAddress}
                 `;
                 
                 // Log the payment in treasury_logs
                 await sql`
                     INSERT INTO treasury_logs ("walletAddress", amount, type) 
-                    VALUES (${walletAddress}, ${-status.boxCost}, 'REWARDS_BOX_OPEN_SP')
+                    VALUES (${walletAddress}, ${-spCost}, 'REWARDS_BOX_OPEN_SP')
                 `;
             } else {
                 if (points < status.boxCost) {

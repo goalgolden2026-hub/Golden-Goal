@@ -119,6 +119,7 @@ export default function RewardBoxPage() {
     const [status, setStatus] = useState(null);
     const [isSpinning, setIsSpinning] = useState(false);
     const [reward, setReward] = useState(null);
+    const [paymentMethod, setPaymentMethod] = useState('XP'); // 'XP' or 'SP'
 
     useEffect(() => {
         if (connected && publicKey) {
@@ -183,7 +184,7 @@ export default function RewardBoxPage() {
             const res = await fetch('/api/reward-box', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ walletAddress: publicKey.toBase58() })
+                body: JSON.stringify({ walletAddress: publicKey.toBase58(), paymentMethod })
             });
             const data = await res.json();
 
@@ -340,42 +341,87 @@ export default function RewardBoxPage() {
 
             {/* Controls */}
             <div className="flex flex-col items-center gap-4 w-full max-w-sm mb-14 relative z-10">
+                {/* Payment Method Selector Tab */}
+                {!status?.isEligibleForFreeBox && (
+                    <div className="flex bg-black/40 border border-zinc-800/80 p-1 rounded-full w-full max-w-[280px] mb-2">
+                        <button 
+                            onClick={() => setPaymentMethod('XP')}
+                            className={`flex-1 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${paymentMethod === 'XP' ? 'bg-zinc-800 text-yellow-400 border border-white/5' : 'text-zinc-500 hover:text-zinc-300'}`}
+                        >
+                            🪙 Pay with XP
+                        </button>
+                        <button 
+                            onClick={() => setPaymentMethod('SP')}
+                            className={`flex-1 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${paymentMethod === 'SP' ? 'bg-zinc-800 text-blue-400 border border-white/5' : 'text-zinc-500 hover:text-zinc-300'}`}
+                        >
+                            🐦 Pay with SP
+                        </button>
+                    </div>
+                )}
+
                 <button
                     onClick={handleSpin}
-                    disabled={isSpinning || (!status?.isEligibleForFreeBox && status?.points < status?.boxCost)}
+                    disabled={isSpinning || (!status?.isEligibleForFreeBox && (paymentMethod === 'XP' ? status?.points < status?.boxCost : status?.socialPoints < status?.boxCost))}
                     className={`w-full py-5 rounded-full font-black text-xl uppercase tracking-widest transition-all shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex items-center justify-center gap-3 ${
                         isSpinning 
                         ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
                         : status?.isEligibleForFreeBox
-                            ? 'bg-gradient-to-b from-green-400 via-emerald-500 to-green-700 text-white shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-105 hover:brightness-110'
-                            : (status?.points >= status?.boxCost)
-                                ? 'bg-gradient-to-b from-yellow-300 via-amber-500 to-orange-600 text-white shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:scale-105 hover:brightness-110'
-                                : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
+                            ? 'bg-gradient-to-b from-green-400 via-emerald-500 to-green-700 text-white shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-105 hover:brightness-110 cursor-pointer'
+                            : paymentMethod === 'XP'
+                                ? (status?.points >= status?.boxCost)
+                                    ? 'bg-gradient-to-b from-yellow-300 via-amber-500 to-orange-600 text-white shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:scale-105 hover:brightness-110 cursor-pointer'
+                                    : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
+                                : (status?.socialPoints >= status?.boxCost)
+                                    ? 'bg-gradient-to-b from-blue-400 via-indigo-500 to-purple-600 text-white shadow-[0_0_30px_rgba(59,130,246,0.4)] hover:scale-105 hover:brightness-110 cursor-pointer'
+                                    : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
                     }`}
                 >
                     {!isSpinning && (
                         <div className="w-8 h-8 rounded-full bg-black/30 flex items-center justify-center border border-white/20">
-                            <span className="text-yellow-300 text-xs font-bold">XP</span>
+                            <span className={`text-[10px] font-bold ${paymentMethod === 'XP' ? 'text-yellow-300' : 'text-blue-300'}`}>
+                                {paymentMethod}
+                            </span>
                         </div>
                     )}
-                    {isSpinning ? 'OPENING...' : status?.isEligibleForFreeBox ? 'OPEN REWARDS BOX' : `OPEN FOR ${status?.boxCost || 0} XP`}
+                    {isSpinning ? 'OPENING...' : status?.isEligibleForFreeBox ? 'OPEN REWARDS BOX' : `OPEN FOR ${status?.boxCost || 0} ${paymentMethod}`}
                 </button>
 
-                <div className="text-xs text-zinc-400 text-center flex flex-col gap-2 max-w-sm mx-auto select-none">
-                    <div className="flex items-center justify-center gap-1.5 bg-zinc-900/60 border border-white/5 rounded-full px-4 py-1.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
-                        <span className="text-zinc-500">Your Balance:</span>
-                        <span className="text-yellow-400 font-bold">{status?.points !== undefined ? status.points.toLocaleString('en-US') : 0} XP</span>
+                <div className="text-xs text-zinc-400 text-center flex flex-col gap-2.5 max-w-sm mx-auto select-none w-full">
+                    {/* Dual balance ribbon */}
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 bg-zinc-900/60 border border-white/5 rounded-2xl sm:rounded-full px-5 py-2 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] w-full">
+                        <div className="flex items-center gap-1.5">
+                            <span className="text-zinc-500 text-xs">My XP:</span>
+                            <span className="text-yellow-400 font-bold text-xs">{status?.points !== undefined ? status.points.toLocaleString('en-US') : 0} XP</span>
+                        </div>
+                        <span className="hidden sm:inline text-zinc-800">|</span>
+                        <div className="flex items-center gap-1.5">
+                            <span className="text-zinc-500 text-xs">My SP:</span>
+                            <span className="text-blue-400 font-bold text-xs">{status?.socialPoints !== undefined ? status.socialPoints.toLocaleString('en-US') : 0} SP</span>
+                        </div>
                     </div>
+
                     {!status?.isEligibleForFreeBox && (
                         <p className="mt-1">
-                            {status?.points < status?.boxCost ? (
-                                <span className="text-red-500 font-bold block">
-                                    ⚠️ Insufficient XP Points. {status.boxCost} XP required.
-                                </span>
+                            {paymentMethod === 'XP' ? (
+                                status?.points < status?.boxCost ? (
+                                    <span className="text-red-500 font-bold block">
+                                        ⚠️ Insufficient XP Points. {status.boxCost} XP required.
+                                    </span>
+                                ) : (
+                                    <span>
+                                        Cost: <span className="text-amber-400 font-bold">{status?.boxCost} XP Points</span>.
+                                    </span>
+                                )
                             ) : (
-                                <span>
-                                    Cost: <span className="text-amber-400 font-bold">{status?.boxCost} XP Points</span>. Opens are point-based.
-                                </span>
+                                status?.socialPoints < status?.boxCost ? (
+                                    <span className="text-red-500 font-bold block">
+                                        ⚠️ Insufficient Social Points. {status.boxCost} SP required.
+                                    </span>
+                                ) : (
+                                    <span>
+                                        Cost: <span className="text-blue-400 font-bold">{status?.boxCost} Social Points</span>.
+                                    </span>
+                                )
                             )}
                         </p>
                     )}

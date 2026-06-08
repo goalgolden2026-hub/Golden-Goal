@@ -73,11 +73,13 @@ export async function GET(request) {
         const sql = await getDb();
         const status = await getBoxStatus(sql, walletAddress);
 
-        // Fetch user's current points
+        // Fetch user's current points and socialPoints
         let points = 0;
-        const userRes = await sql`SELECT points FROM users WHERE "walletAddress" = ${walletAddress}`;
-        if (userRes.rowCount > 0 && userRes.rows[0].points !== null) {
-            points = parseInt(userRes.rows[0].points);
+        let socialPoints = 0;
+        const userRes = await sql`SELECT points, "socialPoints" FROM users WHERE "walletAddress" = ${walletAddress}`;
+        if (userRes.rowCount > 0) {
+            points = parseInt(userRes.rows[0].points || 0);
+            socialPoints = parseInt(userRes.rows[0].socialPoints || 0);
         }
 
         return NextResponse.json({ 
@@ -86,7 +88,8 @@ export async function GET(request) {
             boxCost: status.boxCost,
             requiresMinBalance: status.requiresMinBalance,
             activeTier: status.activeTier,
-            points: points
+            points: points,
+            socialPoints: socialPoints
         }, { status: 200 });
 
     } catch (error) {
@@ -98,7 +101,7 @@ export async function GET(request) {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { walletAddress } = body;
+        const { walletAddress, paymentMethod } = body;
         if (!walletAddress) return NextResponse.json({ success: false, error: "Missing walletAddress" }, { status: 400 });
 
         const sql = await getDb();
@@ -140,29 +143,50 @@ export async function POST(request) {
                 WHERE "walletAddress" = ${walletAddress}
             `;
         } else {
-            // Fetch user's current points (reload to get up-to-date points after daily reset)
+            // Fetch user's current points and socialPoints (reload to get up-to-date values after daily reset)
             let points = 0;
-            const pointsRes = await sql`SELECT points FROM users WHERE "walletAddress" = ${walletAddress}`;
-            if (pointsRes.rowCount > 0 && pointsRes.rows[0].points !== null) {
-                points = parseInt(pointsRes.rows[0].points);
+            let socialPoints = 0;
+            const pointsRes = await sql`SELECT points, "socialPoints" FROM users WHERE "walletAddress" = ${walletAddress}`;
+            if (pointsRes.rowCount > 0) {
+                points = parseInt(pointsRes.rows[0].points || 0);
+                socialPoints = parseInt(pointsRes.rows[0].socialPoints || 0);
             }
 
-            if (points < status.boxCost) {
-                return NextResponse.json({ success: false, error: `Insufficient XP Points. ${status.boxCost} XP points are required to open the Rewards Box.` }, { status: 400 });
-            }
+            if (paymentMethod === 'SP') {
+                if (socialPoints < status.boxCost) {
+                    return NextResponse.json({ success: false, error: `Insufficient Social Points. ${status.boxCost} SP points are required to open the Rewards Box.` }, { status: 400 });
+                }
 
-            // Deduct Box Cost from user's points directly and update lastFreeBoxDate!
-            await sql`
-                UPDATE users 
-                SET points = COALESCE(points, 0) - ${status.boxCost}, "lastFreeBoxDate" = CURRENT_DATE
-                WHERE "walletAddress" = ${walletAddress}
-            `;
-            
-            // Log the payment in treasury_logs
-            await sql`
-                INSERT INTO treasury_logs ("walletAddress", amount, type) 
-                VALUES (${walletAddress}, ${-status.boxCost}, 'REWARDS_BOX_OPEN_XP')
-            `;
+                // Deduct Box Cost from user's socialPoints directly and update lastFreeBoxDate!
+                await sql`
+                    UPDATE users 
+                    SET "socialPoints" = COALESCE("socialPoints", 0) - ${status.boxCost}, "lastFreeBoxDate" = CURRENT_DATE
+                    WHERE "walletAddress" = ${walletAddress}
+                `;
+                
+                // Log the payment in treasury_logs
+                await sql`
+                    INSERT INTO treasury_logs ("walletAddress", amount, type) 
+                    VALUES (${walletAddress}, ${-status.boxCost}, 'REWARDS_BOX_OPEN_SP')
+                `;
+            } else {
+                if (points < status.boxCost) {
+                    return NextResponse.json({ success: false, error: `Insufficient XP Points. ${status.boxCost} XP points are required to open the Rewards Box.` }, { status: 400 });
+                }
+
+                // Deduct Box Cost from user's points directly and update lastFreeBoxDate!
+                await sql`
+                    UPDATE users 
+                    SET points = COALESCE(points, 0) - ${status.boxCost}, "lastFreeBoxDate" = CURRENT_DATE
+                    WHERE "walletAddress" = ${walletAddress}
+                `;
+                
+                // Log the payment in treasury_logs
+                await sql`
+                    INSERT INTO treasury_logs ("walletAddress", amount, type) 
+                    VALUES (${walletAddress}, ${-status.boxCost}, 'REWARDS_BOX_OPEN_XP')
+                `;
+            }
         }
 
         // 2. Box RNG

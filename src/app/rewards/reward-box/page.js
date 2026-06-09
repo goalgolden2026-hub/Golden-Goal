@@ -386,7 +386,7 @@ export default function RewardBoxPage() {
                             </span>
                         </div>
                     )}
-                    {isSpinning ? 'OPENING...' : status?.isEligibleForFreeBox ? 'OPEN REWARDS BOX' : `OPEN FOR ${currentCost} ${paymentMethod}`}
+                    {isSpinning ? 'OPENING...' : status?.isEligibleForFreeBox ? (status?.isEventParticipant ? `OPEN FREE BOX (${3 - (status?.freeBoxesOpenedToday || 0)} LEFT)` : 'OPEN REWARDS BOX (FREE)') : `OPEN FOR ${currentCost} ${paymentMethod}`}
                 </button>
 
                 <div className="text-xs text-zinc-400 text-center flex flex-col gap-2.5 max-w-sm mx-auto select-none w-full">
@@ -446,7 +446,11 @@ export default function RewardBoxPage() {
                     )}
                     {status?.isEligibleForFreeBox && (
                         <p className="mt-1 text-emerald-400 font-bold">
-                            🎉 Your first daily Rewards Box opening is completely FREE!
+                            {status?.isEventParticipant ? (
+                                `🎉 Event active: You have ${3 - (status?.freeBoxesOpenedToday || 0)} free box openings remaining today!`
+                            ) : (
+                                "🎉 Your first daily Rewards Box opening is completely FREE!"
+                            )}
                         </p>
                     )}
                 </div>

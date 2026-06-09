@@ -19,37 +19,77 @@ async function getBoxStatus(sql, walletAddress) {
     const activeLockRes = await sql`SELECT tier FROM locks WHERE "walletAddress" = ${walletAddress} AND status = 'ACTIVE' ORDER BY tier DESC LIMIT 1`;
     if (activeLockRes.rowCount > 0) activeTier = activeLockRes.rows[0].tier;
 
-    let boxCost = 100;
+    // Get event participants (first 100 unique wallets with active locks of Tier 2, 3, 4 ordered by createdAt ASC)
+    const participantsRes = await sql`
+        SELECT "walletAddress"
+        FROM locks
+        WHERE status = 'ACTIVE' AND tier IN (2, 3, 4)
+        GROUP BY "walletAddress"
+        ORDER BY MIN("createdAt") ASC
+        LIMIT 100
+    `;
+    const participantWallets = participantsRes.rows.map(r => r.walletAddress);
+    const isEventParticipant = participantWallets.includes(walletAddress);
+    const userPosition = participantWallets.indexOf(walletAddress);
+
+    let boxCost = 250;
     let requiresMinBalance = false;
     let isEligibleForFreeBox = false;
+    let freeBoxesOpenedToday = 0;
 
-    if (activeTier === 0) {
-        boxCost = 250;
-    } else if (activeTier === 1) {
-        boxCost = 225;
-    } else if (activeTier === 2) {
-        boxCost = 200;
-    } else if (activeTier === 3) {
-        boxCost = 150;
-    } else if (activeTier === 4) {
-        // Check free box eligibility
-        const today = new Date().toISOString().split('T')[0];
-        const userRes = await sql`SELECT "lastFreeBoxDate" FROM users WHERE "walletAddress" = ${walletAddress}`;
-        if (userRes.rowCount > 0) {
-            const lastFreeBox = userRes.rows[0].lastFreeBoxDate;
-            if (!lastFreeBox || new Date(lastFreeBox).toISOString().split('T')[0] !== today) {
+    const today = new Date().toISOString().split('T')[0];
+    const userRes = await sql`SELECT "lastFreeBoxDate", "freeBoxesOpenedToday" FROM users WHERE "walletAddress" = ${walletAddress}`;
+    
+    if (userRes.rowCount > 0) {
+        const lastFreeBox = userRes.rows[0].lastFreeBoxDate;
+        const lastFreeBoxStr = lastFreeBox ? new Date(lastFreeBox).toISOString().split('T')[0] : null;
+        if (lastFreeBoxStr === today) {
+            freeBoxesOpenedToday = userRes.rows[0].freeBoxesOpenedToday || 0;
+        }
+    }
+
+    if (isEventParticipant) {
+        // Event rules apply: 3 free boxes daily
+        if (freeBoxesOpenedToday < 3) {
+            isEligibleForFreeBox = true;
+            boxCost = 0;
+        } else {
+            // Normal rate after 3 free boxes
+            if (activeTier === 4) boxCost = 150;
+            else if (activeTier === 3) boxCost = 150;
+            else if (activeTier === 2) boxCost = 200;
+        }
+    } else {
+        // Standard rules apply
+        if (activeTier === 4) {
+            // Tier 4 gets 1 free box per day
+            if (freeBoxesOpenedToday < 1) {
                 isEligibleForFreeBox = true;
                 boxCost = 0;
             } else {
                 boxCost = 150;
             }
+        } else if (activeTier === 3) {
+            boxCost = 150;
+        } else if (activeTier === 2) {
+            boxCost = 200;
+        } else if (activeTier === 1) {
+            boxCost = 225;
         } else {
-            isEligibleForFreeBox = true;
-            boxCost = 0;
+            boxCost = 250;
         }
     }
 
-    return { isEligibleForFreeBox, boxCost, requiresMinBalance, activeTier };
+    return { 
+        isEligibleForFreeBox, 
+        boxCost, 
+        requiresMinBalance, 
+        activeTier, 
+        freeBoxesOpenedToday, 
+        isEventParticipant, 
+        userPosition, 
+        totalParticipants: participantWallets.length 
+    };
 }
 
 function openRNG() {
@@ -90,7 +130,11 @@ export async function GET(request) {
             requiresMinBalance: status.requiresMinBalance,
             activeTier: status.activeTier,
             points: points,
-            socialPoints: socialPoints
+            socialPoints: socialPoints,
+            freeBoxesOpenedToday: status.freeBoxesOpenedToday,
+            isEventParticipant: status.isEventParticipant,
+            userPosition: status.userPosition,
+            totalParticipants: status.totalParticipants
         }, { status: 200 });
 
     } catch (error) {
@@ -138,11 +182,21 @@ export async function POST(request) {
         const status = await getBoxStatus(sql, walletAddress);
         
         if (status.isEligibleForFreeBox) {
-            // Update lastFreeBoxDate to today
-            await sql`
-                UPDATE users SET "lastFreeBoxDate" = CURRENT_DATE 
-                WHERE "walletAddress" = ${walletAddress}
-            `;
+            // Update lastFreeBoxDate and increment freeBoxesOpenedToday
+            const lastFreeBoxStr = user.lastFreeBoxDate ? new Date(user.lastFreeBoxDate).toISOString().split('T')[0] : null;
+            if (lastFreeBoxStr === today) {
+                await sql`
+                    UPDATE users 
+                    SET "freeBoxesOpenedToday" = COALESCE("freeBoxesOpenedToday", 0) + 1, "lastFreeBoxDate" = CURRENT_DATE 
+                    WHERE "walletAddress" = ${walletAddress}
+                `;
+            } else {
+                await sql`
+                    UPDATE users 
+                    SET "freeBoxesOpenedToday" = 1, "lastFreeBoxDate" = CURRENT_DATE 
+                    WHERE "walletAddress" = ${walletAddress}
+                `;
+            }
         } else {
             // Fetch user's current points and socialPoints (reload to get up-to-date values after daily reset)
             let points = 0;

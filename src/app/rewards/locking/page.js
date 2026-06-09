@@ -17,7 +17,17 @@ export default function LockingPage() {
   const [activeLock, setActiveLock] = useState(null);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [refresh, setRefresh] = useState(0);
-  const [stats, setStats] = useState({ tvl: 0, lockers: 0, userLocked: 0, tierCounts: { 1: 0, 2: 0, 3: 0, 4: 0 }, stakeWallet: "Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm", stakeAtaExists: false });
+  const [stats, setStats] = useState({ 
+    tvl: 0, 
+    lockers: 0, 
+    userLocked: 0, 
+    tierCounts: { 1: 0, 2: 0, 3: 0, 4: 0 }, 
+    stakeWallet: "Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm", 
+    stakeAtaExists: false,
+    isEventParticipant: false,
+    userPosition: -1,
+    totalParticipants: 0
+  });
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     title: '',
@@ -41,7 +51,10 @@ export default function LockingPage() {
             userLocked: data.userLocked,
             tierCounts: data.tierCounts || { 1: 0, 2: 0, 3: 0, 4: 0 },
             stakeWallet: data.stakeWallet || "Fk3kDaJbh4dBHNfDyiquXTiKZmbVS8BQ8bLvDy4aeJwm",
-            stakeAtaExists: !!data.stakeAtaExists
+            stakeAtaExists: !!data.stakeAtaExists,
+            isEventParticipant: !!data.isEventParticipant,
+            userPosition: data.userPosition !== undefined ? data.userPosition : -1,
+            totalParticipants: data.totalParticipants || 0
           });
           setActiveLock(data.activeLock);
         }
@@ -467,7 +480,47 @@ export default function LockingPage() {
   return (
     <div className="flex-1 w-full max-w-6xl mx-auto px-4 py-12">
       
-      {/* Header */}
+      {/* Event Marquee */}
+      <div className="relative w-full overflow-hidden bg-[#130b29]/80 border-y border-amber-500/30 py-3 mb-10 rounded-2xl select-none shadow-[0_0_15px_rgba(245,158,11,0.05)]">
+        <div className="flex whitespace-nowrap animate-marquee">
+          <span className="text-xs font-black uppercase tracking-widest text-amber-300 mx-4">
+            🔥 SPECIAL LOCKING EVENT IS ACTIVE! LOCK TIER 2, 3 OR 4 (500K+ TOKENS) TO UNLOCK 3 DAILY FREE REWARD BOX OPENINGS! LIMIT TO FIRST 100 PARTICIPANTS ONLY. PREVIOUS LOCKERS AUTOMATICALLY INCLUDED! CURRENT PARTICIPANTS: {stats.totalParticipants} / 100 🔥
+          </span>
+          <span className="text-xs font-black uppercase tracking-widest text-amber-300 mx-4">
+            🔥 SPECIAL LOCKING EVENT IS ACTIVE! LOCK TIER 2, 3 OR 4 (500K+ TOKENS) TO UNLOCK 3 DAILY FREE REWARD BOX OPENINGS! LIMIT TO FIRST 100 PARTICIPANTS ONLY. PREVIOUS LOCKERS AUTOMATICALLY INCLUDED! CURRENT PARTICIPANTS: {stats.totalParticipants} / 100 🔥
+          </span>
+        </div>
+        <style jsx>{`
+          @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+          }
+          .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 35s linear infinite;
+          }
+        `}</style>
+      </div>
+
+      {/* Event Participation Card */}
+      {connected && stats.isEventParticipant && (
+        <div className="mb-10 p-5 bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-emerald-500/10 border border-emerald-500/20 rounded-2xl text-center shadow-[0_0_20px_rgba(16,185,129,0.05)] animate-pulse">
+          <span className="text-xl mr-2">🎉</span>
+          <span className="text-emerald-400 font-extrabold text-sm uppercase tracking-wider">
+            You are in! You are Participant #{stats.userPosition + 1} of the Locking Event. 3 Daily FREE Reward Box openings are active!
+          </span>
+        </div>
+      )}
+
+      {connected && !stats.isEventParticipant && (
+        <div className="mb-10 p-5 bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-amber-500/10 border border-amber-500/20 rounded-2xl text-center shadow-[0_0_20px_rgba(245,158,11,0.05)]">
+          <span className="text-lg mr-2">🚀</span>
+          <span className="text-amber-400 font-extrabold text-sm uppercase tracking-wider">
+            Lock Tier 2, 3 or 4 now to join the event and claim 3 daily FREE Reward Box openings! {Math.max(0, 100 - stats.totalParticipants)} slots remaining.
+          </span>
+        </div>
+      )}
       <div className="text-center mb-16 flex flex-col items-center">
         <h1 className="text-4xl sm:text-5xl font-extrabold mb-4 text-white leading-none flex items-center justify-center gap-3">
           <img 

@@ -73,7 +73,8 @@ export async function getDb() {
                     "lastFreeBoxDate" DATE,
                     "bonusPredictions" INTEGER DEFAULT 0,
                     "twitterTaskStatus" BOOLEAN DEFAULT false,
-                    "socialPoints" INTEGER DEFAULT 0
+                    "socialPoints" INTEGER DEFAULT 0,
+                    "freeBoxesOpenedToday" INTEGER DEFAULT 0
                 );
             `;
 
@@ -196,6 +197,7 @@ export async function getDb() {
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "bonusPredictions" INTEGER DEFAULT 0;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "twitterTaskStatus" BOOLEAN DEFAULT false;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "socialPoints" INTEGER DEFAULT 0;`;
+            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "freeBoxesOpenedToday" INTEGER DEFAULT 0;`;
 
             // Seed initial World Cup markets if none exist
             const { rows } = await sql`SELECT COUNT(*) as count FROM markets;`;

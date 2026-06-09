@@ -87,6 +87,19 @@ export async function GET(request) {
             stakeAtaExists = true;
         }
 
+        // Fetch event statistics
+        const participantsRes = await sql`
+            SELECT "walletAddress"
+            FROM locks
+            WHERE status = 'ACTIVE' AND tier IN (2, 3, 4)
+            GROUP BY "walletAddress"
+            ORDER BY MIN("createdAt") ASC
+            LIMIT 100
+        `;
+        const participantWallets = participantsRes.rows.map(r => r.walletAddress);
+        const isEventParticipant = walletAddress ? participantWallets.includes(walletAddress) : false;
+        const userPosition = walletAddress ? participantWallets.indexOf(walletAddress) : -1;
+
         return NextResponse.json({ 
             success: true, 
             totalValueLocked: Number(totalValueLocked),
@@ -95,7 +108,10 @@ export async function GET(request) {
             activeLock: activeLock,
             tierCounts: tierCounts,
             stakeWallet: stakeWallet,
-            stakeAtaExists: stakeAtaExists
+            stakeAtaExists: stakeAtaExists,
+            isEventParticipant: isEventParticipant,
+            userPosition: userPosition,
+            totalParticipants: participantWallets.length
         }, { status: 200 });
 
     } catch (error) {

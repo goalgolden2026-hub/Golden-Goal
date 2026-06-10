@@ -3,7 +3,7 @@ import { getDb } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || 'fb0b6761c9msha29978207b28aa6p17856bjsnca9d44b79409';
+const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || '15e24fe1f1msh75f445d3e3d398dp1968d3jsn73f855695703';
 const SPORT_API_HOST = 'sportapi7.p.rapidapi.com';
 
 function normalizeTeamName(name) {
@@ -42,8 +42,28 @@ export async function GET(request) {
         const sql = await getDb();
         const now = Date.now();
 
-        // 1. Check Database Cache (highly reliable across multiple serverless functions)
-        const CACHE_TTL = process.env.CACHE_TTL ? parseInt(process.env.CACHE_TTL) : 120000; // Default 120 seconds (2 mins) to safeguard free tiers
+        // 1. Fetch active markets first to check if there are live matches
+        const { rows: activeMarkets } = await sql`
+            SELECT id, "teamA", "teamB", "matchDate", status 
+            FROM markets 
+            WHERE status = 'ACTIVE' OR "scoreA" IS NULL OR "scoreB" IS NULL
+        `;
+
+        if (activeMarkets.length === 0) {
+            return NextResponse.json({ success: true, scores: {} });
+        }
+
+        // Determine if any match is currently live (within 3 hours of kickoff)
+        const hasLiveMatch = activeMarkets.some(market => {
+            const matchTime = new Date(market.matchDate).getTime();
+            const timeDiff = now - matchTime;
+            return timeDiff >= 0 && timeDiff < 3 * 60 * 60 * 1000;
+        });
+
+        // 2. Check Database Cache
+        // Save limits: 10 minutes cache when no matches are live, 2 minutes during live matches
+        const CACHE_TTL = hasLiveMatch ? 120000 : 600000;
+        
         const cacheRes = await sql`
             SELECT data, "updatedAt" 
             FROM live_scores_cache 
@@ -57,13 +77,6 @@ export async function GET(request) {
                 return NextResponse.json({ success: true, scores: cache.data }, { status: 200 });
             }
         }
-
-        // Cache is missing or expired -> Fetch fresh data
-        const { rows: activeMarkets } = await sql`
-            SELECT id, "teamA", "teamB", "matchDate", status 
-            FROM markets 
-            WHERE status = 'ACTIVE' OR "scoreA" IS NULL OR "scoreB" IS NULL
-        `;
 
         if (activeMarkets.length === 0) {
             return NextResponse.json({ success: true, scores: {} });

@@ -3,7 +3,7 @@ import { getDb } from '@/lib/db';
 import fs from 'fs';
 import path from 'path';
 
-const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || 'fb0b6761c9msha29978207b28aa6p17856bjsnca9d44b79409';
+const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || '15e24fe1f1msh75f445d3e3d398dp1968d3jsn73f855695703';
 const SPORT_API_HOST = 'sportapi7.p.rapidapi.com';
 
 // Server-side persistent log helper

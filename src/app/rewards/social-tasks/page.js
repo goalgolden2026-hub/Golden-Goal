@@ -240,7 +240,7 @@ export default function SocialTasksPage() {
                                         Need a quick tweet idea? Click below to generate a beautiful tweet automatically!
                                     </div>
                                     <a 
-                                        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("⚽️ Risk yok, heyecan çok! @goldengoalsol ile Dünya Kupası tahminleri tamamen ÜCRETSİZ!\n\nLiderlik tablosuna tırman, ödüller için yarış ve $GoldenGoal ekosisteminin gücünü keşfet! 🏆\n\nHer gün 3 bedava tahmin hakkı kazanmak için cüzdanında 250k token tutman yeterli.\n\n🌐 www.goldengoalsol.com\n📝 CA: GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump\n\n#GoldenGoal #Solana #WorldCup2026 #Crypto #Football")}`} 
+                                        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("⚽️ No risk, pure thrill! World Cup predictions are completely FREE with @goldengoalsol!\n\nClimb the leaderboard, compete for rewards, and discover the power of the $GoldenGoal ecosystem! 🏆\n\nJust hold 250k tokens in your wallet to unlock 3 free predictions every day.\n\n🌐 www.goldengoalsol.com\n📝 CA: GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump\n\n#GoldenGoal #Solana #WorldCup2026 #Crypto #Football")}`} 
                                         target="_blank" 
                                         rel="noopener noreferrer"
                                         className="shrink-0 bg-blue-500 hover:bg-blue-600 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-colors flex items-center gap-1.5"

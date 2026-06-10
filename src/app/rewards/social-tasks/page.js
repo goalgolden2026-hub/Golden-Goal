@@ -191,7 +191,7 @@ export default function SocialTasksPage() {
                                                 <div>
                                                     <p className="text-[9px] text-amber-400 font-extrabold uppercase tracking-widest">LATEST RAFFLE WINNER</p>
                                                     <p className="text-xs sm:text-sm text-zinc-200 font-medium mt-0.5">
-                                                        Wallet <span className="font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 text-xs sm:text-sm">{latest.walletAddress.slice(0, 10)}...{latest.walletAddress.slice(-10)}</span> won the <strong className="text-white">1,000,000 Points</strong> Grand Prize!
+                                                        Winner: <span className="font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 text-xs sm:text-sm">{latest.walletAddress.slice(0, 12)}...{latest.walletAddress.slice(-12)}</span>
                                                     </p>
                                                 </div>
                                             </div>

@@ -38,6 +38,24 @@ export default function AdminDashboard() {
   const [analysisData, setAnalysisData] = useState(null);
   const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
   const [analysisError, setAnalysisError] = useState(null);
+  const [sortField, setSortField] = useState('totalSol');
+  const [sortDirection, setSortDirection] = useState('desc');
+
+  const handleSort = (field) => {
+      if (sortField === field) {
+          setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+      } else {
+          setSortField(field);
+          setSortDirection('desc');
+      }
+  };
+
+  const renderSortIndicator = (field) => {
+      if (sortField !== field) return <span className="text-zinc-700 ml-1 text-[10px]">↕</span>;
+      return sortDirection === 'asc' 
+          ? <span className="text-amber-500 ml-1 text-[10px]">▲</span> 
+          : <span className="text-amber-500 ml-1 text-[10px]">▼</span>;
+  };
 
   useEffect(() => {
     fetchMarkets();
@@ -516,17 +534,43 @@ export default function AdminDashboard() {
                       <table className="w-full text-left border-collapse">
                           <thead>
                               <tr className="border-b border-zinc-800 text-zinc-500 text-xs font-bold uppercase tracking-wider pb-3 sticky top-0 bg-zinc-900 z-10">
-                                  <th className="pb-3 text-center w-12">#</th>
-                                  <th className="pb-3">Trader Wallet</th>
-                                  <th className="pb-3 text-right">SOL Spent</th>
-                                  <th className="pb-3 text-right">Tokens</th>
-                                  <th className="pb-3 text-right">Est. Avg Cost (SOL / USD)</th>
-                                  <th className="pb-3 text-right">Est. Avg Market Cap</th>
-                                  <th className="pb-3 text-center w-24">Trades</th>
+                                  <th className="pb-3 text-center w-12 select-none">#</th>
+                                  <th className="pb-3 cursor-pointer hover:text-white transition-colors select-none" onClick={() => handleSort('wallet')}>
+                                      Trader Wallet {renderSortIndicator('wallet')}
+                                  </th>
+                                  <th className="pb-3 text-right cursor-pointer hover:text-white transition-colors select-none" onClick={() => handleSort('totalSol')}>
+                                      SOL Spent {renderSortIndicator('totalSol')}
+                                  </th>
+                                  <th className="pb-3 text-right cursor-pointer hover:text-white transition-colors select-none" onClick={() => handleSort('totalTokens')}>
+                                      Tokens {renderSortIndicator('totalTokens')}
+                                  </th>
+                                  <th className="pb-3 text-right cursor-pointer hover:text-white transition-colors select-none" onClick={() => handleSort('avgPrice')}>
+                                      Est. Avg Cost {renderSortIndicator('avgPrice')}
+                                  </th>
+                                  <th className="pb-3 text-right cursor-pointer hover:text-white transition-colors select-none" onClick={() => handleSort('avgMarketCap')}>
+                                      Est. Avg Market Cap {renderSortIndicator('avgMarketCap')}
+                                  </th>
+                                  <th className="pb-3 text-center w-24 cursor-pointer hover:text-white transition-colors select-none" onClick={() => handleSort('tradesCount')}>
+                                      Trades {renderSortIndicator('tradesCount')}
+                                  </th>
                               </tr>
                           </thead>
                           <tbody className="divide-y divide-zinc-800/50 text-sm">
-                              {analysisData.topBuyers && analysisData.topBuyers.map((b, idx) => {
+                              {analysisData.topBuyers && [...analysisData.topBuyers].sort((a, b) => {
+                                  let valA = a[sortField];
+                                  let valB = b[sortField];
+                                  
+                                  if (sortField === 'wallet') {
+                                      valA = valA.toLowerCase();
+                                      valB = valB.toLowerCase();
+                                  }
+                                  
+                                  if (sortDirection === 'asc') {
+                                      return valA > valB ? 1 : -1;
+                                  } else {
+                                      return valA < valB ? 1 : -1;
+                                  }
+                              }).map((b, idx) => {
                                   let medal = '';
                                   if (idx === 0) medal = '🥇';
                                   else if (idx === 1) medal = '🥈';

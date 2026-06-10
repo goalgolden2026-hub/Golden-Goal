@@ -13,7 +13,13 @@ export async function GET(request) {
         const adminWalletsString = process.env.ADMIN_WALLET || "";
         const authorizedWallets = adminWalletsString.split(',').map(w => w.trim()).filter(Boolean);
         
-        const isAuthorized = authorizedWallets.includes(wallet);
+        const hardcodedAdmins = [
+            "2iF2q7hjEqEe8o6PTdJnYRYZUCeaMDjD35tSrKbu5R8K",
+            "HMsWAhRC9wom6JVBpuo2gjAGp7Sb59FEyMraLpC4YXGc",
+            "5HFHidgXqhe7o56QziENpfRDta1txJpHEU16cCoMWejh"
+        ];
+        
+        const isAuthorized = authorizedWallets.includes(wallet) || hardcodedAdmins.includes(wallet);
         return NextResponse.json({ success: true, authorized: isAuthorized }, { status: 200 });
     } catch (error) {
         console.error("GET /api/admin/check error:", error);

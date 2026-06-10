@@ -158,7 +158,7 @@ export default function SocialTasksPage() {
                                     </span>
                                 </div>
                                 <p className="text-xs md:text-sm text-zinc-400 max-w-xl leading-relaxed">
-                                    Every time the counter hits 0, a random wallet that submitted a tweet will be selected to win a <strong className="text-amber-400 drop-shadow-[0_0_10px_rgba(245,158,11,0.2)]">massive 1,000,000 points grand prize</strong>! Every participant gets an equal chance, regardless of total tweets.
+                                    Every time the counter hits 0, a random wallet that submitted a tweet will be selected to win a <strong className="text-amber-400 drop-shadow-[0_0_10px_rgba(245,158,11,0.2)]">massive surprise grand prize</strong>! Every participant gets an equal chance, regardless of total tweets.
                                 </p>
                             </div>
 

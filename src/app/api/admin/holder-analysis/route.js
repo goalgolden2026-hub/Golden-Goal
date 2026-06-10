@@ -60,7 +60,7 @@ export async function GET(request) {
         const fourDaysAgo = Date.now() - 4 * 24 * 60 * 60 * 1000;
         let reachedLimit = false;
         let apiCalls = 0;
-        const maxApiCalls = 25; // Guard rails to stay strictly under Vercel 10s timeout limit (up to 2,500 txs)
+        const maxApiCalls = 15; // Guard rails to stay strictly under Vercel 10s Hobby timeout limit (up to 1,500 txs)
         const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
         while (!reachedLimit && apiCalls < maxApiCalls) {
@@ -96,7 +96,7 @@ export async function GET(request) {
             }
             
             // Limit rate to stay under the 10 RPS developer plan limit
-            await delay(55);
+            await delay(45);
         }
         
         // 5. Parse transactions and filter for last 4 days

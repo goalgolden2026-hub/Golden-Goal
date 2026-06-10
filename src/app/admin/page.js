@@ -504,152 +504,89 @@ export default function AdminDashboard() {
                   </div>
               </div>
 
-              {/* Main tables grid */}
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                  
-                  {/* Left: Top Buyers / Whales List */}
-                  <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-xl flex flex-col">
-                      <div className="flex justify-between items-center mb-6">
-                          <div>
-                              <h3 className="text-lg font-bold text-white">🐳 Top Buyers & Cost Basis</h3>
-                              <p className="text-xs text-zinc-500">Top wallets by SOL spent in analyzed period</p>
-                          </div>
-                      </div>
-                      <div className="overflow-x-auto">
-                          <table className="w-full text-left border-collapse">
-                              <thead>
-                                  <tr className="border-b border-zinc-800 text-zinc-500 text-xs font-bold uppercase tracking-wider pb-3">
-                                      <th className="pb-3 text-center w-12">#</th>
-                                      <th className="pb-3">Trader Wallet</th>
-                                      <th className="pb-3 text-right">SOL Spent</th>
-                                      <th className="pb-3 text-right">Tokens</th>
-                                      <th className="pb-3 text-right">Est. Avg Cost</th>
-                                      <th className="pb-3 text-center w-16">Trades</th>
-                                  </tr>
-                              </thead>
-                              <tbody className="divide-y divide-zinc-800/50 text-sm">
-                                  {analysisData.topBuyers && analysisData.topBuyers.map((b, idx) => {
-                                      let medal = '';
-                                      if (idx === 0) medal = '🥇';
-                                      else if (idx === 1) medal = '🥈';
-                                      else if (idx === 2) medal = '🥉';
-
-                                      return (
-                                          <tr key={b.wallet} className="hover:bg-zinc-950/40 transition-colors">
-                                              <td className="py-3.5 text-center font-bold text-zinc-500">
-                                                  {medal ? medal : idx + 1}
-                                              </td>
-                                              <td className="py-3.5 font-mono text-zinc-300">
-                                                  <a 
-                                                      href={`https://solscan.io/account/${b.wallet}`} 
-                                                      target="_blank" 
-                                                      rel="noopener noreferrer"
-                                                      className="hover:text-amber-400 hover:underline flex items-center gap-1 w-fit"
-                                                  >
-                                                      {b.wallet.slice(0, 6)}...{b.wallet.slice(-4)}
-                                                      <span className="text-[10px] text-zinc-600">↗</span>
-                                                  </a>
-                                              </td>
-                                              <td className="py-3.5 text-right font-bold text-white">
-                                                  {b.totalSol.toFixed(2)} SOL
-                                              </td>
-                                              <td className="py-3.5 text-right text-zinc-300 font-sans">
-                                                  {b.totalTokens.toLocaleString()}
-                                              </td>
-                                              <td className="py-3.5 text-right font-mono text-amber-500/80 text-xs">
-                                                  {b.avgPrice.toFixed(8)} SOL
-                                              </td>
-                                              <td className="py-3.5 text-center font-semibold text-zinc-400">
-                                                  {b.tradesCount}
-                                              </td>
-                                          </tr>
-                                      );
-                                  })}
-                                  {(!analysisData.topBuyers || analysisData.topBuyers.length === 0) && (
-                                      <tr>
-                                          <td colSpan="6" className="py-10 text-center text-zinc-500 text-sm">
-                                              No buy activities found in this dataset.
-                                          </td>
-                                      </tr>
-                                  )}
-                              </tbody>
-                          </table>
+              {/* Main table: Full Width Top Buyers */}
+              <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-xl flex flex-col w-full">
+                  <div className="flex justify-between items-center mb-6">
+                      <div>
+                          <h3 className="text-lg font-bold text-white">🐳 Top Buyers & Cost Basis (Last 4 Days)</h3>
+                          <p className="text-xs text-zinc-500">Top 100 wallets sorted by total SOL spent. Live SOL Price: ${analysisData.solPrice?.toFixed(2)} USD</p>
                       </div>
                   </div>
+                  <div className="overflow-x-auto max-h-[70vh] custom-scrollbar">
+                      <table className="w-full text-left border-collapse">
+                          <thead>
+                              <tr className="border-b border-zinc-800 text-zinc-500 text-xs font-bold uppercase tracking-wider pb-3 sticky top-0 bg-zinc-900 z-10">
+                                  <th className="pb-3 text-center w-12">#</th>
+                                  <th className="pb-3">Trader Wallet</th>
+                                  <th className="pb-3 text-right">SOL Spent</th>
+                                  <th className="pb-3 text-right">Tokens</th>
+                                  <th className="pb-3 text-right">Est. Avg Cost (SOL / USD)</th>
+                                  <th className="pb-3 text-right">Est. Avg Market Cap</th>
+                                  <th className="pb-3 text-center w-24">Trades</th>
+                              </tr>
+                          </thead>
+                          <tbody className="divide-y divide-zinc-800/50 text-sm">
+                              {analysisData.topBuyers && analysisData.topBuyers.map((b, idx) => {
+                                  let medal = '';
+                                  if (idx === 0) medal = '🥇';
+                                  else if (idx === 1) medal = '🥈';
+                                  else if (idx === 2) medal = '🥉';
 
-                  {/* Right: Live Trades Feed */}
-                  <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-xl flex flex-col">
-                      <div className="flex justify-between items-center mb-6">
-                          <div>
-                              <h3 className="text-lg font-bold text-white">💸 Recent Swaps</h3>
-                              <p className="text-xs text-zinc-500">Direct on-chain events in chronological order</p>
-                          </div>
-                      </div>
-                      <div className="overflow-x-auto max-h-[500px] custom-scrollbar">
-                          <table className="w-full text-left border-collapse">
-                              <thead>
-                                  <tr className="border-b border-zinc-800 text-zinc-500 text-xs font-bold uppercase tracking-wider pb-3 sticky top-0 bg-zinc-900 z-10">
-                                      <th className="pb-3">Time</th>
-                                      <th className="pb-3">Type</th>
-                                      <th className="pb-3 text-right">SOL</th>
-                                      <th className="pb-3 text-right">Tokens</th>
-                                      <th className="pb-3 text-right">Price (SOL)</th>
-                                      <th className="pb-3 text-center w-12">Tx</th>
-                                  </tr>
-                              </thead>
-                              <tbody className="divide-y divide-zinc-800/50 text-xs font-mono">
-                                  {analysisData.trades && analysisData.trades.map((t) => {
-                                      const isBuy = t.type === 'BUY';
-                                      const timeStr = new Date(t.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                                  const formattedMcap = b.avgMarketCap >= 1000000 
+                                      ? `$${(b.avgMarketCap / 1000000).toFixed(2)}M` 
+                                      : b.avgMarketCap >= 1000 
+                                          ? `$${(b.avgMarketCap / 1000).toFixed(1)}K` 
+                                          : `$${b.avgMarketCap}`;
 
-                                      return (
-                                          <tr key={t.signature} className="hover:bg-zinc-950/40 transition-colors">
-                                              <td className="py-3 text-zinc-500">
-                                                  {timeStr}
-                                              </td>
-                                              <td className="py-3">
-                                                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold tracking-wider border ${
-                                                      isBuy 
-                                                          ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
-                                                          : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-                                                  }`}>
-                                                      {t.type}
-                                                  </span>
-                                              </td>
-                                              <td className={`py-3 text-right font-bold ${isBuy ? 'text-emerald-400/90' : 'text-rose-400/90'}`}>
-                                                  {t.solAmount > 0 ? `${t.solAmount.toFixed(3)} SOL` : '0.00 SOL'}
-                                              </td>
-                                              <td className="py-3 text-right text-zinc-300 font-sans">
-                                                  {Math.round(t.tokenAmount).toLocaleString()}
-                                              </td>
-                                              <td className="py-3 text-right text-zinc-400">
-                                                  {t.pricePerToken.toFixed(8)}
-                                              </td>
-                                              <td className="py-3 text-center">
-                                                  <a 
-                                                      href={`https://solscan.io/tx/${t.signature}`} 
-                                                      target="_blank" 
-                                                      rel="noopener noreferrer"
-                                                      className="hover:text-amber-400 text-zinc-600 transition-colors"
-                                                  >
-                                                      ↗
-                                                  </a>
-                                              </td>
-                                          </tr>
-                                      );
-                                  })}
-                                  {(!analysisData.trades || analysisData.trades.length === 0) && (
-                                      <tr>
-                                          <td colSpan="6" className="py-10 text-center text-zinc-500 font-sans text-sm">
-                                              No swaps detected in the latest transactions.
+                                  const formattedUsdPrice = b.avgPriceUsd < 0.01 
+                                      ? `$${b.avgPriceUsd.toFixed(6)}` 
+                                      : `$${b.avgPriceUsd.toFixed(2)}`;
+
+                                  return (
+                                      <tr key={b.wallet} className="hover:bg-zinc-950/40 transition-colors">
+                                          <td className="py-3.5 text-center font-bold text-zinc-500">
+                                              {medal ? medal : idx + 1}
+                                          </td>
+                                          <td className="py-3.5 font-mono text-zinc-300">
+                                              <a 
+                                                  href={`https://solscan.io/account/${b.wallet}`} 
+                                                  target="_blank" 
+                                                  rel="noopener noreferrer"
+                                                  className="hover:text-amber-400 hover:underline flex items-center gap-1 w-fit"
+                                              >
+                                                  {b.wallet.slice(0, 8)}...{b.wallet.slice(-8)}
+                                                  <span className="text-[10px] text-zinc-600">↗</span>
+                                              </a>
+                                          </td>
+                                          <td className="py-3.5 text-right font-bold text-white">
+                                              {b.totalSol.toFixed(2)} SOL
+                                          </td>
+                                          <td className="py-3.5 text-right text-zinc-300 font-sans">
+                                              {b.totalTokens.toLocaleString()}
+                                          </td>
+                                          <td className="py-3.5 text-right font-mono text-xs">
+                                              <span className="text-zinc-300">{b.avgPrice.toFixed(8)} SOL</span>
+                                              <span className="text-zinc-500 ml-1.5">({formattedUsdPrice})</span>
+                                          </td>
+                                          <td className="py-3.5 text-right font-bold text-amber-500 font-mono text-xs">
+                                              {formattedMcap}
+                                          </td>
+                                          <td className="py-3.5 text-center font-semibold text-zinc-400">
+                                              {b.tradesCount}
                                           </td>
                                       </tr>
-                                  )}
-                              </tbody>
-                          </table>
-                      </div>
+                                  );
+                              })}
+                              {(!analysisData.topBuyers || analysisData.topBuyers.length === 0) && (
+                                  <tr>
+                                      <td colSpan="7" className="py-10 text-center text-zinc-500 text-sm">
+                                          No buy activities found in this 4-day period.
+                                      </td>
+                                  </tr>
+                              )}
+                          </tbody>
+                      </table>
                   </div>
-
               </div>
 
           </div>

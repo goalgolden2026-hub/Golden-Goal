@@ -39,6 +39,21 @@ export async function GET(request) {
             }, { status: 400 });
         }
 
+        // 3.5. Fetch SOL price in USD
+        let solPrice = 175.0; // fallback
+        try {
+            const solPriceRes = await fetch("https://api.jup.ag/price/v2?ids=So11111111111111111111111111111111111111112", { next: { revalidate: 60 } });
+            if (solPriceRes.ok) {
+                const solPriceData = await solPriceRes.json();
+                const priceVal = solPriceData?.data?.['So11111111111111111111111111111111111111112']?.price;
+                if (priceVal) {
+                    solPrice = Number(priceVal);
+                }
+            }
+        } catch (priceErr) {
+            console.error("Failed to fetch SOL price, using fallback", priceErr);
+        }
+
         // 4. Fetch parsed transactions from Helius with pagination for 4 days
         let transactions = [];
         let beforeSignature = '';
@@ -164,22 +179,29 @@ export async function GET(request) {
         }
 
         const topBuyers = Object.values(buyersMap)
-            .map(b => ({
-                wallet: b.wallet,
-                totalSol: Number(b.totalSol.toFixed(4)),
-                totalTokens: Math.round(b.totalTokens),
-                tradesCount: b.tradesCount,
-                avgPrice: b.totalTokens > 0 ? Number((b.totalSol / b.totalTokens).toFixed(9)) : 0
-            }))
+            .map(b => {
+                const avgPrice = b.totalTokens > 0 ? b.totalSol / b.totalTokens : 0;
+                const avgPriceUsd = avgPrice * solPrice;
+                const avgMarketCap = avgPriceUsd * 1000000000;
+                return {
+                    wallet: b.wallet,
+                    totalSol: Number(b.totalSol.toFixed(4)),
+                    totalTokens: Math.round(b.totalTokens),
+                    tradesCount: b.tradesCount,
+                    avgPrice: Number(avgPrice.toFixed(9)),
+                    avgPriceUsd: Number(avgPriceUsd.toFixed(6)),
+                    avgMarketCap: Math.round(avgMarketCap)
+                };
+            })
             .sort((a, b) => b.totalSol - a.totalSol)
-            .slice(0, 20);
+            .slice(0, 100);
 
         // 7. Save Cache
         const resultData = {
+            solPrice,
             totalSolVolume: Number(totalSolVolume.toFixed(2)),
             totalBuys,
             totalSells,
-            trades: trades.slice(0, 50), // Send latest 50 parsed trades
             topBuyers
         };
 

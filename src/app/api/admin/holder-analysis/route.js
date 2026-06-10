@@ -122,15 +122,30 @@ export async function GET(request) {
                 }
             }
 
+            let tokensReceived = 0;
+            let tokensSent = 0;
+
+            for (const t of uniqueTransfers) {
+                if (t.toUserAccount === trader) {
+                    tokensReceived += t.tokenAmount || 0;
+                }
+                if (t.fromUserAccount === trader) {
+                    tokensSent += t.tokenAmount || 0;
+                }
+            }
+
+            const netAmount = tokensReceived - tokensSent;
             let tokenAmount = 0;
             let isBuy = false;
 
-            for (const t of uniqueTransfers) {
-                tokenAmount += t.tokenAmount || 0;
-                // If the tokens are sent to the trader, it's a BUY
-                if (t.toUserAccount === trader) {
-                    isBuy = true;
-                }
+            if (netAmount > 0) {
+                tokenAmount = netAmount;
+                isBuy = true;
+            } else if (netAmount < 0) {
+                tokenAmount = Math.abs(netAmount);
+                isBuy = false;
+            } else {
+                continue;
             }
 
             // Find SOL (native) transfers

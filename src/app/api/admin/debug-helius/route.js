@@ -16,7 +16,8 @@ export async function GET(request) {
         const fourDaysAgo = Date.now() - 4 * 24 * 60 * 60 * 1000;
         let reachedLimit = false;
         let apiCalls = 0;
-        const maxApiCalls = 50; // Fetch up to 50 pages (5000 transactions)
+        const maxApiCalls = 35; // Fetch up to 35 pages (3500 transactions)
+        const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
         while (!reachedLimit && apiCalls < maxApiCalls) {
             let heliusUrl = `https://api.helius.xyz/v0/addresses/${mint}/transactions?api-key=${apiKey}&limit=100`;
@@ -26,6 +27,11 @@ export async function GET(request) {
             
             const res = await fetch(heliusUrl);
             if (!res.ok) {
+                if (res.status === 429) {
+                    console.log('Rate limited, sleeping 500ms...');
+                    await delay(500);
+                    continue; // Retry
+                }
                 throw new Error(`Helius API status: ${res.status}`);
             }
             
@@ -44,6 +50,9 @@ export async function GET(request) {
             if (lastTxTime < fourDaysAgo || pageTxs.length < 100) {
                 reachedLimit = true;
             }
+            
+            // Wait 100ms before next request
+            await delay(100);
         }
 
         // Filter for last 4 days

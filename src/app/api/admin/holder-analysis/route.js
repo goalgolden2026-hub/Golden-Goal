@@ -39,19 +39,19 @@ export async function GET(request) {
             }, { status: 400 });
         }
 
-        // 3.5. Fetch SOL price in USD
-        let solPrice = 175.0; // fallback
+        // 3.5. Fetch SOL price in USD from CoinGecko
+        let solPrice = 63.5; // fallback
         try {
-            const solPriceRes = await fetch("https://api.jup.ag/price/v2?ids=So11111111111111111111111111111111111111112", { next: { revalidate: 60 } });
+            const solPriceRes = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd", { next: { revalidate: 60 } });
             if (solPriceRes.ok) {
                 const solPriceData = await solPriceRes.json();
-                const priceVal = solPriceData?.data?.['So11111111111111111111111111111111111111112']?.price;
+                const priceVal = solPriceData?.solana?.usd;
                 if (priceVal) {
                     solPrice = Number(priceVal);
                 }
             }
         } catch (priceErr) {
-            console.error("Failed to fetch SOL price, using fallback", priceErr);
+            console.error("Failed to fetch SOL price from CoinGecko, using fallback", priceErr);
         }
 
         // 4. Fetch parsed transactions from Helius with pagination for 4 days
@@ -109,10 +109,23 @@ export async function GET(request) {
             const mintTransfers = tx.tokenTransfers.filter(t => t.mint === GOLDEN_GOAL_MINT);
             if (mintTransfers.length === 0) continue;
 
+            // Deduplicate transfers to prevent double counting from Helius outer/inner parsing
+            const uniqueTransfers = [];
+            for (const t of mintTransfers) {
+                const isDuplicate = uniqueTransfers.some(u => 
+                    u.fromUserAccount === t.fromUserAccount &&
+                    u.toUserAccount === t.toUserAccount &&
+                    u.tokenAmount === t.tokenAmount
+                );
+                if (!isDuplicate) {
+                    uniqueTransfers.push(t);
+                }
+            }
+
             let tokenAmount = 0;
             let isBuy = false;
 
-            for (const t of mintTransfers) {
+            for (const t of uniqueTransfers) {
                 tokenAmount += t.tokenAmount || 0;
                 // If the tokens are sent to the trader, it's a BUY
                 if (t.toUserAccount === trader) {

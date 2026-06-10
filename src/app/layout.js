@@ -7,6 +7,8 @@ import ReferralCapture from "@/components/ReferralCapture";
 import IntroAnimation from "@/components/IntroAnimation";
 import WhitelistGuard from "@/components/WhitelistGuard";
 import { Suspense } from "react";
+import { Analytics } from "@vercel/analytics/react";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,6 +41,7 @@ export default function RootLayout({ children }) {
           </main>
           <Footer />
         </WalletContextProvider>
+        <Analytics />
       </body>
     </html>
   );

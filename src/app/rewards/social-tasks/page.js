@@ -148,14 +148,17 @@ export default function SocialTasksPage() {
                         
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
                             <div className="space-y-3 flex-1">
-                                <div className="flex items-center gap-2">
+                                <div className="flex flex-wrap items-center gap-2.5">
                                     <span className="text-xl md:text-2xl animate-bounce">🚨</span>
                                     <h2 className="text-xl md:text-2xl font-black text-white tracking-tight">
                                         Community Goal: <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.2)]">1,000 Tweets Raffle</span>
                                     </h2>
+                                    <span className="text-[9px] font-black bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-md uppercase tracking-widest leading-none">
+                                        Round #{Math.floor(raffleData.total / 1000) + 1} Active
+                                    </span>
                                 </div>
                                 <p className="text-xs md:text-sm text-zinc-400 max-w-xl leading-relaxed">
-                                    Every time the counter hits 0, a random wallet that submitted a tweet will be selected to win a <strong className="text-amber-400 drop-shadow-[0_0_10px_rgba(245,158,11,0.2)]">massive surprise grand prize</strong>! Every participant gets an equal chance, regardless of total tweets.
+                                    Every time the counter hits 0, a random wallet that submitted a tweet will be selected to win a <strong className="text-amber-400 drop-shadow-[0_0_10px_rgba(245,158,11,0.2)]">massive 1,000,000 points grand prize</strong>! Every participant gets an equal chance, regardless of total tweets.
                                 </p>
                             </div>
 
@@ -177,14 +180,38 @@ export default function SocialTasksPage() {
 
                         {/* Winners list (if any) */}
                         {raffleData.winners && raffleData.winners.length > 0 && (
-                            <div className="border-t border-zinc-800/80 mt-6 pt-5 flex flex-col gap-2 relative z-10">
-                                <span className="text-[10px] font-extrabold tracking-widest text-zinc-500 uppercase">🏆 Last Raffle Winners</span>
-                                <div className="flex flex-wrap gap-3 mt-1">
-                                    {raffleData.winners.slice(0, 3).map((w, idx) => (
+                            <div className="border-t border-zinc-800/80 mt-6 pt-5 relative z-10">
+                                {/* Prominent announcement for the latest winner */}
+                                {(() => {
+                                    const latest = raffleData.winners[0];
+                                    return (
+                                        <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-[0_0_20px_rgba(245,158,11,0.05)]">
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-2xl animate-pulse">🎉</span>
+                                                <div>
+                                                    <p className="text-[9px] text-amber-400 font-extrabold uppercase tracking-widest">LATEST RAFFLE WINNER</p>
+                                                    <p className="text-xs sm:text-sm text-zinc-200 font-medium mt-0.5">
+                                                        Wallet <span className="font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 text-xs sm:text-sm">{latest.walletAddress.slice(0, 10)}...{latest.walletAddress.slice(-10)}</span> won the <strong className="text-white">1,000,000 Points</strong> Grand Prize!
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className="shrink-0">
+                                                <span className="text-[10px] font-black bg-amber-500 text-black px-3.5 py-1.5 rounded-full uppercase tracking-wider">
+                                                    Round #{latest.raffleNumber} Winner
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
+                                
+                                {/* Historical list of winners */}
+                                <span className="text-[10px] font-extrabold tracking-widest text-zinc-500 uppercase block mb-3">📜 Previous Raffle Winners</span>
+                                <div className="flex flex-wrap gap-3">
+                                    {raffleData.winners.slice(0, 8).map((w, idx) => (
                                         <div key={idx} className="bg-white/5 border border-white/5 hover:border-amber-500/20 px-3 py-1.5 rounded-xl flex items-center gap-2 transition-all">
-                                            <span className="text-xs">🎉</span>
+                                            <span className="text-xs">🏆</span>
                                             <span className="font-mono text-xs text-zinc-300">
-                                                {w.walletAddress.slice(0, 4)}...{w.walletAddress.slice(-4)}
+                                                {w.walletAddress.slice(0, 6)}...{w.walletAddress.slice(-6)}
                                             </span>
                                             <span className="text-[10px] font-extrabold bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-md leading-none">
                                                 Round #{w.raffleNumber}

@@ -84,13 +84,13 @@ export async function GET(request) {
 
         const liveScores = {};
 
-        // 2. Identify dates to query. IMPORTANT: Only query dates that are close to now (within 24 hours)
-        // This prevents query calls for upcoming World Cup matches scheduled weeks away.
+        // 3. Identify dates to query.
+        // We only query RapidAPI starting 15 minutes before kickoff and up to 24 hours after kickoff.
+        // This prevents wasting API calls during the long pre-match lead-up.
         const activeMatchDatesToQuery = activeMarkets.filter(market => {
             const matchTime = new Date(market.matchDate).getTime();
-            const diffMs = Math.abs(now - matchTime);
-            // Match window: 24 hours before or after kickoff
-            return diffMs < 24 * 60 * 60 * 1000;
+            const timeDiff = now - matchTime;
+            return timeDiff >= -15 * 60 * 1000 && timeDiff < 24 * 60 * 60 * 1000;
         });
 
         const uniqueDates = Array.from(new Set(activeMatchDatesToQuery.map(market => {

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const GOLDEN_GOAL_MINT = process.env.GOLDEN_GOAL_MINT || process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT || "GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump";
-const CACHE_DURATION = 60 * 1000; // 60 seconds
+const CACHE_DURATION = 120 * 1000; // 120 seconds (2 minutes)
 
 let apiCache = {
     data: null,
@@ -39,26 +39,55 @@ export async function GET(request) {
             }, { status: 400 });
         }
 
-        // 4. Fetch parsed transactions from Helius (v0 Enhanced Transactions)
-        const heliusUrl = `https://api.helius.xyz/v0/addresses/${GOLDEN_GOAL_MINT}/transactions?api-key=${apiKey}&limit=100`;
-        const res = await fetch(heliusUrl);
-        
-        if (!res.ok) {
-            throw new Error(`Helius API returned status: ${res.status}`);
-        }
+        // 4. Fetch parsed transactions from Helius with pagination for 4 days
+        let transactions = [];
+        let beforeSignature = '';
+        const fourDaysAgo = Date.now() - 4 * 24 * 60 * 60 * 1000;
+        let reachedLimit = false;
+        let apiCalls = 0;
+        const maxApiCalls = 5; // Guard rails
 
-        const transactions = await res.json();
+        while (!reachedLimit && apiCalls < maxApiCalls) {
+            let heliusUrl = `https://api.helius.xyz/v0/addresses/${GOLDEN_GOAL_MINT}/transactions?api-key=${apiKey}&limit=100`;
+            if (beforeSignature) {
+                heliusUrl += `&before=${beforeSignature}`;
+            }
+            
+            const res = await fetch(heliusUrl);
+            if (!res.ok) {
+                throw new Error(`Helius API returned status: ${res.status}`);
+            }
+            
+            const pageTxs = await res.json();
+            if (!pageTxs || pageTxs.length === 0) {
+                break;
+            }
+            
+            transactions = transactions.concat(pageTxs);
+            apiCalls++;
+            
+            const lastTx = pageTxs[pageTxs.length - 1];
+            beforeSignature = lastTx?.signature || '';
+            
+            const lastTxTime = lastTx?.timestamp ? lastTx.timestamp * 1000 : Date.now();
+            if (lastTxTime < fourDaysAgo || pageTxs.length < 100) {
+                reachedLimit = true;
+            }
+        }
         
-        // 5. Parse transactions
+        // 5. Parse transactions and filter for last 4 days
         const trades = [];
         let totalSolVolume = 0;
         let totalBuys = 0;
         let totalSells = 0;
 
         for (const tx of transactions) {
+            const timestamp = tx.timestamp ? tx.timestamp * 1000 : Date.now();
+            // Filter strictly inside the 4-day window
+            if (timestamp < fourDaysAgo) continue;
+
             const trader = tx.feePayer;
             const signature = tx.signature;
-            const timestamp = tx.timestamp ? tx.timestamp * 1000 : Date.now();
             
             if (!tx.tokenTransfers) continue;
 

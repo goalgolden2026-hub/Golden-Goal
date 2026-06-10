@@ -363,7 +363,7 @@ export default function AdminDashboard() {
               <div className="flex flex-col items-center justify-center py-20">
                   <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500 mb-4"></div>
                   <h3 className="text-lg font-bold text-white">Querying Helius Nodes...</h3>
-                  <p className="text-zinc-500 text-sm">Parsing recent token swaps and native transfers.</p>
+                  <p className="text-zinc-500 text-sm">Parsing token swaps and native transfers from the last 4 days.</p>
               </div>
           );
       }
@@ -431,7 +431,7 @@ export default function AdminDashboard() {
                               </span>
                           )}
                       </h2>
-                      <p className="text-xs text-zinc-500">Real-time analysis computed from the last 100 on-chain actions.</p>
+                      <p className="text-xs text-zinc-500">Real-time analysis computed from the last 4 days of on-chain activity.</p>
                   </div>
                   <div className="flex items-center gap-3 w-full md:w-auto">
                       <button 

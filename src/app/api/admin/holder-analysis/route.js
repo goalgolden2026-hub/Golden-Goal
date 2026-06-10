@@ -60,7 +60,8 @@ export async function GET(request) {
         const fourDaysAgo = Date.now() - 4 * 24 * 60 * 60 * 1000;
         let reachedLimit = false;
         let apiCalls = 0;
-        const maxApiCalls = 5; // Guard rails
+        const maxApiCalls = 45; // Guard rails to cover full 4 days (up to 4,500 txs)
+        const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
         while (!reachedLimit && apiCalls < maxApiCalls) {
             let heliusUrl = `https://api.helius.xyz/v0/addresses/${GOLDEN_GOAL_MINT}/transactions?api-key=${apiKey}&limit=100`;
@@ -70,6 +71,11 @@ export async function GET(request) {
             
             const res = await fetch(heliusUrl);
             if (!res.ok) {
+                if (res.status === 429) {
+                    console.log('Rate limited on holder-analysis, sleeping 500ms...');
+                    await delay(500);
+                    continue; // Retry
+                }
                 throw new Error(`Helius API returned status: ${res.status}`);
             }
             
@@ -88,6 +94,9 @@ export async function GET(request) {
             if (lastTxTime < fourDaysAgo || pageTxs.length < 100) {
                 reachedLimit = true;
             }
+            
+            // Limit rate to 9 requests per second (developer plan has 10 RPS limit)
+            await delay(110);
         }
         
         // 5. Parse transactions and filter for last 4 days

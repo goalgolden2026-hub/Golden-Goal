@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
+import { getDb } from '@/lib/db';
 
 const GOLDEN_GOAL_MINT = process.env.GOLDEN_GOAL_MINT || process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT || "GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump";
 const CACHE_DURATION = 120 * 1000; // 120 seconds (2 minutes)
@@ -66,16 +67,25 @@ export async function GET(request) {
             console.error("Failed to fetch SOL price from CoinGecko, using fallback", priceErr);
         }
 
-        // 4. Fetch parsed transactions from Helius with pagination since June 5th, 2026
+        // 4. Fetch parsed transactions from Helius since the last synced transaction signature
+        const sql = await getDb();
+        const lastStoredTrade = await sql`
+            SELECT signature, timestamp FROM trader_trades 
+            ORDER BY timestamp DESC LIMIT 1
+        `;
+        const lastSignature = lastStoredTrade.length > 0 ? lastStoredTrade[0].signature : null;
+        const lastTimestamp = lastStoredTrade.length > 0 ? Number(lastStoredTrade[0].timestamp) : 0;
+
         let transactions = [];
         let beforeSignature = '';
         const juneFifth = new Date('2026-06-05T00:00:00+03:00').getTime(); // Launch date TR time
         let reachedLimit = false;
+        let reachedStored = false;
         let apiCalls = 0;
-        const maxApiCalls = 30; // Guard rails to stay strictly under Vercel 10s Hobby timeout limit (up to 3,000 txs)
+        const maxApiCalls = 50; // High limit to pull all trades on initial sync/backfill
         const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-        while (!reachedLimit && apiCalls < maxApiCalls) {
+        while (!reachedLimit && !reachedStored && apiCalls < maxApiCalls) {
             let heliusUrl = `https://api.helius.xyz/v0/addresses/${GOLDEN_GOAL_MINT}/transactions?api-key=${apiKey}&limit=100`;
             if (beforeSignature) {
                 heliusUrl += `&before=${beforeSignature}`;
@@ -96,8 +106,19 @@ export async function GET(request) {
             if (!pageTxs || pageTxs.length === 0) {
                 break;
             }
+
+            for (const tx of pageTxs) {
+                if (tx.signature === lastSignature) {
+                    reachedStored = true;
+                    break;
+                }
+                transactions.push(tx);
+            }
+
+            if (reachedStored) {
+                break;
+            }
             
-            transactions = transactions.concat(pageTxs);
             apiCalls++;
             
             const lastTx = pageTxs[pageTxs.length - 1];
@@ -112,12 +133,8 @@ export async function GET(request) {
             await delay(45);
         }
         
-        // 5. Parse transactions and filter since June 5th, 2026
-        const trades = [];
-        let totalSolVolume = 0;
-        let totalBuys = 0;
-        let totalSells = 0;
-
+        // 5. Parse new transactions and filter since June 5th, 2026
+        const newTrades = [];
         for (const tx of transactions) {
             const timestamp = tx.timestamp ? tx.timestamp * 1000 : Date.now();
             // Filter strictly inside the target window (since launch)
@@ -195,7 +212,7 @@ export async function GET(request) {
 
             const pricePerToken = tokenAmount > 0 ? (solAmount / tokenAmount) : 0;
 
-            trades.push({
+            newTrades.push({
                 signature,
                 trader,
                 timestamp,
@@ -204,18 +221,43 @@ export async function GET(request) {
                 solAmount,
                 pricePerToken
             });
-
-            totalSolVolume += solAmount;
-            if (isBuy) totalBuys++;
-            else totalSells++;
         }
+
+        // Save new trades to the database
+        if (newTrades.length > 0) {
+            // Save in chronological order (oldest first) so that timestamps build sequentially
+            const sortedNewTrades = [...newTrades].sort((a, b) => a.timestamp - b.timestamp);
+            for (const t of sortedNewTrades) {
+                try {
+                    await sql`
+                        INSERT INTO trader_trades (signature, trader, timestamp, type, token_amount, sol_amount, price_per_token)
+                        VALUES (${t.signature}, ${t.trader}, ${t.timestamp}, ${t.type}, ${t.tokenAmount}, ${t.solAmount}, ${t.pricePerToken})
+                        ON CONFLICT (signature) DO NOTHING
+                    `;
+                } catch (dbErr) {
+                    console.error(`Failed to store trade ${t.signature}:`, dbErr.message);
+                }
+            }
+        }
+
+        // Query all historical trades from the database for aggregation
+        const allTrades = await sql`
+            SELECT trader, type, token_amount, sol_amount 
+            FROM trader_trades
+            WHERE timestamp >= ${juneFifth}
+        `;
 
         // 6. Aggregate Top Buyers and Cost Basis (Net of Buys and Sells)
         const buyersMap = {};
-        for (const t of trades) {
-            if (!buyersMap[t.trader]) {
-                buyersMap[t.trader] = {
-                    wallet: t.trader,
+        let totalSolVolume = 0;
+        let totalBuys = 0;
+        let totalSells = 0;
+
+        for (const t of allTrades) {
+            const trader = t.trader;
+            if (!buyersMap[trader]) {
+                buyersMap[trader] = {
+                    wallet: trader,
                     totalSolSpent: 0,
                     totalSolReceived: 0,
                     tokensBought: 0,
@@ -224,14 +266,18 @@ export async function GET(request) {
                 };
             }
             
-            buyersMap[t.trader].tradesCount += 1;
+            buyersMap[trader].tradesCount += 1;
             
             if (t.type === 'BUY') {
-                buyersMap[t.trader].totalSolSpent += t.solAmount;
-                buyersMap[t.trader].tokensBought += t.tokenAmount;
+                buyersMap[trader].totalSolSpent += t.sol_amount;
+                buyersMap[trader].tokensBought += t.token_amount;
+                totalSolVolume += t.sol_amount;
+                totalBuys++;
             } else {
-                buyersMap[t.trader].totalSolReceived += t.solAmount;
-                buyersMap[t.trader].tokensSold += t.tokenAmount;
+                buyersMap[trader].totalSolReceived += t.sol_amount;
+                buyersMap[trader].tokensSold += t.token_amount;
+                totalSolVolume += t.sol_amount;
+                totalSells++;
             }
         }
 

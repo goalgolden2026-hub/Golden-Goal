@@ -69,7 +69,7 @@ export async function GET(request) {
 
         // 4. Fetch parsed transactions from Helius since the last synced transaction signature
         const sql = await getDb();
-        const lastStoredTrade = await sql`
+        const { rows: lastStoredTrade } = await sql`
             SELECT signature, timestamp FROM trader_trades 
             ORDER BY timestamp DESC LIMIT 1
         `;
@@ -241,7 +241,7 @@ export async function GET(request) {
         }
 
         // Query all historical trades from the database for aggregation
-        const allTrades = await sql`
+        const { rows: allTrades } = await sql`
             SELECT trader, type, token_amount, sol_amount 
             FROM trader_trades
             WHERE timestamp >= ${juneFifth}

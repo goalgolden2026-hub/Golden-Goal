@@ -12,6 +12,7 @@ export async function GET(request) {
     try {
         const { searchParams } = new URL(request.url);
         const adminWallet = searchParams.get('wallet');
+        const forceRefresh = searchParams.get('refresh') === 'true';
 
         if (!adminWallet) {
             return NextResponse.json({ success: false, error: "Missing admin wallet" }, { status: 400 });
@@ -33,7 +34,7 @@ export async function GET(request) {
 
         // 2. Check Cache
         const now = Date.now();
-        if (apiCache.data && (now - apiCache.timestamp < CACHE_DURATION)) {
+        if (!forceRefresh && apiCache.data && (now - apiCache.timestamp < CACHE_DURATION)) {
             return NextResponse.json({ success: true, fromCache: true, ...apiCache.data }, { status: 200 });
         }
 
@@ -61,13 +62,13 @@ export async function GET(request) {
             console.error("Failed to fetch SOL price from CoinGecko, using fallback", priceErr);
         }
 
-        // 4. Fetch parsed transactions from Helius with pagination for 4 days
+        // 4. Fetch parsed transactions from Helius with pagination since June 5th, 2026
         let transactions = [];
         let beforeSignature = '';
-        const fourDaysAgo = Date.now() - 4 * 24 * 60 * 60 * 1000;
+        const juneFifth = new Date('2026-06-05T00:00:00+03:00').getTime(); // Launch date TR time
         let reachedLimit = false;
         let apiCalls = 0;
-        const maxApiCalls = 15; // Guard rails to stay strictly under Vercel 10s Hobby timeout limit (up to 1,500 txs)
+        const maxApiCalls = 30; // Guard rails to stay strictly under Vercel 10s Hobby timeout limit (up to 3,000 txs)
         const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
         while (!reachedLimit && apiCalls < maxApiCalls) {
@@ -76,7 +77,8 @@ export async function GET(request) {
                 heliusUrl += `&before=${beforeSignature}`;
             }
             
-            const res = await fetch(heliusUrl);
+            // Bypass Next.js data cache to fetch real-time on-chain data
+            const res = await fetch(heliusUrl, { cache: 'no-store' });
             if (!res.ok) {
                 if (res.status === 429) {
                     console.log('Rate limited on holder-analysis, sleeping 500ms...');
@@ -98,7 +100,7 @@ export async function GET(request) {
             beforeSignature = lastTx?.signature || '';
             
             const lastTxTime = lastTx?.timestamp ? lastTx.timestamp * 1000 : Date.now();
-            if (lastTxTime < fourDaysAgo || pageTxs.length < 100) {
+            if (lastTxTime < juneFifth || pageTxs.length < 100) {
                 reachedLimit = true;
             }
             
@@ -106,7 +108,7 @@ export async function GET(request) {
             await delay(45);
         }
         
-        // 5. Parse transactions and filter for last 4 days
+        // 5. Parse transactions and filter since June 5th, 2026
         const trades = [];
         let totalSolVolume = 0;
         let totalBuys = 0;
@@ -114,8 +116,8 @@ export async function GET(request) {
 
         for (const tx of transactions) {
             const timestamp = tx.timestamp ? tx.timestamp * 1000 : Date.now();
-            // Filter strictly inside the 4-day window
-            if (timestamp < fourDaysAgo) continue;
+            // Filter strictly inside the target window (since launch)
+            if (timestamp < juneFifth) continue;
 
             const trader = tx.feePayer;
             const signature = tx.signature;

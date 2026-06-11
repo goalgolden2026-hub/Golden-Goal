@@ -67,7 +67,7 @@ export async function GET(request) {
         const logsRes = await sql`SELECT amount, type FROM treasury_logs WHERE "walletAddress" = ${walletAddress}`;
         for (const log of logsRes.rows) {
             const amt = parseFloat(log.amount);
-            if (log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') {
+            if ((log.type.includes('BURN') || log.type.includes('REWARD_POOL') || log.type === 'TREASURY') && log.type !== 'BURN' && log.type !== 'TREASURY') {
                 mockBalance -= amt; // Deductions logged as positive
             } else if (log.type === 'SPIN_PAYMENT') {
                 mockBalance += amt; // Already negative

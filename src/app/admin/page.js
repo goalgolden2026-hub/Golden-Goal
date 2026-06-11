@@ -95,12 +95,13 @@ export default function AdminDashboard() {
     }
   };
 
-  const fetchAnalysis = async () => {
+  const fetchAnalysis = async (force = false) => {
     if (!publicKey) return;
     setIsLoadingAnalysis(true);
     setAnalysisError(null);
     try {
-        const res = await fetch(`/api/admin/holder-analysis?wallet=${publicKey.toBase58()}`);
+        const url = `/api/admin/holder-analysis?wallet=${publicKey.toBase58()}${force ? '&refresh=true' : ''}`;
+        const res = await fetch(url);
         const data = await res.json();
         if (data.success) {
             setAnalysisData(data);
@@ -381,7 +382,7 @@ export default function AdminDashboard() {
               <div className="flex flex-col items-center justify-center py-20">
                   <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500 mb-4"></div>
                   <h3 className="text-lg font-bold text-white">Querying Helius Nodes...</h3>
-                  <p className="text-zinc-500 text-sm">Parsing token swaps and native transfers from the last 4 days.</p>
+                  <p className="text-zinc-500 text-sm">Parsing token swaps and native transfers since launch (June 5th).</p>
               </div>
           );
       }
@@ -444,16 +445,16 @@ export default function AdminDashboard() {
                       <h2 className="text-xl font-bold text-white flex items-center gap-2">
                           📈 Token Swap Metrics
                           {analysisData.fromCache && (
-                              <span className="text-[10px] font-extrabold tracking-widest text-amber-500 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-full shrink-0">
+                              <span className="text-[10px] font-extrabold tracking-widest text-amber-500 bg-amber-500/10 border border-amber-500/30 px-2.5 py-0.5 rounded-full shrink-0">
                                   ⚡ CACHED
                               </span>
                           )}
                       </h2>
-                      <p className="text-xs text-zinc-500">Real-time analysis computed from the last 4 days of on-chain activity.</p>
+                      <p className="text-xs text-zinc-500">Real-time analysis computed since launch (June 5th) of on-chain activity.</p>
                   </div>
                   <div className="flex items-center gap-3 w-full md:w-auto">
                       <button 
-                          onClick={fetchAnalysis}
+                          onClick={() => fetchAnalysis(true)}
                           disabled={isLoadingAnalysis}
                           className="w-full md:w-auto py-2 px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 text-xs font-bold transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
                       >
@@ -526,7 +527,7 @@ export default function AdminDashboard() {
               <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-xl flex flex-col w-full">
                   <div className="flex justify-between items-center mb-6">
                       <div>
-                          <h3 className="text-lg font-bold text-white">🐳 Top Buyers & Cost Basis (Last 4 Days)</h3>
+                          <h3 className="text-lg font-bold text-white">🐳 Top Buyers & Cost Basis (Since June 5th)</h3>
                           <p className="text-xs text-zinc-500">Top 100 wallets sorted by total SOL spent. Live SOL Price: ${analysisData.solPrice?.toFixed(2)} USD</p>
                       </div>
                   </div>

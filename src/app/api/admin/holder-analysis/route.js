@@ -1,4 +1,8 @@
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
+import { Connection, PublicKey } from '@solana/web3.js';
+import { getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
 
 const GOLDEN_GOAL_MINT = process.env.GOLDEN_GOAL_MINT || process.env.NEXT_PUBLIC_GOLDEN_GOAL_MINT || "GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump";
 const CACHE_DURATION = 120 * 1000; // 120 seconds (2 minutes)
@@ -206,41 +210,123 @@ export async function GET(request) {
             else totalSells++;
         }
 
-        // 6. Aggregate Top Buyers and Cost Basis
+        // 6. Aggregate Top Buyers and Cost Basis (Net of Buys and Sells)
         const buyersMap = {};
         for (const t of trades) {
+            if (!buyersMap[t.trader]) {
+                buyersMap[t.trader] = {
+                    wallet: t.trader,
+                    totalSolSpent: 0,
+                    totalSolReceived: 0,
+                    tokensBought: 0,
+                    tokensSold: 0,
+                    tradesCount: 0
+                };
+            }
+            
+            buyersMap[t.trader].tradesCount += 1;
+            
             if (t.type === 'BUY') {
-                if (!buyersMap[t.trader]) {
-                    buyersMap[t.trader] = {
-                        wallet: t.trader,
-                        totalSol: 0,
-                        totalTokens: 0,
-                        tradesCount: 0
-                    };
-                }
-                buyersMap[t.trader].totalSol += t.solAmount;
-                buyersMap[t.trader].totalTokens += t.tokenAmount;
-                buyersMap[t.trader].tradesCount += 1;
+                buyersMap[t.trader].totalSolSpent += t.solAmount;
+                buyersMap[t.trader].tokensBought += t.tokenAmount;
+            } else {
+                buyersMap[t.trader].totalSolReceived += t.solAmount;
+                buyersMap[t.trader].tokensSold += t.tokenAmount;
             }
         }
 
-        const topBuyers = Object.values(buyersMap)
+        const candidateBuyers = Object.values(buyersMap)
             .map(b => {
-                const avgPrice = b.totalTokens > 0 ? b.totalSol / b.totalTokens : 0;
-                const avgPriceUsd = avgPrice * solPrice;
-                const avgMarketCap = avgPriceUsd * 1000000000;
+                const netSol = b.totalSolSpent - b.totalSolReceived;
+                const finalSol = Math.max(0, netSol);
                 return {
                     wallet: b.wallet,
-                    totalSol: Number(b.totalSol.toFixed(4)),
-                    totalTokens: Math.round(b.totalTokens),
+                    totalSol: Number(finalSol.toFixed(4)),
                     tradesCount: b.tradesCount,
-                    avgPrice: Number(avgPrice.toFixed(9)),
-                    avgPriceUsd: Number(avgPriceUsd.toFixed(6)),
-                    avgMarketCap: Math.round(avgMarketCap)
+                    tokensBought: b.tokensBought,
+                    tokensSold: b.tokensSold
                 };
             })
             .sort((a, b) => b.totalSol - a.totalSol)
             .slice(0, 100);
+
+        // 6.5 Fetch actual on-chain balances for the top 100 candidate wallets
+        let topBuyers = [];
+        try {
+            const rpcUrl = `https://mainnet.helius-rpc.com/?api-key=${apiKey}`;
+            const connection = new Connection(rpcUrl, 'confirmed');
+            const mintPubKey = new PublicKey(GOLDEN_GOAL_MINT);
+            
+            const candidatesWithATAs = candidateBuyers.map(c => {
+                try {
+                    const ownerPubKey = new PublicKey(c.wallet);
+                    const ata = getAssociatedTokenAddressSync(mintPubKey, ownerPubKey, false, TOKEN_2022_PROGRAM_ID);
+                    return { ...c, ata };
+                } catch (e) {
+                    return null;
+                }
+            }).filter(Boolean);
+
+            if (candidatesWithATAs.length > 0) {
+                const ataKeys = candidatesWithATAs.map(c => c.ata);
+                const accountsInfo = await connection.getMultipleAccountsInfo(ataKeys);
+                
+                for (let i = 0; i < candidatesWithATAs.length; i++) {
+                    const candidate = candidatesWithATAs[i];
+                    const info = accountsInfo[i];
+                    
+                    let onChainBalance = 0;
+                    if (info && info.data && info.data.length >= 72) {
+                        try {
+                            const rawAmount = info.data.readBigUInt64LE(64);
+                            onChainBalance = Number(rawAmount) / 1e6;
+                        } catch (err) {
+                            console.error(`Failed to parse account data for ${candidate.wallet}:`, err);
+                        }
+                    }
+
+                    // Exclude wallets with no tokens
+                    if (onChainBalance < 1) {
+                        continue;
+                    }
+
+                    const avgPrice = onChainBalance > 0 ? candidate.totalSol / onChainBalance : 0;
+                    const avgPriceUsd = avgPrice * solPrice;
+                    const avgMarketCap = avgPriceUsd * 1000000000;
+
+                    topBuyers.push({
+                        wallet: candidate.wallet,
+                        totalSol: candidate.totalSol,
+                        totalTokens: Math.round(onChainBalance),
+                        tradesCount: candidate.tradesCount,
+                        avgPrice: Number(avgPrice.toFixed(9)),
+                        avgPriceUsd: Number(avgPriceUsd.toFixed(6)),
+                        avgMarketCap: Math.round(avgMarketCap)
+                    });
+                }
+            }
+            
+            // Sort by totalSol again in case any were skipped
+            topBuyers.sort((a, b) => b.totalSol - a.totalSol);
+        } catch (rpcErr) {
+            console.error("Failed to query on-chain balances, falling back to swap aggregation estimation:", rpcErr);
+            topBuyers = candidateBuyers.map(c => {
+                const netTokens = c.tokensBought - c.tokensSold;
+                if (netTokens <= 0) return null;
+                const avgPrice = netTokens > 0 ? c.totalSol / netTokens : 0;
+                const avgPriceUsd = avgPrice * solPrice;
+                const avgMarketCap = avgPriceUsd * 1000000000;
+                return {
+                    wallet: c.wallet,
+                    totalSol: c.totalSol,
+                    totalTokens: Math.round(netTokens),
+                    tradesCount: c.tradesCount,
+                    avgPrice: Number(avgPrice.toFixed(9)),
+                    avgPriceUsd: Number(avgPriceUsd.toFixed(6)),
+                    avgMarketCap: Math.round(avgMarketCap)
+                };
+            }).filter(Boolean);
+        }
 
         // 7. Save Cache
         const resultData = {
@@ -248,7 +334,8 @@ export async function GET(request) {
             totalSolVolume: Number(totalSolVolume.toFixed(2)),
             totalBuys,
             totalSells,
-            topBuyers
+            topBuyers,
+            envKeys: Object.keys(process.env)
         };
 
         apiCache = {

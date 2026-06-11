@@ -90,7 +90,8 @@ export async function GET(request) {
         const activeMatchDatesToQuery = activeMarkets.filter(market => {
             const matchTime = new Date(market.matchDate).getTime();
             const timeDiff = now - matchTime;
-            return timeDiff >= -15 * 60 * 1000 && timeDiff < 24 * 60 * 60 * 1000;
+            // Look look-ahead is 15 minutes, look-back is 7 days to cover delayed resolution
+            return timeDiff >= -15 * 60 * 1000 && timeDiff < 7 * 24 * 60 * 60 * 1000;
         });
 
         const uniqueDates = Array.from(new Set(activeMatchDatesToQuery.map(market => {
@@ -132,6 +133,16 @@ export async function GET(request) {
         // 4. If fetch failed (e.g., quota exceeded) and we have an old database cache, serve the old cache to keep the site online
         if (!fetchSuccess && cacheRes.rowCount > 0) {
             console.warn("Using expired live-scores database cache due to API sync failure (likely quota exceeded).");
+            // Update the cache updatedAt timestamp to prevent cache stampede/API hammering loop
+            try {
+                await sql`
+                    UPDATE live_scores_cache 
+                    SET "updatedAt" = CURRENT_TIMESTAMP 
+                    WHERE key = 'global_live_scores'
+                `;
+            } catch (e) {
+                console.error("Failed to update cache timestamp after API failure:", e);
+            }
             return NextResponse.json({ success: true, scores: cacheRes.rows[0].data }, { status: 200 });
         }
 
@@ -200,11 +211,11 @@ export async function GET(request) {
                     };
                 }
             } else {
-                // If it is not within 24 hours of kickoff, it is statically UPCOMING
+                // If it is not within 7 days of kickoff, it is statically UPCOMING
                 // If it IS close but not found in the feed, return OFFLINE fallback
                 const matchTime = new Date(market.matchDate).getTime();
                 const diffMs = Math.abs(now - matchTime);
-                const isNearTerm = diffMs < 24 * 60 * 60 * 1000;
+                const isNearTerm = diffMs < 7 * 24 * 60 * 60 * 1000;
 
                 liveScores[market.id] = {
                     goalsA: null,

@@ -261,6 +261,10 @@ export async function POST(request) {
                 SET points = COALESCE(points, 0) + ${reward.value} 
                 WHERE "walletAddress" = ${walletAddress}
             `;
+            await sql`
+                INSERT INTO treasury_logs ("walletAddress", amount, type) 
+                VALUES (${walletAddress}, ${reward.value}, 'REWARDS_BOX_WIN_XP')
+            `;
         }
 
         return NextResponse.json({ 

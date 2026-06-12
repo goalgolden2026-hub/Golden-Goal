@@ -57,21 +57,39 @@ export async function GET(request) {
                     (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status = 'WON') as "wonPredictions",
                     (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status IN ('WON', 'LOST')) as "resolvedPredictions",
                     (
+                        (
+                            SELECT COALESCE(SUM(p."pointsReward"), 0) 
+                            FROM predictions p 
+                            WHERE p."walletAddress" = u."walletAddress" 
+                            AND p.status = 'WON' 
+                            AND p."updatedAt" >= ${queryWeekStart}::timestamp
+                            AND p."updatedAt" <= ${queryWeekEnd}::timestamp
+                        ) + (
+                            SELECT COALESCE(SUM(t.amount), 0) 
+                            FROM treasury_logs t 
+                            WHERE t."walletAddress" = u."walletAddress" 
+                            AND t.type = 'REWARDS_BOX_WIN_XP' 
+                            AND t.timestamp >= ${queryWeekStart}::timestamp
+                            AND t.timestamp <= ${queryWeekEnd}::timestamp
+                        )
+                    ) as "weeklyPoints"
+                FROM users u
+                ORDER BY (
+                    (
                         SELECT COALESCE(SUM(p."pointsReward"), 0) 
                         FROM predictions p 
                         WHERE p."walletAddress" = u."walletAddress" 
                         AND p.status = 'WON' 
                         AND p."updatedAt" >= ${queryWeekStart}::timestamp
                         AND p."updatedAt" <= ${queryWeekEnd}::timestamp
-                    ) as "weeklyPoints"
-                FROM users u
-                ORDER BY (
-                    SELECT COALESCE(SUM(p."pointsReward"), 0) 
-                    FROM predictions p 
-                    WHERE p."walletAddress" = u."walletAddress" 
-                    AND p.status = 'WON' 
-                    AND p."updatedAt" >= ${queryWeekStart}::timestamp
-                    AND p."updatedAt" <= ${queryWeekEnd}::timestamp
+                    ) + (
+                        SELECT COALESCE(SUM(t.amount), 0) 
+                        FROM treasury_logs t 
+                        WHERE t."walletAddress" = u."walletAddress" 
+                        AND t.type = 'REWARDS_BOX_WIN_XP' 
+                        AND t.timestamp >= ${queryWeekStart}::timestamp
+                        AND t.timestamp <= ${queryWeekEnd}::timestamp
+                    )
                 ) DESC, u.points DESC
                 LIMIT 10
             `;
@@ -88,12 +106,21 @@ export async function GET(request) {
                         (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status = 'WON') as "wonPredictions",
                         (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status IN ('WON', 'LOST')) as "resolvedPredictions",
                         (
-                            SELECT COALESCE(SUM(p."pointsReward"), 0) 
-                            FROM predictions p 
-                            WHERE p."walletAddress" = u."walletAddress" 
-                            AND p.status = 'WON' 
-                            AND p."updatedAt" >= ${queryWeekStart}::timestamp
-                            AND p."updatedAt" <= ${queryWeekEnd}::timestamp
+                            (
+                                SELECT COALESCE(SUM(p."pointsReward"), 0) 
+                                FROM predictions p 
+                                WHERE p."walletAddress" = u."walletAddress" 
+                                AND p.status = 'WON' 
+                                AND p."updatedAt" >= ${queryWeekStart}::timestamp
+                                AND p."updatedAt" <= ${queryWeekEnd}::timestamp
+                            ) + (
+                                SELECT COALESCE(SUM(t.amount), 0) 
+                                FROM treasury_logs t 
+                                WHERE t."walletAddress" = u."walletAddress" 
+                                AND t.type = 'REWARDS_BOX_WIN_XP' 
+                                AND t.timestamp >= ${queryWeekStart}::timestamp
+                                AND t.timestamp <= ${queryWeekEnd}::timestamp
+                            )
                         ) as "weeklyPoints"
                     FROM users u
                     ORDER BY u.points DESC
@@ -150,12 +177,21 @@ export async function GET(request) {
                             (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status = 'WON') as "wonPredictions",
                             (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status IN ('WON', 'LOST')) as "resolvedPredictions",
                             (
-                                SELECT COALESCE(SUM(p."pointsReward"), 0) 
-                                FROM predictions p 
-                                WHERE p."walletAddress" = u."walletAddress" 
-                                AND p.status = 'WON' 
-                                AND p."updatedAt" >= ${queryWeekStart}::timestamp
-                                AND p."updatedAt" <= ${queryWeekEnd}::timestamp
+                                (
+                                    SELECT COALESCE(SUM(p."pointsReward"), 0) 
+                                    FROM predictions p 
+                                    WHERE p."walletAddress" = u."walletAddress" 
+                                    AND p.status = 'WON' 
+                                    AND p."updatedAt" >= ${queryWeekStart}::timestamp
+                                    AND p."updatedAt" <= ${queryWeekEnd}::timestamp
+                                ) + (
+                                    SELECT COALESCE(SUM(t.amount), 0) 
+                                    FROM treasury_logs t 
+                                    WHERE t."walletAddress" = u."walletAddress" 
+                                    AND t.type = 'REWARDS_BOX_WIN_XP' 
+                                    AND t.timestamp >= ${queryWeekStart}::timestamp
+                                    AND t.timestamp <= ${queryWeekEnd}::timestamp
+                                )
                             ) as "weeklyPoints",
                             (
                                 SELECT COUNT(*) + 1 
@@ -163,22 +199,40 @@ export async function GET(request) {
                                     SELECT 
                                         u2."walletAddress",
                                         (
-                                            SELECT COALESCE(SUM(p2."pointsReward"), 0)
-                                            FROM predictions p2
-                                            WHERE p2."walletAddress" = u2."walletAddress"
-                                            AND p2.status = 'WON'
-                                            AND p2."updatedAt" >= ${queryWeekStart}::timestamp
-                                            AND p2."updatedAt" <= ${queryWeekEnd}::timestamp
+                                            (
+                                                SELECT COALESCE(SUM(p2."pointsReward"), 0)
+                                                FROM predictions p2
+                                                WHERE p2."walletAddress" = u2."walletAddress"
+                                                AND p2.status = 'WON'
+                                                AND p2."updatedAt" >= ${queryWeekStart}::timestamp
+                                                AND p2."updatedAt" <= ${queryWeekEnd}::timestamp
+                                            ) + (
+                                                SELECT COALESCE(SUM(t2.amount), 0)
+                                                FROM treasury_logs t2
+                                                WHERE t2."walletAddress" = u2."walletAddress"
+                                                AND t2.type = 'REWARDS_BOX_WIN_XP'
+                                                AND t2.timestamp >= ${queryWeekStart}::timestamp
+                                                AND t2.timestamp <= ${queryWeekEnd}::timestamp
+                                            )
                                         ) as wp
                                     FROM users u2
                                 ) sub
                                 WHERE sub.wp > (
-                                    SELECT COALESCE(SUM(p3."pointsReward"), 0)
-                                    FROM predictions p3
-                                    WHERE p3."walletAddress" = u."walletAddress"
-                                    AND p3.status = 'WON'
-                                    AND p3."updatedAt" >= ${queryWeekStart}::timestamp
-                                    AND p3."updatedAt" <= ${queryWeekEnd}::timestamp
+                                    (
+                                        SELECT COALESCE(SUM(p3."pointsReward"), 0)
+                                        FROM predictions p3
+                                        WHERE p3."walletAddress" = u."walletAddress"
+                                        AND p3.status = 'WON'
+                                        AND p3."updatedAt" >= ${queryWeekStart}::timestamp
+                                        AND p3."updatedAt" <= ${queryWeekEnd}::timestamp
+                                    ) + (
+                                        SELECT COALESCE(SUM(t3.amount), 0)
+                                        FROM treasury_logs t3
+                                        WHERE t3."walletAddress" = u."walletAddress"
+                                        AND t3.type = 'REWARDS_BOX_WIN_XP'
+                                        AND t3.timestamp >= ${queryWeekStart}::timestamp
+                                        AND t3.timestamp <= ${queryWeekEnd}::timestamp
+                                    )
                                 )
                             ) as rank
                         FROM users u
@@ -195,12 +249,21 @@ export async function GET(request) {
                                 (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status = 'WON') as "wonPredictions",
                                 (SELECT COUNT(*) FROM predictions p WHERE p."walletAddress" = u."walletAddress" AND p.status IN ('WON', 'LOST')) as "resolvedPredictions",
                                 (
-                                    SELECT COALESCE(SUM(p."pointsReward"), 0) 
-                                    FROM predictions p 
-                                    WHERE p."walletAddress" = u."walletAddress" 
-                                    AND p.status = 'WON' 
-                                    AND p."updatedAt" >= ${queryWeekStart}::timestamp
-                                    AND p."updatedAt" <= ${queryWeekEnd}::timestamp
+                                    (
+                                        SELECT COALESCE(SUM(p."pointsReward"), 0) 
+                                        FROM predictions p 
+                                        WHERE p."walletAddress" = u."walletAddress" 
+                                        AND p.status = 'WON' 
+                                        AND p."updatedAt" >= ${queryWeekStart}::timestamp
+                                        AND p."updatedAt" <= ${queryWeekEnd}::timestamp
+                                    ) + (
+                                        SELECT COALESCE(SUM(t.amount), 0) 
+                                        FROM treasury_logs t 
+                                        WHERE t."walletAddress" = u."walletAddress" 
+                                        AND t.type = 'REWARDS_BOX_WIN_XP' 
+                                        AND t.timestamp >= ${queryWeekStart}::timestamp
+                                        AND t.timestamp <= ${queryWeekEnd}::timestamp
+                                    )
                                 ) as "weeklyPoints",
                                 (SELECT COUNT(*) + 1 FROM users u2 WHERE u2.points > u.points) as rank
                             FROM users u

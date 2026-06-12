@@ -334,6 +334,40 @@ function MarketsContent() {
                                     <span className="text-zinc-100 font-semibold text-xs md:text-sm lg:text-base leading-tight break-words w-full px-1">{m.teamB}</span>
                                 </div>
                             </div>
+
+                            {/* Goalscorers Grid */}
+                            {((isLive || (m.scoreA !== null && m.scoreB !== null)) && scoreInfo?.goals && scoreInfo.goals.length > 0) && (
+                                <div className="mt-4 pt-4 border-t border-zinc-800/60 grid grid-cols-3 gap-2 text-[9px] md:text-[10px] text-zinc-400 font-semibold max-w-sm mx-auto drop-shadow-sm">
+                                    {/* Team A Goals */}
+                                    <div className="text-right space-y-1 min-w-0">
+                                        {scoreInfo.goals.filter(g => g.isHome).map((g, idx) => (
+                                            <div key={idx} className="flex items-center justify-end gap-1 truncate">
+                                                <span className="text-zinc-300 truncate">{g.player}</span>
+                                                <span className="text-zinc-500 font-mono flex-shrink-0">{g.time}{g.addedTime ? `+${g.addedTime}` : ''}'</span>
+                                                {g.incidentClass === 'penalty' && <span className="text-amber-400 text-[8px] font-extrabold flex-shrink-0">(P)</span>}
+                                                {g.incidentClass === 'ownGoal' && <span className="text-red-500 text-[8px] font-extrabold flex-shrink-0">(OG)</span>}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Ball Icon */}
+                                    <div className="flex items-center justify-center opacity-30 select-none text-[10px] md:text-xs">
+                                        ⚽
+                                    </div>
+
+                                    {/* Team B Goals */}
+                                    <div className="text-left space-y-1 min-w-0">
+                                        {scoreInfo.goals.filter(g => !g.isHome).map((g, idx) => (
+                                            <div key={idx} className="flex items-center justify-start gap-1 truncate">
+                                                {g.incidentClass === 'penalty' && <span className="text-amber-400 text-[8px] font-extrabold flex-shrink-0">(P)</span>}
+                                                {g.incidentClass === 'ownGoal' && <span className="text-red-500 text-[8px] font-extrabold flex-shrink-0">(OG)</span>}
+                                                <span className="text-zinc-500 font-mono flex-shrink-0">{g.time}{g.addedTime ? `+${g.addedTime}` : ''}'</span>
+                                                <span className="text-zinc-300 truncate">{g.player}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Prediction Action Buttons */}

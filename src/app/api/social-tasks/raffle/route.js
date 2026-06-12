@@ -34,10 +34,61 @@ export async function GET(request) {
             FROM social_raffle_winners 
             ORDER BY "createdAt" DESC
         `;
-        const winners = winnersRes.rows;
+        let winners = winnersRes.rows;
 
         const target = 1000;
         const remaining = target - (total % target);
+
+        // --- Self-Healing Missing Raffle Winners ---
+        const expectedRaffles = Math.floor(total / target);
+        let updatedWinners = false;
+        
+        for (let r = 1; r <= expectedRaffles; r++) {
+            const hasWinner = winners.some(w => w.raffleNumber === r);
+            if (!hasWinner) {
+                try {
+                    const winnerRes = await sql`
+                        SELECT "walletAddress" 
+                        FROM social_tasks 
+                        GROUP BY "walletAddress"
+                        ORDER BY RANDOM() 
+                        LIMIT 1
+                    `;
+                    if (winnerRes.rows.length > 0) {
+                        const winnerWallet = winnerRes.rows[0].walletAddress;
+                        const prizeAmount = 1000000;
+                        
+                        const insertRes = await sql`
+                            INSERT INTO social_raffle_winners ("walletAddress", "raffleNumber", "prizeAmount", status)
+                            VALUES (${winnerWallet}, ${r}, ${prizeAmount}, 'PENDING')
+                            ON CONFLICT ("raffleNumber") DO NOTHING
+                            RETURNING "walletAddress"
+                        `;
+                        
+                        if (insertRes.rows.length > 0) {
+                            await sql`
+                                UPDATE users 
+                                SET points = points + ${prizeAmount}
+                                WHERE "walletAddress" = ${winnerWallet}
+                            `;
+                            updatedWinners = true;
+                        }
+                    }
+                } catch (err) {
+                    console.error(`Self-healing error for raffle round #${r}:`, err);
+                }
+            }
+        }
+
+        if (updatedWinners) {
+            const freshWinnersRes = await sql`
+                SELECT id, "walletAddress", "raffleNumber", "prizeAmount", status, "createdAt" 
+                FROM social_raffle_winners 
+                ORDER BY "createdAt" DESC
+            `;
+            winners = freshWinnersRes.rows;
+        }
+        // --- End of Self-Healing ---
 
         const raffleData = {
             total,

@@ -122,8 +122,9 @@ export async function POST(request) {
                 
                 // Select a random unique participant wallet
                 const winnerRes = await sql`
-                    SELECT DISTINCT "walletAddress" 
+                    SELECT "walletAddress" 
                     FROM social_tasks 
+                    GROUP BY "walletAddress"
                     ORDER BY RANDOM() 
                     LIMIT 1
                 `;

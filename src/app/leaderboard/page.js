@@ -8,27 +8,28 @@ export default function Leaderboard() {
   const [leaders, setLeaders] = useState([]);
   const [userStats, setUserStats] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('ALL'); // 'ALL' or 1, 2, 3, 4, 5
+  const [activeTab, setActiveTab] = useState(1); // Default to Week 1
   const [unlockedWeeks, setUnlockedWeeks] = useState([]);
 
   useEffect(() => {
     const WEEK_1_START = new Date("2026-06-11T00:00:00+03:00");
     const now = new Date();
     const active = [];
+    let currentWeek = 1;
     for (let w = 1; w <= 5; w++) {
       const weekStart = new Date(WEEK_1_START.getTime() + (w - 1) * 7 * 24 * 60 * 60 * 1000);
       if (now >= weekStart) {
         active.push(w);
+        currentWeek = w;
       }
     }
     setUnlockedWeeks(active);
+    setActiveTab(currentWeek); // Automatically select the current active week
   }, []);
 
   useEffect(() => {
     const walletParam = connected && publicKey ? `&walletAddress=${publicKey.toBase58()}` : '';
-    const url = activeTab === 'ALL' 
-        ? `/api/leaderboard?${walletParam.replace('&', '')}`
-        : `/api/leaderboard?week=${activeTab}${walletParam}`;
+    const url = `/api/leaderboard?week=${activeTab}${walletParam}`;
         
     setLoading(true);
     fetch(url)
@@ -68,7 +69,7 @@ export default function Leaderboard() {
           <span className="font-mono text-lg text-zinc-300 ml-2">{shortenWallet(leader.walletAddress)}</span>
         </div>
         <span className="inline-flex items-center justify-center px-4 py-1 rounded-xl bg-amber-500/10 text-amber-500 font-bold text-lg border border-amber-500/20">
-          {activeTab === 'ALL' ? leader.points : leader.weeklyPoints} pts
+          {leader.weeklyPoints} pts
         </span>
       </div>
 
@@ -79,7 +80,7 @@ export default function Leaderboard() {
         {index === 2 && <span className="text-amber-700">🥉</span>}
         {index > 2 && <span className="text-zinc-600">#{index + 1}</span>}
       </div>
-      <div className="hidden md:block col-span-3">
+      <div className="hidden md:block col-span-4">
         <span className="font-mono text-lg text-zinc-300">{shortenWallet(leader.walletAddress)}</span>
       </div>
 
@@ -92,24 +93,11 @@ export default function Leaderboard() {
 
       {/* Points */}
       <div className="flex justify-between items-center md:contents">
-        <div className="md:col-span-2 text-left md:text-right">
-          <span className="text-xs text-zinc-500 md:hidden mr-2">Weekly:</span>
-          {activeTab !== 'ALL' ? (
-            <span className="inline-flex items-center justify-center min-w-[80px] px-4 h-12 rounded-2xl bg-amber-500/10 text-amber-500 font-bold text-xl border border-amber-500/20">
-              {leader.weeklyPoints}
-            </span>
-          ) : (
-            <span className="text-blue-400 font-bold text-lg">{leader.weeklyPoints}</span>
-          )}
-        </div>
-        <div className="hidden md:block col-span-2 text-right">
-          {activeTab === 'ALL' ? (
-            <span className="inline-flex items-center justify-center min-w-[80px] px-4 h-12 rounded-2xl bg-amber-500/10 text-amber-500 font-bold text-xl border border-amber-500/20">
-              {leader.points}
-            </span>
-          ) : (
-            <span className="text-blue-400 font-bold text-lg">{leader.points}</span>
-          )}
+        <div className="md:col-span-3 text-left md:text-right">
+          <span className="text-xs text-zinc-500 md:hidden mr-2">Score:</span>
+          <span className="inline-flex items-center justify-center min-w-[80px] px-4 h-12 rounded-2xl bg-amber-500/10 text-amber-500 font-bold text-xl border border-amber-500/20">
+            {leader.weeklyPoints}
+          </span>
         </div>
       </div>
     </div>
@@ -123,56 +111,34 @@ export default function Leaderboard() {
       </div>
 
       {/* Week Navigation Filters */}
-      <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
-        <button
-          onClick={() => setActiveTab('ALL')}
-          className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all border ${
-            activeTab === 'ALL'
-              ? 'bg-amber-500 text-black border-amber-500 shadow-lg shadow-amber-500/20'
-              : 'bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 border-zinc-800/80 hover:border-zinc-700'
-          }`}
-        >
-          🏆 ALL
-        </button>
-        {[1, 2, 3, 4, 5].map((w) => {
-          const isUnlocked = unlockedWeeks.includes(w);
-          if (isUnlocked) {
+      {unlockedWeeks.length > 1 && (
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+          {unlockedWeeks.map((w) => {
+            const isActiveWeek = w === unlockedWeeks[unlockedWeeks.length - 1];
             return (
               <button
                 key={w}
                 onClick={() => setActiveTab(w)}
-                className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all border ${
+                className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all border cursor-pointer ${
                   activeTab === w
                     ? 'bg-amber-500 text-black border-amber-500 shadow-lg shadow-amber-500/20'
                     : 'bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 border-zinc-800/80 hover:border-zinc-700'
                 }`}
               >
-                Week {w}
+                Week {w} {isActiveWeek ? '(Active)' : '(Archived)'}
               </button>
             );
-          } else {
-            return (
-              <button
-                key={w}
-                disabled
-                className="px-5 py-2.5 rounded-xl font-bold text-sm bg-zinc-950/40 text-zinc-600 border border-zinc-900/50 cursor-not-allowed flex items-center gap-1.5 opacity-60"
-                title="This week's competition hasn't started yet"
-              >
-                🔒 Week {w}
-              </button>
-            );
-          }
-        })}
-      </div>
+          })}
+        </div>
+      )}
 
       <div className="bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl">
         {/* Header */}
         <div className="hidden md:grid grid-cols-12 gap-4 p-6 border-b border-zinc-800 text-sm font-bold uppercase tracking-wider">
           <div className="col-span-1 text-center text-zinc-500">Rank</div>
-          <div className="col-span-3 text-zinc-500">Wallet</div>
+          <div className="col-span-4 text-zinc-500">Wallet</div>
           <div className="col-span-4 text-center text-zinc-500">Stats</div>
-          <div className={`col-span-2 text-right transition-colors ${activeTab !== 'ALL' ? 'text-amber-500 font-extrabold' : 'text-zinc-500'}`}>Weekly Pts</div>
-          <div className={`col-span-2 text-right transition-colors ${activeTab === 'ALL' ? 'text-amber-500 font-extrabold' : 'text-zinc-500'}`}>Total Pts</div>
+          <div className="col-span-3 text-right text-amber-500 font-extrabold">Score</div>
         </div>
 
         {loading ? (
@@ -236,12 +202,8 @@ export default function Leaderboard() {
               {/* Points */}
               <div className="flex items-center gap-4 md:justify-end">
                 <div className="text-center">
-                  <p className="text-xs text-zinc-500 mb-1">Weekly</p>
-                  <p className={`${activeTab !== 'ALL' ? 'text-amber-400 text-3xl' : 'text-blue-400 text-xl'} font-black`}>{userStats.weeklyPoints}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-xs text-zinc-500 mb-1">Total</p>
-                  <p className={`${activeTab === 'ALL' ? 'text-amber-400 text-3xl' : 'text-blue-400 text-xl'} font-black`}>{userStats.points}</p>
+                  <p className="text-xs text-zinc-500 mb-1">Score</p>
+                  <p className="text-amber-400 text-3xl font-black">{userStats.weeklyPoints}</p>
                 </div>
               </div>
             </div>

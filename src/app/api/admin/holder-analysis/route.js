@@ -283,11 +283,9 @@ export async function GET(request) {
 
         const candidateBuyers = Object.values(buyersMap)
             .map(b => {
-                const netSol = b.totalSolSpent - b.totalSolReceived;
-                const finalSol = Math.max(0, netSol);
                 return {
                     wallet: b.wallet,
-                    totalSol: Number(finalSol.toFixed(4)),
+                    totalSol: Number(b.totalSolSpent.toFixed(4)),
                     tradesCount: b.tradesCount,
                     tokensBought: b.tokensBought,
                     tokensSold: b.tokensSold

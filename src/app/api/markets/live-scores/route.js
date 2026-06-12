@@ -67,14 +67,15 @@ export async function GET(request) {
         const CACHE_TTL = hasLiveMatch ? 120000 : 600000;
         
         const cacheRes = await sql`
-            SELECT data, "updatedAt" 
+            SELECT data, "updatedAt",
+                   EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - "updatedAt")) * 1000 AS "cacheAgeMs"
             FROM live_scores_cache 
             WHERE key = 'global_live_scores'
         `;
         
         if (cacheRes.rowCount > 0) {
             const cache = cacheRes.rows[0];
-            const cacheAgeMs = now - new Date(cache.updatedAt).getTime();
+            const cacheAgeMs = Number(cache.cacheAgeMs);
             if (cacheAgeMs < CACHE_TTL) {
                 return NextResponse.json({ success: true, scores: cache.data }, { status: 200 });
             }
@@ -82,6 +83,18 @@ export async function GET(request) {
 
         if (activeMarkets.length === 0) {
             return NextResponse.json({ success: true, scores: {} });
+        }
+
+        // Acquire a cache update lock immediately to prevent other concurrent requests 
+        // from making parallel API fetches (cache stampede protection)
+        try {
+            await sql`
+                UPDATE live_scores_cache 
+                SET "updatedAt" = CURRENT_TIMESTAMP 
+                WHERE key = 'global_live_scores'
+            `;
+        } catch (e) {
+            console.error("Failed to acquire cache update lock:", e);
         }
 
         const liveScores = {};
@@ -135,18 +148,9 @@ export async function GET(request) {
         // 4. If fetch failed (e.g., quota exceeded) and we have an old database cache, serve the old cache to keep the site online
         if (!fetchSuccess && cacheRes.rowCount > 0) {
             console.warn("Using expired live-scores database cache due to API sync failure (likely quota exceeded).");
-            // Update the cache updatedAt timestamp to prevent cache stampede/API hammering loop
-            try {
-                await sql`
-                    UPDATE live_scores_cache 
-                    SET "updatedAt" = CURRENT_TIMESTAMP 
-                    WHERE key = 'global_live_scores'
-                `;
-            } catch (e) {
-                console.error("Failed to update cache timestamp after API failure:", e);
-            }
             return NextResponse.json({ success: true, scores: cacheRes.rows[0].data }, { status: 200 });
         }
+
 
         // 5. Match our database markets
         for (const market of activeMarkets) {

@@ -229,6 +229,50 @@ export default function LandingPage() {
             </p>
           )}
 
+          {/* DEXSCREENER CHART SECTION */}
+          <div className="w-full max-w-4xl mx-auto mt-12 relative text-left">
+            <div className="relative rounded-[32px] overflow-hidden border border-white/10 bg-zinc-950/60 p-6 sm:p-8 shadow-[0_0_35px_rgba(0,0,0,0.3)] backdrop-blur-xl hover:border-yellow-500/20 transition-all duration-300">
+              {/* Background vector glow */}
+              <div className="absolute -top-12 -right-12 w-64 h-64 bg-amber-500/5 rounded-full blur-[80px] pointer-events-none"></div>
+              
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 pb-6 border-b border-white/5 relative z-10">
+                <div className="text-left space-y-1">
+                  <span className="text-[10px] font-black text-amber-500 font-mono tracking-widest uppercase">Live Token Market</span>
+                  <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2">
+                    <span>$GoldenGoal Chart</span>
+                    <span className="inline-flex items-center gap-1.5 text-[9px] font-black text-emerald-300 bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-400/50 font-mono shadow-[0_0_18px_rgba(52,211,153,0.45)]">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-100"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+                      </span>
+                      LIVE
+                    </span>
+                  </h2>
+                </div>
+                <a 
+                  href="https://dexscreener.com/solana/GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="h-10 px-5 bg-zinc-900 border border-white/10 hover:border-yellow-500/30 hover:bg-zinc-800 text-white font-bold rounded-xl text-xs transition-all duration-300 flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <span>Open in Dexscreener</span>
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
+
+              {/* Responsive Iframe Container */}
+              <div className="w-full aspect-[16/9] min-h-[340px] sm:min-h-[440px] rounded-2xl overflow-hidden border border-white/5 bg-black/40 relative z-10">
+                <iframe 
+                  src="https://dexscreener.com/solana/GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump?embed=1&theme=dark&trades=0&info=0" 
+                  className="absolute inset-0 w-full h-full border-0"
+                  title="Dexscreener Chart"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+
           {/* PREMIUM LEGAL COMPLIANCE SHIELD CARD */}
           <div className="w-full max-w-2xl mx-auto mt-12 p-5 rounded-2xl bg-zinc-950/60 border border-yellow-500/10 hover:border-yellow-500/30 backdrop-blur-xl shadow-[0_0_35px_rgba(245,158,11,0.02)] transition-all duration-300 select-none text-left flex items-start gap-4 group">
             <div className="p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 flex items-center justify-center shrink-0 group-hover:bg-yellow-500/20 group-hover:scale-105 transition-all duration-300">
@@ -311,49 +355,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* DEXSCREENER CHART SECTION */}
-        <section className="w-full max-w-5xl mb-32 select-none">
-          <div className="relative rounded-[32px] overflow-hidden border border-white/10 bg-zinc-950/60 p-6 sm:p-8 shadow-[0_0_35px_rgba(0,0,0,0.3)] backdrop-blur-xl hover:border-yellow-500/20 transition-all duration-300">
-            {/* Background vector glow */}
-            <div className="absolute -top-12 -right-12 w-64 h-64 bg-amber-500/5 rounded-full blur-[80px] pointer-events-none"></div>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 pb-6 border-b border-white/5 relative z-10">
-              <div className="text-left space-y-1">
-                <span className="text-[10px] font-black text-amber-500 font-mono tracking-widest uppercase">Live Token Market</span>
-                <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2">
-                  <span>$GoldenGoal Chart</span>
-                  <span className="inline-flex items-center gap-1.5 text-[9px] font-black text-emerald-300 bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-400/50 font-mono shadow-[0_0_18px_rgba(52,211,153,0.45)]">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-100"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
-                    </span>
-                    LIVE
-                  </span>
-                </h2>
-              </div>
-              <a 
-                href="https://dexscreener.com/solana/GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="h-10 px-5 bg-zinc-900 border border-white/10 hover:border-yellow-500/30 hover:bg-zinc-800 text-white font-bold rounded-xl text-xs transition-all duration-300 flex items-center gap-2 whitespace-nowrap cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <span>Open in Dexscreener</span>
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
-            </div>
 
-            {/* Responsive Iframe Container */}
-            <div className="w-full aspect-[16/9] min-h-[380px] sm:min-h-[480px] md:min-h-[520px] rounded-2xl overflow-hidden border border-white/5 bg-black/40 relative z-10">
-              <iframe 
-                src="https://dexscreener.com/solana/GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump?embed=1&theme=dark&trades=0&info=0" 
-                className="absolute inset-0 w-full h-full border-0"
-                title="Dexscreener Chart"
-              ></iframe>
-            </div>
-          </div>
-        </section>
 
         {/* SKILL-BASED SYSTEM SHOWCASE */}
         <section className="w-full max-w-5xl mb-32 select-none">

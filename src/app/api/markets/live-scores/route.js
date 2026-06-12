@@ -12,7 +12,9 @@ function normalizeTeamName(name) {
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\band\b/g, ' ')
         .replace(/[^a-z0-9]/g, ' ')
+        .replace(/\s+/g, ' ')
         .replace(/turkiye/g, 'turkey')
         .replace(/turkiya/g, 'turkey')
         .trim();

@@ -523,6 +523,41 @@ export default function MatchDetail() {
                       <span className="text-zinc-100 text-base md:text-lg lg:text-2xl leading-tight break-words w-full px-1">{market.teamB}</span>
                   </div>
               </div>
+
+              {/* Goalscorers Grid */}
+              {((isLive || isMatchEnded) && scoreInfo?.goals && scoreInfo.goals.length > 0) && (
+                  <div className="mt-8 pt-6 border-t border-zinc-800/60 grid grid-cols-3 gap-6 text-[10px] md:text-xs text-zinc-400 relative z-10 font-semibold max-w-xl mx-auto drop-shadow-sm">
+                      {/* Team A (Home) Goals */}
+                      <div className="text-right space-y-1.5 min-w-0">
+                          {scoreInfo.goals.filter(g => g.isHome).map((g, idx) => (
+                              <div key={idx} className="flex items-center justify-end gap-1.5 truncate">
+                                  <span className="text-zinc-100 truncate">{g.player}</span>
+                                  <span className="text-zinc-500 font-mono flex-shrink-0">{g.time}{g.addedTime ? `+${g.addedTime}` : ''}'</span>
+                                  {g.incidentClass === 'penalty' && <span className="text-amber-400 text-[9px] md:text-[10px] font-extrabold flex-shrink-0">(P)</span>}
+                                  {g.incidentClass === 'ownGoal' && <span className="text-red-500 text-[9px] md:text-[10px] font-extrabold flex-shrink-0">(OG)</span>}
+                              </div>
+                          ))}
+                      </div>
+
+                      {/* Ball Icon */}
+                      <div className="flex items-center justify-center opacity-30 select-none text-sm md:text-base animate-pulse">
+                          ⚽
+                      </div>
+
+                      {/* Team B (Away) Goals */}
+                      <div className="text-left space-y-1.5 min-w-0">
+                          {scoreInfo.goals.filter(g => !g.isHome).map((g, idx) => (
+                              <div key={idx} className="flex items-center justify-start gap-1.5 truncate">
+                                  {g.incidentClass === 'penalty' && <span className="text-amber-400 text-[9px] md:text-[10px] font-extrabold flex-shrink-0">(P)</span>}
+                                  {g.incidentClass === 'ownGoal' && <span className="text-red-500 text-[9px] md:text-[10px] font-extrabold flex-shrink-0">(OG)</span>}
+                                  <span className="text-zinc-500 font-mono flex-shrink-0">{g.time}{g.addedTime ? `+${g.addedTime}` : ''}'</span>
+                                  <span className="text-zinc-100 truncate">{g.player}</span>
+                              </div>
+                          ))}
+                      </div>
+                  </div>
+              )}
+
               {market.isLocked && !isLive && !isMatchEnded && (
                   <div className="inline-block bg-red-500/10 text-red-500 text-sm font-bold px-4 py-2 rounded-full border border-red-500/20 mt-4 relative z-10">
                       MATCH LOCKED

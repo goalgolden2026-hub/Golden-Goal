@@ -182,20 +182,57 @@ export async function GET(request) {
                 const goalsA = isHomeDbA ? homeScore : awayScore;
                 const goalsB = isHomeDbA ? awayScore : homeScore;
 
+                let goals = [];
+                if ((statusType === 'inprogress' || statusType === 'finished') && (homeScore > 0 || awayScore > 0)) {
+                    try {
+                        const incResponse = await fetch(`https://${SPORT_API_HOST}/api/v1/event/${matchedEvent.id}/incidents`, {
+                            headers: {
+                                'x-rapidapi-key': RAPIDAPI_KEY,
+                                'x-rapidapi-host': SPORT_API_HOST
+                            },
+                            cache: 'no-store'
+                        });
+                        if (incResponse.ok) {
+                            const incData = await incResponse.json();
+                            if (incData.incidents) {
+                                const goalIncidents = incData.incidents
+                                    .filter(inc => inc.incidentType === 'goal')
+                                    .sort((a, b) => {
+                                        const timeA = a.time + (a.addedTime || 0) / 100;
+                                        const timeB = b.time + (b.addedTime || 0) / 100;
+                                        return timeA - timeB;
+                                    });
+                                
+                                goals = goalIncidents.map(inc => ({
+                                    time: inc.time,
+                                    addedTime: inc.addedTime || null,
+                                    player: inc.player?.name || inc.playerName || 'Unknown Player',
+                                    isHome: inc.isHome ? isHomeDbA : !isHomeDbA,
+                                    incidentClass: inc.incidentClass || 'regular'
+                                }));
+                            }
+                        }
+                    } catch (e) {
+                        console.error(`Failed to fetch incidents for event ${matchedEvent.id}:`, e);
+                    }
+                }
+
                 if (statusType === 'inprogress') {
                     liveScores[market.id] = {
                         goalsA,
                         goalsB,
                         elapsed: calculateElapsedMinutes(matchedEvent),
                         status: 'LIVE',
-                        matchStatus: statusDesc || '1st half'
+                        matchStatus: statusDesc || '1st half',
+                        goals
                     };
                 } else if (statusType === 'finished') {
                     liveScores[market.id] = {
                         goalsA,
                         goalsB,
                         elapsed: 90,
-                        status: 'FT'
+                        status: 'FT',
+                        goals
                     };
 
                     // Await the auto-resolution process to prevent Vercel container shutdown from cutting it off

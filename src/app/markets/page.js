@@ -611,18 +611,24 @@ function MarketsContent() {
       <section className="py-12 px-4 max-w-5xl mx-auto w-full relative z-10">
         
         {/* Sports Tab Selector */}
-        <div className="mb-12 w-full overflow-x-auto pb-2 flex gap-4 select-none scrollbar-thin scrollbar-thumb-zinc-855 shrink-0">
+        <div className="mb-12 p-1.5 bg-zinc-950/60 backdrop-blur-xl border border-white/5 rounded-2xl flex gap-2 w-max max-w-full overflow-x-auto select-none scrollbar-none shrink-0 shadow-[0_4px_25px_rgba(0,0,0,0.6)]">
           <button
             onClick={() => setSelectedSport('football')}
-            className={`flex items-center gap-2 px-5 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all duration-300 shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 shrink-0 cursor-pointer ${
               selectedSport === 'football'
-                ? 'bg-emerald-500 text-zinc-950 font-black border border-emerald-400/30 hover:scale-[1.02] animate-green-pulse'
-                : 'bg-zinc-900/50 hover:bg-zinc-900 border border-white/5 hover:border-zinc-700 text-zinc-400 hover:text-zinc-205'
+                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)] animate-green-pulse hover:scale-[1.02]'
+                : 'bg-transparent border border-transparent hover:border-white/5 hover:bg-zinc-900/40 text-zinc-400 hover:text-zinc-200'
             }`}
           >
             <span>⚽</span>
             <span>Football</span>
-            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-emerald-400 font-bold ml-1 animate-pulse">Live</span>
+            <span className="flex items-center gap-1.5 ml-1">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+              </span>
+              <span className="text-[9px] font-mono font-black text-emerald-400 uppercase bg-emerald-500/20 px-2 py-0.5 rounded-md">Live</span>
+            </span>
           </button>
 
           <button
@@ -632,11 +638,11 @@ function MarketsContent() {
               title: '🏀 NBA Finals Markets',
               details: 'Predict the NBA Finals matches, quarter outcomes, player points, and series MVP. Hold at least 250K $GoldenGoal to unlock basic basketball prediction privileges.'
             })}
-            className="flex items-center gap-2 px-5 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all duration-300 bg-zinc-900/50 hover:bg-zinc-900 border border-white/5 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 cursor-pointer shrink-0 hover:scale-[1.02]"
+            className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 bg-transparent border border-transparent hover:border-white/5 hover:bg-zinc-900/40 text-zinc-500 hover:text-zinc-300 cursor-pointer shrink-0 hover:scale-[1.02]"
           >
             <span>🏀</span>
             <span>Basketball</span>
-            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-zinc-500 font-bold ml-1">🔒 Coming Soon</span>
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded-md bg-zinc-900 border border-white/5 text-zinc-500 font-bold ml-1">🔒 Coming Soon</span>
           </button>
 
           <button
@@ -646,11 +652,11 @@ function MarketsContent() {
               title: '🏐 Volleyball Nations League (VNL)',
               details: 'Predict the VNL match winners, set scores, and total points. Lock your $GoldenGoal tokens to earn VNL XP boosters and exclusive rewards.'
             })}
-            className="flex items-center gap-2 px-5 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all duration-300 bg-zinc-900/50 hover:bg-zinc-900 border border-white/5 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 cursor-pointer shrink-0 hover:scale-[1.02]"
+            className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 bg-transparent border border-transparent hover:border-white/5 hover:bg-zinc-900/40 text-zinc-500 hover:text-zinc-300 cursor-pointer shrink-0 hover:scale-[1.02]"
           >
             <span>🏐</span>
             <span>Volleyball</span>
-            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-zinc-500 font-bold ml-1">🔒 Coming Soon</span>
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded-md bg-zinc-900 border border-white/5 text-zinc-500 font-bold ml-1">🔒 Coming Soon</span>
           </button>
 
           <button
@@ -660,11 +666,11 @@ function MarketsContent() {
               title: '🎾 Wimbledon Championship',
               details: 'Predict Wimbledon set scores, match aces, and tournament champions. Access to tennis pools is reserved for Tier 1 and higher token lockers.'
             })}
-            className="flex items-center gap-2 px-5 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all duration-300 bg-zinc-900/50 hover:bg-zinc-900 border border-white/5 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 cursor-pointer shrink-0 hover:scale-[1.02]"
+            className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 bg-transparent border border-transparent hover:border-white/5 hover:bg-zinc-900/40 text-zinc-500 hover:text-zinc-300 cursor-pointer shrink-0 hover:scale-[1.02]"
           >
             <span>🎾</span>
             <span>Tennis</span>
-            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-zinc-500 font-bold ml-1">🔒 Coming Soon</span>
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded-md bg-zinc-900 border border-white/5 text-zinc-500 font-bold ml-1">🔒 Coming Soon</span>
           </button>
         </div>
 
@@ -754,9 +760,9 @@ function MarketsContent() {
                                 </span>
                               </div>
                             ) : (
-                              <span className="text-[10px] font-extrabold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.25)] animate-pulse">
-                                ⚽ TOURNAMENT UNDERWAY
-                              </span>
+                               <span className="text-[10px] font-extrabold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.25)] animate-pulse">
+                                🏆 WORLD CUP TOURNAMENT UNDERWAY
+                               </span>
                             )}
                           </div>
                         )}

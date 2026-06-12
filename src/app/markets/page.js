@@ -616,13 +616,13 @@ function MarketsContent() {
             onClick={() => setSelectedSport('football')}
             className={`flex items-center gap-2 px-5 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all duration-300 shrink-0 cursor-pointer ${
               selectedSport === 'football'
-                ? 'bg-amber-500 text-zinc-950 font-black shadow-[0_0_20px_rgba(245,158,11,0.25)] border border-amber-400/30 hover:scale-[1.02]'
+                ? 'bg-emerald-500 text-zinc-950 font-black border border-emerald-400/30 hover:scale-[1.02] animate-green-pulse'
                 : 'bg-zinc-900/50 hover:bg-zinc-900 border border-white/5 hover:border-zinc-700 text-zinc-400 hover:text-zinc-205'
             }`}
           >
             <span>⚽</span>
             <span>Football</span>
-            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-amber-500 font-bold ml-1 animate-pulse">Live</span>
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-emerald-400 font-bold ml-1 animate-pulse">Live</span>
           </button>
 
           <button
@@ -636,7 +636,7 @@ function MarketsContent() {
           >
             <span>🏀</span>
             <span>Basketball</span>
-            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-zinc-500 font-bold ml-1">🔒 Locked</span>
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-zinc-500 font-bold ml-1">🔒 Coming Soon</span>
           </button>
 
           <button
@@ -650,7 +650,7 @@ function MarketsContent() {
           >
             <span>🏐</span>
             <span>Volleyball</span>
-            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-zinc-500 font-bold ml-1">🔒 Locked</span>
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-zinc-500 font-bold ml-1">🔒 Coming Soon</span>
           </button>
 
           <button
@@ -664,21 +664,21 @@ function MarketsContent() {
           >
             <span>🎾</span>
             <span>Tennis</span>
-            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-zinc-500 font-bold ml-1">🔒 Locked</span>
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-zinc-500 font-bold ml-1">🔒 Coming Soon</span>
           </button>
         </div>
 
         {/* Coming Soon Modal */}
         {comingSoonModal.isOpen && (
           <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
-            <div className="bg-zinc-950/90 border border-yellow-500/20 max-w-md w-full rounded-3xl p-6 sm:p-8 shadow-[0_0_50px_rgba(245,158,11,0.15)] relative overflow-hidden group select-none text-left">
+            <div className="bg-zinc-950/90 border border-emerald-500/20 max-w-md w-full rounded-3xl p-6 sm:p-8 shadow-[0_0_50px_rgba(16,185,129,0.15)] relative overflow-hidden group select-none text-left">
               {/* Decorative glows */}
-              <div className="absolute -top-12 -right-12 w-36 h-36 bg-amber-500/10 rounded-full blur-[40px] pointer-events-none"></div>
-              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
+              <div className="absolute -top-12 -right-12 w-36 h-36 bg-emerald-500/10 rounded-full blur-[40px] pointer-events-none"></div>
+              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"></div>
 
               <div className="space-y-6">
                 <div className="flex justify-between items-start">
-                  <span className="text-[10px] font-black tracking-widest text-amber-500 font-mono uppercase bg-amber-500/10 px-3 py-1.5 rounded-full border border-amber-500/20">
+                  <span className="text-[10px] font-black tracking-widest text-emerald-400 font-mono uppercase bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20">
                     ⚡ UPCOMING TOURNAMENT
                   </span>
                   <button 
@@ -710,7 +710,7 @@ function MarketsContent() {
                 {/* CTA Button */}
                 <button
                   onClick={() => setComingSoonModal({ isOpen: false, sport: '', title: '', details: '' })}
-                  className="w-full h-12 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-zinc-950 font-black rounded-xl text-sm transition-all duration-205 cursor-pointer shadow-[0_0_20px_rgba(245,158,11,0.15)] hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center uppercase tracking-wider"
+                  className="w-full h-12 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-zinc-950 font-black rounded-xl text-sm transition-all duration-205 cursor-pointer shadow-[0_0_20px_rgba(16,185,129,0.15)] hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center uppercase tracking-wider"
                 >
                   Acknowledge & Close
                 </button>

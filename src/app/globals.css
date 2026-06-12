@@ -93,3 +93,19 @@ body {
   background-color: #27272a !important;
 }
 
+@keyframes green-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.45);
+    border-color: rgba(52, 211, 153, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.85);
+    border-color: rgba(52, 211, 153, 0.7);
+  }
+}
+
+.animate-green-pulse {
+  animation: green-glow-pulse 2s infinite ease-in-out;
+}
+
+

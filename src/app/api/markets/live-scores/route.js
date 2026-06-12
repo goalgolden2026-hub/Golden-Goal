@@ -30,10 +30,12 @@ function calculateElapsedMinutes(event) {
     
     if (event.lastPeriod === 'period1') {
         const diff = Math.floor((nowSeconds - event.startTimestamp) / 60);
+        console.log(`[ELAPSED] nowSeconds=${nowSeconds}, startTimestamp=${event.startTimestamp}, diff=${diff}`);
         return Math.max(0, Math.min(45, diff));
     } else if (event.lastPeriod === 'period2') {
         const start2nd = event.time.currentPeriodStartTimestamp || (event.startTimestamp + 60 * 60);
         const diff = Math.floor((nowSeconds - start2nd) / 60);
+        console.log(`[ELAPSED] nowSeconds=${nowSeconds}, start2nd=${start2nd}, diff=${diff}`);
         return Math.max(45, Math.min(90, 45 + diff));
     }
     return 0;
@@ -171,6 +173,7 @@ export async function GET(request) {
             });
 
             if (matchedEvent) {
+                console.log(`[MATCH] marketId=${market.id}, dbA=${dbA}, dbB=${dbB}, home=${matchedEvent.homeTeam?.name}, away=${matchedEvent.awayTeam?.name}, homeScore=${matchedEvent.homeScore?.current}, awayScore=${matchedEvent.awayScore?.current}, statusType=${matchedEvent.status?.type}`);
                 const statusType = matchedEvent.status?.type;
                 const statusDesc = matchedEvent.status?.description;
                 const homeScore = matchedEvent.homeScore?.current ?? 0;

@@ -83,6 +83,8 @@ function MarketsContent() {
 
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, expired: false });
   const [copied, setCopied] = useState(false);
+  const [selectedSport, setSelectedSport] = useState('football');
+  const [comingSoonModal, setComingSoonModal] = useState({ isOpen: false, sport: '', title: '', details: '' });
 
   useEffect(() => {
     const targetDate = new Date('2026-06-11T16:00:00Z').getTime();
@@ -606,9 +608,117 @@ function MarketsContent() {
         </div>
       </section>
 
-      {/* Markets Section */}
       <section className="py-12 px-4 max-w-5xl mx-auto w-full relative z-10">
         
+        {/* Sports Tab Selector */}
+        <div className="mb-12 w-full overflow-x-auto pb-2 flex gap-4 select-none scrollbar-thin scrollbar-thumb-zinc-855 shrink-0">
+          <button
+            onClick={() => setSelectedSport('football')}
+            className={`flex items-center gap-2 px-5 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all duration-300 shrink-0 cursor-pointer ${
+              selectedSport === 'football'
+                ? 'bg-amber-500 text-zinc-950 font-black shadow-[0_0_20px_rgba(245,158,11,0.25)] border border-amber-400/30 hover:scale-[1.02]'
+                : 'bg-zinc-900/50 hover:bg-zinc-900 border border-white/5 hover:border-zinc-700 text-zinc-400 hover:text-zinc-205'
+            }`}
+          >
+            <span>⚽</span>
+            <span>Football</span>
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-amber-500 font-bold ml-1 animate-pulse">Live</span>
+          </button>
+
+          <button
+            onClick={() => setComingSoonModal({
+              isOpen: true,
+              sport: 'Basketball',
+              title: '🏀 NBA Finals Markets',
+              details: 'Predict the NBA Finals matches, quarter outcomes, player points, and series MVP. Hold at least 250K $GoldenGoal to unlock basic basketball prediction privileges.'
+            })}
+            className="flex items-center gap-2 px-5 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all duration-300 bg-zinc-900/50 hover:bg-zinc-900 border border-white/5 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 cursor-pointer shrink-0 hover:scale-[1.02]"
+          >
+            <span>🏀</span>
+            <span>Basketball</span>
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-zinc-500 font-bold ml-1">🔒 Locked</span>
+          </button>
+
+          <button
+            onClick={() => setComingSoonModal({
+              isOpen: true,
+              sport: 'Volleyball',
+              title: '🏐 Volleyball Nations League (VNL)',
+              details: 'Predict the VNL match winners, set scores, and total points. Lock your $GoldenGoal tokens to earn VNL XP boosters and exclusive rewards.'
+            })}
+            className="flex items-center gap-2 px-5 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all duration-300 bg-zinc-900/50 hover:bg-zinc-900 border border-white/5 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 cursor-pointer shrink-0 hover:scale-[1.02]"
+          >
+            <span>🏐</span>
+            <span>Volleyball</span>
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-zinc-500 font-bold ml-1">🔒 Locked</span>
+          </button>
+
+          <button
+            onClick={() => setComingSoonModal({
+              isOpen: true,
+              sport: 'Tennis',
+              title: '🎾 Wimbledon Championship',
+              details: 'Predict Wimbledon set scores, match aces, and tournament champions. Access to tennis pools is reserved for Tier 1 and higher token lockers.'
+            })}
+            className="flex items-center gap-2 px-5 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all duration-300 bg-zinc-900/50 hover:bg-zinc-900 border border-white/5 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 cursor-pointer shrink-0 hover:scale-[1.02]"
+          >
+            <span>🎾</span>
+            <span>Tennis</span>
+            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-zinc-950/80 text-zinc-500 font-bold ml-1">🔒 Locked</span>
+          </button>
+        </div>
+
+        {/* Coming Soon Modal */}
+        {comingSoonModal.isOpen && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+            <div className="bg-zinc-950/90 border border-yellow-500/20 max-w-md w-full rounded-3xl p-6 sm:p-8 shadow-[0_0_50px_rgba(245,158,11,0.15)] relative overflow-hidden group select-none text-left">
+              {/* Decorative glows */}
+              <div className="absolute -top-12 -right-12 w-36 h-36 bg-amber-500/10 rounded-full blur-[40px] pointer-events-none"></div>
+              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
+
+              <div className="space-y-6">
+                <div className="flex justify-between items-start">
+                  <span className="text-[10px] font-black tracking-widest text-amber-500 font-mono uppercase bg-amber-500/10 px-3 py-1.5 rounded-full border border-amber-500/20">
+                    ⚡ UPCOMING TOURNAMENT
+                  </span>
+                  <button 
+                    onClick={() => setComingSoonModal({ isOpen: false, sport: '', title: '', details: '' })}
+                    className="text-zinc-500 hover:text-zinc-300 font-bold text-sm cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="space-y-3">
+                  <h3 className="text-2xl font-black text-white tracking-tight">{comingSoonModal.title}</h3>
+                  <p className="text-zinc-400 text-sm leading-relaxed font-medium">
+                    {comingSoonModal.details}
+                  </p>
+                </div>
+
+                {/* Info box */}
+                <div className="p-4 rounded-2xl bg-zinc-900/50 border border-white/5 flex gap-3 items-start">
+                  <span className="text-xl">🏆</span>
+                  <div className="space-y-1">
+                    <h4 className="text-xs font-bold text-zinc-200">Prepare Your Wallet</h4>
+                    <p className="text-[10px] text-zinc-500 leading-relaxed">
+                      Locking more $GoldenGoal tokens grants access to higher multiplier rewards and extra daily prediction quotas when these pools go live.
+                    </p>
+                  </div>
+                </div>
+
+                {/* CTA Button */}
+                <button
+                  onClick={() => setComingSoonModal({ isOpen: false, sport: '', title: '', details: '' })}
+                  className="w-full h-12 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-zinc-950 font-black rounded-xl text-sm transition-all duration-205 cursor-pointer shadow-[0_0_20px_rgba(245,158,11,0.15)] hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center uppercase tracking-wider"
+                >
+                  Acknowledge & Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {loading ? (
             <div className="text-center text-zinc-500 py-12">
                 <div className="animate-spin w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full mx-auto mb-4"></div>

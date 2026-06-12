@@ -17,6 +17,7 @@ export default function LockingPage() {
   const [activeLock, setActiveLock] = useState(null);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [refresh, setRefresh] = useState(0);
+  const [copied, setCopied] = useState(false);
   const [stats, setStats] = useState({ 
     tvl: 0, 
     lockers: 0, 
@@ -535,6 +536,47 @@ export default function LockingPage() {
         <p className="text-zinc-400 max-w-2xl mx-auto text-lg leading-relaxed mt-2">
           Lock your Golden Tokens to unlock powerful multipliers, extra daily predictions, and secure the network.
         </p>
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-900/60 border border-yellow-500/10 hover:border-yellow-500/30 backdrop-blur-xl shadow-[0_0_20px_rgba(245,158,11,0.05)] transition-all duration-300">
+            <span className="text-xs font-bold text-amber-500 uppercase tracking-wider font-mono">Contract:</span>
+            <a 
+              href="https://solscan.io/token/GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-xs font-mono font-bold text-zinc-100 hover:text-amber-400 transition-colors flex items-center gap-1.5"
+              title="View on Solscan"
+            >
+              <span className="hidden sm:inline">GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump</span>
+              <span className="inline sm:hidden">GU527smM...FMBfZ8pump</span>
+              <svg className="w-3.5 h-3.5 opacity-60 hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+            
+            <div className="w-[1px] h-4 bg-zinc-800"></div>
+            
+            <button 
+              onClick={() => {
+                navigator.clipboard.writeText("GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump");
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+              className="flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-200 transition-all duration-200 cursor-pointer min-w-[55px] justify-center"
+              title="Copy Address"
+            >
+              {copied ? (
+                <span className="text-[10px] text-emerald-400 font-bold font-mono">Copied!</span>
+              ) : (
+                <>
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                  </svg>
+                  <span className="font-mono text-[10px] uppercase font-bold tracking-wider">Copy</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Messages */}

@@ -509,7 +509,17 @@ function MarketsContent() {
                 {isUpcomingMode ? (
                     "Analyze scheduled matches. Lock in your predictions ahead of time and secure your leaderboard multiplier!"
                 ) : (
-                    "Hold Golden Tokens to place free predictions on active FIFA World Cup 2026 matches. Correct predictions earn you points and rank you up the leaderboard."
+                    <>
+                      Hold at least 250K tokens to earn 3 free prediction rights daily. Contract Address:{" "}
+                      <a 
+                        href="https://solscan.io/token/GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-amber-400 hover:text-amber-300 underline font-mono break-all hover:opacity-80 transition-opacity"
+                      >
+                        GU527smM71ht8aCA8ouShfXhahVq6crz51FMbfZ8pump
+                      </a>
+                    </>
                 )}
             </p>
 

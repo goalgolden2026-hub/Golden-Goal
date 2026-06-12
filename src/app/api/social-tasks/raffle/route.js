@@ -56,7 +56,7 @@ export async function GET(request) {
                     `;
                     if (winnerRes.rows.length > 0) {
                         const winnerWallet = winnerRes.rows[0].walletAddress;
-                        const prizeAmount = 1000000;
+                        const prizeAmount = 0;
                         
                         const insertRes = await sql`
                             INSERT INTO social_raffle_winners ("walletAddress", "raffleNumber", "prizeAmount", status)
@@ -66,11 +66,6 @@ export async function GET(request) {
                         `;
                         
                         if (insertRes.rows.length > 0) {
-                            await sql`
-                                UPDATE users 
-                                SET points = points + ${prizeAmount}
-                                WHERE "walletAddress" = ${winnerWallet}
-                            `;
                             updatedWinners = true;
                         }
                     }

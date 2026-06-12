@@ -191,16 +191,16 @@ export async function GET(request) {
                         status: 'FT'
                     };
 
-                    // Trigger the auto-resolution background process asynchronously
+                    // Await the auto-resolution process to prevent Vercel container shutdown from cutting it off
                     try {
                         const matchDateStr = new Date(market.matchDate).toISOString().split('T')[0];
-                        fetch(`${request.nextUrl.origin}/api/admin/sportradar-sync`, {
+                        await fetch(`${request.nextUrl.origin}/api/admin/sportradar-sync`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ date: matchDateStr })
-                        }).catch(e => console.error("Async background sync failed:", e));
+                        }).catch(e => console.error("Background sync failed:", e));
                     } catch (e) {
-                        console.error("Failed to dispatch async background resolution:", e);
+                        console.error("Failed to dispatch background resolution:", e);
                     }
                 } else {
                     liveScores[market.id] = {

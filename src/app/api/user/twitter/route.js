@@ -131,19 +131,12 @@ export async function POST(request) {
                 
                 if (winnerRes.rowCount > 0) {
                     const winnerWallet = winnerRes.rows[0].walletAddress;
-                    const prizeAmount = 1000000; // 1,000,000 points
+                    const prizeAmount = 0; // 0 points
                     
                     await sql`
                         INSERT INTO social_raffle_winners ("walletAddress", "raffleNumber", "prizeAmount", status)
                         VALUES (${winnerWallet}, ${raffleNumber}, ${prizeAmount}, 'PENDING')
                         ON CONFLICT ("raffleNumber") DO NOTHING
-                    `;
-                    
-                    // Award winner points directly in user account
-                    await sql`
-                        UPDATE users 
-                        SET points = points + ${prizeAmount}
-                        WHERE "walletAddress" = ${winnerWallet}
                     `;
                 }
             }

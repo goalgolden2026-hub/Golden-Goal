@@ -125,7 +125,8 @@ export async function GET(request) {
                         headers: {
                             'x-rapidapi-key': RAPIDAPI_KEY,
                             'x-rapidapi-host': SPORT_API_HOST
-                        }
+                        },
+                        cache: 'no-store'
                     });
                     if (response.ok) {
                         const data = await response.json();

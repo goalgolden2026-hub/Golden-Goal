@@ -48,7 +48,8 @@ export async function POST(request) {
             headers: {
                 'x-rapidapi-key': RAPIDAPI_KEY,
                 'x-rapidapi-host': SPORT_API_HOST
-            }
+            },
+            cache: 'no-store'
         });
         if (!srResponse.ok) {
             writeLog(`[ERROR] Sofascore API schedule request failed: ${srResponse.statusText}`);

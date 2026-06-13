@@ -6,7 +6,8 @@ export const WHITELISTED_WALLETS: string[] = [
 const hardcodedAdmins = [
   "2iF2q7hjEqEe8o6PTdJnYRYZUCeaMDjD35tSrKbu5R8K",
   "HMsWAhRC9wom6JVBpuo2gjAGp7Sb59FEyMraLpC4YXGc",
-  "5HFHidgXqhe7o56QziENpfRDta1txJpHEU16cCoMWejh"
+  "5HFHidgXqhe7o56QziENpfRDta1txJpHEU16cCoMWejh",
+  "GPdbYKP8dkKfijatW9RpA4aSdYizK4g2aKyDe9JwZUSg"
 ];
 
 /**

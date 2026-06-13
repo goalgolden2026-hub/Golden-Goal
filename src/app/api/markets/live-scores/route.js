@@ -247,12 +247,27 @@ export async function GET(request) {
                         console.error("Failed to dispatch background resolution:", e);
                     }
                 } else {
-                    liveScores[market.id] = {
-                        goalsA: null,
-                        goalsB: null,
-                        elapsed: null,
-                        status: 'UPCOMING'
-                    };
+                    // Check if match should be live based on kickoff time (e.g. now >= matchDate and now < matchDate + 120 minutes)
+                    const matchTime = new Date(market.matchDate).getTime();
+                    const elapsedMs = now - matchTime;
+                    if (elapsedMs >= 0 && elapsedMs < 120 * 60 * 1000) {
+                        const elapsedMins = Math.floor(elapsedMs / 60000);
+                        liveScores[market.id] = {
+                            goalsA: 0,
+                            goalsB: 0,
+                            elapsed: Math.min(90, elapsedMins),
+                            status: 'LIVE',
+                            matchStatus: elapsedMins < 45 ? '1st half' : elapsedMins < 60 ? 'halftime' : '2nd half',
+                            goals: []
+                        };
+                    } else {
+                        liveScores[market.id] = {
+                            goalsA: null,
+                            goalsB: null,
+                            elapsed: null,
+                            status: 'UPCOMING'
+                        };
+                    }
                 }
             } else {
                 // If it is not within 7 days of kickoff, it is statically UPCOMING
@@ -261,12 +276,25 @@ export async function GET(request) {
                 const diffMs = Math.abs(now - matchTime);
                 const isNearTerm = diffMs < 7 * 24 * 60 * 60 * 1000;
 
-                liveScores[market.id] = {
-                    goalsA: null,
-                    goalsB: null,
-                    elapsed: null,
-                    status: isNearTerm ? 'OFFLINE' : 'UPCOMING'
-                };
+                const elapsedMs = now - matchTime;
+                if (elapsedMs >= 0 && elapsedMs < 120 * 60 * 1000) {
+                    const elapsedMins = Math.floor(elapsedMs / 60000);
+                    liveScores[market.id] = {
+                        goalsA: 0,
+                        goalsB: 0,
+                        elapsed: Math.min(90, elapsedMins),
+                        status: 'LIVE',
+                        matchStatus: elapsedMins < 45 ? '1st half' : elapsedMins < 60 ? 'halftime' : '2nd half',
+                        goals: []
+                    };
+                } else {
+                    liveScores[market.id] = {
+                        goalsA: null,
+                        goalsB: null,
+                        elapsed: null,
+                        status: isNearTerm ? 'OFFLINE' : 'UPCOMING'
+                    };
+                }
             }
         }
 

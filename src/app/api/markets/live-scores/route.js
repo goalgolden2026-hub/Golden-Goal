@@ -29,7 +29,8 @@ function calculateElapsedMinutes(event) {
     if (desc === 'ended' || event.status?.type === 'finished') return 90;
     
     if (event.lastPeriod === 'period1') {
-        const diff = Math.floor((nowSeconds - event.startTimestamp) / 60);
+        const startTimestamp = event.time?.currentPeriodStartTimestamp || event.startTimestamp;
+        const diff = Math.floor((nowSeconds - startTimestamp) / 60);
         return Math.max(0, Math.min(45, diff));
     } else if (event.lastPeriod === 'period2') {
         const start2nd = event.time.currentPeriodStartTimestamp || (event.startTimestamp + 60 * 60);
@@ -37,6 +38,34 @@ function calculateElapsedMinutes(event) {
         return Math.max(45, Math.min(90, 45 + diff));
     }
     return 0;
+}
+
+function getDynamicElapsed(match, now) {
+    const nowSeconds = Math.floor(now / 1000);
+    const start2ndOffset = 60 * 60; // 60 minutes
+    
+    if (match.matchStatus?.toLowerCase() === 'ht' || match.matchStatus?.toLowerCase() === 'halftime') {
+        return 45;
+    }
+    if (match.status === 'FT') {
+        return 90;
+    }
+    
+    const start = match.currentPeriodStartTimestamp ? Math.floor(match.currentPeriodStartTimestamp / 1000) : null;
+    const scheduledStart = match.startTimestamp ? Math.floor(match.startTimestamp / 1000) : null;
+    
+    if (match.lastPeriod === 'period2') {
+        const start2nd = start || (scheduledStart ? scheduledStart + start2ndOffset : null);
+        if (!start2nd) return 45;
+        const diff = Math.floor((nowSeconds - start2nd) / 60);
+        return Math.max(45, Math.min(90, 45 + diff));
+    } else {
+        // period1 or fallback
+        const start1st = start || scheduledStart;
+        if (!start1st) return 0;
+        const diff = Math.floor((nowSeconds - start1st) / 60);
+        return Math.max(0, Math.min(45, diff));
+    }
 }
 
 export async function GET(request) {
@@ -77,7 +106,15 @@ export async function GET(request) {
             const cache = cacheRes.rows[0];
             const cacheAgeMs = Number(cache.cacheAgeMs);
             if (cacheAgeMs < CACHE_TTL) {
-                return NextResponse.json({ success: true, scores: cache.data }, { status: 200 });
+                const scores = cache.data;
+                const nowVal = Date.now();
+                for (const marketId in scores) {
+                    const match = scores[marketId];
+                    if (match.status === 'LIVE') {
+                        match.elapsed = getDynamicElapsed(match, nowVal);
+                    }
+                }
+                return NextResponse.json({ success: true, scores: scores }, { status: 200 });
             }
         }
 
@@ -224,7 +261,10 @@ export async function GET(request) {
                         elapsed: calculateElapsedMinutes(matchedEvent),
                         status: 'LIVE',
                         matchStatus: statusDesc || '1st half',
-                        goals
+                        goals,
+                        startTimestamp: market.matchDate ? new Date(market.matchDate).getTime() : null,
+                        currentPeriodStartTimestamp: matchedEvent.time?.currentPeriodStartTimestamp ? matchedEvent.time.currentPeriodStartTimestamp * 1000 : null,
+                        lastPeriod: matchedEvent.lastPeriod || 'period1'
                     };
                 } else if (statusType === 'finished') {
                     liveScores[market.id] = {
@@ -258,7 +298,10 @@ export async function GET(request) {
                             elapsed: Math.min(90, elapsedMins),
                             status: 'LIVE',
                             matchStatus: elapsedMins < 45 ? '1st half' : elapsedMins < 60 ? 'halftime' : '2nd half',
-                            goals: []
+                            goals: [],
+                            startTimestamp: new Date(market.matchDate).getTime(),
+                            currentPeriodStartTimestamp: null,
+                            lastPeriod: elapsedMins < 45 ? 'period1' : 'period2'
                         };
                     } else {
                         liveScores[market.id] = {
@@ -285,7 +328,10 @@ export async function GET(request) {
                         elapsed: Math.min(90, elapsedMins),
                         status: 'LIVE',
                         matchStatus: elapsedMins < 45 ? '1st half' : elapsedMins < 60 ? 'halftime' : '2nd half',
-                        goals: []
+                        goals: [],
+                        startTimestamp: new Date(market.matchDate).getTime(),
+                        currentPeriodStartTimestamp: null,
+                        lastPeriod: elapsedMins < 45 ? 'period1' : 'period2'
                     };
                 } else {
                     liveScores[market.id] = {

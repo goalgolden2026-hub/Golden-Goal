@@ -94,9 +94,6 @@ export async function POST(request) {
         // 3. Process each prediction
         for (const bet of bets) {
             if (bet.prediction === winningPrediction) {
-                // Win
-                await sql`UPDATE predictions SET status = 'WON' WHERE id = ${bet.id}`;
-                
                 // Calculate Multiplier based on Active Lock
                 const activeLockRes = await sql`SELECT * FROM locks WHERE "walletAddress" = ${bet.walletAddress} AND status = 'ACTIVE'`;
                 let finalReward = pointsReward;
@@ -107,6 +104,8 @@ export async function POST(request) {
                     else if (tier === 4) finalReward = Math.floor(pointsReward * 1.25);
                 }
 
+                // Win
+                await sql`UPDATE predictions SET status = 'WON', "pointsReward" = ${finalReward}, "updatedAt" = CURRENT_TIMESTAMP WHERE id = ${bet.id}`;
                 await sql`UPDATE users SET points = points + ${finalReward} WHERE "walletAddress" = ${bet.walletAddress}`;
                 winnersCount++;
             } else {

@@ -209,8 +209,6 @@ export async function POST(request) {
                 }
 
                 if (isWinner) {
-                    await sql`UPDATE predictions SET status = 'WON', "updatedAt" = CURRENT_TIMESTAMP WHERE id = ${pred.id}`;
-                    
                     const lockRes = await sql`SELECT tier FROM locks WHERE "walletAddress" = ${pred.walletAddress} AND status = 'ACTIVE'`;
                     const basePoints = pred.pointsReward || 100;
                     let points = basePoints;
@@ -221,6 +219,7 @@ export async function POST(request) {
                         if (tier === 3) points = Math.round(basePoints * 1.10);
                         else if (tier === 4) points = Math.round(basePoints * 1.25);
                     }
+                    await sql`UPDATE predictions SET status = 'WON', "pointsReward" = ${points}, "updatedAt" = CURRENT_TIMESTAMP WHERE id = ${pred.id}`;
                     await sql`UPDATE users SET points = points + ${points} WHERE "walletAddress" = ${pred.walletAddress}`;
                     writeLog(`[WINNER] Pred ID: ${pred.id} | Wallet: ${pred.walletAddress.slice(0,6)}... | Type: ${pType} | Prediction: ${pred.prediction} | Points: +${points} (Tier ${activeTier})`);
                 } else {

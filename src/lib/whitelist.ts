@@ -3,6 +3,12 @@ export const WHITELISTED_WALLETS: string[] = [
   "2iF2q7hjEqEe8o6PTdJnYRYZUCeaMDjD35tSrKbu5R8K", // User's wallet address
 ];
 
+const hardcodedAdmins = [
+  "2iF2q7hjEqEe8o6PTdJnYRYZUCeaMDjD35tSrKbu5R8K",
+  "HMsWAhRC9wom6JVBpuo2gjAGp7Sb59FEyMraLpC4YXGc",
+  "5HFHidgXqhe7o56QziENpfRDta1txJpHEU16cCoMWejh"
+];
+
 /**
  * Checks if a given wallet address is in the official private preview whitelist.
  * @param walletAddress - The Solana wallet address to check.
@@ -19,7 +25,16 @@ export function isWalletWhitelisted(walletAddress: string | null | undefined): b
  */
 export function isAdminWallet(walletAddress: string | null | undefined): boolean {
   if (!walletAddress) return false;
-  return WHITELISTED_WALLETS.some(
-    (addr) => addr.toLowerCase() === walletAddress.trim().toLowerCase()
+  
+  const adminWalletsString = process.env.ADMIN_WALLET || "";
+  const authorizedWallets = adminWalletsString.split(',').map(w => w.trim()).filter(Boolean);
+  
+  const normalizedAddress = walletAddress.trim().toLowerCase();
+  
+  return (
+    authorizedWallets.some(addr => addr.toLowerCase() === normalizedAddress) ||
+    hardcodedAdmins.some(addr => addr.toLowerCase() === normalizedAddress) ||
+    WHITELISTED_WALLETS.some(addr => addr.toLowerCase() === normalizedAddress)
   );
 }
+

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import crypto from 'crypto';
+import { isAdminWallet } from '@/lib/whitelist';
 
 const REWARD_TIERS = [
     { index: 0, type: 'EMPTY', value: 0, label: 'Miss', prob: 20 },
@@ -48,7 +49,17 @@ async function getBoxStatus(sql, walletAddress) {
         }
     }
 
-    if (isEventParticipant) {
+    const isAdmin = isAdminWallet(walletAddress);
+
+    if (isAdmin) {
+        // Admin gets 3 free boxes daily
+        if (freeBoxesOpenedToday < 3) {
+            isEligibleForFreeBox = true;
+            boxCost = 0;
+        } else {
+            boxCost = 150;
+        }
+    } else if (isEventParticipant) {
         // Event rules apply: 3 free boxes daily
         if (freeBoxesOpenedToday < 3) {
             isEligibleForFreeBox = true;

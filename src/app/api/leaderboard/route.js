@@ -57,7 +57,7 @@ export async function GET(request) {
                         SELECT COALESCE(SUM(t.amount), 0) 
                         FROM treasury_logs t 
                         WHERE t."walletAddress" = u."walletAddress" 
-                        AND t.type = 'REWARDS_BOX_WIN_XP' 
+                        AND t.type IN ('REWARDS_BOX_WIN_XP', 'REWARDS_BOX_OPEN_XP')
                         AND t.timestamp >= ${queryWeekStart}::timestamp
                         AND t.timestamp <= ${queryWeekEnd}::timestamp
                     )
@@ -75,7 +75,7 @@ export async function GET(request) {
                     SELECT COALESCE(SUM(t.amount), 0) 
                     FROM treasury_logs t 
                     WHERE t."walletAddress" = u."walletAddress" 
-                    AND t.type = 'REWARDS_BOX_WIN_XP' 
+                    AND t.type IN ('REWARDS_BOX_WIN_XP', 'REWARDS_BOX_OPEN_XP')
                     AND t.timestamp >= ${queryWeekStart}::timestamp
                     AND t.timestamp <= ${queryWeekEnd}::timestamp
                 )
@@ -124,7 +124,7 @@ export async function GET(request) {
                                 SELECT COALESCE(SUM(t.amount), 0) 
                                 FROM treasury_logs t 
                                 WHERE t."walletAddress" = u."walletAddress" 
-                                AND t.type = 'REWARDS_BOX_WIN_XP' 
+                                AND t.type IN ('REWARDS_BOX_WIN_XP', 'REWARDS_BOX_OPEN_XP')
                                 AND t.timestamp >= ${queryWeekStart}::timestamp
                                 AND t.timestamp <= ${queryWeekEnd}::timestamp
                             )
@@ -146,7 +146,7 @@ export async function GET(request) {
                                             SELECT COALESCE(SUM(t2.amount), 0)
                                             FROM treasury_logs t2
                                             WHERE t2."walletAddress" = u2."walletAddress"
-                                            AND t2.type = 'REWARDS_BOX_WIN_XP'
+                                            AND t2.type IN ('REWARDS_BOX_WIN_XP', 'REWARDS_BOX_OPEN_XP')
                                             AND t2.timestamp >= ${queryWeekStart}::timestamp
                                             AND t2.timestamp <= ${queryWeekEnd}::timestamp
                                         )
@@ -165,7 +165,7 @@ export async function GET(request) {
                                     SELECT COALESCE(SUM(t3.amount), 0)
                                     FROM treasury_logs t3
                                     WHERE t3."walletAddress" = u."walletAddress"
-                                    AND t3.type = 'REWARDS_BOX_WIN_XP'
+                                    AND t3.type IN ('REWARDS_BOX_WIN_XP', 'REWARDS_BOX_OPEN_XP')
                                     AND t3.timestamp >= ${queryWeekStart}::timestamp
                                     AND t3.timestamp <= ${queryWeekEnd}::timestamp
                                 )

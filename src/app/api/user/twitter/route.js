@@ -13,11 +13,12 @@ export async function POST(request) {
         const sql = await getDb();
 
         // 0. Check if user has linked a Twitter handle
-        const userCheck = await sql`SELECT "twitterHandle" FROM users WHERE "walletAddress" = ${walletAddress}`;
-        if (userCheck.rowCount === 0 || !userCheck.rows[0].twitterHandle) {
+        const userCheck = await sql`SELECT "twitterHandle", "twitterHandle2" FROM users WHERE "walletAddress" = ${walletAddress}`;
+        if (userCheck.rowCount === 0 || (!userCheck.rows[0].twitterHandle && !userCheck.rows[0].twitterHandle2)) {
             return NextResponse.json({ success: false, error: "Please link your Twitter (X) account first before submitting tweets." }, { status: 400 });
         }
-        const userHandle = userCheck.rows[0].twitterHandle.toLowerCase();
+        const userHandle = userCheck.rows[0].twitterHandle ? userCheck.rows[0].twitterHandle.toLowerCase() : null;
+        const userHandle2 = userCheck.rows[0].twitterHandle2 ? userCheck.rows[0].twitterHandle2.toLowerCase() : null;
 
         // Basic Regex to check if it's a valid x.com or twitter.com status URL
         const twitterRegex = /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/status\/[0-9]+(\?.*)?$/;
@@ -61,11 +62,16 @@ export async function POST(request) {
 
                 // Verify screen name/authorship
                 const authorHandle = tweetData?.author?.screen_name?.toLowerCase();
-                if (!authorHandle || authorHandle !== userHandle) {
-                    return NextResponse.json({ 
-                        success: false, 
-                        error: `This X post does not belong to your linked X account. Your linked X handle is @${userCheck.rows[0].twitterHandle}. Please submit an X post link shared by this account.` 
-                    }, { status: 400 });
+                const isMatched = (userHandle && authorHandle === userHandle) || (userHandle2 && authorHandle === userHandle2);
+                if (!authorHandle || !isMatched) {
+                    let errorMsg = `This X post does not belong to your linked X account. `;
+                    if (userCheck.rows[0].twitterHandle && userCheck.rows[0].twitterHandle2) {
+                        errorMsg += `Your linked X handles are @${userCheck.rows[0].twitterHandle} and @${userCheck.rows[0].twitterHandle2}. Please submit an X post link shared by one of these accounts.`;
+                    } else {
+                        const activeHandle = userCheck.rows[0].twitterHandle || userCheck.rows[0].twitterHandle2;
+                        errorMsg += `Your linked X handle is @${activeHandle}. Please submit an X post link shared by this account.`;
+                    }
+                    return NextResponse.json({ success: false, error: errorMsg }, { status: 400 });
                 }
 
                 const tweetText = tweetData.text.toLowerCase();

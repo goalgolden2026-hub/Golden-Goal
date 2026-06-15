@@ -113,6 +113,7 @@ export async function GET(request) {
                 socialPoints: user.socialPoints || 0,
                 twitterTaskStatus: user.twitterTaskStatus || false,
                 twitterHandle: user.twitterHandle || null,
+                twitterHandle2: user.twitterHandle2 || null,
                 totalInvited,
                 predictionsToday: displayPredictionsToday,
                 maxPredictions: maxPredictions

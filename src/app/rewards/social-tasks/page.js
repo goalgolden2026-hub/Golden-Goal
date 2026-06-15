@@ -27,6 +27,8 @@ export default function SocialTasksPage() {
 
     // X Handle Link State
     const [xHandle, setXHandle] = useState('');
+    const [xHandle2, setXHandle2] = useState('');
+    const [isEditingHandles, setIsEditingHandles] = useState(false);
     const [linkingHandle, setLinkingHandle] = useState(false);
     const [linkMessage, setLinkMessage] = useState('');
 
@@ -56,6 +58,8 @@ export default function SocialTasksPage() {
             const data = await res.json();
             if (data.success) {
                 setProfile(data.profile);
+                setXHandle(data.profile.twitterHandle || '');
+                setXHandle2(data.profile.twitterHandle2 || '');
             }
             
             // Also fetch social leaderboard
@@ -110,13 +114,19 @@ export default function SocialTasksPage() {
             const res = await fetch('/api/user/twitter/link', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ walletAddress: publicKey.toBase58(), twitterHandle: xHandle })
+                body: JSON.stringify({ 
+                    walletAddress: publicKey.toBase58(), 
+                    twitterHandle: xHandle,
+                    twitterHandle2: xHandle2
+                })
             });
             const data = await res.json();
             if (data.success) {
-                setLinkMessage('🎉 Account linked successfully! History cleaned.');
+                setLinkMessage('🎉 Accounts linked successfully! History cleaned.');
+                setIsEditingHandles(false);
                 setTimeout(() => {
                     fetchProfile();
+                    setLinkMessage('');
                 }, 1500);
             } else {
                 setLinkMessage('❌ ' + data.error);
@@ -309,34 +319,62 @@ export default function SocialTasksPage() {
                         </div>
                         
                         <div>
-                            {!profile.twitterHandle ? (
+                            {(!profile.twitterHandle && !profile.twitterHandle2) || isEditingHandles ? (
                                 <div className="flex flex-col gap-3">
                                     <span className="text-xs text-zinc-400 font-bold block mb-1 uppercase tracking-wider">
-                                        🔗 Link your Twitter (X) account first:
+                                        🔗 Link your Twitter (X) accounts:
                                     </span>
-                                    <input 
-                                        type="text" 
-                                        placeholder="Enter your X username (e.g. goldengoalsol)"
-                                        value={xHandle}
-                                        onChange={(e) => setXHandle(e.target.value)}
-                                        className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3.5 text-zinc-300 text-sm focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/40 transition-all placeholder-zinc-600"
-                                    />
-                                    <button 
-                                        onClick={handleLinkTwitter}
-                                        disabled={linkingHandle || !xHandle}
-                                        className={`w-full py-4 rounded-xl font-bold tracking-wide transition-all duration-300 text-sm ${
-                                            linkingHandle || !xHandle 
-                                            ? 'bg-zinc-800/80 text-zinc-500 cursor-not-allowed border border-white/5' 
-                                            : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_4px_20px_rgba(59,130,246,0.5)]'
-                                        }`}
-                                    >
-                                        {linkingHandle ? (
-                                            <span className="flex items-center justify-center gap-2">
-                                                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                                                Linking Account & Cleaning...
-                                            </span>
-                                        ) : 'Link X Account'}
-                                    </button>
+                                    <div>
+                                        <label className="text-[10px] text-zinc-500 font-bold block mb-1 uppercase tracking-wider">Account 1 (Required)</label>
+                                        <input 
+                                            type="text" 
+                                            placeholder="Enter your X username (e.g. goldengoalsol)"
+                                            value={xHandle}
+                                            onChange={(e) => setXHandle(e.target.value)}
+                                            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-300 text-sm focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/40 transition-all placeholder-zinc-600"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] text-zinc-500 font-bold block mb-1 uppercase tracking-wider">Account 2 (Optional)</label>
+                                        <input 
+                                            type="text" 
+                                            placeholder="Enter your second X username (optional)"
+                                            value={xHandle2}
+                                            onChange={(e) => setXHandle2(e.target.value)}
+                                            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-300 text-sm focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/40 transition-all placeholder-zinc-600"
+                                        />
+                                    </div>
+                                    <div className="flex gap-2 mt-2">
+                                        {isEditingHandles && (
+                                            <button 
+                                                onClick={() => {
+                                                    setIsEditingHandles(false);
+                                                    setLinkMessage('');
+                                                    setXHandle(profile.twitterHandle || '');
+                                                    setXHandle2(profile.twitterHandle2 || '');
+                                                }}
+                                                className="flex-1 py-3.5 bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 rounded-xl font-bold tracking-wide transition-all duration-300 text-sm border border-white/5"
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
+                                        <button 
+                                            onClick={handleLinkTwitter}
+                                            disabled={linkingHandle || !xHandle}
+                                            className={`py-3.5 rounded-xl font-bold tracking-wide transition-all duration-300 text-sm ${isEditingHandles ? 'flex-1' : 'w-full'} ${
+                                                linkingHandle || !xHandle 
+                                                ? 'bg-zinc-800/80 text-zinc-500 cursor-not-allowed border border-white/5' 
+                                                : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_4px_20px_rgba(59,130,246,0.5)]'
+                                            }`}
+                                        >
+                                            {linkingHandle ? (
+                                                <span className="flex items-center justify-center gap-2">
+                                                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                                    Linking Accounts...
+                                                </span>
+                                            ) : 'Link Accounts'}
+                                        </button>
+                                    </div>
                                     {linkMessage && (
                                         <div className={`mt-2 p-3 rounded-xl border text-xs font-medium text-center ${linkMessage.includes('❌') ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-green-500/10 border-green-500/20 text-green-400'}`}>
                                             {linkMessage}
@@ -345,12 +383,38 @@ export default function SocialTasksPage() {
                                 </div>
                             ) : (
                                 <>
-                                    {/* Linked X account badge */}
-                                    <div className="flex items-center gap-2 mb-4 bg-blue-500/10 border border-blue-500/20 px-4 py-2.5 rounded-xl">
-                                        <span className="text-sm">🔗</span>
-                                        <span className="text-xs text-zinc-300 font-semibold">
-                                            Linked X Account: <strong className="text-blue-400">@{profile.twitterHandle}</strong>
-                                        </span>
+                                    {/* Linked X account badges */}
+                                    <div className="flex flex-col gap-2 mb-4 bg-blue-500/10 border border-blue-500/20 px-4 py-3.5 rounded-xl">
+                                        <div className="flex justify-between items-center">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-sm">🔗</span>
+                                                <span className="text-xs text-zinc-300 font-semibold">
+                                                    Linked X Accounts:
+                                                </span>
+                                            </div>
+                                            <button 
+                                                onClick={() => setIsEditingHandles(true)}
+                                                className="text-xs text-blue-400 hover:text-blue-300 font-bold tracking-wide transition-all"
+                                            >
+                                                Manage
+                                            </button>
+                                        </div>
+                                        <div className="flex flex-col gap-1.5 mt-1">
+                                            {profile.twitterHandle && (
+                                                <div className="text-xs text-zinc-300">
+                                                    • Account 1: <strong className="text-blue-400 font-mono">@{profile.twitterHandle}</strong>
+                                                </div>
+                                            )}
+                                            {profile.twitterHandle2 ? (
+                                                <div className="text-xs text-zinc-300">
+                                                    • Account 2: <strong className="text-blue-400 font-mono">@{profile.twitterHandle2}</strong>
+                                                </div>
+                                            ) : (
+                                                <div className="text-xs text-zinc-500 italic">
+                                                    • Account 2: Not linked
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                     
                                     {cooldown > 0 ? (

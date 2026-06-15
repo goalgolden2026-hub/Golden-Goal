@@ -75,7 +75,8 @@ export async function getDb() {
                     "twitterTaskStatus" BOOLEAN DEFAULT false,
                     "socialPoints" INTEGER DEFAULT 0,
                     "freeBoxesOpenedToday" INTEGER DEFAULT 0,
-                    "twitterHandle" TEXT
+                    "twitterHandle" TEXT,
+                    "twitterHandle2" TEXT
                 );
             `;
 
@@ -204,6 +205,7 @@ export async function getDb() {
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "socialPoints" INTEGER DEFAULT 0;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "freeBoxesOpenedToday" INTEGER DEFAULT 0;`;
             await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "twitterHandle" TEXT;`;
+            await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "twitterHandle2" TEXT;`;
 
             // Seed initial World Cup markets if none exist
             const { rows } = await sql`SELECT COUNT(*) as count FROM markets;`;

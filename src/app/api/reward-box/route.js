@@ -124,15 +124,16 @@ export async function GET(request) {
         const sql = await getDb();
         const status = await getBoxStatus(sql, walletAddress);
 
-        // Fetch user's current points and socialPoints
         let points = 0;
         let socialPoints = 0;
         let twitterHandle = null;
-        const userRes = await sql`SELECT points, "socialPoints", "twitterHandle" FROM users WHERE "walletAddress" = ${walletAddress}`;
+        let twitterHandle2 = null;
+        const userRes = await sql`SELECT points, "socialPoints", "twitterHandle", "twitterHandle2" FROM users WHERE "walletAddress" = ${walletAddress}`;
         if (userRes.rowCount > 0) {
             points = parseInt(userRes.rows[0].points || 0);
             socialPoints = parseInt(userRes.rows[0].socialPoints || 0);
             twitterHandle = userRes.rows[0].twitterHandle || null;
+            twitterHandle2 = userRes.rows[0].twitterHandle2 || null;
         }
 
         return NextResponse.json({ 
@@ -145,6 +146,7 @@ export async function GET(request) {
             points: points,
             socialPoints: socialPoints,
             twitterHandle: twitterHandle,
+            twitterHandle2: twitterHandle2,
             freeBoxesOpenedToday: status.freeBoxesOpenedToday,
             isEventParticipant: status.isEventParticipant,
             userPosition: status.userPosition,
@@ -216,15 +218,17 @@ export async function POST(request) {
             let points = 0;
             let socialPoints = 0;
             let twitterHandle = null;
-            const pointsRes = await sql`SELECT points, "socialPoints", "twitterHandle" FROM users WHERE "walletAddress" = ${walletAddress}`;
+            let twitterHandle2 = null;
+            const pointsRes = await sql`SELECT points, "socialPoints", "twitterHandle", "twitterHandle2" FROM users WHERE "walletAddress" = ${walletAddress}`;
             if (pointsRes.rowCount > 0) {
                 points = parseInt(pointsRes.rows[0].points || 0);
                 socialPoints = parseInt(pointsRes.rows[0].socialPoints || 0);
                 twitterHandle = pointsRes.rows[0].twitterHandle || null;
+                twitterHandle2 = pointsRes.rows[0].twitterHandle2 || null;
             }
 
             if (paymentMethod === 'SP') {
-                if (!twitterHandle) {
+                if (!twitterHandle && !twitterHandle2) {
                     return NextResponse.json({ success: false, error: "Please link your Twitter (X) account first to open the Rewards Box using Social Points." }, { status: 400 });
                 }
 

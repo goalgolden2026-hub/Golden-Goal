@@ -125,6 +125,7 @@ export default function RewardBoxPage() {
     // X Handle Link Modal State
     const [showLinkModal, setShowLinkModal] = useState(false);
     const [modalXHandle, setModalXHandle] = useState('');
+    const [modalXHandle2, setModalXHandle2] = useState('');
     const [modalLinking, setModalLinking] = useState(false);
     const [modalError, setModalError] = useState('');
 
@@ -185,8 +186,9 @@ export default function RewardBoxPage() {
         if (!status || isSpinning) return;
         
         // Block SP open if user has not linked Twitter handle
-        if (paymentMethod === 'SP' && !status.isEligibleForFreeBox && !status.twitterHandle) {
+        if (paymentMethod === 'SP' && !status.isEligibleForFreeBox && !status.twitterHandle && !status.twitterHandle2) {
             setModalXHandle('');
+            setModalXHandle2('');
             setModalError('');
             setShowLinkModal(true);
             return;
@@ -243,7 +245,11 @@ export default function RewardBoxPage() {
             const res = await fetch('/api/user/twitter/link', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ walletAddress: publicKey.toBase58(), twitterHandle: modalXHandle })
+                body: JSON.stringify({ 
+                    walletAddress: publicKey.toBase58(), 
+                    twitterHandle: modalXHandle,
+                    twitterHandle2: modalXHandle2
+                })
             });
             const data = await res.json();
             
@@ -679,21 +685,35 @@ export default function RewardBoxPage() {
                         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-blue-500/5 to-transparent pointer-events-none"></div>
                         
                         <h2 className="text-2xl font-black text-white mb-2 text-center flex items-center justify-center gap-2">
-                            <span>🐦</span> Link X (Twitter) Account
+                            <span>🐦</span> Link X (Twitter) Accounts
                         </h2>
                         
                         <p className="text-sm text-zinc-400 text-center mb-6 leading-relaxed">
-                            You must link your Twitter (X) handle to your wallet first. Your history will be verified, and any invalid tasks will be cleaned up.
+                            You must link your Twitter (X) handles to your wallet first. Your history will be verified, and any invalid tasks will be cleaned up.
                         </p>
                         
                         <div className="space-y-4">
-                            <input 
-                                type="text" 
-                                placeholder="Enter X username (e.g. goldengoalsol)"
-                                value={modalXHandle}
-                                onChange={(e) => setModalXHandle(e.target.value)}
-                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3.5 text-zinc-300 text-sm focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/40 transition-all placeholder-zinc-600"
-                            />
+                            <div>
+                                <label className="text-[10px] text-zinc-500 font-bold block mb-1 uppercase tracking-wider">Account 1 (Required)</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Enter your X username (e.g. goldengoalsol)"
+                                    value={modalXHandle}
+                                    onChange={(e) => setModalXHandle(e.target.value)}
+                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-300 text-sm focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/40 transition-all placeholder-zinc-600"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label className="text-[10px] text-zinc-500 font-bold block mb-1 uppercase tracking-wider">Account 2 (Optional)</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Enter your second X username (optional)"
+                                    value={modalXHandle2}
+                                    onChange={(e) => setModalXHandle2(e.target.value)}
+                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-300 text-sm focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/40 transition-all placeholder-zinc-600"
+                                />
+                            </div>
                             
                             {modalError && (
                                 <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold rounded-xl text-center">

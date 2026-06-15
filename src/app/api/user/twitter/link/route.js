@@ -9,35 +9,69 @@ function extractUsername(url) {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { walletAddress, twitterHandle } = body;
+        const { walletAddress, twitterHandle, twitterHandle2 } = body;
 
         if (!walletAddress || !twitterHandle) {
             return NextResponse.json({ success: false, error: "Missing walletAddress or twitterHandle" }, { status: 400 });
         }
 
-        // Clean handle: remove leading @, spaces, and make lowercase
+        // Clean handle 1: remove leading @, spaces, and make lowercase
         let cleanedHandle = twitterHandle.trim().toLowerCase();
         if (cleanedHandle.startsWith('@')) {
             cleanedHandle = cleanedHandle.substring(1);
         }
 
-        // Validate handle format
+        // Validate handle 1 format
         const handleRegex = /^[a-zA-Z0-9_]{1,15}$/;
         if (!handleRegex.test(cleanedHandle)) {
-            return NextResponse.json({ success: false, error: "Invalid X handle format. Username must be 1-15 characters, containing only letters, numbers, and underscores." }, { status: 400 });
+            return NextResponse.json({ success: false, error: "Invalid X handle format for Account 1. Username must be 1-15 characters, containing only letters, numbers, and underscores." }, { status: 400 });
+        }
+
+        // Clean and validate handle 2 if provided
+        let cleanedHandle2 = null;
+        if (twitterHandle2 && twitterHandle2.trim()) {
+            cleanedHandle2 = twitterHandle2.trim().toLowerCase();
+            if (cleanedHandle2.startsWith('@')) {
+                cleanedHandle2 = cleanedHandle2.substring(1);
+            }
+
+            if (!handleRegex.test(cleanedHandle2)) {
+                return NextResponse.json({ success: false, error: "Invalid X handle format for Account 2. Username must be 1-15 characters, containing only letters, numbers, and underscores." }, { status: 400 });
+            }
+
+            if (cleanedHandle === cleanedHandle2) {
+                return NextResponse.json({ success: false, error: "Account 1 and Account 2 must be different X handles." }, { status: 400 });
+            }
         }
 
         const sql = await getDb();
 
-        // 1. Check if this twitterHandle is already linked to another wallet
-        const handleCheck = await sql`
-            SELECT "walletAddress" 
-            FROM users 
-            WHERE LOWER("twitterHandle") = ${cleanedHandle} AND "walletAddress" != ${walletAddress}
-        `;
+        // 1. Check if either twitterHandle is already linked to another wallet
+        let handleCheck;
+        if (cleanedHandle2) {
+            handleCheck = await sql`
+                SELECT "walletAddress" 
+                FROM users 
+                WHERE 
+                    (LOWER("twitterHandle") = ${cleanedHandle} OR 
+                     LOWER("twitterHandle2") = ${cleanedHandle} OR 
+                     LOWER("twitterHandle") = ${cleanedHandle2} OR 
+                     LOWER("twitterHandle2") = ${cleanedHandle2})
+                    AND "walletAddress" != ${walletAddress}
+            `;
+        } else {
+            handleCheck = await sql`
+                SELECT "walletAddress" 
+                FROM users 
+                WHERE 
+                    (LOWER("twitterHandle") = ${cleanedHandle} OR 
+                     LOWER("twitterHandle2") = ${cleanedHandle})
+                    AND "walletAddress" != ${walletAddress}
+            `;
+        }
         
         if (handleCheck.rowCount > 0) {
-            return NextResponse.json({ success: false, error: "This X handle is already linked to another wallet address." }, { status: 400 });
+            return NextResponse.json({ success: false, error: "One of the X handles is already linked to another wallet address." }, { status: 400 });
         }
 
         // Fetch current user details
@@ -63,8 +97,11 @@ export async function POST(request) {
             if (usernameInUrl) {
                 if (usernameInUrl === 'i') {
                     iTasksToVerify.push(task);
-                } else if (usernameInUrl !== cleanedHandle) {
-                    tasksToDelete.push(task.id);
+                } else {
+                    const isMatched = (usernameInUrl === cleanedHandle) || (cleanedHandle2 && usernameInUrl === cleanedHandle2);
+                    if (!isMatched) {
+                        tasksToDelete.push(task.id);
+                    }
                 }
             } else {
                 // Invalid URL pattern, delete
@@ -73,7 +110,6 @@ export async function POST(request) {
         }
 
         // Anti-Spam protection: if user has more than 10 /i/ links, immediately delete them all as spam.
-        // Legitimate users shouldn't have more than a few /i/ links, whereas spammers have hundreds.
         if (iTasksToVerify.length > 10) {
             console.log(`User ${walletAddress} has ${iTasksToVerify.length} /i/ links. Treating all as invalid spam.`);
             for (const task of iTasksToVerify) {
@@ -105,8 +141,9 @@ export async function POST(request) {
                     if (apiRes.status === 200) {
                         const tweetData = await apiRes.json();
                         const tweetAuthor = tweetData?.author?.screen_name?.toLowerCase();
+                        const isMatched = (tweetAuthor === cleanedHandle) || (cleanedHandle2 && tweetAuthor === cleanedHandle2);
 
-                        if (!tweetAuthor || tweetAuthor !== cleanedHandle) {
+                        if (!tweetAuthor || !isMatched) {
                             tasksToDelete.push(task.id);
                         }
                     } else {
@@ -146,6 +183,7 @@ export async function POST(request) {
             UPDATE users 
             SET 
                 "twitterHandle" = ${cleanedHandle},
+                "twitterHandle2" = ${cleanedHandle2},
                 "socialPoints" = ${newSocialPoints},
                 points = GREATEST(0, points - ${diff}),
                 "twitterTaskStatus" = ${validCount > 0}
@@ -154,8 +192,9 @@ export async function POST(request) {
 
         return NextResponse.json({ 
             success: true, 
-            message: "X account linked and historical tasks verified successfully.", 
+            message: "X accounts linked and historical tasks verified successfully.", 
             twitterHandle: cleanedHandle,
+            twitterHandle2: cleanedHandle2,
             newSocialPoints,
             removedCount: tasksToDelete.length,
             validCount

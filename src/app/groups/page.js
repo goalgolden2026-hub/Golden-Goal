@@ -38,27 +38,70 @@ export default function GroupStage() {
   const [selectedGroupFilter, setSelectedGroupFilter] = useState('ALL');
   const [selectedSport, setSelectedSport] = useState('football');
 
+const VNL_BASE_STATS = {
+  'Brazil': { played: 12, won: 12, lost: 0, setsWon: 36, setsLost: 9, pts: 34 },
+  'Italy': { played: 12, won: 10, lost: 2, setsWon: 32, setsLost: 10, pts: 31 },
+  'Poland': { played: 12, won: 10, lost: 2, setsWon: 31, setsLost: 8, pts: 30 },
+  'China': { played: 12, won: 9, lost: 3, setsWon: 29, setsLost: 15, pts: 26 },
+  'Japan': { played: 12, won: 8, lost: 4, setsWon: 28, setsLost: 16, pts: 25 },
+  'Turkey': { played: 12, won: 8, lost: 4, setsWon: 29, setsLost: 18, pts: 25 },
+  'Türkiye': { played: 12, won: 8, lost: 4, setsWon: 29, setsLost: 18, pts: 25 },
+  'USA': { played: 12, won: 7, lost: 5, setsWon: 27, setsLost: 18, pts: 22 },
+  'Netherlands': { played: 12, won: 7, lost: 5, setsWon: 24, setsLost: 18, pts: 21 },
+  'Canada': { played: 12, won: 7, lost: 5, setsWon: 24, setsLost: 19, pts: 20 },
+  'Dominican Republic': { played: 12, won: 3, lost: 9, setsWon: 15, setsLost: 29, pts: 10 },
+  'Serbia': { played: 12, won: 3, lost: 9, setsWon: 16, setsLost: 30, pts: 9 },
+  'Germany': { played: 12, won: 3, lost: 9, setsWon: 12, setsLost: 28, pts: 9 },
+  'Thailand': { played: 12, won: 3, lost: 9, setsWon: 12, setsLost: 32, pts: 7 },
+  'France': { played: 12, won: 2, lost: 10, setsWon: 10, setsLost: 32, pts: 8 },
+  'South Korea': { played: 12, won: 2, lost: 10, setsWon: 8, setsLost: 33, pts: 6 },
+  'Bulgaria': { played: 12, won: 1, lost: 11, setsWon: 11, setsLost: 34, pts: 5 },
+  'Czechia': { played: 12, won: 2, lost: 10, setsWon: 9, setsLost: 31, pts: 6 },
+  'Belgium': { played: 12, won: 1, lost: 11, setsWon: 8, setsLost: 33, pts: 4 }
+};
+
+function canonicalTeamName(name) {
+  if (!name) return '';
+  const norm = name.trim();
+  if (norm === 'Türkiye') return 'Turkey';
+  return norm;
+}
+
   const calculateVNLStandings = () => {
     const volleyballMatches = matches.filter(m => m.sport === 'VOLLEYBALL');
-    const teamsSet = new Set();
-    volleyballMatches.forEach(m => {
-      if (m.teamA) teamsSet.add(m.teamA);
-      if (m.teamB) teamsSet.add(m.teamB);
-    });
-
     const stats = {};
-    teamsSet.forEach(team => {
-      stats[team] = { team, played: 0, won: 0, lost: 0, setsWon: 0, setsLost: 0, setDiff: 0, pts: 0 };
+
+    // Initialize with all VNL base stats
+    Object.keys(VNL_BASE_STATS).forEach(team => {
+      const canonical = canonicalTeamName(team);
+      if (!stats[canonical]) {
+        const base = VNL_BASE_STATS[team];
+        stats[canonical] = { 
+          team: canonical, 
+          played: base.played, 
+          won: base.won, 
+          lost: base.lost, 
+          setsWon: base.setsWon, 
+          setsLost: base.setsLost, 
+          setDiff: base.setsWon - base.setsLost, 
+          pts: base.pts 
+        };
+      }
     });
 
     volleyballMatches.forEach(m => {
       const isConcluded = m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined;
       if (!isConcluded) return;
 
-      const teamA = m.teamA;
-      const teamB = m.teamB;
+      const teamA = canonicalTeamName(m.teamA);
+      const teamB = canonicalTeamName(m.teamB);
 
-      if (!stats[teamA] || !stats[teamB]) return;
+      if (!stats[teamA]) {
+        stats[teamA] = { team: teamA, played: 0, won: 0, lost: 0, setsWon: 0, setsLost: 0, setDiff: 0, pts: 0 };
+      }
+      if (!stats[teamB]) {
+        stats[teamB] = { team: teamB, played: 0, won: 0, lost: 0, setsWon: 0, setsLost: 0, setDiff: 0, pts: 0 };
+      }
 
       stats[teamA].played += 1;
       stats[teamB].played += 1;
@@ -96,6 +139,11 @@ export default function GroupStage() {
       stats[teamB].setDiff = stats[teamB].setsWon - stats[teamB].setsLost;
     });
 
+    // VNL Standings sorting priority:
+    // 1. Matches Won (won) descending
+    // 2. VNL Points (pts) descending
+    // 3. Set Difference (setDiff) descending
+    // 4. Team name alphabetical
     return Object.values(stats).sort((a, b) => {
       if (b.won !== a.won) return b.won - a.won;
       if (b.pts !== a.pts) return b.pts - a.pts;

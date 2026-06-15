@@ -333,42 +333,127 @@ Group L
                     { teamA: 'Turkey', teamB: 'Germany', date: '2026-06-20 19:30:00+03' },
                     { teamA: 'Turkey', teamB: 'China', date: '2026-06-21 19:30:00+03' },
                     { teamA: 'China', teamB: 'Turkey', date: '2026-06-24 14:00:00+03' },
-                    { teamA: 'Poland', teamB: 'Turkey', date: '2026-06-25 21:00:00+03' }
+                    { teamA: 'Poland', teamB: 'Turkey', date: '2026-06-25 21:00:00+03' },
+                    { teamA: 'USA', teamB: 'Czechia', date: '2026-06-18 16:00:00+03' },
+                    { teamA: 'Serbia', teamB: 'Italy', date: '2026-06-18 20:00:00+03' },
+                    { teamA: 'Belgium', teamB: 'Brazil', date: '2026-06-18 16:00:00+03' },
+                    { teamA: 'France', teamB: 'China', date: '2026-06-19 16:00:00+03' },
+                    { teamA: 'Belgium', teamB: 'Germany', date: '2026-06-19 19:30:00+03' }
                 ];
                 for (const match of volleyballMatches) {
-                    const defaultOdds = {
-                        "MAIN": {
-                            [match.teamA]: 1.85,
-                            [match.teamB]: 1.85
-                        },
-                        "CORRECT_SCORE": {
-                            "3-0": 4.50,
-                            "3-1": 3.80,
-                            "3-2": 4.20,
-                            "2-3": 4.20,
-                            "1-3": 3.80,
-                            "0-3": 4.50
-                        },
-                        "TOTAL_POINTS": {
-                            "Under 180.5": 1.85,
-                            "Over 180.5": 1.85
-                        },
-                        "FIRST_SET": {
-                            [match.teamA]: 1.85,
-                            [match.teamB]: 1.85
-                        },
-                        "FIFTH_SET": {
-                            "Yes": 3.20,
-                            "No": 1.30
-                        },
-                        "EXTRA_POINTS": {
-                            "Yes": 2.80,
-                            "No": 1.38
-                        }
-                    };
+                    let oddsObj = null;
+                    if (match.teamA === 'Turkey' && match.teamB === 'Belgium') {
+                        oddsObj = {
+                            "MAIN": { "Turkey": 1.10, "Belgium": 6.50 },
+                            "CORRECT_SCORE": { "3-0": 1.70, "3-1": 3.10, "3-2": 5.20, "2-3": 11.00, "1-3": 15.00, "0-3": 23.00 },
+                            "TOTAL_POINTS": { "Under 180.5": 1.45, "Over 180.5": 2.55 },
+                            "FIRST_SET": { "Turkey": 1.18, "Belgium": 4.80 },
+                            "FIFTH_SET": { "Yes": 5.20, "No": 1.13 },
+                            "EXTRA_POINTS": { "Yes": 3.20, "No": 1.30 }
+                        };
+                    } else if (match.teamA === 'Turkey' && match.teamB === 'France') {
+                        oddsObj = {
+                            "MAIN": { "Turkey": 1.05, "France": 9.00 },
+                            "CORRECT_SCORE": { "3-0": 1.50, "3-1": 3.20, "3-2": 6.00, "2-3": 15.00, "1-3": 23.00, "0-3": 35.00 },
+                            "TOTAL_POINTS": { "Under 180.5": 1.35, "Over 180.5": 2.95 },
+                            "FIRST_SET": { "Turkey": 1.12, "France": 6.00 },
+                            "FIFTH_SET": { "Yes": 6.00, "No": 1.10 },
+                            "EXTRA_POINTS": { "Yes": 3.50, "No": 1.25 }
+                        };
+                    } else if (match.teamA === 'Turkey' && match.teamB === 'Germany') {
+                        oddsObj = {
+                            "MAIN": { "Turkey": 1.15, "Germany": 5.00 },
+                            "CORRECT_SCORE": { "3-0": 1.95, "3-1": 3.05, "3-2": 4.80, "2-3": 9.50, "1-3": 13.00, "0-3": 19.00 },
+                            "TOTAL_POINTS": { "Under 180.5": 1.55, "Over 180.5": 2.30 },
+                            "FIRST_SET": { "Turkey": 1.25, "Germany": 3.80 },
+                            "FIFTH_SET": { "Yes": 4.80, "No": 1.15 },
+                            "EXTRA_POINTS": { "Yes": 3.00, "No": 1.33 }
+                        };
+                    } else if (match.teamA === 'Turkey' && match.teamB === 'China') {
+                        oddsObj = {
+                            "MAIN": { "Turkey": 1.80, "China": 2.00 },
+                            "CORRECT_SCORE": { "3-0": 4.20, "3-1": 3.80, "3-2": 4.20, "2-3": 4.50, "1-3": 4.00, "0-3": 4.80 },
+                            "TOTAL_POINTS": { "Under 180.5": 1.90, "Over 180.5": 1.80 },
+                            "FIRST_SET": { "Turkey": 1.80, "China": 1.95 },
+                            "FIFTH_SET": { "Yes": 3.20, "No": 1.30 },
+                            "EXTRA_POINTS": { "Yes": 2.70, "No": 1.40 }
+                        };
+                    } else if (match.teamA === 'China' && match.teamB === 'Turkey') {
+                        oddsObj = {
+                            "MAIN": { "China": 2.00, "Turkey": 1.80 },
+                            "CORRECT_SCORE": { "3-0": 4.80, "3-1": 4.00, "3-2": 4.50, "2-3": 4.20, "1-3": 3.80, "0-3": 4.20 },
+                            "TOTAL_POINTS": { "Under 180.5": 1.90, "Over 180.5": 1.80 },
+                            "FIRST_SET": { "China": 1.95, "Turkey": 1.80 },
+                            "FIFTH_SET": { "Yes": 3.20, "No": 1.30 },
+                            "EXTRA_POINTS": { "Yes": 2.70, "No": 1.40 }
+                        };
+                    } else if (match.teamA === 'Poland' && match.teamB === 'Turkey') {
+                        oddsObj = {
+                            "MAIN": { "Poland": 2.20, "Turkey": 1.65 },
+                            "CORRECT_SCORE": { "3-0": 5.20, "3-1": 4.50, "3-2": 4.80, "2-3": 4.00, "1-3": 3.65, "0-3": 3.90 },
+                            "TOTAL_POINTS": { "Under 180.5": 1.85, "Over 180.5": 1.85 },
+                            "FIRST_SET": { "Poland": 2.10, "Turkey": 1.68 },
+                            "FIFTH_SET": { "Yes": 3.20, "No": 1.30 },
+                            "EXTRA_POINTS": { "Yes": 2.70, "No": 1.40 }
+                        };
+                    } else if (match.teamA === 'USA' && match.teamB === 'Czechia') {
+                        oddsObj = {
+                            "MAIN": { "USA": 1.05, "Czechia": 9.00 },
+                            "CORRECT_SCORE": { "3-0": 1.50, "3-1": 3.20, "3-2": 6.00, "2-3": 15.00, "1-3": 23.00, "0-3": 35.00 },
+                            "TOTAL_POINTS": { "Under 180.5": 1.35, "Over 180.5": 2.95 },
+                            "FIRST_SET": { "USA": 1.12, "Czechia": 6.00 },
+                            "FIFTH_SET": { "Yes": 6.00, "No": 1.10 },
+                            "EXTRA_POINTS": { "Yes": 3.50, "No": 1.25 }
+                        };
+                    } else if (match.teamA === 'Serbia' && match.teamB === 'Italy') {
+                        oddsObj = {
+                            "MAIN": { "Serbia": 2.50, "Italy": 1.50 },
+                            "CORRECT_SCORE": { "3-0": 7.50, "3-1": 5.80, "3-2": 5.20, "2-3": 4.50, "1-3": 3.40, "0-3": 3.80 },
+                            "TOTAL_POINTS": { "Under 180.5": 1.85, "Over 180.5": 1.85 },
+                            "FIRST_SET": { "Serbia": 2.30, "Italy": 1.55 },
+                            "FIFTH_SET": { "Yes": 3.20, "No": 1.30 },
+                            "EXTRA_POINTS": { "Yes": 2.70, "No": 1.40 }
+                        };
+                    } else if (match.teamA === 'Belgium' && match.teamB === 'Brazil') {
+                        oddsObj = {
+                            "MAIN": { "Belgium": 5.50, "Brazil": 1.12 },
+                            "CORRECT_SCORE": { "3-0": 21.00, "3-1": 14.00, "3-2": 10.00, "2-3": 5.00, "1-3": 3.05, "0-3": 1.85 },
+                            "TOTAL_POINTS": { "Under 180.5": 1.50, "Over 180.5": 2.40 },
+                            "FIRST_SET": { "Belgium": 4.20, "Brazil": 1.20 },
+                            "FIFTH_SET": { "Yes": 5.00, "No": 1.14 },
+                            "EXTRA_POINTS": { "Yes": 3.10, "No": 1.32 }
+                        };
+                    } else if (match.teamA === 'France' && match.teamB === 'China') {
+                        oddsObj = {
+                            "MAIN": { "France": 7.00, "China": 1.08 },
+                            "CORRECT_SCORE": { "3-0": 25.00, "3-1": 16.00, "3-2": 11.00, "2-3": 5.50, "1-3": 3.15, "0-3": 1.65 },
+                            "TOTAL_POINTS": { "Under 180.5": 1.40, "Over 180.5": 2.70 },
+                            "FIRST_SET": { "France": 5.00, "China": 1.15 },
+                            "FIFTH_SET": { "Yes": 5.50, "No": 1.12 },
+                            "EXTRA_POINTS": { "Yes": 3.30, "No": 1.28 }
+                        };
+                    } else if (match.teamA === 'Belgium' && match.teamB === 'Germany') {
+                        oddsObj = {
+                            "MAIN": { "Belgium": 2.80, "Germany": 1.40 },
+                            "CORRECT_SCORE": { "3-0": 9.00, "3-1": 6.20, "3-2": 5.50, "2-3": 4.60, "1-3": 3.10, "0-3": 3.40 },
+                            "TOTAL_POINTS": { "Under 180.5": 1.85, "Over 180.5": 1.85 },
+                            "FIRST_SET": { "Belgium": 2.50, "Germany": 1.48 },
+                            "FIFTH_SET": { "Yes": 3.20, "No": 1.30 },
+                            "EXTRA_POINTS": { "Yes": 2.70, "No": 1.40 }
+                        };
+                    } else {
+                        oddsObj = {
+                            "MAIN": { [match.teamA]: 1.85, [match.teamB]: 1.85 },
+                            "CORRECT_SCORE": { "3-0": 4.50, "3-1": 3.80, "3-2": 4.20, "2-3": 4.20, "1-3": 3.80, "0-3": 4.50 },
+                            "TOTAL_POINTS": { "Under 180.5": 1.85, "Over 180.5": 1.85 },
+                            "FIRST_SET": { [match.teamA]: 1.85, [match.teamB]: 1.85 },
+                            "FIFTH_SET": { "Yes": 3.20, "No": 1.30 },
+                            "EXTRA_POINTS": { "Yes": 2.80, "No": 1.38 }
+                        };
+                    }
                     await sql`
                         INSERT INTO markets ("teamA", "teamB", "matchDate", "pointsReward", "sport", "odds") 
-                        VALUES (${match.teamA}, ${match.teamB}, ${match.date}, 100, 'VOLLEYBALL', ${JSON.stringify(defaultOdds)})
+                        VALUES (${match.teamA}, ${match.teamB}, ${match.date}, 100, 'VOLLEYBALL', ${JSON.stringify(oddsObj)})
                     `;
                 }
                 console.log("Volleyball seeding completed successfully.");

@@ -31,6 +31,9 @@ function normalizeName(name) {
     if (normalized === 'cotedivoire' || normalized === 'cotedivoir') {
         return 'ivorycoast';
     }
+    if (normalized === 'caboverde') {
+        return 'capeverde';
+    }
     return normalized;
 }
 

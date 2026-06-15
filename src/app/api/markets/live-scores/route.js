@@ -21,6 +21,9 @@ function normalizeTeamName(name) {
     if (normalized === 'cote d ivoire' || normalized === 'cote divoire' || normalized === 'cote divoir' || normalized === 'cote d ivor') {
         return 'ivory coast';
     }
+    if (normalized === 'cabo verde' || normalized === 'caboverde') {
+        return 'cape verde';
+    }
     return normalized;
 }
 

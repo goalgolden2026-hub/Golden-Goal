@@ -336,9 +336,39 @@ Group L
                     { teamA: 'Poland', teamB: 'Turkey', date: '2026-06-25 21:00:00+03' }
                 ];
                 for (const match of volleyballMatches) {
+                    const defaultOdds = {
+                        "MAIN": {
+                            [match.teamA]: 1.85,
+                            [match.teamB]: 1.85
+                        },
+                        "CORRECT_SCORE": {
+                            "3-0": 4.50,
+                            "3-1": 3.80,
+                            "3-2": 4.20,
+                            "2-3": 4.20,
+                            "1-3": 3.80,
+                            "0-3": 4.50
+                        },
+                        "TOTAL_POINTS": {
+                            "Under 180.5": 1.85,
+                            "Over 180.5": 1.85
+                        },
+                        "FIRST_SET": {
+                            [match.teamA]: 1.85,
+                            [match.teamB]: 1.85
+                        },
+                        "FIFTH_SET": {
+                            "Yes": 3.20,
+                            "No": 1.30
+                        },
+                        "EXTRA_POINTS": {
+                            "Yes": 2.80,
+                            "No": 1.38
+                        }
+                    };
                     await sql`
-                        INSERT INTO markets ("teamA", "teamB", "matchDate", "pointsReward", "sport") 
-                        VALUES (${match.teamA}, ${match.teamB}, ${match.date}, 100, 'VOLLEYBALL')
+                        INSERT INTO markets ("teamA", "teamB", "matchDate", "pointsReward", "sport", "odds") 
+                        VALUES (${match.teamA}, ${match.teamB}, ${match.date}, 100, 'VOLLEYBALL', ${JSON.stringify(defaultOdds)})
                     `;
                 }
                 console.log("Volleyball seeding completed successfully.");

@@ -39,25 +39,25 @@ export default function GroupStage() {
   const [selectedSport, setSelectedSport] = useState('football');
 
 const VNL_BASE_STATS = {
-  'Brazil': { played: 12, won: 12, lost: 0, setsWon: 36, setsLost: 9, pts: 34 },
-  'Italy': { played: 12, won: 10, lost: 2, setsWon: 32, setsLost: 10, pts: 31 },
-  'Poland': { played: 12, won: 10, lost: 2, setsWon: 31, setsLost: 8, pts: 30 },
-  'China': { played: 12, won: 9, lost: 3, setsWon: 29, setsLost: 15, pts: 26 },
-  'Japan': { played: 12, won: 8, lost: 4, setsWon: 28, setsLost: 16, pts: 25 },
-  'Turkey': { played: 12, won: 8, lost: 4, setsWon: 29, setsLost: 18, pts: 25 },
-  'Türkiye': { played: 12, won: 8, lost: 4, setsWon: 29, setsLost: 18, pts: 25 },
-  'USA': { played: 12, won: 7, lost: 5, setsWon: 27, setsLost: 18, pts: 22 },
-  'Netherlands': { played: 12, won: 7, lost: 5, setsWon: 24, setsLost: 18, pts: 21 },
-  'Canada': { played: 12, won: 7, lost: 5, setsWon: 24, setsLost: 19, pts: 20 },
-  'Dominican Republic': { played: 12, won: 3, lost: 9, setsWon: 15, setsLost: 29, pts: 10 },
-  'Serbia': { played: 12, won: 3, lost: 9, setsWon: 16, setsLost: 30, pts: 9 },
-  'Germany': { played: 12, won: 3, lost: 9, setsWon: 12, setsLost: 28, pts: 9 },
-  'Thailand': { played: 12, won: 3, lost: 9, setsWon: 12, setsLost: 32, pts: 7 },
-  'France': { played: 12, won: 2, lost: 10, setsWon: 10, setsLost: 32, pts: 8 },
-  'South Korea': { played: 12, won: 2, lost: 10, setsWon: 8, setsLost: 33, pts: 6 },
-  'Bulgaria': { played: 12, won: 1, lost: 11, setsWon: 11, setsLost: 34, pts: 5 },
-  'Czechia': { played: 12, won: 2, lost: 10, setsWon: 9, setsLost: 31, pts: 6 },
-  'Belgium': { played: 12, won: 1, lost: 11, setsWon: 8, setsLost: 33, pts: 4 }
+  'Brazil': { played: 4, won: 4, lost: 0, setsWon: 12, setsLost: 4, pts: 11 },
+  'Japan': { played: 4, won: 4, lost: 0, setsWon: 12, setsLost: 4, pts: 11 },
+  'Italy': { played: 4, won: 3, lost: 1, setsWon: 11, setsLost: 4, pts: 10 },
+  'Czechia': { played: 4, won: 3, lost: 1, setsWon: 9, setsLost: 3, pts: 9 },
+  'USA': { played: 4, won: 3, lost: 1, setsWon: 9, setsLost: 5, pts: 8 },
+  'China': { played: 4, won: 3, lost: 1, setsWon: 9, setsLost: 6, pts: 8 },
+  'Poland': { played: 4, won: 3, lost: 1, setsWon: 10, setsLost: 7, pts: 7 },
+  'Canada': { played: 4, won: 2, lost: 2, setsWon: 9, setsLost: 7, pts: 7 },
+  'Netherlands': { played: 4, won: 2, lost: 2, setsWon: 7, setsLost: 6, pts: 6 },
+  'Belgium': { played: 4, won: 2, lost: 2, setsWon: 8, setsLost: 10, pts: 5 },
+  'Turkey': { played: 4, won: 2, lost: 2, setsWon: 7, setsLost: 9, pts: 5 },
+  'Türkiye': { played: 4, won: 2, lost: 2, setsWon: 7, setsLost: 9, pts: 5 },
+  'Serbia': { played: 4, won: 1, lost: 3, setsWon: 7, setsLost: 9, pts: 5 },
+  'Germany': { played: 4, won: 1, lost: 3, setsWon: 5, setsLost: 10, pts: 4 },
+  'France': { played: 4, won: 1, lost: 3, setsWon: 7, setsLost: 11, pts: 3 },
+  'Ukraine': { played: 4, won: 1, lost: 3, setsWon: 6, setsLost: 11, pts: 3 },
+  'Bulgaria': { played: 4, won: 1, lost: 3, setsWon: 4, setsLost: 9, pts: 3 },
+  'Thailand': { played: 4, won: 0, lost: 4, setsWon: 4, setsLost: 12, pts: 2 },
+  'Dominican Republic': { played: 4, won: 0, lost: 4, setsWon: 3, setsLost: 12, pts: 1 }
 };
 
 function canonicalTeamName(name) {

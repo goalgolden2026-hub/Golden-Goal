@@ -56,5 +56,6 @@ export const TEAM_FLAGS = {
   'Bulgaria': '🇧🇬',
   'Italy': '🇮🇹',
   'Dominican Republic': '🇩🇴',
-  'Thailand': '🇹🇭'
+  'Thailand': '🇹🇭',
+  'Ukraine': '🇺🇦'
 };

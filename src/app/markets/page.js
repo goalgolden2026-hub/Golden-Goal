@@ -251,22 +251,48 @@ function MarketsContent() {
                   const scoreInfo = scores[m.id];
                   const isLive = scoreInfo && scoreInfo.status === 'LIVE';
                   const userPredCount = userPredictions.filter(p => p.marketId === m.id).length;
+                  const isVolleyball = m.sport === 'VOLLEYBALL';
+                  const borderClasses = isMexicoSA 
+                    ? 'border-yellow-600/30 hover:border-yellow-500/50 shadow-[0_4px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_10px_40px_rgba(245,158,11,0.1)] hover:scale-[1.01]' 
+                    : isVolleyball
+                    ? (vbg === 'glass' 
+                      ? 'border-amber-500/30 hover:border-amber-400 shadow-[0_4px_30px_rgba(245,158,11,0.15)] hover:shadow-[0_10px_40px_rgba(245,158,11,0.3)] hover:scale-[1.01]' 
+                      : 'border-amber-900/40 hover:border-amber-500/50 shadow-[0_4px_25px_rgba(0,0,0,0.35)] hover:shadow-[0_8px_30px_rgba(245,158,11,0.2)] hover:scale-[1.01]')
+                    : 'border-zinc-800/80 hover:border-blue-500/40 shadow-[0_4px_25px_rgba(0,0,0,0.35)] hover:shadow-[0_8px_30px_rgba(59,130,246,0.15)] hover:scale-[1.01]';
+
+                  const bgStyle = isVolleyball
+                    ? (vbg === 'glass'
+                      ? {
+                          background: 'linear-gradient(135deg, rgba(20, 20, 20, 0.8), rgba(10, 10, 10, 0.95))',
+                          backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.12) 0%, transparent 80%), linear-gradient(135deg, rgba(245, 158, 11, 0.05), transparent)',
+                        }
+                      : {
+                          backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-volleyball-bg.png')",
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                        })
+                    : {
+                        backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-stadium-bg.png')",
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      };
                   
                   return (
                     <Link 
                       href={`/markets/${m.id}`} 
                       key={m.id} 
-                      className={`backdrop-blur-md border transition-all duration-500 relative overflow-hidden flex flex-col items-center gap-6 block cursor-pointer rounded-3xl p-6 group ${
-                        isMexicoSA 
-                          ? 'border-yellow-600/30 hover:border-yellow-500/50 shadow-[0_4px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_10px_40px_rgba(245,158,11,0.1)] hover:scale-[1.01]' 
-                          : 'border-zinc-800/80 hover:border-blue-500/40 shadow-[0_4px_25px_rgba(0,0,0,0.35)] hover:shadow-[0_8px_30px_rgba(59,130,246,0.15)] hover:scale-[1.01]'
-                      }`}
-                      style={{
-                        backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-stadium-bg.png')",
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      }}
+                      className={`backdrop-blur-md border transition-all duration-500 relative overflow-hidden flex flex-col items-center gap-6 block cursor-pointer rounded-3xl p-6 group ${borderClasses}`}
+                      style={bgStyle}
                     >
+                        {/* Abstract Volleyball Court SVG overlay (Option 2: glass) */}
+                        {isVolleyball && vbg === 'glass' && (
+                          <svg className="absolute inset-0 w-full h-full object-cover opacity-[0.04] pointer-events-none z-0 text-amber-500" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                            <rect x="10" y="10" width="80" height="80" strokeWidth="1" />
+                            <line x1="10" y1="36.6" x2="90" y2="36.6" strokeWidth="1" />
+                            <line x1="10" y1="63.3" x2="90" y2="63.3" strokeWidth="1" />
+                            <line x1="10" y1="50" x2="90" y2="50" strokeWidth="2" strokeDasharray="2,2" />
+                          </svg>
+                        )}
                         
                         {/* Match Info */}
                         <div className="w-full text-center relative z-10">

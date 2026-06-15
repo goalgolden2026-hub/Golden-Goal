@@ -73,6 +73,14 @@ export default function MatchDetail() {
   const [resolvedOutcomes, setResolvedOutcomes] = useState({});
   const [legendIndex, setLegendIndex] = useState(0);
   const [isRotating, setIsRotating] = useState(false);
+  const [vbg, setVbg] = useState('court');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      setVbg(searchParams.get('vbg') || 'court');
+    }
+  }, []);
 
   // Dynamic slot resolvers to show 2 players on each side (total 4 stacked legends)
   const leftSlotA = LEFT_LEGENDS[legendIndex]; // Top Left Player
@@ -469,113 +477,143 @@ export default function MatchDetail() {
           </button>
 
           {/* Match Header */}
-          <div 
-            className={`text-center mb-12 relative overflow-hidden rounded-3xl p-8 border ${
-              market.teamA === 'Mexico' && market.teamB === 'South Africa'
+          {(() => {
+              const isVolleyball = market.sport === 'VOLLEYBALL';
+              const borderClass = market.teamA === 'Mexico' && market.teamB === 'South Africa'
                 ? 'border-emerald-500/20 shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
-                : 'border-zinc-800/80 shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
-            }`}
-            style={{
-              backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-stadium-bg.png')",
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          >
-              {isLive ? (
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                      <span className="text-xs font-extrabold tracking-widest text-red-400 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.3)]">
-                          • LIVE {market.sport === 'VOLLEYBALL' ? (scoreInfo.matchStatus || 'LIVE') : (scoreInfo.status === 'HT' ? 'HT' : scoreInfo.status === 'FT' ? 'FT' : `${scoreInfo.elapsed}'`)}
-                      </span>
-                  </div>
-              ) : isMatchEnded ? (
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                      <span className="text-xs font-extrabold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.25)]">
-                          ✓ MATCH ENDED
-                      </span>
-                  </div>
-              ) : (
-                  <span className={`text-sm font-mono mb-2 block ${market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'text-amber-400 font-bold' : 'text-zinc-300'}`}>{market.dateStr} • {market.timeStr} {market.tz}</span>
-              )}
-              <div className="grid grid-cols-3 items-center w-full text-center text-3xl md:text-5xl font-extrabold mb-4 relative z-10">
-                  {/* Team A */}
-                  <div className="flex flex-col items-center gap-2 justify-center min-w-0">
-                      <span className="text-5xl md:text-6xl drop-shadow-lg shrink-0">{TEAM_FLAGS[market.teamA] || '🏳️'}</span>
-                      <span className="text-zinc-100 text-base md:text-lg lg:text-2xl leading-tight break-words w-full px-1">{market.teamA}</span>
-                  </div>
+                : isVolleyball
+                ? (vbg === 'glass'
+                  ? 'border-amber-500/20 shadow-[0_4px_30px_rgba(245,158,11,0.15)]'
+                  : 'border-amber-900/40 shadow-[0_4px_30px_rgba(245,158,11,0.15)]')
+                : 'border-zinc-800/80 shadow-[0_4px_30px_rgba(0,0,0,0.4)]';
 
-                  {/* Center Score/VS */}
-                  <div className="flex flex-col items-center justify-center shrink-0">
-                      {isLive ? (
-                          <div className="flex flex-col items-center justify-center px-4">
-                              <span className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.55)] tracking-tight">
-                                  {scoreInfo.goalsA} - {scoreInfo.goalsB}
-                              </span>
-                              {market.sport === 'VOLLEYBALL' && scoreInfo.pointsA !== null && scoreInfo.pointsB !== null && (
-                                  <span className="text-sm font-bold text-amber-500 mt-1 select-none tracking-wide animate-pulse">
-                                      ({scoreInfo.pointsA} - {scoreInfo.pointsB})
-                                  </span>
-                              )}
-                          </div>
-                      ) : isMatchEnded ? (
-                          <div className="flex flex-col items-center justify-center px-4">
-                              <span className="text-4xl md:text-6xl font-black text-amber-400 drop-shadow-[0_0_20px_rgba(245,158,11,0.55)] tracking-tight">
-                                  {market.scoreA} - {market.scoreB}
-                              </span>
-                          </div>
-                      ) : (
-                          <span className="text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20">
-                              VS
+              const bgStyle = isVolleyball
+                ? (vbg === 'glass'
+                  ? {
+                      background: 'linear-gradient(135deg, rgba(20, 20, 20, 0.85), rgba(10, 10, 10, 0.98))',
+                      backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.12) 0%, transparent 85%), linear-gradient(135deg, rgba(245, 158, 11, 0.05), transparent)',
+                    }
+                  : {
+                      backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-volleyball-bg.png')",
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    })
+                : {
+                    backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-stadium-bg.png')",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  };
+
+              return (
+                <div 
+                  className={`text-center mb-12 relative overflow-hidden rounded-3xl p-8 border ${borderClass}`}
+                  style={bgStyle}
+                >
+                  {isVolleyball && vbg === 'glass' && (
+                    <svg className="absolute inset-0 w-full h-full object-cover opacity-[0.04] pointer-events-none z-0 text-amber-500" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                      <rect x="10" y="10" width="80" height="80" strokeWidth="1" />
+                      <line x1="10" y1="36.6" x2="90" y2="36.6" strokeWidth="1" />
+                      <line x1="10" y1="63.3" x2="90" y2="63.3" strokeWidth="1" />
+                      <line x1="10" y1="50" x2="90" y2="50" strokeWidth="2" strokeDasharray="2,2" />
+                    </svg>
+                  )}
+                  {isLive ? (
+                      <div className="flex items-center justify-center gap-2 mb-2">
+                          <span className="text-xs font-extrabold tracking-widest text-red-400 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.3)]">
+                              • LIVE {market.sport === 'VOLLEYBALL' ? (scoreInfo.matchStatus || 'LIVE') : (scoreInfo.status === 'HT' ? 'HT' : scoreInfo.status === 'FT' ? 'FT' : `${scoreInfo.elapsed}'`)}
                           </span>
-                      )}
+                      </div>
+                  ) : isMatchEnded ? (
+                      <div className="flex items-center justify-center gap-2 mb-2">
+                          <span className="text-xs font-extrabold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.25)]">
+                              ✓ MATCH ENDED
+                          </span>
+                      </div>
+                  ) : (
+                      <span className={`text-sm font-mono mb-2 block ${market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'text-amber-400 font-bold' : 'text-zinc-300'}`}>{market.dateStr} • {market.timeStr} {market.tz}</span>
+                  )}
+                  <div className="grid grid-cols-3 items-center w-full text-center text-3xl md:text-5xl font-extrabold mb-4 relative z-10">
+                      {/* Team A */}
+                      <div className="flex flex-col items-center gap-2 justify-center min-w-0">
+                          <span className="text-5xl md:text-6xl drop-shadow-lg shrink-0">{TEAM_FLAGS[market.teamA] || '🏳️'}</span>
+                          <span className="text-zinc-100 text-base md:text-lg lg:text-2xl leading-tight break-words w-full px-1">{market.teamA}</span>
+                      </div>
+
+                      {/* Center Score/VS */}
+                      <div className="flex flex-col items-center justify-center shrink-0">
+                          {isLive ? (
+                              <div className="flex flex-col items-center justify-center px-4">
+                                  <span className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.55)] tracking-tight">
+                                      {scoreInfo.goalsA} - {scoreInfo.goalsB}
+                                  </span>
+                                  {market.sport === 'VOLLEYBALL' && scoreInfo.pointsA !== null && scoreInfo.pointsB !== null && (
+                                      <span className="text-sm font-bold text-amber-500 mt-1 select-none tracking-wide animate-pulse">
+                                          ({scoreInfo.pointsA} - {scoreInfo.pointsB})
+                                      </span>
+                                  )}
+                              </div>
+                          ) : isMatchEnded ? (
+                              <div className="flex flex-col items-center justify-center px-4">
+                                  <span className="text-4xl md:text-6xl font-black text-amber-400 drop-shadow-[0_0_20px_rgba(245,158,11,0.55)] tracking-tight">
+                                      {market.scoreA} - {market.scoreB}
+                                  </span>
+                              </div>
+                          ) : (
+                              <span className="text-amber-500 text-xs font-black tracking-widest drop-shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20">
+                                  VS
+                              </span>
+                          )}
+                      </div>
+
+                      {/* Team B */}
+                      <div className="flex flex-col items-center gap-2 justify-center min-w-0">
+                          <span className="text-5xl md:text-6xl drop-shadow-lg shrink-0">{TEAM_FLAGS[market.teamB] || '🏳️'}</span>
+                          <span className="text-zinc-100 text-base md:text-lg lg:text-2xl leading-tight break-words w-full px-1">{market.teamB}</span>
+                      </div>
                   </div>
 
-                  {/* Team B */}
-                  <div className="flex flex-col items-center gap-2 justify-center min-w-0">
-                      <span className="text-5xl md:text-6xl drop-shadow-lg shrink-0">{TEAM_FLAGS[market.teamB] || '🏳️'}</span>
-                      <span className="text-zinc-100 text-base md:text-lg lg:text-2xl leading-tight break-words w-full px-1">{market.teamB}</span>
-                  </div>
+                  {/* Goalscorers Grid */}
+                  {((isLive || isMatchEnded) && scoreInfo?.goals && scoreInfo.goals.length > 0) && (
+                      <div className="mt-8 pt-6 border-t border-zinc-800/60 grid grid-cols-3 gap-6 text-[10px] md:text-xs text-zinc-400 relative z-10 font-semibold max-w-xl mx-auto drop-shadow-sm">
+                          {/* Team A (Home) Goals */}
+                          <div className="text-right space-y-1.5 min-w-0">
+                              {scoreInfo.goals.filter(g => g.isHome).map((g, idx) => (
+                                  <div key={idx} className="flex items-center justify-end gap-1.5 truncate">
+                                      <span className="text-zinc-100 truncate">{g.player}</span>
+                                      <span className="text-zinc-500 font-mono flex-shrink-0">{g.time}{g.addedTime ? `+${g.addedTime}` : ''}'</span>
+                                      {g.incidentClass === 'penalty' && <span className="text-amber-400 text-[9px] md:text-[10px] font-extrabold flex-shrink-0">(P)</span>}
+                                      {g.incidentClass === 'ownGoal' && <span className="text-red-500 text-[9px] md:text-[10px] font-extrabold flex-shrink-0">(OG)</span>}
+                                  </div>
+                              ))}
+                          </div>
+
+                          {/* Ball Icon */}
+                          <div className="flex items-center justify-center opacity-30 select-none text-sm md:text-base animate-pulse">
+                              {market.sport === 'VOLLEYBALL' ? '🏐' : '⚽'}
+                          </div>
+
+                          {/* Team B (Away) Goals */}
+                          <div className="text-left space-y-1.5 min-w-0">
+                              {scoreInfo.goals.filter(g => !g.isHome).map((g, idx) => (
+                                  <div key={idx} className="flex items-center justify-start gap-1.5 truncate">
+                                      {g.incidentClass === 'penalty' && <span className="text-amber-400 text-[9px] md:text-[10px] font-extrabold flex-shrink-0">(P)</span>}
+                                      {g.incidentClass === 'ownGoal' && <span className="text-red-500 text-[9px] md:text-[10px] font-extrabold flex-shrink-0">(OG)</span>}
+                                      <span className="text-zinc-500 font-mono flex-shrink-0">{g.time}{g.addedTime ? `+${g.addedTime}` : ''}'</span>
+                                      <span className="text-zinc-100 truncate">{g.player}</span>
+                                  </div>
+                              ))}
+                          </div>
+                      </div>
+                  )}
+
+                  {market.isLocked && !isLive && !isMatchEnded && (
+                      <div className="inline-block bg-red-500/10 text-red-500 text-sm font-bold px-4 py-2 rounded-full border border-red-500/20 mt-4 relative z-10">
+                          MATCH LOCKED
+                      </div>
+                  )}
               </div>
-
-              {/* Goalscorers Grid */}
-              {((isLive || isMatchEnded) && scoreInfo?.goals && scoreInfo.goals.length > 0) && (
-                  <div className="mt-8 pt-6 border-t border-zinc-800/60 grid grid-cols-3 gap-6 text-[10px] md:text-xs text-zinc-400 relative z-10 font-semibold max-w-xl mx-auto drop-shadow-sm">
-                      {/* Team A (Home) Goals */}
-                      <div className="text-right space-y-1.5 min-w-0">
-                          {scoreInfo.goals.filter(g => g.isHome).map((g, idx) => (
-                              <div key={idx} className="flex items-center justify-end gap-1.5 truncate">
-                                  <span className="text-zinc-100 truncate">{g.player}</span>
-                                  <span className="text-zinc-500 font-mono flex-shrink-0">{g.time}{g.addedTime ? `+${g.addedTime}` : ''}'</span>
-                                  {g.incidentClass === 'penalty' && <span className="text-amber-400 text-[9px] md:text-[10px] font-extrabold flex-shrink-0">(P)</span>}
-                                  {g.incidentClass === 'ownGoal' && <span className="text-red-500 text-[9px] md:text-[10px] font-extrabold flex-shrink-0">(OG)</span>}
-                              </div>
-                          ))}
-                      </div>
-
-                      {/* Ball Icon */}
-                      <div className="flex items-center justify-center opacity-30 select-none text-sm md:text-base animate-pulse">
-                          {market.sport === 'VOLLEYBALL' ? '🏐' : '⚽'}
-                      </div>
-
-                      {/* Team B (Away) Goals */}
-                      <div className="text-left space-y-1.5 min-w-0">
-                          {scoreInfo.goals.filter(g => !g.isHome).map((g, idx) => (
-                              <div key={idx} className="flex items-center justify-start gap-1.5 truncate">
-                                  {g.incidentClass === 'penalty' && <span className="text-amber-400 text-[9px] md:text-[10px] font-extrabold flex-shrink-0">(P)</span>}
-                                  {g.incidentClass === 'ownGoal' && <span className="text-red-500 text-[9px] md:text-[10px] font-extrabold flex-shrink-0">(OG)</span>}
-                                  <span className="text-zinc-500 font-mono flex-shrink-0">{g.time}{g.addedTime ? `+${g.addedTime}` : ''}'</span>
-                                  <span className="text-zinc-100 truncate">{g.player}</span>
-                              </div>
-                          ))}
-                      </div>
-                  </div>
-              )}
-
-              {market.isLocked && !isLive && !isMatchEnded && (
-                  <div className="inline-block bg-red-500/10 text-red-500 text-sm font-bold px-4 py-2 rounded-full border border-red-500/20 mt-4 relative z-10">
-                      MATCH LOCKED
-                  </div>
-              )}
-          </div>
+              );
+          })()}
 
           {/* Sub-Markets */}
           <div className="flex flex-col gap-2">

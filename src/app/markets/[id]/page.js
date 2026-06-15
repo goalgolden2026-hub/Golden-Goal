@@ -510,6 +510,11 @@ export default function MatchDetail() {
                               <span className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.55)] tracking-tight">
                                   {scoreInfo.goalsA} - {scoreInfo.goalsB}
                               </span>
+                              {market.sport === 'VOLLEYBALL' && scoreInfo.pointsA !== null && scoreInfo.pointsB !== null && (
+                                  <span className="text-sm font-bold text-amber-500 mt-1 select-none tracking-wide animate-pulse">
+                                      ({scoreInfo.pointsA} - {scoreInfo.pointsB})
+                                  </span>
+                              )}
                           </div>
                       ) : isMatchEnded ? (
                           <div className="flex flex-col items-center justify-center px-4">

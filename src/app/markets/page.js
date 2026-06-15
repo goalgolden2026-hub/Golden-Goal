@@ -319,6 +319,11 @@ function MarketsContent() {
                                             <span className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-amber-400 to-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.45)] tracking-tight">
                                                 {scoreInfo.goalsA} - {scoreInfo.goalsB}
                                             </span>
+                                            {m.sport === 'VOLLEYBALL' && scoreInfo.pointsA !== null && scoreInfo.pointsB !== null && (
+                                                <span className="text-[10px] font-extrabold text-amber-500 mt-0.5 animate-pulse">
+                                                    ({scoreInfo.pointsA} - {scoreInfo.pointsB})
+                                                </span>
+                                            )}
                                         </div>
                                     ) : (m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined) ? (
                                         <div className="flex flex-col items-center justify-center">

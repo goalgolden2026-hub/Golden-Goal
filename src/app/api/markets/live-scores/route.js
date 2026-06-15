@@ -238,6 +238,13 @@ export async function GET(request) {
                 const scoreValA = isHomeDbA ? homeScore : awayScore;
                 const scoreValB = isHomeDbA ? awayScore : homeScore;
 
+                const pointValA = marketSport === 'volleyball' 
+                    ? (isHomeDbA ? (matchedEvent.homeScore?.point ?? null) : (matchedEvent.awayScore?.point ?? null))
+                    : null;
+                const pointValB = marketSport === 'volleyball'
+                    ? (isHomeDbA ? (matchedEvent.awayScore?.point ?? null) : (matchedEvent.homeScore?.point ?? null))
+                    : null;
+
                 let goals = [];
                 if (marketSport === 'football' && (statusType === 'inprogress' || statusType === 'finished') && (homeScore > 0 || awayScore > 0)) {
                     try {
@@ -277,6 +284,8 @@ export async function GET(request) {
                     liveScores[market.id] = {
                         goalsA: scoreValA,
                         goalsB: scoreValB,
+                        pointsA: pointValA,
+                        pointsB: pointValB,
                         elapsed: marketSport === 'volleyball' ? null : calculateElapsedMinutes(matchedEvent),
                         status: 'LIVE',
                         matchStatus: statusDesc || 'LIVE',

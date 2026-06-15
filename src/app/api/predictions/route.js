@@ -144,16 +144,23 @@ export async function POST(request) {
                             xp = Math.max(50, oddsValue * 80);
                             break;
                         case 'TOTAL_GOALS':
+                        case 'TOTAL_POINTS':
                             xp = Math.max(120, oddsValue * 100);
                             break;
                         case 'BTTS':
+                        case 'FIFTH_SET':
+                        case 'EXTRA_POINTS':
                             xp = Math.max(120, oddsValue * 100);
                             break;
                         case 'FIRST_HALF':
+                        case 'FIRST_SET':
                             xp = Math.max(120, oddsValue * 100);
                             break;
                         case 'FIRST_GOAL':
                             xp = Math.min(600, Math.max(150, oddsValue * 100));
+                            break;
+                        case 'CORRECT_SCORE':
+                            xp = Math.max(150, oddsValue * 100);
                             break;
                         default:
                             xp = oddsValue * 100;

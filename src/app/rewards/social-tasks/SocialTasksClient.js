@@ -97,6 +97,7 @@ export default function SocialTasksPage() {
         setSubmittingTweet(true);
         setTweetMessage('');
         try {
+            console.log("Submitting tweet URL:", tweetUrl);
             const res = await fetch(getApiUrl('/api/user/twitter'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -106,7 +107,21 @@ export default function SocialTasksPage() {
                     confirmSecondHandle: confirmSecond
                 })
             });
-            const data = await res.json();
+
+            console.log("Response status:", res.status);
+
+            let data;
+            const contentType = res.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                data = await res.json();
+            } else {
+                const text = await res.text();
+                console.error("Non-JSON response received:", text);
+                throw new Error(`Server returned non-JSON response (Status ${res.status}): ${text.substring(0, 100)}`);
+            }
+
+            console.log("Response data:", data);
+
             if (data.success) {
                 setTweetMessage('🎉 ' + data.message);
                 setTweetUrl('');
@@ -117,11 +132,12 @@ export default function SocialTasksPage() {
                 setDetectedHandle(data.authorHandle);
                 setShowConfirmSecondHandleModal(true);
             } else {
-                setTweetMessage('❌ ' + data.error);
+                setTweetMessage('❌ ' + (data.error || 'Unknown error occurred.'));
                 setShowConfirmSecondHandleModal(false);
             }
         } catch (error) {
-            setTweetMessage('❌ Server error.');
+            console.error("Error submitting tweet:", error);
+            setTweetMessage(`❌ Server error: ${error.message || error}`);
             setShowConfirmSecondHandleModal(false);
         }
         setSubmittingTweet(false);
@@ -137,6 +153,7 @@ export default function SocialTasksPage() {
         setLinkingHandle(true);
         setLinkMessage('');
         try {
+            console.log("Linking X handle:", xHandle, xHandle2);
             const res = await fetch(getApiUrl('/api/user/twitter/link'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -146,7 +163,21 @@ export default function SocialTasksPage() {
                     twitterHandle2: xHandle2
                 })
             });
-            const data = await res.json();
+
+            console.log("Link response status:", res.status);
+
+            let data;
+            const contentType = res.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                data = await res.json();
+            } else {
+                const text = await res.text();
+                console.error("Link non-JSON response received:", text);
+                throw new Error(`Server returned non-JSON response (Status ${res.status}): ${text.substring(0, 100)}`);
+            }
+
+            console.log("Link response data:", data);
+
             if (data.success) {
                 setLinkMessage('🎉 Accounts linked successfully! History cleaned.');
                 setIsEditingHandles(false);
@@ -155,10 +186,11 @@ export default function SocialTasksPage() {
                     setLinkMessage('');
                 }, 1500);
             } else {
-                setLinkMessage('❌ ' + data.error);
+                setLinkMessage('❌ ' + (data.error || 'Unknown error occurred.'));
             }
         } catch (error) {
-            setLinkMessage('❌ Server error.');
+            console.error("Error linking Twitter:", error);
+            setLinkMessage(`❌ Server error: ${error.message || error}`);
         }
         setLinkingHandle(false);
     };

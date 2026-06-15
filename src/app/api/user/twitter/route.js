@@ -4,21 +4,13 @@ import { getDb } from '@/lib/db';
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { walletAddress, tweetUrl } = body;
+        const { walletAddress, tweetUrl, confirmSecondHandle } = body;
 
         if (!walletAddress || !tweetUrl) {
             return NextResponse.json({ success: false, error: "Missing walletAddress or tweetUrl" }, { status: 400 });
         }
 
         const sql = await getDb();
-
-        // 0. Check if user has linked a Twitter handle
-        const userCheck = await sql`SELECT "twitterHandle", "twitterHandle2" FROM users WHERE "walletAddress" = ${walletAddress}`;
-        if (userCheck.rowCount === 0 || (!userCheck.rows[0].twitterHandle && !userCheck.rows[0].twitterHandle2)) {
-            return NextResponse.json({ success: false, error: "Please link your Twitter (X) account first before submitting tweets." }, { status: 400 });
-        }
-        const userHandle = userCheck.rows[0].twitterHandle ? userCheck.rows[0].twitterHandle.toLowerCase() : null;
-        const userHandle2 = userCheck.rows[0].twitterHandle2 ? userCheck.rows[0].twitterHandle2.toLowerCase() : null;
 
         // Basic Regex to check if it's a valid x.com or twitter.com status URL
         const twitterRegex = /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/status\/[0-9]+(\?.*)?$/;
@@ -32,6 +24,19 @@ export async function POST(request) {
 
         if (!tweetId) {
             return NextResponse.json({ success: false, error: "Could not parse Tweet ID from the URL." }, { status: 400 });
+        }
+
+        // Fetch user linked handles
+        const userCheck = await sql`SELECT "twitterHandle", "twitterHandle2" FROM users WHERE "walletAddress" = ${walletAddress}`;
+        if (userCheck.rowCount === 0) {
+            return NextResponse.json({ success: false, error: "User profile not found." }, { status: 404 });
+        }
+        let userHandle = userCheck.rows[0].twitterHandle ? userCheck.rows[0].twitterHandle.toLowerCase() : null;
+        let userHandle2 = userCheck.rows[0].twitterHandle2 ? userCheck.rows[0].twitterHandle2.toLowerCase() : null;
+
+        // 1-Time Ask Verification: User must have linked at least one X account first
+        if (!userHandle && !userHandle2) {
+            return NextResponse.json({ success: false, error: "Please link your Twitter (X) account first before submitting tweets." }, { status: 400 });
         }
 
         // Programmatic Tweet details verification via RapidAPI
@@ -62,16 +67,51 @@ export async function POST(request) {
 
                 // Verify screen name/authorship
                 const authorHandle = tweetData?.author?.screen_name?.toLowerCase();
+                if (!authorHandle) {
+                    return NextResponse.json({ success: false, error: "Could not retrieve author details from the Tweet." }, { status: 400 });
+                }
+
+                // Check matches
                 const isMatched = (userHandle && authorHandle === userHandle) || (userHandle2 && authorHandle === userHandle2);
-                if (!authorHandle || !isMatched) {
-                    let errorMsg = `This X post does not belong to your linked X account. `;
-                    if (userCheck.rows[0].twitterHandle && userCheck.rows[0].twitterHandle2) {
-                        errorMsg += `Your linked X handles are @${userCheck.rows[0].twitterHandle} and @${userCheck.rows[0].twitterHandle2}. Please submit an X post link shared by one of these accounts.`;
-                    } else {
-                        const activeHandle = userCheck.rows[0].twitterHandle || userCheck.rows[0].twitterHandle2;
-                        errorMsg += `Your linked X handle is @${activeHandle}. Please submit an X post link shared by this account.`;
+                if (!isMatched) {
+                    // Both handles are already linked and mismatching
+                    if (userHandle && userHandle2) {
+                        return NextResponse.json({ 
+                            success: false, 
+                            error: `This X post does not belong to your linked X accounts. Your linked X handles are @${userHandle} and @${userHandle2}. Please submit an X post link shared by one of these accounts.` 
+                        }, { status: 400 });
                     }
-                    return NextResponse.json({ success: false, error: errorMsg }, { status: 400 });
+
+                    // Only one handle is linked, offer auto-linking via confirmSecondHandle
+                    if (confirmSecondHandle === true) {
+                        // Check if authorHandle is already linked to another wallet
+                        const handleCheck = await sql`
+                            SELECT "walletAddress" 
+                            FROM users 
+                            WHERE (LOWER("twitterHandle") = ${authorHandle} OR LOWER("twitterHandle2") = ${authorHandle})
+                            AND "walletAddress" != ${walletAddress}
+                        `;
+                        if (handleCheck.rowCount > 0) {
+                            return NextResponse.json({ success: false, error: `The X account @${authorHandle} is already linked to another wallet.` }, { status: 400 });
+                        }
+
+                        // Update the empty account slot
+                        if (!userHandle) {
+                            await sql`UPDATE users SET "twitterHandle" = ${authorHandle} WHERE "walletAddress" = ${walletAddress}`;
+                            userHandle = authorHandle;
+                        } else {
+                            await sql`UPDATE users SET "twitterHandle2" = ${authorHandle} WHERE "walletAddress" = ${walletAddress}`;
+                            userHandle2 = authorHandle;
+                        }
+                        console.log(`Auto-linked Second Account: @${authorHandle} for wallet ${walletAddress}`);
+                    } else {
+                        // Return special error code to trigger frontend popup modal
+                        return NextResponse.json({ 
+                            success: false, 
+                            code: "NEW_HANDLE_DETECTED", 
+                            authorHandle: authorHandle 
+                        }, { status: 400 });
+                    }
                 }
 
                 const tweetText = tweetData.text.toLowerCase();

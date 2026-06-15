@@ -169,15 +169,16 @@ export async function POST(request) {
             `;
         }
 
-        // 4. Calculate new social points (only counting COMPLETED tasks)
+        // 4. Calculate deduction for rejected tasks
         const remainingTasksRes = await sql`
             SELECT COUNT(*) as count 
             FROM social_tasks 
             WHERE "walletAddress" = ${walletAddress} AND "taskType" = 'TWITTER_SHARE' AND status = 'COMPLETED'
         `;
         const validCount = parseInt(remainingTasksRes.rows[0].count) || 0;
-        const newSocialPoints = validCount * 25;
-        const diff = originalSocialPoints - newSocialPoints;
+        const rejectedCount = tasksToDelete.length;
+        const deduction = rejectedCount * 25;
+        const newSocialPoints = Math.max(0, originalSocialPoints - deduction);
 
         // 5. Update user profile
         await sql`
@@ -185,8 +186,8 @@ export async function POST(request) {
             SET 
                 "twitterHandle" = ${cleanedHandle},
                 "twitterHandle2" = ${cleanedHandle2},
-                "socialPoints" = ${newSocialPoints},
-                points = GREATEST(0, points - ${diff}),
+                "socialPoints" = GREATEST(0, "socialPoints" - ${deduction}),
+                points = GREATEST(0, points - ${deduction}),
                 "twitterTaskStatus" = ${validCount > 0}
             WHERE "walletAddress" = ${walletAddress}
         `;

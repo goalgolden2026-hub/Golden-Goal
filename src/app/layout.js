@@ -20,6 +20,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          if (window.location.hostname === 'goldengoalsol.com') {
+            window.location.replace('https://www.goldengoalsol.com' + window.location.pathname + window.location.search);
+          }
+        ` }} />
+      </head>
       <body className={`${inter.className} bg-black text-zinc-50 min-h-screen flex flex-col relative`}>
         <IntroAnimation />
         {/* Web3 Glowing Background Orbs */}

@@ -321,7 +321,13 @@ function MarketsContent() {
                                     </span>
                                 </div>
                             ) : (
-                                <span className={`text-sm font-mono mb-2 block ${isMexicoSA ? 'text-zinc-400 font-medium' : 'text-zinc-500'}`}>{m.timeStr} {m.tz}</span>
+                                <span className={`text-sm font-mono mb-2 block ${
+                                  isMexicoSA 
+                                    ? 'text-yellow-400/80 font-bold' 
+                                    : isVolleyball 
+                                    ? 'text-amber-400/90 font-bold drop-shadow-[0_1px_5px_rgba(245,158,11,0.6)]' 
+                                    : 'text-zinc-300 font-semibold'
+                                }`}>{m.timeStr} {m.tz}</span>
                             )}
                             
                             {/* Predictions Placed Badge */}

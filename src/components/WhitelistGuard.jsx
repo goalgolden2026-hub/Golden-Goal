@@ -53,9 +53,10 @@ export default function WhitelistGuard({ children }) {
   }
 
   const isWhitelisted = isWalletWhitelisted(walletAddress);
+  const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-  // If connected AND whitelisted, grant access
-  if (connected && isWhitelisted) {
+  // If connected AND whitelisted (or running on localhost), grant access
+  if (isLocalhost || (connected && isWhitelisted)) {
     return <>{children}</>;
   }
 

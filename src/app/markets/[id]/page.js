@@ -530,7 +530,13 @@ export default function MatchDetail() {
                           </span>
                       </div>
                   ) : (
-                      <span className={`text-sm font-mono mb-2 block ${market.teamA === 'Mexico' && market.teamB === 'South Africa' ? 'text-amber-400 font-bold' : 'text-zinc-300'}`}>{market.dateStr} • {market.timeStr} {market.tz}</span>
+                      <span className={`text-sm font-mono mb-2 block ${
+                        market.teamA === 'Mexico' && market.teamB === 'South Africa' 
+                          ? 'text-yellow-400 font-bold' 
+                          : isVolleyball 
+                          ? 'text-amber-400 font-bold drop-shadow-[0_1px_5px_rgba(245,158,11,0.6)]' 
+                          : 'text-zinc-300 font-semibold'
+                      }`}>{market.dateStr} • {market.timeStr} {market.tz}</span>
                   )}
                   <div className="grid grid-cols-3 items-center w-full text-center text-3xl md:text-5xl font-extrabold mb-4 relative z-10">
                       {/* Team A */}

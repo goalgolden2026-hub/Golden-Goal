@@ -328,12 +328,12 @@ Group L
             if (parseInt(volleyballCountRes[0].count) === 0) {
                 console.log("Seeding VNL Volleyball matches...");
                 const volleyballMatches = [
-                    { teamA: 'Türkiye', teamB: 'Belgium', date: '2026-06-17 19:30:00+03' },
-                    { teamA: 'Türkiye', teamB: 'France', date: '2026-06-18 19:30:00+03' },
-                    { teamA: 'Türkiye', teamB: 'Germany', date: '2026-06-20 19:30:00+03' },
-                    { teamA: 'Türkiye', teamB: 'China', date: '2026-06-21 19:30:00+03' },
-                    { teamA: 'China', teamB: 'Türkiye', date: '2026-06-24 14:00:00+03' },
-                    { teamA: 'Poland', teamB: 'Türkiye', date: '2026-06-25 21:00:00+03' }
+                    { teamA: 'Turkey', teamB: 'Belgium', date: '2026-06-17 19:30:00+03' },
+                    { teamA: 'Turkey', teamB: 'France', date: '2026-06-18 19:30:00+03' },
+                    { teamA: 'Turkey', teamB: 'Germany', date: '2026-06-20 19:30:00+03' },
+                    { teamA: 'Turkey', teamB: 'China', date: '2026-06-21 19:30:00+03' },
+                    { teamA: 'China', teamB: 'Turkey', date: '2026-06-24 14:00:00+03' },
+                    { teamA: 'Poland', teamB: 'Turkey', date: '2026-06-25 21:00:00+03' }
                 ];
                 for (const match of volleyballMatches) {
                     await sql`

@@ -97,16 +97,23 @@ export default function MatchDetail() {
               xp = Math.max(50, oddsValue * 80);
               break;
             case 'TOTAL_GOALS':
+            case 'TOTAL_POINTS':
               xp = Math.max(120, oddsValue * 100);
               break;
             case 'BTTS':
+            case 'FIFTH_SET':
+            case 'EXTRA_POINTS':
               xp = Math.max(120, oddsValue * 100);
               break;
             case 'FIRST_HALF':
+            case 'FIRST_SET':
               xp = Math.max(120, oddsValue * 100);
               break;
             case 'FIRST_GOAL':
               xp = Math.min(600, Math.max(150, oddsValue * 100));
+              break;
+            case 'CORRECT_SCORE':
+              xp = Math.max(150, oddsValue * 100);
               break;
             default:
               xp = oddsValue * 100;
@@ -477,7 +484,7 @@ export default function MatchDetail() {
               {isLive ? (
                   <div className="flex items-center justify-center gap-2 mb-2">
                       <span className="text-xs font-extrabold tracking-widest text-red-400 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.3)]">
-                          • LIVE {scoreInfo.status === 'HT' ? 'HT' : scoreInfo.status === 'FT' ? 'FT' : `${scoreInfo.elapsed}'`}
+                          • LIVE {market.sport === 'VOLLEYBALL' ? (scoreInfo.matchStatus || 'LIVE') : (scoreInfo.status === 'HT' ? 'HT' : scoreInfo.status === 'FT' ? 'FT' : `${scoreInfo.elapsed}'`)}
                       </span>
                   </div>
               ) : isMatchEnded ? (
@@ -541,7 +548,7 @@ export default function MatchDetail() {
 
                       {/* Ball Icon */}
                       <div className="flex items-center justify-center opacity-30 select-none text-sm md:text-base animate-pulse">
-                          ⚽
+                          {market.sport === 'VOLLEYBALL' ? '🏐' : '⚽'}
                       </div>
 
                       {/* Team B (Away) Goals */}
@@ -567,12 +574,25 @@ export default function MatchDetail() {
 
           {/* Sub-Markets */}
           <div className="flex flex-col gap-2">
-              {renderMarketSection("Match Result", "MAIN", [market.teamA, "Draw", market.teamB])}
-              {renderMarketSection("Total Goals", "TOTAL_GOALS", ["Under 2.5", "Over 2.5"])}
-              {renderMarketSection("Both Teams to Score", "BTTS", ["Yes", "No"])}
-              {renderMarketSection("First Goalscorer", "FIRST_GOAL", [market.teamA, "No Goal", market.teamB])}
-              {renderMarketSection("Double Chance", "DOUBLE_CHANCE", [`${market.teamA} & Draw`, `${market.teamB} & Draw`])}
-              {renderMarketSection("First Half Winner", "FIRST_HALF", [market.teamA, "Draw", market.teamB])}
+              {market.sport === 'VOLLEYBALL' ? (
+                  <>
+                      {renderMarketSection("Match Winner", "MAIN", [market.teamA, market.teamB])}
+                      {renderMarketSection("Correct Score (Sets)", "CORRECT_SCORE", ["3-0", "3-1", "3-2", "2-3", "1-3", "0-3"])}
+                      {renderMarketSection("Total Points", "TOTAL_POINTS", ["Under 180.5", "Over 180.5"])}
+                      {renderMarketSection("Winner of 1st Set", "FIRST_SET", [market.teamA, market.teamB])}
+                      {renderMarketSection("Will there be a 5th Set?", "FIFTH_SET", ["Yes", "No"])}
+                      {renderMarketSection("Extra Points in Any Set?", "EXTRA_POINTS", ["Yes", "No"])}
+                  </>
+              ) : (
+                  <>
+                      {renderMarketSection("Match Result", "MAIN", [market.teamA, "Draw", market.teamB])}
+                      {renderMarketSection("Total Goals", "TOTAL_GOALS", ["Under 2.5", "Over 2.5"])}
+                      {renderMarketSection("Both Teams to Score", "BTTS", ["Yes", "No"])}
+                      {renderMarketSection("First Goalscorer", "FIRST_GOAL", [market.teamA, "No Goal", market.teamB])}
+                      {renderMarketSection("Double Chance", "DOUBLE_CHANCE", [`${market.teamA} & Draw`, `${market.teamB} & Draw`])}
+                      {renderMarketSection("First Half Winner", "FIRST_HALF", [market.teamA, "Draw", market.teamB])}
+                  </>
+              )}
           </div>
 
           {/* Prediction Modal */}

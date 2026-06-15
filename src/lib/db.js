@@ -85,7 +85,8 @@ export async function getDb() {
                     "teamB" TEXT NOT NULL,
                     "matchDate" TIMESTAMP NOT NULL,
                     "pointsReward" INTEGER DEFAULT 100,
-                    status TEXT DEFAULT 'ACTIVE'
+                    status TEXT DEFAULT 'ACTIVE',
+                    sport TEXT DEFAULT 'FOOTBALL'
                 );
             `;
 
@@ -129,6 +130,9 @@ export async function getDb() {
 
             // Migration: Add odds JSONB to markets table
             await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "odds" JSONB;`;
+
+            // Migration: Add sport column to markets table
+            await sql`ALTER TABLE markets ADD COLUMN IF NOT EXISTS "sport" TEXT DEFAULT 'FOOTBALL';`;
 
             // Migration: Add pointsReward to predictions table
             await sql`ALTER TABLE predictions ADD COLUMN IF NOT EXISTS "pointsReward" INTEGER DEFAULT 100;`;
@@ -317,6 +321,27 @@ Group L
                         await sql`INSERT INTO markets ("teamA", "teamB", "matchDate", "pointsReward") VALUES (${teamA}, ${teamB}, ${matchDate}, 100)`;
                     }
                 }
+            }
+
+            // Seed VNL Volleyball matches if none exist
+            const { rows: volleyballCountRes } = await sql`SELECT COUNT(*) as count FROM markets WHERE sport = 'VOLLEYBALL';`;
+            if (parseInt(volleyballCountRes[0].count) === 0) {
+                console.log("Seeding VNL Volleyball matches...");
+                const volleyballMatches = [
+                    { teamA: 'Türkiye', teamB: 'Belgium', date: '2026-06-17 19:30:00+03' },
+                    { teamA: 'Türkiye', teamB: 'France', date: '2026-06-18 19:30:00+03' },
+                    { teamA: 'Türkiye', teamB: 'Germany', date: '2026-06-20 19:30:00+03' },
+                    { teamA: 'Türkiye', teamB: 'China', date: '2026-06-21 19:30:00+03' },
+                    { teamA: 'China', teamB: 'Türkiye', date: '2026-06-24 14:00:00+03' },
+                    { teamA: 'Poland', teamB: 'Türkiye', date: '2026-06-25 21:00:00+03' }
+                ];
+                for (const match of volleyballMatches) {
+                    await sql`
+                        INSERT INTO markets ("teamA", "teamB", "matchDate", "pointsReward", "sport") 
+                        VALUES (${match.teamA}, ${match.teamB}, ${match.date}, 100, 'VOLLEYBALL')
+                    `;
+                }
+                console.log("Volleyball seeding completed successfully.");
             }
             
             isInitialized = true;

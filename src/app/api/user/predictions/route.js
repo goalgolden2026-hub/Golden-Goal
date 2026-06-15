@@ -24,7 +24,7 @@ export async function GET(request) {
         // Fetch Predictions
         const { rows: predictions } = await sql`
             SELECT p.id as "predictionId", p.prediction, p."predictionType", p.status as "predictionStatus", p.timestamp, p."updatedAt", p."pointsReward",
-                   m.id as "marketId", m."teamA", m."teamB", m."matchDate", m.status as "marketStatus"
+                   m.id as "marketId", m."teamA", m."teamB", m."matchDate", m.status as "marketStatus", m.sport
             FROM predictions p
             JOIN markets m ON p."marketId" = m.id
             WHERE p."walletAddress" = ${wallet}

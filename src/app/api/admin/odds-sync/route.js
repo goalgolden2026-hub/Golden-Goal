@@ -19,7 +19,7 @@ function writeLog(message) {
 // Helper to normalize and match team names
 function normalizeName(name) {
     if (!name) return '';
-    return name
+    const normalized = name
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
@@ -28,6 +28,10 @@ function normalizeName(name) {
         .replace(/turkiye/g, "turkey")
         .replace(/turkiya/g, "turkey")
         .replace(/czechia/g, "czechrepublic");
+    if (normalized === 'cotedivoire' || normalized === 'cotedivoir') {
+        return 'ivorycoast';
+    }
+    return normalized;
 }
 
 export async function POST(request) {

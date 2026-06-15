@@ -671,7 +671,7 @@ export default function AdminDashboard() {
               
               {/* Active Markets List */}
               <div className="lg:col-span-2 space-y-4">
-                  <h2 className="text-xl font-bold mb-4">Manage World Cup Matches</h2>
+                  <h2 className="text-xl font-bold mb-4">Manage Matches</h2>
                   {markets.map(m => {
                       let resolvedList = m.resolvedMarkets ? m.resolvedMarkets.split(',').filter(Boolean) : [];
                       if (m.resolvedOutcomes) {
@@ -696,6 +696,9 @@ export default function AdminDashboard() {
                           >
                               <div className="flex-1 text-left">
                                   <div className="flex flex-wrap items-center gap-3 mb-1.5">
+                                      <span className="text-lg" title={m.sport || 'FOOTBALL'}>
+                                          {m.sport === 'VOLLEYBALL' ? '🏐' : '⚽'}
+                                      </span>
                                       <h3 className="text-xl font-bold text-white leading-none">{m.teamA} vs {m.teamB}</h3>
                                       {isFullyResolved ? (
                                           <span className="text-[10px] font-extrabold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.15)] flex items-center gap-1 shrink-0">
@@ -841,12 +844,25 @@ export default function AdminDashboard() {
                           </div>
                       </div>
 
-                      {renderResolveSection("Match Result", "MAIN", [selectedMatch.teamA, "Draw", selectedMatch.teamB])}
-                      {renderResolveSection("Total Goals", "TOTAL_GOALS", ["Under 2.5", "Over 2.5"])}
-                      {renderResolveSection("Both Teams to Score", "BTTS", ["Yes", "No"])}
-                      {renderResolveSection("First Goalscorer", "FIRST_GOAL", [selectedMatch.teamA, "No Goal", selectedMatch.teamB])}
-                      {renderResolveSection("Double Chance", "DOUBLE_CHANCE", [`${selectedMatch.teamA} & Draw`, `${selectedMatch.teamB} & Draw`])}
-                      {renderResolveSection("First Half Winner", "FIRST_HALF", [selectedMatch.teamA, "Draw", selectedMatch.teamB])}
+                      {selectedMatch.sport === 'VOLLEYBALL' ? (
+                          <>
+                              {renderResolveSection("Match Winner", "MAIN", [selectedMatch.teamA, selectedMatch.teamB])}
+                              {renderResolveSection("Correct Score (Sets)", "CORRECT_SCORE", ["3-0", "3-1", "3-2", "2-3", "1-3", "0-3"])}
+                              {renderResolveSection("Total Points", "TOTAL_POINTS", ["Under 180.5", "Over 180.5"])}
+                              {renderResolveSection("Winner of 1st Set", "FIRST_SET", [selectedMatch.teamA, selectedMatch.teamB])}
+                              {renderResolveSection("Will there be a 5th Set?", "FIFTH_SET", ["Yes", "No"])}
+                              {renderResolveSection("Extra Points in Any Set?", "EXTRA_POINTS", ["Yes", "No"])}
+                          </>
+                      ) : (
+                          <>
+                              {renderResolveSection("Match Result", "MAIN", [selectedMatch.teamA, "Draw", selectedMatch.teamB])}
+                              {renderResolveSection("Total Goals", "TOTAL_GOALS", ["Under 2.5", "Over 2.5"])}
+                              {renderResolveSection("Both Teams to Score", "BTTS", ["Yes", "No"])}
+                              {renderResolveSection("First Goalscorer", "FIRST_GOAL", [selectedMatch.teamA, "No Goal", selectedMatch.teamB])}
+                              {renderResolveSection("Double Chance", "DOUBLE_CHANCE", [`${selectedMatch.teamA} & Draw`, `${selectedMatch.teamB} & Draw`])}
+                              {renderResolveSection("First Half Winner", "FIRST_HALF", [selectedMatch.teamA, "Draw", selectedMatch.teamB])}
+                          </>
+                      )}
                   </div>
               </div>
           </div>

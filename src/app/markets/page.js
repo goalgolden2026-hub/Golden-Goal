@@ -202,8 +202,13 @@ function MarketsContent() {
     return () => clearInterval(interval);
   }, []);
 
+  const filteredMarkets = markets.filter(m => {
+      const sport = m.sport ? m.sport.toLowerCase() : 'football';
+      return sport === selectedSport;
+  });
+
   const groupedMarkets = [];
-  markets.filter(m => m.status === 'ACTIVE' && !(m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined)).forEach(m => {
+  filteredMarkets.filter(m => m.status === 'ACTIVE' && !(m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined)).forEach(m => {
       const dateObj = new Date(m.matchDate);
       const dateStr = dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
       let group = groupedMarkets.find(g => g.date === dateStr);
@@ -224,7 +229,7 @@ function MarketsContent() {
       });
   });
 
-  const resolvedMarkets = markets.filter(m => m.status !== 'ACTIVE' || (m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined));
+  const resolvedMarkets = filteredMarkets.filter(m => m.status !== 'ACTIVE' || (m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined));
   
   // Separator: first 3 groups (Live/Active), remaining groups (Upcoming)
   const initialGroups = groupedMarkets.slice(0, 3);
@@ -267,13 +272,13 @@ function MarketsContent() {
                         <div className="w-full text-center relative z-10">
                             {/* Group Tag */}
                             <span className="text-[11px] font-black tracking-[0.2em] text-yellow-400 uppercase block mb-3 select-none">
-                              {getTeamGroup(m.teamA) || 'Tournament Match'}
+                              {m.sport === 'VOLLEYBALL' ? 'Volleyball Nations League' : (getTeamGroup(m.teamA) || 'Tournament Match')}
                             </span>
 
                             {isLive ? (
                                 <div className="flex items-center justify-center gap-2 mb-2">
                                     <span className="text-[10px] font-extrabold tracking-widest text-red-400 bg-red-500/10 border border-red-500/30 px-2.5 py-0.5 rounded-full animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.25)]">
-                                        • LIVE {scoreInfo.status === 'HT' ? 'HT' : scoreInfo.status === 'FT' ? 'FT' : `${scoreInfo.elapsed}'`}
+                                        • LIVE {m.sport === 'VOLLEYBALL' ? (scoreInfo.matchStatus || 'LIVE') : (scoreInfo.status === 'HT' ? 'HT' : `${scoreInfo.elapsed}'`)}
                                     </span>
                                 </div>
                             ) : (m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined) ? (
@@ -352,7 +357,7 @@ function MarketsContent() {
 
                                     {/* Ball Icon */}
                                     <div className="flex items-center justify-center opacity-30 select-none text-[10px] md:text-xs">
-                                        ⚽
+                                        {m.sport === 'VOLLEYBALL' ? '🏐' : '⚽'}
                                     </div>
 
                                     {/* Team B Goals */}
@@ -680,17 +685,22 @@ function MarketsContent() {
           </button>
 
           <button
-            onClick={() => setComingSoonModal({
-              isOpen: true,
-              sport: 'Volleyball',
-              title: '🏐 Volleyball Nations League (VNL)',
-              details: 'Predict the VNL match winners, set scores, and total points. Lock your $GoldenGoal tokens to earn VNL XP boosters and exclusive rewards.'
-            })}
-            className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 bg-transparent border border-transparent hover:border-white/5 hover:bg-zinc-900/40 text-zinc-500 hover:text-zinc-300 cursor-pointer shrink-0 hover:scale-[1.02]"
+            onClick={() => setSelectedSport('volleyball')}
+            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 shrink-0 cursor-pointer ${
+              selectedSport === 'volleyball'
+                ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.15)] animate-amber-pulse hover:scale-[1.02]'
+                : 'bg-transparent border border-transparent hover:border-white/5 hover:bg-zinc-900/40 text-zinc-400 hover:text-zinc-200'
+            }`}
           >
             <span>🏐</span>
             <span>Volleyball</span>
-            <span className="text-[9px] font-mono px-2 py-0.5 rounded-md bg-zinc-900 border border-white/5 text-zinc-500 font-bold ml-1">🔒 Coming Soon</span>
+            <span className="flex items-center gap-1.5 ml-1">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
+              </span>
+              <span className="text-[9px] font-mono font-black text-amber-400 uppercase bg-amber-500/20 px-2 py-0.5 rounded-md">VNL</span>
+            </span>
           </button>
 
           <button

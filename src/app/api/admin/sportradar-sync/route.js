@@ -20,7 +20,7 @@ function writeLog(message) {
 // Helper to normalize and match team names
 function normalizeName(name) {
     if (!name) return '';
-    return name
+    const normalized = name
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
@@ -28,6 +28,10 @@ function normalizeName(name) {
         .replace(/[^a-z0-9]/g, "")
         .replace(/turkiye/g, "turkey")
         .replace(/turkiya/g, "turkey");
+    if (normalized === 'cotedivoire' || normalized === 'cotedivoir') {
+        return 'ivorycoast';
+    }
+    return normalized;
 }
 
 export async function POST(request) {
@@ -42,34 +46,49 @@ export async function POST(request) {
 
         writeLog(`[START] Sync automation triggered for target date: ${date}`);
 
-        // 1. Fetch daily schedule from Sofascore via RapidAPI
-        const sportradarUrl = `https://${SPORT_API_HOST}/api/v1/sport/football/scheduled-events/${date}`;
-        const srResponse = await fetch(sportradarUrl, {
-            headers: {
-                'x-rapidapi-key': RAPIDAPI_KEY,
-                'x-rapidapi-host': SPORT_API_HOST
-            },
-            cache: 'no-store'
-        });
-        if (!srResponse.ok) {
-            writeLog(`[ERROR] Sofascore API schedule request failed: ${srResponse.statusText}`);
-            return NextResponse.json({ success: false, error: `Sofascore API error: ${srResponse.statusText}` }, { status: srResponse.status });
-        }
-        const srData = await srResponse.json();
-        const srEvents = srData.events || [];
-        writeLog(`[FETCH] Successfully fetched Sofascore schedule. Found ${srEvents.length} daily events.`);
-
         const sql = await getDb();
 
-        // 2. Fetch all active/pending markets from our database
+        // 1. Fetch all active/pending markets from our database
         const dbMarketsRes = await sql`
-            SELECT id, "teamA", "teamB", status 
+            SELECT id, "teamA", "teamB", status, sport 
             FROM markets 
             WHERE status = 'ACTIVE' OR "scoreA" IS NULL OR "scoreB" IS NULL
         `;
         const dbMarkets = dbMarketsRes.rows;
         writeLog(`[DB] Found ${dbMarkets.length} active/unresolved markets in database.`);
 
+        // Determine which sports are active
+        const activeSports = Array.from(new Set(dbMarkets.map(m => (m.sport || 'FOOTBALL').toLowerCase())));
+        if (activeSports.length === 0) {
+            activeSports.push('football'); // Fallback
+        }
+
+        let srEvents = [];
+        for (const sport of activeSports) {
+            try {
+                const sportradarUrl = `https://${SPORT_API_HOST}/api/v1/sport/${sport}/scheduled-events/${date}`;
+                const srResponse = await fetch(sportradarUrl, {
+                    headers: {
+                        'x-rapidapi-key': RAPIDAPI_KEY,
+                        'x-rapidapi-host': SPORT_API_HOST
+                    },
+                    cache: 'no-store'
+                });
+                if (srResponse.ok) {
+                    const srData = await srResponse.json();
+                    if (srData.events) {
+                        const eventsWithSport = srData.events.map(ev => ({ ...ev, _sport: sport }));
+                        srEvents = srEvents.concat(eventsWithSport);
+                        writeLog(`[FETCH] Fetched Sofascore schedule for ${sport}. Found ${srData.events.length} events.`);
+                    }
+                } else {
+                    writeLog(`[WARNING] Sofascore API schedule request failed for sport ${sport}: ${srResponse.statusText}`);
+                }
+            } catch (e) {
+                writeLog(`[WARNING] Sofascore API call threw error for sport ${sport}: ${e.message}`);
+            }
+        }
+        
         let processedMatches = 0;
         let resolvedCount = 0;
 
@@ -77,8 +96,10 @@ export async function POST(request) {
         for (const dbMarket of dbMarkets) {
             const dbA = normalizeName(dbMarket.teamA);
             const dbB = normalizeName(dbMarket.teamB);
+            const marketSport = (dbMarket.sport || 'FOOTBALL').toLowerCase();
 
             const matchedEvent = srEvents.find(event => {
+                if (event._sport !== marketSport) return false;
                 const home = normalizeName(event.homeTeam?.name || '');
                 const away = normalizeName(event.awayTeam?.name || '');
                 
@@ -119,67 +140,114 @@ export async function POST(request) {
             // --- 4. Resolve the 6 Prediction Sub-Markets ---
             const outcomes = {};
 
-            // 1. MAIN (Match Result)
-            if (goalsA > goalsB) outcomes['MAIN'] = teamA;
-            else if (goalsB > goalsA) outcomes['MAIN'] = teamB;
-            else outcomes['MAIN'] = 'Draw';
+            if (marketSport === 'volleyball') {
+                // 1. MAIN (Match Winner - no Draw)
+                if (goalsA > goalsB) outcomes['MAIN'] = teamA;
+                else outcomes['MAIN'] = teamB;
 
-            // 2. TOTAL_GOALS (Over/Under 2.5)
-            outcomes['TOTAL_GOALS'] = (goalsA + goalsB >= 3) ? 'Over 2.5' : 'Under 2.5';
+                // 2. CORRECT_SCORE (Sets score: 3-0, 3-1, 3-2, 2-3, 1-3, 0-3)
+                outcomes['CORRECT_SCORE'] = `${goalsA}-${goalsB}`;
 
-            // 3. BTTS (Both Teams to Score)
-            outcomes['BTTS'] = (goalsA > 0 && goalsB > 0) ? 'Yes' : 'No';
+                // 3. TOTAL_POINTS (Total points Over/Under 180.5)
+                let totalPoints = 0;
+                for (let i = 1; i <= 5; i++) {
+                    const hp = parseInt(matchedEvent.homeScore?.[`period${i}`] ?? 0);
+                    const ap = parseInt(matchedEvent.awayScore?.[`period${i}`] ?? 0);
+                    totalPoints += hp + ap;
+                }
+                outcomes['TOTAL_POINTS'] = (totalPoints > 180.5) ? 'Over 180.5' : 'Under 180.5';
 
-            // 4. FIRST_HALF (First Half Winner)
-            const fhHome = parseInt(matchedEvent.homeScore?.period1 ?? 0);
-            const fhAway = parseInt(matchedEvent.awayScore?.period1 ?? 0);
-            const fhGoalsA = isHomeDbA ? fhHome : fhAway;
-            const fhGoalsB = isHomeDbA ? fhAway : fhHome;
-            if (fhGoalsA > fhGoalsB) outcomes['FIRST_HALF'] = teamA;
-            else if (fhGoalsB > fhGoalsA) outcomes['FIRST_HALF'] = teamB;
-            else outcomes['FIRST_HALF'] = 'Draw';
+                // 4. FIRST_SET (Winner of 1st set)
+                const s1Home = parseInt(matchedEvent.homeScore?.period1 ?? 0);
+                const s1Away = parseInt(matchedEvent.awayScore?.period1 ?? 0);
+                const s1ScoreA = isHomeDbA ? s1Home : s1Away;
+                const s1ScoreB = isHomeDbA ? s1Away : s1Home;
+                if (s1ScoreA > s1ScoreB) outcomes['FIRST_SET'] = teamA;
+                else outcomes['FIRST_SET'] = teamB;
 
-            // 5. DOUBLE_CHANCE (Double Chance)
-            if (goalsA === goalsB) {
-                outcomes['DOUBLE_CHANCE'] = 'DRAW';
-            } else if (goalsA > goalsB) {
-                outcomes['DOUBLE_CHANCE'] = `${teamA} & Draw`;
-            } else {
-                outcomes['DOUBLE_CHANCE'] = `${teamB} & Draw`;
-            }
+                // 5. FIFTH_SET (Will there be a 5th set?)
+                const isFifthSet = (goalsA === 3 && goalsB === 2) || (goalsA === 2 && goalsB === 3);
+                outcomes['FIFTH_SET'] = isFifthSet ? 'Yes' : 'No';
 
-            // 6. FIRST_GOAL (First Goalscorer)
-            if (goalsA === 0 && goalsB === 0) {
-                outcomes['FIRST_GOAL'] = 'No Goal';
-            } else if (goalsA > 0 && goalsB === 0) {
-                outcomes['FIRST_GOAL'] = teamA;
-            } else if (goalsB > 0 && goalsA === 0) {
-                outcomes['FIRST_GOAL'] = teamB;
-            } else {
-                // Both teams scored. We query play-by-play to determine first goalscorer.
-                try {
-                    const response = await fetch(`https://${SPORT_API_HOST}/api/v1/event/${matchedEvent.id}/incidents`, {
-                        headers: {
-                            'x-rapidapi-key': RAPIDAPI_KEY,
-                            'x-rapidapi-host': SPORT_API_HOST
-                        }
-                    });
-                    if (response.ok) {
-                        const data = await response.json();
-                        const goals = (data.incidents || [])
-                            .filter(i => i.incidentType === 'goal')
-                            .sort((a, b) => a.time - b.time);
-                        if (goals.length > 0) {
-                            const firstGoalHome = goals[0].isHome;
-                            outcomes['FIRST_GOAL'] = (firstGoalHome === isHomeDbA) ? teamA : teamB;
+                // 6. EXTRA_POINTS (Extra points in any set)
+                let hasExtraPoints = false;
+                for (let i = 1; i <= 5; i++) {
+                    const hp = parseInt(matchedEvent.homeScore?.[`period${i}`] ?? 0);
+                    const ap = parseInt(matchedEvent.awayScore?.[`period${i}`] ?? 0);
+                    if (hp > 0 || ap > 0) {
+                        const maxScore = Math.max(hp, ap);
+                        const target = (i === 5) ? 15 : 25;
+                        if (maxScore > target) {
+                            hasExtraPoints = true;
+                            break;
                         }
                     }
-                } catch (e) {
-                    writeLog(`[WARNING] Failed to query play-by-play timeline for match ${matchedEvent.id}: ${e.message}`);
                 }
-                
-                if (!outcomes['FIRST_GOAL']) {
-                    outcomes['FIRST_GOAL'] = isHomeDbA ? teamA : teamB;
+                outcomes['EXTRA_POINTS'] = hasExtraPoints ? 'Yes' : 'No';
+            } else {
+                // Football (Soccer)
+                // 1. MAIN (Match Result)
+                if (goalsA > goalsB) outcomes['MAIN'] = teamA;
+                else if (goalsB > goalsA) outcomes['MAIN'] = teamB;
+                else outcomes['MAIN'] = 'Draw';
+
+                // 2. TOTAL_GOALS (Over/Under 2.5)
+                outcomes['TOTAL_GOALS'] = (goalsA + goalsB >= 3) ? 'Over 2.5' : 'Under 2.5';
+
+                // 3. BTTS (Both Teams to Score)
+                outcomes['BTTS'] = (goalsA > 0 && goalsB > 0) ? 'Yes' : 'No';
+
+                // 4. FIRST_HALF (First Half Winner)
+                const fhHome = parseInt(matchedEvent.homeScore?.period1 ?? 0);
+                const fhAway = parseInt(matchedEvent.awayScore?.period1 ?? 0);
+                const fhGoalsA = isHomeDbA ? fhHome : fhAway;
+                const fhGoalsB = isHomeDbA ? fhAway : fhHome;
+                if (fhGoalsA > fhGoalsB) outcomes['FIRST_HALF'] = teamA;
+                else if (fhGoalsB > fhGoalsA) outcomes['FIRST_HALF'] = teamB;
+                else outcomes['FIRST_HALF'] = 'Draw';
+
+                // 5. DOUBLE_CHANCE (Double Chance)
+                if (goalsA === goalsB) {
+                    outcomes['DOUBLE_CHANCE'] = 'DRAW';
+                } else if (goalsA > goalsB) {
+                    outcomes['DOUBLE_CHANCE'] = `${teamA} & Draw`;
+                } else {
+                    outcomes['DOUBLE_CHANCE'] = `${teamB} & Draw`;
+                }
+
+                // 6. FIRST_GOAL (First Goalscorer)
+                if (goalsA === 0 && goalsB === 0) {
+                    outcomes['FIRST_GOAL'] = 'No Goal';
+                } else if (goalsA > 0 && goalsB === 0) {
+                    outcomes['FIRST_GOAL'] = teamA;
+                } else if (goalsB > 0 && goalsA === 0) {
+                    outcomes['FIRST_GOAL'] = teamB;
+                } else {
+                    // Both teams scored. We query play-by-play to determine first goalscorer.
+                    try {
+                        const response = await fetch(`https://${SPORT_API_HOST}/api/v1/event/${matchedEvent.id}/incidents`, {
+                            headers: {
+                                'x-rapidapi-key': RAPIDAPI_KEY,
+                                'x-rapidapi-host': SPORT_API_HOST
+                            }
+                        });
+                        if (response.ok) {
+                            const data = await response.json();
+                            const goals = (data.incidents || [])
+                                .filter(i => i.incidentType === 'goal')
+                                .sort((a, b) => a.time - b.time);
+                            if (goals.length > 0) {
+                                const firstGoalHome = goals[0].isHome;
+                                outcomes['FIRST_GOAL'] = (firstGoalHome === isHomeDbA) ? teamA : teamB;
+                            }
+                        }
+                    } catch (e) {
+                        writeLog(`[WARNING] Failed to query play-by-play timeline for match ${matchedEvent.id}: ${e.message}`);
+                    }
+                    
+                    if (!outcomes['FIRST_GOAL']) {
+                        outcomes['FIRST_GOAL'] = isHomeDbA ? teamA : teamB;
+                    }
                 }
             }
 

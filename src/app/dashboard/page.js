@@ -15,6 +15,16 @@ const formatPredictionType = (type) => {
             return 'Both Teams to Score';
         case 'TOTAL_GOALS':
             return 'Total Goals';
+        case 'TOTAL_POINTS':
+            return 'Total Points';
+        case 'CORRECT_SCORE':
+            return 'Correct Score (Sets)';
+        case 'FIRST_SET':
+            return 'Winner of 1st Set';
+        case 'FIFTH_SET':
+            return 'Will there be a 5th Set?';
+        case 'EXTRA_POINTS':
+            return 'Extra Points in Any Set?';
         case 'DOUBLE_CHANCE':
             return 'Double Chance';
         case 'FIRST_GOAL':
@@ -386,15 +396,19 @@ export default function Dashboard() {
       const isSettled = pred.predictionStatus === 'WON' || pred.predictionStatus === 'LOST';
       const isWin = pred.predictionStatus === 'WON';
       
+      const isVolleyball = pred.sport && pred.sport.toLowerCase() === 'volleyball';
+      const ballEmoji = isVolleyball ? "🏐" : "⚽️";
+      const tournamentName = isVolleyball ? "VNL matches" : "World Cup matches";
+      
       let tweetText = "";
       if (isSettled) {
           if (isWin) {
-              tweetText = `🏆 I predicted ${hashtagA} vs ${hashtagB} correctly and won +${pred.pointsReward || 100} PTS on @goldengoalsol! ⚽️\n\nCheck out my ticket! 👇\n\n#GoldenGoal #Solana`;
+              tweetText = `🏆 I predicted ${hashtagA} vs ${hashtagB} correctly and won +${pred.pointsReward || 100} PTS on @goldengoalsol! ${ballEmoji}\n\nCheck out my ticket! 👇\n\n#GoldenGoal #Solana`;
           } else {
-              tweetText = `My forecast for ${hashtagA} vs ${hashtagB} on @goldengoalsol! ⚽️\n\nWe analyze and go again! Join the prediction economy! 🏆\n\n#GoldenGoal #Solana`;
+              tweetText = `My forecast for ${hashtagA} vs ${hashtagB} on @goldengoalsol! ${ballEmoji}\n\nWe analyze and go again! Join the prediction economy! 🏆\n\n#GoldenGoal #Solana`;
           }
       } else {
-          tweetText = `I just placed a prediction on ${hashtagA} vs ${hashtagB} at @goldengoalsol! ⚽️\n\nPredict World Cup matches for free! 🏆\n\n#GoldenGoal #Solana`;
+          tweetText = `I just placed a prediction on ${hashtagA} vs ${hashtagB} at @goldengoalsol! ${ballEmoji}\n\nPredict ${tournamentName} for free! 🏆\n\n#GoldenGoal #Solana`;
       }
       
       const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent('https://goldengoalsol.com')}`;
@@ -492,7 +506,26 @@ export default function Dashboard() {
   };
 
   const getOptionsForPredictionType = (pred) => {
-      const { predictionType, teamA, teamB } = pred;
+      const { predictionType, teamA, teamB, sport } = pred;
+      const isVolleyball = sport && sport.toLowerCase() === 'volleyball';
+      
+      if (isVolleyball) {
+          switch (predictionType) {
+              case 'MAIN':
+              case 'FIRST_SET':
+                  return [teamA, teamB];
+              case 'CORRECT_SCORE':
+                  return ["3-0", "3-1", "3-2", "2-3", "1-3", "0-3"];
+              case 'TOTAL_POINTS':
+                  return ["Under 180.5", "Over 180.5"];
+              case 'FIFTH_SET':
+              case 'EXTRA_POINTS':
+                  return ["Yes", "No"];
+              default:
+                  return [teamA, teamB];
+          }
+      }
+
       switch (predictionType) {
           case 'TOTAL_GOALS': return ["Under 2.5", "Over 2.5"];
           case 'BTTS': return ["Yes", "No"];

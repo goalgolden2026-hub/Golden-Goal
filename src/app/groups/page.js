@@ -36,6 +36,73 @@ export default function GroupStage() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedGroupFilter, setSelectedGroupFilter] = useState('ALL');
+  const [selectedSport, setSelectedSport] = useState('football');
+
+  const calculateVNLStandings = () => {
+    const volleyballMatches = matches.filter(m => m.sport === 'VOLLEYBALL');
+    const teamsSet = new Set();
+    volleyballMatches.forEach(m => {
+      if (m.teamA) teamsSet.add(m.teamA);
+      if (m.teamB) teamsSet.add(m.teamB);
+    });
+
+    const stats = {};
+    teamsSet.forEach(team => {
+      stats[team] = { team, played: 0, won: 0, lost: 0, setsWon: 0, setsLost: 0, setDiff: 0, pts: 0 };
+    });
+
+    volleyballMatches.forEach(m => {
+      const isConcluded = m.scoreA !== null && m.scoreB !== null && m.scoreA !== undefined && m.scoreB !== undefined;
+      if (!isConcluded) return;
+
+      const teamA = m.teamA;
+      const teamB = m.teamB;
+
+      if (!stats[teamA] || !stats[teamB]) return;
+
+      stats[teamA].played += 1;
+      stats[teamB].played += 1;
+      stats[teamA].setsWon += m.scoreA;
+      stats[teamA].setsLost += m.scoreB;
+      stats[teamB].setsWon += m.scoreB;
+      stats[teamB].setsLost += m.scoreA;
+
+      const scoreA = Number(m.scoreA);
+      const scoreB = Number(m.scoreB);
+
+      if (scoreA === 3) {
+        stats[teamA].won += 1;
+        stats[teamB].lost += 1;
+        if (scoreB === 2) {
+          stats[teamA].pts += 2;
+          stats[teamB].pts += 1;
+        } else {
+          stats[teamA].pts += 3;
+          stats[teamB].pts += 0;
+        }
+      } else if (scoreB === 3) {
+        stats[teamB].won += 1;
+        stats[teamA].lost += 1;
+        if (scoreA === 2) {
+          stats[teamB].pts += 2;
+          stats[teamA].pts += 1;
+        } else {
+          stats[teamB].pts += 3;
+          stats[teamA].pts += 0;
+        }
+      }
+
+      stats[teamA].setDiff = stats[teamA].setsWon - stats[teamA].setsLost;
+      stats[teamB].setDiff = stats[teamB].setsWon - stats[teamB].setsLost;
+    });
+
+    return Object.values(stats).sort((a, b) => {
+      if (b.won !== a.won) return b.won - a.won;
+      if (b.pts !== a.pts) return b.pts - a.pts;
+      if (b.setDiff !== a.setDiff) return b.setDiff - a.setDiff;
+      return a.team.localeCompare(b.team);
+    });
+  };
 
   useEffect(() => {
     fetch('/api/markets')
@@ -148,77 +215,184 @@ export default function GroupStage() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pb-24 relative z-10">
-        {/* Group Filter Navigation */}
-        <div className="flex items-center justify-start sm:justify-center gap-1.5 md:gap-2 mb-16 max-w-4xl mx-auto px-4 overflow-x-auto no-scrollbar scroll-smooth whitespace-nowrap select-none">
-          {['ALL', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'].map((letter) => {
-            const isActive = selectedGroupFilter === letter;
-            return (
-              <button
-                key={letter}
-                onClick={() => setSelectedGroupFilter(letter)}
-                className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-black tracking-wider transition-all duration-300 border shrink-0 ${
-                  isActive
-                    ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-zinc-950 border-yellow-400 shadow-[0_0_15px_rgba(245,158,11,0.25)] scale-105'
-                    : 'bg-zinc-900/40 backdrop-blur-md border-white/5 text-zinc-400 hover:text-white hover:border-zinc-700/60'
-                }`}
-              >
-                {letter}
-              </button>
-            );
-          })}
+      <div className="max-w-7xl mx-auto px-4 md:px-8 pb-24 relative z-10 flex flex-col items-center">
+        {/* Sports Tab Selector */}
+        <div className="mb-12 p-1.5 bg-zinc-950/60 backdrop-blur-xl border border-white/5 rounded-2xl flex gap-2 w-max max-w-full overflow-x-auto select-none scrollbar-none shrink-0 shadow-[0_4px_25px_rgba(0,0,0,0.6)]">
+          <button
+            onClick={() => setSelectedSport('football')}
+            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 shrink-0 cursor-pointer ${
+              selectedSport === 'football'
+                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:scale-[1.02]'
+                : 'bg-transparent border border-transparent hover:border-white/5 hover:bg-zinc-900/40 text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            <span>⚽</span>
+            <span>Football</span>
+          </button>
+
+          <button
+            onClick={() => setSelectedSport('volleyball')}
+            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-300 shrink-0 cursor-pointer ${
+              selectedSport === 'volleyball'
+                ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:scale-[1.02]'
+                : 'bg-transparent border border-transparent hover:border-white/5 hover:bg-zinc-900/40 text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            <span>🏐</span>
+            <span>Volleyball</span>
+          </button>
         </div>
 
-        {/* 12-Group Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {Object.keys(GROUPS)
-            .filter((groupName) => {
-              if (selectedGroupFilter === 'ALL') return true;
-              return groupName === `Group ${selectedGroupFilter}`;
-            })
-            .map((groupName) => {
-              const standings = calculateStandings(groupName);
-              const groupId = groupName.split(' ')[1];
-              return (
-                <div
-                  key={groupName}
-                  onClick={() => router.push(`/groups/${groupId}`)}
-                  className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/80 hover:border-yellow-500/40 rounded-3xl p-6 transition-all duration-300 shadow-xl cursor-pointer hover:-translate-y-1 select-none flex flex-col justify-between group relative overflow-hidden"
-                >
-                  {/* Visual Glow Bridge on Hover */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+        {selectedSport === 'volleyball' ? (
+          /* VNL Standings Table */
+          <div className="w-full max-w-4xl bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 hover:border-amber-500/20 transition-all duration-300 shadow-2xl relative overflow-hidden select-none text-left">
+             <div className="absolute -top-12 -right-12 w-36 h-36 bg-amber-500/5 rounded-full blur-[40px] pointer-events-none"></div>
+             
+             <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
+               <h2 className="text-2xl font-black text-white flex items-center gap-3">
+                 <span>🏆</span> VNL Standings
+               </h2>
+               <span className="text-[10px] font-black tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full uppercase">
+                 Preliminary Round
+               </span>
+             </div>
 
-                  <div>
-                    {/* Group Title */}
-                    <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-lg font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-500">
-                        {groupName}
-                      </h3>
-                      <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-500 group-hover:text-yellow-400 transition-colors">
-                        View Details →
-                      </span>
-                    </div>
+             <div className="overflow-x-auto">
+               <table className="w-full text-left text-xs font-semibold">
+                 <thead>
+                   <tr className="border-b border-zinc-800 text-zinc-500 uppercase tracking-widest text-[9px] py-2">
+                     <th className="pb-3 px-1 text-center w-8">#</th>
+                     <th className="pb-3 px-2">Team</th>
+                     <th className="pb-3 px-2 text-center w-12">Played</th>
+                     <th className="pb-3 px-2 text-center w-10">Won</th>
+                     <th className="pb-3 px-2 text-center w-10">Lost</th>
+                     <th className="pb-3 px-2 text-center w-12">Sets Won</th>
+                     <th className="pb-3 px-2 text-center w-12">Sets Lost</th>
+                     <th className="pb-3 px-2 text-center w-12">Set Diff</th>
+                     <th className="pb-3 px-3 text-center w-16 text-amber-400">PTS</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   {calculateVNLStandings().map((stat, idx) => {
+                     const isQualifying = idx < 8;
+                     return (
+                       <tr key={idx} className="border-b border-zinc-800/50 hover:bg-white/[0.01] transition-colors">
+                         <td className="py-4 px-1 text-center font-bold text-zinc-400">
+                           <span className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] ${
+                             isQualifying ? 'bg-amber-500/15 text-amber-400 border border-amber-500/20' : 'bg-zinc-800 text-zinc-500'
+                           }`}>
+                             {idx + 1}
+                           </span>
+                         </td>
+                         <td className="py-4 px-2">
+                           <div className="flex items-center gap-2 min-w-0">
+                             <span className="text-xl shrink-0">{TEAM_FLAGS[stat.team] || '🏳️'}</span>
+                             <span className="text-white font-bold truncate">{stat.team}</span>
+                           </div>
+                         </td>
+                         <td className="py-4 px-2 text-center text-zinc-300 font-bold">{stat.played}</td>
+                         <td className="py-4 px-2 text-center text-emerald-400">{stat.won}</td>
+                         <td className="py-4 px-2 text-center text-rose-400">{stat.lost}</td>
+                         <td className="py-4 px-2 text-center text-zinc-400">{stat.setsWon}</td>
+                         <td className="py-4 px-2 text-center text-zinc-400">{stat.setsLost}</td>
+                         <td className={`py-4 px-2 text-center font-mono font-bold ${stat.setDiff > 0 ? 'text-emerald-400' : stat.setDiff < 0 ? 'text-rose-400' : 'text-zinc-500'}`}>
+                           {stat.setDiff > 0 ? `+${stat.setDiff}` : stat.setDiff}
+                         </td>
+                         <td className="py-4 px-3 text-center text-amber-400 font-black text-sm">{stat.pts}</td>
+                       </tr>
+                     );
+                   })}
+                   {calculateVNLStandings().length === 0 && (
+                     <tr>
+                       <td colSpan="9" className="text-center py-12 text-zinc-500">
+                         No Volleyball matches found in database.
+                       </td>
+                     </tr>
+                   )}
+                 </tbody>
+               </table>
+             </div>
 
-                    {/* Team List with Flags & Points */}
-                    <div className="flex flex-col gap-3">
-                      {standings.map((stat, idx) => (
-                        <div key={idx} className="flex justify-between items-center py-1 border-b border-white/5 last:border-b-0">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className="text-xl shrink-0">{TEAM_FLAGS[stat.team] || '🏳️'}</span>
-                            <span className="text-zinc-200 text-xs font-semibold truncate">{stat.team}</span>
-                          </div>
-                          <div className="flex items-center gap-3 shrink-0">
-                            <span className="text-[10px] text-zinc-500 font-bold">P{stat.played}</span>
-                            <span className="text-xs text-yellow-400 font-extrabold min-w-[14px] text-right">{stat.pts} pts</span>
-                          </div>
+             <div className="flex items-center gap-2.5 mt-8 text-[9px] text-zinc-400 font-black uppercase tracking-wider bg-zinc-950/40 border border-zinc-800/80 p-4 rounded-2xl">
+               <span className="w-2.5 h-2.5 rounded-full bg-amber-500/20 border border-amber-500/30 animate-pulse"></span>
+               <span>Top 8 teams advance to the VNL Finals (Knockout Stage)</span>
+             </div>
+          </div>
+        ) : (
+          /* Original Football View */
+          <div className="w-full">
+            {/* Group Filter Navigation */}
+            <div className="flex items-center justify-start sm:justify-center gap-1.5 md:gap-2 mb-16 max-w-4xl mx-auto px-4 overflow-x-auto no-scrollbar scroll-smooth whitespace-nowrap select-none">
+              {['ALL', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'].map((letter) => {
+                const isActive = selectedGroupFilter === letter;
+                return (
+                  <button
+                    key={letter}
+                    onClick={() => setSelectedGroupFilter(letter)}
+                    className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-black tracking-wider transition-all duration-300 border shrink-0 ${
+                      isActive
+                        ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-zinc-950 border-yellow-400 shadow-[0_0_15px_rgba(245,158,11,0.25)] scale-105'
+                        : 'bg-zinc-900/40 backdrop-blur-md border-white/5 text-zinc-400 hover:text-white hover:border-zinc-700/60'
+                    }`}
+                  >
+                    {letter}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* 12-Group Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {Object.keys(GROUPS)
+                .filter((groupName) => {
+                  if (selectedGroupFilter === 'ALL') return true;
+                  return groupName === `Group ${selectedGroupFilter}`;
+                })
+                .map((groupName) => {
+                  const standings = calculateStandings(groupName);
+                  const groupId = groupName.split(' ')[1];
+                  return (
+                    <div
+                      key={groupName}
+                      onClick={() => router.push(`/groups/${groupId}`)}
+                      className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/80 hover:border-yellow-500/40 rounded-3xl p-6 transition-all duration-300 shadow-xl cursor-pointer hover:-translate-y-1 select-none flex flex-col justify-between group relative overflow-hidden"
+                    >
+                      {/* Visual Glow Bridge on Hover */}
+                      <div className="absolute inset-0 bg-gradient-to-b from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+
+                      <div>
+                        {/* Group Title */}
+                        <div className="flex justify-between items-center mb-6">
+                          <h3 className="text-lg font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-500">
+                            {groupName}
+                          </h3>
+                          <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-500 group-hover:text-yellow-400 transition-colors">
+                            View Details →
+                          </span>
                         </div>
-                      ))}
+
+                        {/* Team List with Flags & Points */}
+                        <div className="flex flex-col gap-3">
+                          {standings.map((stat, idx) => (
+                            <div key={idx} className="flex justify-between items-center py-1 border-b border-white/5 last:border-b-0">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span className="text-xl shrink-0">{TEAM_FLAGS[stat.team] || '🏳️'}</span>
+                                <span className="text-zinc-200 text-xs font-semibold truncate">{stat.team}</span>
+                              </div>
+                              <div className="flex items-center gap-3 shrink-0">
+                                <span className="text-[10px] text-zinc-500 font-bold">P{stat.played}</span>
+                                <span className="text-xs text-yellow-400 font-extrabold min-w-[14px] text-right">{stat.pts} pts</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              );
-            })}
-        </div>
+                  );
+                })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

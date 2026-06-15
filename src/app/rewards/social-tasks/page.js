@@ -9,6 +9,13 @@ const WalletMultiButtonDynamic = dynamic(
     { ssr: false }
 );
 
+const getApiUrl = (path) => {
+    const apiBase = typeof window !== 'undefined' && window.location.hostname === 'goldengoalsol.com'
+        ? 'https://www.goldengoalsol.com'
+        : '';
+    return `${apiBase}${path}`;
+};
+
 export default function SocialTasksPage() {
     const { publicKey, connected } = useWallet();
     
@@ -56,7 +63,7 @@ export default function SocialTasksPage() {
     const fetchProfile = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`/api/user/profile?walletAddress=${publicKey.toBase58()}`);
+            const res = await fetch(getApiUrl(`/api/user/profile?walletAddress=${publicKey.toBase58()}`));
             const data = await res.json();
             if (data.success) {
                 setProfile(data.profile);
@@ -65,14 +72,14 @@ export default function SocialTasksPage() {
             }
             
             // Also fetch social leaderboard
-            const lbRes = await fetch('/api/leaderboard/social');
+            const lbRes = await fetch(getApiUrl('/api/leaderboard/social'));
             const lbData = await lbRes.json();
             if (lbData.success) {
                 setSocialLeaderboard(lbData.leaderboard);
             }
 
             // Fetch raffle data
-            const rfRes = await fetch('/api/social-tasks/raffle');
+            const rfRes = await fetch(getApiUrl('/api/social-tasks/raffle'));
             const rfData = await rfRes.json();
             if (rfData.success) {
                 setRaffleData(rfData);
@@ -88,7 +95,7 @@ export default function SocialTasksPage() {
         setSubmittingTweet(true);
         setTweetMessage('');
         try {
-            const res = await fetch('/api/user/twitter', {
+            const res = await fetch(getApiUrl('/api/user/twitter'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -128,7 +135,7 @@ export default function SocialTasksPage() {
         setLinkingHandle(true);
         setLinkMessage('');
         try {
-            const res = await fetch('/api/user/twitter/link', {
+            const res = await fetch(getApiUrl('/api/user/twitter/link'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 

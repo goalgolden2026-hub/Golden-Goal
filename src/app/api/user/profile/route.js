@@ -112,6 +112,7 @@ export async function GET(request) {
                 referralPoints: user.referralPoints,
                 socialPoints: user.socialPoints || 0,
                 twitterTaskStatus: user.twitterTaskStatus || false,
+                twitterHandle: user.twitterHandle || null,
                 totalInvited,
                 predictionsToday: displayPredictionsToday,
                 maxPredictions: maxPredictions

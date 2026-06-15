@@ -127,10 +127,12 @@ export async function GET(request) {
         // Fetch user's current points and socialPoints
         let points = 0;
         let socialPoints = 0;
-        const userRes = await sql`SELECT points, "socialPoints" FROM users WHERE "walletAddress" = ${walletAddress}`;
+        let twitterHandle = null;
+        const userRes = await sql`SELECT points, "socialPoints", "twitterHandle" FROM users WHERE "walletAddress" = ${walletAddress}`;
         if (userRes.rowCount > 0) {
             points = parseInt(userRes.rows[0].points || 0);
             socialPoints = parseInt(userRes.rows[0].socialPoints || 0);
+            twitterHandle = userRes.rows[0].twitterHandle || null;
         }
 
         return NextResponse.json({ 
@@ -142,6 +144,7 @@ export async function GET(request) {
             activeTier: status.activeTier,
             points: points,
             socialPoints: socialPoints,
+            twitterHandle: twitterHandle,
             freeBoxesOpenedToday: status.freeBoxesOpenedToday,
             isEventParticipant: status.isEventParticipant,
             userPosition: status.userPosition,
@@ -212,13 +215,19 @@ export async function POST(request) {
             // Fetch user's current points and socialPoints (reload to get up-to-date values after daily reset)
             let points = 0;
             let socialPoints = 0;
-            const pointsRes = await sql`SELECT points, "socialPoints" FROM users WHERE "walletAddress" = ${walletAddress}`;
+            let twitterHandle = null;
+            const pointsRes = await sql`SELECT points, "socialPoints", "twitterHandle" FROM users WHERE "walletAddress" = ${walletAddress}`;
             if (pointsRes.rowCount > 0) {
                 points = parseInt(pointsRes.rows[0].points || 0);
                 socialPoints = parseInt(pointsRes.rows[0].socialPoints || 0);
+                twitterHandle = pointsRes.rows[0].twitterHandle || null;
             }
 
             if (paymentMethod === 'SP') {
+                if (!twitterHandle) {
+                    return NextResponse.json({ success: false, error: "Please link your Twitter (X) account first to open the Rewards Box using Social Points." }, { status: 400 });
+                }
+
                 const spCost = 100; // Flat price of 100 SP
                 if (socialPoints < spCost) {
                     return NextResponse.json({ success: false, error: `Insufficient Social Points. ${spCost} SP points are required to open the Rewards Box.` }, { status: 400 });

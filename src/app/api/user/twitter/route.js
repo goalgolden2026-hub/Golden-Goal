@@ -10,6 +10,15 @@ export async function POST(request) {
             return NextResponse.json({ success: false, error: "Missing walletAddress or tweetUrl" }, { status: 400 });
         }
 
+        const sql = await getDb();
+
+        // 0. Check if user has linked a Twitter handle
+        const userCheck = await sql`SELECT "twitterHandle" FROM users WHERE "walletAddress" = ${walletAddress}`;
+        if (userCheck.rowCount === 0 || !userCheck.rows[0].twitterHandle) {
+            return NextResponse.json({ success: false, error: "Please link your Twitter (X) account first before submitting tweets." }, { status: 400 });
+        }
+        const userHandle = userCheck.rows[0].twitterHandle.toLowerCase();
+
         // Basic Regex to check if it's a valid x.com or twitter.com status URL
         const twitterRegex = /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/status\/[0-9]+(\?.*)?$/;
         
@@ -50,6 +59,15 @@ export async function POST(request) {
                     return NextResponse.json({ success: false, error: "Tweet details could not be retrieved from X. Please verify the link is public." }, { status: 400 });
                 }
 
+                // Verify screen name/authorship
+                const authorHandle = tweetData?.author?.screen_name?.toLowerCase();
+                if (!authorHandle || authorHandle !== userHandle) {
+                    return NextResponse.json({ 
+                        success: false, 
+                        error: `This X post does not belong to your linked X account. Your linked X handle is @${userCheck.rows[0].twitterHandle}. Please submit an X post link shared by this account.` 
+                    }, { status: 400 });
+                }
+
                 const tweetText = tweetData.text.toLowerCase();
                 
                 // Programmatic verification: Check if it contains '#goldengoal' or '$goldengoal'
@@ -71,8 +89,6 @@ export async function POST(request) {
             console.error("RapidAPI fetch error:", apiErr);
             return NextResponse.json({ success: false, error: "Failed to connect to X verification service." }, { status: 500 });
         }
-
-        const sql = await getDb();
 
         // 1. Check if the URL has already been submitted by ANYONE (Spam Protection)
         const urlCheckRes = await sql`SELECT id FROM social_tasks WHERE url = ${tweetUrl}`;

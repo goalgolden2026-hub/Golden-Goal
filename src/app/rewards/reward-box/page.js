@@ -122,6 +122,12 @@ export default function RewardBoxPage() {
     const [reward, setReward] = useState(null);
     const [paymentMethod, setPaymentMethod] = useState('XP'); // 'XP' or 'SP'
 
+    // X Handle Link Modal State
+    const [showLinkModal, setShowLinkModal] = useState(false);
+    const [modalXHandle, setModalXHandle] = useState('');
+    const [modalLinking, setModalLinking] = useState(false);
+    const [modalError, setModalError] = useState('');
+
     useEffect(() => {
         if (connected && publicKey) {
             checkStatus();
@@ -178,6 +184,14 @@ export default function RewardBoxPage() {
     const handleSpin = async () => {
         if (!status || isSpinning) return;
         
+        // Block SP open if user has not linked Twitter handle
+        if (paymentMethod === 'SP' && !status.isEligibleForFreeBox && !status.twitterHandle) {
+            setModalXHandle('');
+            setModalError('');
+            setShowLinkModal(true);
+            return;
+        }
+
         setIsSpinning(true);
         setReward(null);
 
@@ -197,6 +211,87 @@ export default function RewardBoxPage() {
                     checkStatus(); // Refresh eligibility
                 }, 2500);
                 
+            } else {
+                setModalConfig({
+                    isOpen: true,
+                    title: "⚠️ Open Error",
+                    message: data.error,
+                    type: "danger",
+                    confirmText: "Close",
+                    onConfirm: null
+                });
+                setIsSpinning(false);
+            }
+        } catch (error) {
+            setModalConfig({
+                isOpen: true,
+                title: "⚠️ Network Error",
+                message: "Failed to connect to reward-box server.",
+                type: "danger",
+                confirmText: "Close",
+                onConfirm: null
+            });
+            setIsSpinning(false);
+        }
+    };
+
+    const handleModalLinkSubmit = async () => {
+        if (!modalXHandle) return;
+        setModalLinking(true);
+        setModalError('');
+        try {
+            const res = await fetch('/api/user/twitter/link', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ walletAddress: publicKey.toBase58(), twitterHandle: modalXHandle })
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                setShowLinkModal(false);
+                await checkStatus(); // refresh status (will return points and twitterHandle)
+
+                // If new socialPoints are sufficient, spin directly
+                if (data.newSocialPoints >= 100) {
+                    setTimeout(() => {
+                        handleSpinDirect();
+                    }, 500);
+                } else {
+                    setModalConfig({
+                        isOpen: true,
+                        title: "⚠️ Points Adjusted",
+                        message: `After verifying your X account, your Social Points were adjusted to ${data.newSocialPoints} SP. You need at least 100 SP to open the Rewards Box.`,
+                        type: "warning",
+                        confirmText: "Close",
+                        onConfirm: null
+                    });
+                }
+            } else {
+                setModalError(data.error);
+            }
+        } catch (error) {
+            setModalError('Server error linking account.');
+        }
+        setModalLinking(false);
+    };
+
+    const handleSpinDirect = async () => {
+        setIsSpinning(true);
+        setReward(null);
+        try {
+            const res = await fetch('/api/reward-box', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ walletAddress: publicKey.toBase58(), paymentMethod: 'SP' })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                setTimeout(() => {
+                    setReward(data.reward);
+                    setIsSpinning(false);
+                    checkStatus();
+                }, 2500);
             } else {
                 setModalConfig({
                     isOpen: true,
@@ -576,6 +671,56 @@ export default function RewardBoxPage() {
                 confirmText={modalConfig.confirmText}
                 cancelText={modalConfig.cancelText}
             />
+
+            {/* Link X Account Modal */}
+            {showLinkModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 max-w-md w-full relative overflow-hidden shadow-2xl shadow-blue-500/10">
+                        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-blue-500/5 to-transparent pointer-events-none"></div>
+                        
+                        <h2 className="text-2xl font-black text-white mb-2 text-center flex items-center justify-center gap-2">
+                            <span>🐦</span> Link X (Twitter) Account
+                        </h2>
+                        
+                        <p className="text-sm text-zinc-400 text-center mb-6 leading-relaxed">
+                            You must link your Twitter (X) handle to your wallet first. Your history will be verified, and any invalid tasks will be cleaned up.
+                        </p>
+                        
+                        <div className="space-y-4">
+                            <input 
+                                type="text" 
+                                placeholder="Enter X username (e.g. goldengoalsol)"
+                                value={modalXHandle}
+                                onChange={(e) => setModalXHandle(e.target.value)}
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3.5 text-zinc-300 text-sm focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/40 transition-all placeholder-zinc-600"
+                            />
+                            
+                            {modalError && (
+                                <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold rounded-xl text-center">
+                                    {modalError}
+                                </div>
+                            )}
+
+                            <div className="flex gap-3 mt-6">
+                                <button 
+                                    onClick={() => setShowLinkModal(false)}
+                                    disabled={modalLinking}
+                                    className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-3.5 rounded-xl transition-colors text-sm"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    onClick={handleModalLinkSubmit}
+                                    disabled={modalLinking || !modalXHandle}
+                                    className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-[0_4px_15px_rgba(59,130,246,0.3)] transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {modalLinking ? 'Verifying...' : 'Link & Open'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
             </div>
         </div>
     );

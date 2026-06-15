@@ -25,6 +25,11 @@ export default function SocialTasksPage() {
     const [socialLeaderboard, setSocialLeaderboard] = useState([]);
     const [raffleData, setRaffleData] = useState(null);
 
+    // X Handle Link State
+    const [xHandle, setXHandle] = useState('');
+    const [linkingHandle, setLinkingHandle] = useState(false);
+    const [linkMessage, setLinkMessage] = useState('');
+
     useEffect(() => {
         if (connected && publicKey) {
             fetchProfile();
@@ -95,6 +100,31 @@ export default function SocialTasksPage() {
             setTweetMessage('❌ Server error.');
         }
         setSubmittingTweet(false);
+    };
+
+    const handleLinkTwitter = async () => {
+        if (!xHandle) return;
+        setLinkingHandle(true);
+        setLinkMessage('');
+        try {
+            const res = await fetch('/api/user/twitter/link', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ walletAddress: publicKey.toBase58(), twitterHandle: xHandle })
+            });
+            const data = await res.json();
+            if (data.success) {
+                setLinkMessage('🎉 Account linked successfully! History cleaned.');
+                setTimeout(() => {
+                    fetchProfile();
+                }, 1500);
+            } else {
+                setLinkMessage('❌ ' + data.error);
+            }
+        } catch (error) {
+            setLinkMessage('❌ Server error.');
+        }
+        setLinkingHandle(false);
     };
 
     if (!connected) {
@@ -279,44 +309,90 @@ export default function SocialTasksPage() {
                         </div>
                         
                         <div>
-                            {cooldown > 0 ? (
-                                <div className="bg-green-500/10 border border-green-500/20 text-green-400 p-6 rounded-2xl text-center font-bold flex flex-col items-center justify-center gap-2 animate-pulse">
-                                    <span className="text-3xl">✅</span>
-                                    <span className="text-lg">Task Verification Submitted!</span>
-                                    <span className="text-xs font-normal text-green-400/80">Points updated successfully! Cooldown active for {cooldown} seconds.</span>
-                                </div>
-                            ) : (
+                            {!profile.twitterHandle ? (
                                 <div className="flex flex-col gap-3">
+                                    <span className="text-xs text-zinc-400 font-bold block mb-1 uppercase tracking-wider">
+                                        🔗 Link your Twitter (X) account first:
+                                    </span>
                                     <input 
                                         type="text" 
-                                        placeholder="https://x.com/username/status/123..."
-                                        value={tweetUrl}
-                                        onChange={(e) => setTweetUrl(e.target.value)}
+                                        placeholder="Enter your X username (e.g. goldengoalsol)"
+                                        value={xHandle}
+                                        onChange={(e) => setXHandle(e.target.value)}
                                         className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3.5 text-zinc-300 text-sm focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/40 transition-all placeholder-zinc-600"
                                     />
                                     <button 
-                                        onClick={handleTweetSubmit}
-                                        disabled={submittingTweet || !tweetUrl}
+                                        onClick={handleLinkTwitter}
+                                        disabled={linkingHandle || !xHandle}
                                         className={`w-full py-4 rounded-xl font-bold tracking-wide transition-all duration-300 text-sm ${
-                                            submittingTweet || !tweetUrl 
+                                            linkingHandle || !xHandle 
                                             ? 'bg-zinc-800/80 text-zinc-500 cursor-not-allowed border border-white/5' 
                                             : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_4px_20px_rgba(59,130,246,0.5)]'
                                         }`}
                                     >
-                                        {submittingTweet ? (
+                                        {linkingHandle ? (
                                             <span className="flex items-center justify-center gap-2">
                                                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                                                Verifying Submission...
+                                                Linking Account & Cleaning...
                                             </span>
-                                        ) : 'Submit and Earn 25 SP'}
+                                        ) : 'Link X Account'}
                                     </button>
+                                    {linkMessage && (
+                                        <div className={`mt-2 p-3 rounded-xl border text-xs font-medium text-center ${linkMessage.includes('❌') ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-green-500/10 border-green-500/20 text-green-400'}`}>
+                                            {linkMessage}
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                            
-                            {tweetMessage && cooldown === 0 && (
-                                <div className={`mt-4 p-3 rounded-xl border text-xs font-medium text-center ${tweetMessage.includes('❌') ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-green-500/10 border-green-500/20 text-green-400'}`}>
-                                    {tweetMessage}
-                                </div>
+                            ) : (
+                                <>
+                                    {/* Linked X account badge */}
+                                    <div className="flex items-center gap-2 mb-4 bg-blue-500/10 border border-blue-500/20 px-4 py-2.5 rounded-xl">
+                                        <span className="text-sm">🔗</span>
+                                        <span className="text-xs text-zinc-300 font-semibold">
+                                            Linked X Account: <strong className="text-blue-400">@{profile.twitterHandle}</strong>
+                                        </span>
+                                    </div>
+                                    
+                                    {cooldown > 0 ? (
+                                        <div className="bg-green-500/10 border border-green-500/20 text-green-400 p-6 rounded-2xl text-center font-bold flex flex-col items-center justify-center gap-2 animate-pulse">
+                                            <span className="text-3xl">✅</span>
+                                            <span className="text-lg">Task Verification Submitted!</span>
+                                            <span className="text-xs font-normal text-green-400/80">Points updated successfully! Cooldown active for {cooldown} seconds.</span>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col gap-3">
+                                            <input 
+                                                type="text" 
+                                                placeholder="https://x.com/username/status/123..."
+                                                value={tweetUrl}
+                                                onChange={(e) => setTweetUrl(e.target.value)}
+                                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3.5 text-zinc-300 text-sm focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/40 transition-all placeholder-zinc-600"
+                                            />
+                                            <button 
+                                                onClick={handleTweetSubmit}
+                                                disabled={submittingTweet || !tweetUrl}
+                                                className={`w-full py-4 rounded-xl font-bold tracking-wide transition-all duration-300 text-sm ${
+                                                    submittingTweet || !tweetUrl 
+                                                    ? 'bg-zinc-800/80 text-zinc-500 cursor-not-allowed border border-white/5' 
+                                                    : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_4px_20px_rgba(59,130,246,0.5)]'
+                                                }`}
+                                            >
+                                                {submittingTweet ? (
+                                                    <span className="flex items-center justify-center gap-2">
+                                                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                                        Verifying Submission...
+                                                    </span>
+                                                ) : 'Submit and Earn 25 SP'}
+                                            </button>
+                                        </div>
+                                    )}
+                                    
+                                    {tweetMessage && cooldown === 0 && (
+                                        <div className={`mt-4 p-3 rounded-xl border text-xs font-medium text-center ${tweetMessage.includes('❌') ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-green-500/10 border-green-500/20 text-green-400'}`}>
+                                            {tweetMessage}
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </div>
                     </div>

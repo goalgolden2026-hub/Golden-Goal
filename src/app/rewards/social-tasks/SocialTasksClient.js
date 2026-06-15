@@ -104,7 +104,7 @@ export default function SocialTasksPage() {
                 body: JSON.stringify({ 
                     walletAddress: publicKey.toBase58(), 
                     tweetUrl,
-                    confirmSecondHandle: confirmSecond
+                    confirmSecondHandle: confirmSecond === true
                 })
             });
 

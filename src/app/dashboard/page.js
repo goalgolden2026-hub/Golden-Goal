@@ -302,7 +302,7 @@ export default function Dashboard() {
     if (shareTicketModal) {
       // Pre-load the stadium background image
       const bgImg = new Image();
-      bgImg.src = shareTicketModal.sport === 'VOLLEYBALL' ? '/default-volleyball-bg.png' : '/default-stadium-bg.png';
+      bgImg.src = shareTicketModal.sport === 'VOLLEYBALL' ? '/default-volleyball-bg.jpg' : '/default-stadium-bg.png';
       
       const draw = () => {
         const canvas = document.getElementById('ticket-canvas');

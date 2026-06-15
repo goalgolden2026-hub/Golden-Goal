@@ -494,7 +494,7 @@ export default function MatchDetail() {
                       backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.12) 0%, transparent 85%), linear-gradient(135deg, rgba(245, 158, 11, 0.05), transparent)',
                     }
                   : {
-                      backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-volleyball-bg.png')",
+                      backgroundImage: "linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.85)), url('/default-volleyball-bg.jpg')",
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                     })

@@ -80,6 +80,7 @@ function MarketsContent() {
   const [latestPredictions, setLatestPredictions] = useState([]);
   const searchParams = useSearchParams();
   const filter = searchParams.get('filter') || 'live';
+  const vbg = searchParams.get('vbg') || 'court';
 
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, expired: false });
   const [copied, setCopied] = useState(false);

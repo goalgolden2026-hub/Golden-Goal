@@ -5,8 +5,11 @@ export function proxy(request) {
   const host = request.headers.get('host') || '';
   const { pathname } = request.nextUrl;
 
+  // Normalize host to remove port number if present (e.g. goldengoalsol.com:443)
+  const cleanHost = host.split(':')[0].toLowerCase().trim();
+
   // 1. Redirect non-www apex domain to www domain
-  if (host === 'goldengoalsol.com') {
+  if (cleanHost === 'goldengoalsol.com') {
     const url = request.nextUrl.clone();
     url.host = 'www.goldengoalsol.com';
     return NextResponse.redirect(url, 308); // 308 Permanent Redirect preserves HTTP method and body

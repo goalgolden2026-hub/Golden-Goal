@@ -14,16 +14,19 @@ export function proxy(request) {
 
   // 2. Add CORS headers for API routes - Handle preflight OPTIONS requests
   if (pathname.startsWith('/api/')) {
-    const origin = request.headers.get('origin') || '';
-    const isAllowedOrigin = origin.endsWith('goldengoalsol.com') || origin.startsWith('http://localhost');
-    const allowOrigin = isAllowedOrigin ? origin : '*';
+    const origin = request.headers.get('origin');
+    
+    if (origin && request.method === 'OPTIONS') {
+      const isAllowedOrigin = origin.endsWith('goldengoalsol.com') || origin.startsWith('http://localhost');
+      const allowOrigin = isAllowedOrigin ? origin : '*';
 
-    if (request.method === 'OPTIONS') {
       const response = new NextResponse(null, { status: 200 });
       response.headers.set('Access-Control-Allow-Origin', allowOrigin);
       response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
       response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-requested-with');
-      response.headers.set('Access-Control-Allow-Credentials', 'true');
+      if (allowOrigin !== '*') {
+        response.headers.set('Access-Control-Allow-Credentials', 'true');
+      }
       return response;
     }
   }
@@ -50,14 +53,19 @@ export function proxy(request) {
   // 4. Append CORS headers to regular API responses
   if (pathname.startsWith('/api/')) {
     const response = NextResponse.next();
-    const origin = request.headers.get('origin') || '';
-    const isAllowedOrigin = origin.endsWith('goldengoalsol.com') || origin.startsWith('http://localhost');
-    const allowOrigin = isAllowedOrigin ? origin : '*';
+    const origin = request.headers.get('origin');
+    
+    if (origin) {
+      const isAllowedOrigin = origin.endsWith('goldengoalsol.com') || origin.startsWith('http://localhost');
+      const allowOrigin = isAllowedOrigin ? origin : '*';
 
-    response.headers.set('Access-Control-Allow-Origin', allowOrigin);
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-requested-with');
-    response.headers.set('Access-Control-Allow-Credentials', 'true');
+      response.headers.set('Access-Control-Allow-Origin', allowOrigin);
+      response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-requested-with');
+      if (allowOrigin !== '*') {
+        response.headers.set('Access-Control-Allow-Credentials', 'true');
+      }
+    }
     return response;
   }
 

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { isWalletWhitelisted } from '@/lib/whitelist';
 
-export function middleware(request) {
+export function proxy(request) {
   const host = request.headers.get('host') || '';
   const { pathname } = request.nextUrl;
 

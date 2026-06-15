@@ -118,7 +118,7 @@ export async function POST(request) {
         } else if (iTasksToVerify.length > 0) {
             // Verify up to 10 /i/ links via RapidAPI
             const rapidApiKey = process.env.TWITTER_RAPIDAPI_KEY || 'fb0b6761c9msha29978207b28aa6p17856bjsnca9d44b79409';
-            const rapidApiHost = process.env.RAPIDAPI_HOST || 'twitter-api45.p.rapidapi.com';
+            const rapidApiHost = process.env.TWITTER_RAPIDAPI_HOST || 'twitter-api45.p.rapidapi.com';
 
             for (const task of iTasksToVerify) {
                 const tweetIdMatch = task.url.match(/status\/([0-9]+)/);

@@ -41,7 +41,7 @@ export async function POST(request) {
 
         // Programmatic Tweet details verification via RapidAPI
         const rapidApiKey = process.env.TWITTER_RAPIDAPI_KEY || 'fb0b6761c9msha29978207b28aa6p17856bjsnca9d44b79409';
-        const rapidApiHost = process.env.RAPIDAPI_HOST || 'twitter-api45.p.rapidapi.com';
+        const rapidApiHost = process.env.TWITTER_RAPIDAPI_HOST || 'twitter-api45.p.rapidapi.com';
 
         if (!rapidApiKey || !rapidApiHost) {
             console.error("RAPIDAPI_KEY or RAPIDAPI_HOST is missing in environment variables.");

@@ -843,7 +843,9 @@ function MarketsContent() {
                               </div>
                             ) : (
                                <span className="text-[10px] font-extrabold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.25)] animate-pulse">
-                                🏆 WORLD CUP TOURNAMENT UNDERWAY
+                                {selectedSport === 'volleyball'
+                                  ? '🏆 VOLLEYBALL NATIONS LEAGUE UNDERWAY'
+                                  : '🏆 WORLD CUP TOURNAMENT UNDERWAY'}
                                </span>
                             )}
                           </div>

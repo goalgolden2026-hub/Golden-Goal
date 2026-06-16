@@ -622,187 +622,189 @@ export default function MatchDetail() {
           })()}
 
           {/* Official Live Broadcasts Section */}
-          <div className="bg-zinc-900/60 backdrop-blur-md border border-zinc-800/80 rounded-3xl p-6 mb-8 relative overflow-hidden">
-            <div className="text-center max-w-2xl mx-auto mb-8">
-              <span className="text-3xl block mb-2 animate-bounce">📺</span>
-              <h4 className="text-base font-bold text-white mb-2">Official Live Broadcasts</h4>
-              <p className="text-xs text-zinc-500 leading-relaxed">
-                Watch World Cup matches legally and in high definition through official broadcasting partners.
-              </p>
+          {market.sport !== 'VOLLEYBALL' && (
+            <div className="bg-zinc-900/60 backdrop-blur-md border border-zinc-800/80 rounded-3xl p-6 mb-8 relative overflow-hidden">
+              <div className="text-center max-w-2xl mx-auto mb-8">
+                <span className="text-3xl block mb-2 animate-bounce">📺</span>
+                <h4 className="text-base font-bold text-white mb-2">Official Live Broadcasts</h4>
+                <p className="text-xs text-zinc-500 leading-relaxed">
+                  Watch World Cup matches legally and in high definition through official broadcasting partners.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                {/* BBC iPlayer (UK) */}
+                <a 
+                  href="https://www.bbc.co.uk/iplayer/live/bbcone" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl select-none">🇬🇧</span>
+                    <div className="text-left">
+                      <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">BBC iPlayer</span>
+                      <span className="text-[10px] text-zinc-500 block mt-0.5">United Kingdom (Free / BBC One)</span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
+                </a>
+
+                {/* ITVX (UK) */}
+                <a 
+                  href="https://www.itv.com/watch" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl select-none">🇬🇧</span>
+                    <div className="text-left">
+                      <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">ITVX Sports</span>
+                      <span className="text-[10px] text-zinc-500 block mt-0.5">United Kingdom (Free / ITV)</span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
+                </a>
+
+                {/* ARD Das Erste (Germany) */}
+                <a 
+                  href="https://live.daserste.de/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl select-none">🇩🇪</span>
+                    <div className="text-left">
+                      <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">ARD Das Erste</span>
+                      <span className="text-[10px] text-zinc-500 block mt-0.5">Germany (Free / ARD)</span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
+                </a>
+
+                {/* ZDF (Germany) */}
+                <a 
+                  href="https://www.zdf.de/live-tv" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl select-none">🇩🇪</span>
+                    <div className="text-left">
+                      <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">ZDF Live TV</span>
+                      <span className="text-[10px] text-zinc-500 block mt-0.5">Germany (Free / ZDF)</span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
+                </a>
+
+                {/* RTVE Play (Spain) */}
+                <a 
+                  href="https://www.rtve.es/play/canales/directo/la-1/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl select-none">🇪🇸</span>
+                    <div className="text-left">
+                      <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">RTVE Play</span>
+                      <span className="text-[10px] text-zinc-500 block mt-0.5">Spain (Free / La 1)</span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
+                </a>
+
+                {/* TRT 1 (Turkey) */}
+                <a 
+                  href="https://www.trtizle.com/canli/tv/trt-1" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl select-none">🇹🇷</span>
+                    <div className="text-left">
+                      <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">TRT 1 Live Stream</span>
+                      <span className="text-[10px] text-zinc-500 block mt-0.5">Turkey (Free / TRT 1)</span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
+                </a>
+
+                {/* TF1 Live (France) */}
+                <a 
+                  href="https://www.tf1.fr/tf1/direct" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl select-none">🇫🇷</span>
+                    <div className="text-left">
+                      <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">TF1 Live</span>
+                      <span className="text-[10px] text-zinc-500 block mt-0.5">France (Free / TF1)</span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
+                </a>
+
+                {/* Rai Play (Italy) */}
+                <a 
+                  href="https://www.raiplay.it/dirette/rai1" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl select-none">🇮🇹</span>
+                    <div className="text-left">
+                      <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">Rai Play</span>
+                      <span className="text-[10px] text-zinc-500 block mt-0.5">Italy (Free / Rai 1)</span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
+                </a>
+
+                {/* Fox Sports (USA) */}
+                <a 
+                  href="https://www.foxsports.com/live" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl select-none">🇺🇸</span>
+                    <div className="text-left">
+                      <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">Fox Sports</span>
+                      <span className="text-[10px] text-zinc-500 block mt-0.5">United States (Official Partner)</span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
+                </a>
+
+                {/* Tubi TV (USA) */}
+                <a 
+                  href="https://tubitv.com/live" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl select-none">🇺🇸</span>
+                    <div className="text-left">
+                      <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">Tubi TV (Live Sports)</span>
+                      <span className="text-[10px] text-zinc-500 block mt-0.5">United States (Free Ad-Supported)</span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
+                </a>
+              </div>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-              {/* BBC iPlayer (UK) */}
-              <a 
-                href="https://www.bbc.co.uk/iplayer/live/bbcone" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl select-none">🇬🇧</span>
-                  <div className="text-left">
-                    <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">BBC iPlayer</span>
-                    <span className="text-[10px] text-zinc-500 block mt-0.5">United Kingdom (Free / BBC One)</span>
-                  </div>
-                </div>
-                <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
-              </a>
-
-              {/* ITVX (UK) */}
-              <a 
-                href="https://www.itv.com/watch" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl select-none">🇬🇧</span>
-                  <div className="text-left">
-                    <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">ITVX Sports</span>
-                    <span className="text-[10px] text-zinc-500 block mt-0.5">United Kingdom (Free / ITV)</span>
-                  </div>
-                </div>
-                <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
-              </a>
-
-              {/* ARD Das Erste (Germany) */}
-              <a 
-                href="https://live.daserste.de/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl select-none">🇩🇪</span>
-                  <div className="text-left">
-                    <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">ARD Das Erste</span>
-                    <span className="text-[10px] text-zinc-500 block mt-0.5">Germany (Free / ARD)</span>
-                  </div>
-                </div>
-                <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
-              </a>
-
-              {/* ZDF (Germany) */}
-              <a 
-                href="https://www.zdf.de/live-tv" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl select-none">🇩🇪</span>
-                  <div className="text-left">
-                    <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">ZDF Live TV</span>
-                    <span className="text-[10px] text-zinc-500 block mt-0.5">Germany (Free / ZDF)</span>
-                  </div>
-                </div>
-                <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
-              </a>
-
-              {/* RTVE Play (Spain) */}
-              <a 
-                href="https://www.rtve.es/play/canales/directo/la-1/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl select-none">🇪🇸</span>
-                  <div className="text-left">
-                    <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">RTVE Play</span>
-                    <span className="text-[10px] text-zinc-500 block mt-0.5">Spain (Free / La 1)</span>
-                  </div>
-                </div>
-                <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
-              </a>
-
-              {/* TRT 1 (Turkey) */}
-              <a 
-                href="https://www.trtizle.com/canli/tv/trt-1" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl select-none">🇹🇷</span>
-                  <div className="text-left">
-                    <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">TRT 1 Live Stream</span>
-                    <span className="text-[10px] text-zinc-500 block mt-0.5">Turkey (Free / TRT 1)</span>
-                  </div>
-                </div>
-                <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
-              </a>
-
-              {/* TF1 Live (France) */}
-              <a 
-                href="https://www.tf1.fr/tf1/direct" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl select-none">🇫🇷</span>
-                  <div className="text-left">
-                    <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">TF1 Live</span>
-                    <span className="text-[10px] text-zinc-500 block mt-0.5">France (Free / TF1)</span>
-                  </div>
-                </div>
-                <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
-              </a>
-
-              {/* Rai Play (Italy) */}
-              <a 
-                href="https://www.raiplay.it/dirette/rai1" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl select-none">🇮🇹</span>
-                  <div className="text-left">
-                    <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">Rai Play</span>
-                    <span className="text-[10px] text-zinc-500 block mt-0.5">Italy (Free / Rai 1)</span>
-                  </div>
-                </div>
-                <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
-              </a>
-
-              {/* Fox Sports (USA) */}
-              <a 
-                href="https://www.foxsports.com/live" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl select-none">🇺🇸</span>
-                  <div className="text-left">
-                    <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">Fox Sports</span>
-                    <span className="text-[10px] text-zinc-500 block mt-0.5">United States (Official Partner)</span>
-                  </div>
-                </div>
-                <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
-              </a>
-
-              {/* Tubi TV (USA) */}
-              <a 
-                href="https://tubitv.com/live" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-zinc-900 border border-zinc-850 hover:border-amber-500/40 p-4 rounded-xl flex items-center justify-between group transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl select-none">🇺🇸</span>
-                  <div className="text-left">
-                    <span className="text-xs font-bold text-zinc-300 group-hover:text-amber-400 transition-colors block">Tubi TV (Live Sports)</span>
-                    <span className="text-[10px] text-zinc-500 block mt-0.5">United States (Free Ad-Supported)</span>
-                  </div>
-                </div>
-                <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Watch →</span>
-              </a>
-            </div>
-          </div>
+          )}
 
           {/* Sub-Markets */}
           <div className="flex flex-col gap-2">

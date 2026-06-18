@@ -36,16 +36,16 @@ export default function Maintenance() {
         {/* Dynamic Titles */}
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4 uppercase">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 block">
-            Bakım Çalışması
+            System Update
           </span>
           <span className="text-zinc-400 text-sm md:text-base font-medium normal-case tracking-normal block mt-1">
-            Platform upgrades in progress
+            Undergoing Scheduled Maintenance
           </span>
         </h1>
 
         {/* Description */}
         <p className="text-zinc-400 text-sm md:text-base leading-relaxed mb-8 max-w-md">
-          Golden Goal'ü sizler için daha güçlü hale getirmek ve yeni özellikleri devreye almak amacıyla sistemlerimizi güncelliyoruz. Çok yakında tekrar yayında olacağız!
+          We are upgrading our systems to improve Golden Goal and roll out exciting new features. We will be back online shortly!
         </p>
 
         {/* Safety Banner */}
@@ -56,16 +56,16 @@ export default function Maintenance() {
             </svg>
           </div>
           <div>
-            <h4 className="text-zinc-200 text-xs font-bold uppercase tracking-wider mb-0.5">On-Chain Güvencesi</h4>
+            <h4 className="text-zinc-200 text-xs font-bold uppercase tracking-wider mb-0.5">On-Chain Protection</h4>
             <p className="text-zinc-500 text-[11px] leading-relaxed">
-              Stake ettiğiniz tüm tokenlar ve platform geçmişiniz Solana blokzinciri üzerinde tamamen güvendedir ve etkilenmemektedir.
+              All staked tokens and user history are safely stored on the Solana blockchain and remain completely unaffected.
             </p>
           </div>
         </div>
 
         {/* Community Links */}
         <div className="w-full flex flex-col gap-3">
-          <span className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest block mb-1">Gelişmeleri Takip Edin</span>
+          <span className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest block mb-1">Follow Our Updates</span>
           
           <div className="grid grid-cols-2 gap-3">
             <a 
